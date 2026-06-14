@@ -1,22 +1,7 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { useAuthStore } from './authStore';
-
-const mapRemedy = (remedy) => ({
-  id: remedy.id,
-  name: remedy.name,
-  category: remedy.category,
-  rating: remedy.rating,
-  reviewCount: remedy.review_count,
-  shortDescription: remedy.short_description,
-  longDescription: remedy.long_description,
-  howToUse: remedy.how_to_use,
-  warnings: remedy.warnings,
-  timeToEffect: remedy.time_to_effect,
-  difficulty: remedy.difficulty,
-  cost: remedy.cost,
-  isFeatured: remedy.is_featured,
-});
+import { mapRemedy } from '../utils/mappers';
 
 export const useFavoritesStore = create((set, get) => ({
   favorites: [],

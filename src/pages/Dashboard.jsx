@@ -34,7 +34,7 @@ export function Dashboard() {
         {/* Header */}
         <header>
           <h1 className="text-3xl font-extrabold text-ink mb-2">
-            {greeting}, {user?.name.split(' ')[0]} <span className="inline-block animate-wave">👋</span>
+            {greeting}, {user?.name?.split(' ')[0] || 'there'} <span className="inline-block animate-wave">👋</span>
           </h1>
           <p className="text-ink-muted">Ready to feel better today?</p>
         </header>
@@ -89,9 +89,9 @@ export function Dashboard() {
                 <p className="text-ink-muted">{upcomingAppointment.doctor}</p>
                 <div className="flex items-center gap-4 mt-2 text-sm text-ink-muted font-medium">
                   <span className="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded-md">
-                    <CalendarIcon className="w-4 h-4" /> {upcomingAppointment.apt_date || upcomingAppointment.date}
+                    <CalendarIcon className="w-4 h-4" /> {upcomingAppointment.date}
                   </span>
-                  <span>{upcomingAppointment.apt_time || upcomingAppointment.time}</span>
+                  <span>{upcomingAppointment.time}</span>
                 </div>
               </div>
               <Link 

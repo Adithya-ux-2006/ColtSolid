@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { useAuthStore } from './authStore';
+import { mapAppointment } from '../utils/mappers';
 
 export const useAppointmentStore = create((set, get) => ({
   appointments: [],
@@ -21,7 +22,7 @@ export const useAppointmentStore = create((set, get) => ({
         .order('apt_date', { ascending: true });
         
       if (error) throw error;
-      set({ appointments: data });
+      set({ appointments: (data || []).map(mapAppointment) });
     } catch (error) {
       console.error('Error fetching appointments:', error);
     } finally {
@@ -53,7 +54,7 @@ export const useAppointmentStore = create((set, get) => ({
       if (error) throw error;
       
       // Update local state
-      set((state) => ({ appointments: [...state.appointments, data] }));
+      set((state) => ({ appointments: [...state.appointments, mapAppointment(data)] }));
     } catch (error) {
       console.error('Error adding appointment:', error);
     }
@@ -86,7 +87,7 @@ export const useAppointmentStore = create((set, get) => ({
       if (error) throw error;
       
       set((state) => ({
-        appointments: state.appointments.map(apt => apt.id === id ? data : apt)
+        appointments: state.appointments.map(apt => apt.id === id ? mapAppointment(data) : apt)
       }));
     } catch (error) {
       console.error('Error updating appointment:', error);

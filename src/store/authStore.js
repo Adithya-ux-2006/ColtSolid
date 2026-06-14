@@ -1,18 +1,31 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
+import { getInitials } from '../utils/mappers';
 
 const buildUser = async (session) => {
   if (!session?.user) return null;
 
   const { data: profile, error } = await supabase
-    .from('user_profiles')
+    .from('users')
     .select('*')
     .eq('id', session.user.id)
     .maybeSingle();
 
+  const metadata = session.user.user_metadata || {};
+
   if (error) throw error;
 
-  return { ...session.user, ...profile };
+  return {
+    ...session.user,
+    name: profile?.name || metadata.name || '',
+    university: profile?.university || metadata.university || '',
+    year: profile?.year || metadata.year || '',
+    preferNatural: profile?.prefer_natural ?? false,
+    avoidMedication: profile?.avoid_medication ?? false,
+    vegetarianRemedies: profile?.vegetarian_remedies ?? false,
+    avatar: metadata.avatar || getInitials(profile?.name || metadata.name || ''),
+    ...profile,
+  };
 };
 
 export const useAuthStore = create((set, get) => ({
@@ -85,33 +98,43 @@ export const useAuthStore = create((set, get) => ({
   register: async (details) => {
     set({ isLoading: true });
     try {
+      const avatar = getInitials(details.name);
       const { data, error } = await supabase.auth.signUp({
         email: details.email,
-        password: details.password
+        password: details.password,
+        options: {
+          data: {
+            name: details.name,
+            university: details.university,
+            year: details.year,
+            avatar,
+          },
+        },
       });
       if (error) throw error;
       if (!data.user) throw new Error('User signup did not return a user record.');
 
-      const avatar = details.name.split(' ').map(n => n[0]).join('').toUpperCase() || 'U';
-      const { error: profileError } = await supabase
-        .from('user_profiles')
-        .insert({
-          id: data.user.id,
-          name: details.name,
-          university: details.university,
-          year: details.year,
-          avatar
+      if (data.session) {
+        const user = await buildUser(data.session);
+        set({
+          user,
+          isAuthenticated: true,
+          isLoading: false,
+          isInitialized: true,
         });
-        
-      if (profileError) throw profileError;
+      } else {
+        set({
+          user: null,
+          isAuthenticated: false,
+          isLoading: false,
+          isInitialized: true,
+        });
+      }
 
-      set({ 
-        user: { ...data.user, name: details.name, university: details.university, year: details.year, avatar },
-        isAuthenticated: true,
-        isLoading: false,
-        isInitialized: true
-      });
-      return { success: true };
+      return {
+        success: true,
+        needsEmailConfirmation: !data.session,
+      };
     } catch (error) {
       console.error('Registration error:', error);
       return { success: false, error };
@@ -130,9 +153,20 @@ export const useAuthStore = create((set, get) => ({
     if (!user) return;
     
     try {
+      const dbUpdates = {
+        name: updates.name,
+        university: updates.university,
+        year: updates.year,
+        prefer_natural: updates.preferNatural,
+        avoid_medication: updates.avoidMedication,
+        vegetarian_remedies: updates.vegetarianRemedies,
+      };
+
+      Object.keys(dbUpdates).forEach((key) => dbUpdates[key] === undefined && delete dbUpdates[key]);
+
       const { error } = await supabase
-        .from('user_profiles')
-        .update(updates)
+        .from('users')
+        .update(dbUpdates)
         .eq('id', user.id);
         
       if (error) throw error;

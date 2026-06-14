@@ -13,6 +13,7 @@ export function Register() {
     password: ''
   });
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const register = useAuthStore(state => state.register);
   const isLoading = useAuthStore(state => state.isLoading);
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ export function Register() {
     if (!isFormValid) return;
 
     setErrorMessage('');
+    setSuccessMessage('');
     const result = await register({
       name: formData.name,
       email: formData.email,
@@ -37,6 +39,11 @@ export function Register() {
     });
 
     if (result.success) {
+      if (result.needsEmailConfirmation) {
+        setSuccessMessage('Account created. Check your email to confirm your account before logging in.');
+        return;
+      }
+
       navigate('/dashboard');
       return;
     }
@@ -137,6 +144,10 @@ export function Register() {
 
           {errorMessage ? (
             <p className="text-sm text-red-600">{errorMessage}</p>
+          ) : null}
+
+          {successMessage ? (
+            <p className="text-sm text-green-700">{successMessage}</p>
           ) : null}
         </form>
 

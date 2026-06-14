@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, ChevronDown, Check, GraduationCap, Leaf, ShieldAlert } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { useAuthStore } from '../store/authStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useAppointmentStore } from '../store/appointmentStore';
+import { getInitials } from '../utils/mappers';
 
 export function Profile() {
   const { user, logout, updateUser } = useAuthStore();
@@ -21,12 +22,25 @@ export function Profile() {
   
   // Health preferences (mock state for UI)
   const [prefs, setPrefs] = useState({
-    natural: true,
-    vegetarian: false,
-    avoidMeds: false
+    natural: user?.preferNatural ?? false,
+    vegetarian: user?.vegetarianRemedies ?? false,
+    avoidMeds: user?.avoidMedication ?? false
   });
 
   const [expandedSection, setExpandedSection] = useState(null);
+
+  useEffect(() => {
+    setEditForm({
+      name: user?.name || '',
+      university: user?.university || '',
+      year: user?.year || '',
+    });
+    setPrefs({
+      natural: user?.preferNatural ?? false,
+      vegetarian: user?.vegetarianRemedies ?? false,
+      avoidMeds: user?.avoidMedication ?? false,
+    });
+  }, [user]);
 
   if (!user) return null;
 
@@ -38,7 +52,10 @@ export function Profile() {
   const handleSaveProfile = () => {
     updateUser({
       ...editForm,
-      avatar: editForm.name.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'
+      preferNatural: prefs.natural,
+      avoidMedication: prefs.avoidMeds,
+      vegetarianRemedies: prefs.vegetarian,
+      avatar: getInitials(editForm.name)
     });
     setIsEditing(false);
   };

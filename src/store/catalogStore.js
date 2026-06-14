@@ -1,28 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
-
-const mapRemedy = (remedy) => ({
-  id: remedy.id,
-  name: remedy.name,
-  category: remedy.category,
-  symptoms: remedy.remedy_symptoms?.map((item) => item.symptom_id) || [],
-  rating: remedy.rating,
-  reviewCount: remedy.review_count,
-  shortDescription: remedy.short_description,
-  longDescription: remedy.long_description,
-  howToUse: remedy.how_to_use,
-  warnings: remedy.warnings,
-  timeToEffect: remedy.time_to_effect,
-  difficulty: remedy.difficulty,
-  cost: remedy.cost,
-  isFeatured: remedy.is_featured,
-  researchPapers: remedy.research_papers?.map((paper) => ({
-    title: paper.title,
-    journal: paper.journal,
-    url: paper.url,
-    keyFinding: paper.key_finding,
-  })) || [],
-});
+import { mapRemedy } from '../utils/mappers';
 
 export const useCatalogStore = create((set, get) => ({
   symptoms: [],
@@ -41,7 +19,7 @@ export const useCatalogStore = create((set, get) => ({
         supabase.from('symptoms').select('*').order('label'),
         supabase
           .from('remedies')
-          .select('*, remedy_symptoms(symptom_id), research_papers(title, journal, url, key_finding)')
+          .select('*, remedy_symptoms(symptom_id), research_papers(title, journal, url, key_findings)')
           .order('name'),
       ]);
 
