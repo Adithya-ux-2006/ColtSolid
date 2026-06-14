@@ -50,7 +50,7 @@ export function AppointmentForm({ initialData, onSubmit, onCancel }) {
           required
           value={formData.title}
           onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-coral/20 focus:border-coral"
+          className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest"
           placeholder="e.g. General Checkup"
         />
       </div>
@@ -65,7 +65,7 @@ export function AppointmentForm({ initialData, onSubmit, onCancel }) {
             required
             value={formData.doctor}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-coral/20 focus:border-coral"
+            className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest"
           />
         </div>
         <div>
@@ -75,7 +75,7 @@ export function AppointmentForm({ initialData, onSubmit, onCancel }) {
             name="type"
             value={formData.type}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-coral/20 focus:border-coral bg-white"
+            className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest bg-white"
           >
             <option value="General">General</option>
             <option value="Specialist">Specialist</option>
@@ -94,7 +94,7 @@ export function AppointmentForm({ initialData, onSubmit, onCancel }) {
             required
             value={formData.date}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-coral/20 focus:border-coral"
+            className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest"
           />
         </div>
         <div>
@@ -106,7 +106,7 @@ export function AppointmentForm({ initialData, onSubmit, onCancel }) {
             required
             value={formData.time}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-coral/20 focus:border-coral"
+            className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest"
           />
         </div>
       </div>
@@ -120,7 +120,7 @@ export function AppointmentForm({ initialData, onSubmit, onCancel }) {
           required
           value={formData.location}
           onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-coral/20 focus:border-coral"
+          className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest"
         />
       </div>
 
@@ -132,7 +132,7 @@ export function AppointmentForm({ initialData, onSubmit, onCancel }) {
           rows="3"
           value={formData.notes}
           onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-coral/20 focus:border-coral resize-none"
+          className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest resize-none"
           placeholder="Any symptoms or questions for the doctor?"
         />
       </div>
@@ -148,7 +148,7 @@ export function AppointmentForm({ initialData, onSubmit, onCancel }) {
         <button
           type="submit"
           disabled={!isFormValid}
-          className="flex-1 py-2.5 rounded-xl font-medium bg-coral text-white hover:bg-coral-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 py-2.5 rounded-xl font-medium bg-forest text-white hover:bg-forest-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {initialData ? 'Update' : 'Schedule'}
         </button>

@@ -49,7 +49,7 @@ export function Results() {
 
   if (!symptom) {
     return (
-      <PageWrapper className="min-h-screen bg-cream pt-20 px-6">
+      <PageWrapper className="min-h-screen bg-snow pt-20 px-6">
         <EmptyState 
           icon={AlertCircle}
           title="Symptom not found"
@@ -64,7 +64,7 @@ export function Results() {
   const filters = ['All', 'Natural', 'TCM', 'Conventional', 'Lifestyle'];
 
   return (
-    <PageWrapper className="min-h-screen bg-cream pb-24 md:pb-8">
+    <PageWrapper className="min-h-screen bg-snow pb-24 md:pb-8">
       {/* Header */}
       <div className="bg-white border-b border-gray-100 pt-6 pb-4 px-6 sticky top-0 md:top-16 z-30">
         <div className="max-w-5xl mx-auto">
@@ -140,7 +140,7 @@ export function Results() {
         
         {!isLoading && filteredAndSortedRemedies.length === 0 && (
           <div className="text-center mt-[-20px]">
-             <button onClick={() => setFilter('All')} className="text-coral font-medium hover:underline">
+             <button onClick={() => setFilter('All')} className="text-forest font-medium hover:underline">
                Clear Filters
              </button>
           </div>

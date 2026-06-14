@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply font-sans bg-cream text-ink antialiased;
+    @apply font-sans bg-snow text-ink antialiased;
   }
 }
 

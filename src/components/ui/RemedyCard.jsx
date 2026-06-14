@@ -26,10 +26,10 @@ export function RemedyCard({ remedy, className }) {
             e.preventDefault();
             toggleFavorite(remedy);
           }}
-          className="text-ink-muted hover:text-coral transition-colors p-1 -mr-1 -mt-1"
+          className="text-ink-muted hover:text-forest transition-colors p-1 -mr-1 -mt-1"
           aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
         >
-          <Heart className={cn("w-5 h-5", favorite && "fill-coral text-coral")} />
+          <Heart className={cn("w-5 h-5", favorite && "fill-forest text-forest")} />
         </motion.button>
       </div>
 
@@ -42,14 +42,14 @@ export function RemedyCard({ remedy, className }) {
       <RatingStars rating={remedy.rating} reviewCount={remedy.reviewCount} className="mb-4" />
 
       <div className="flex items-center gap-2 mb-4 text-xs font-medium text-ink-muted">
-        <span className="bg-cream-dark px-2 py-1 rounded-md">{remedy.cost}</span>
+        <span className="bg-snow-dark px-2 py-1 rounded-md">{remedy.cost}</span>
         <span>•</span>
         <span>{remedy.timeToEffect}</span>
       </div>
 
       <Link
         to={`/remedy/${remedy.id}`}
-        className="w-full mt-auto text-center py-2.5 rounded-xl text-sm font-semibold text-coral bg-coral/5 hover:bg-coral/10 transition-colors"
+        className="w-full mt-auto text-center py-2.5 rounded-xl text-sm font-semibold text-forest bg-forest/5 hover:bg-forest/10 transition-colors"
       >
         View Details &rarr;
       </Link>

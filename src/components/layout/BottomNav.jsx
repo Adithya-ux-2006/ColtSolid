@@ -26,7 +26,7 @@ export function BottomNav() {
             to={item.to}
             className={({ isActive }) => cn(
               "flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors",
-              isActive ? "text-coral" : "text-ink-muted hover:text-ink"
+              isActive ? "text-forest" : "text-ink-muted hover:text-ink"
             )}
           >
             <item.icon className="w-5 h-5" />

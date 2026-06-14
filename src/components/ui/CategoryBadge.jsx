@@ -2,10 +2,10 @@ import { cn } from '../../utils/cn';
 
 export function CategoryBadge({ category, className }) {
   const styles = {
-    Natural: 'bg-teal/10 text-teal-dark',
-    TCM: 'bg-yellow/20 text-yellow-dark',
-    Conventional: 'bg-coral/10 text-coral-dark',
-    Lifestyle: 'bg-ink/10 text-ink'
+    Natural: 'bg-sage/20 text-forest',
+    TCM: 'bg-amber/10 text-amber-dark',
+    Conventional: 'bg-forest/10 text-forest',
+    Lifestyle: 'bg-ink/10 text-ink-muted'
   };
 
   return (

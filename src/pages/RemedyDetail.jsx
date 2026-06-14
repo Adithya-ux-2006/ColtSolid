@@ -29,13 +29,13 @@ export function RemedyDetail() {
   const tabs = ['Overview', 'How to Use', 'Research', 'Warnings'];
 
   return (
-    <PageWrapper className="min-h-screen bg-cream pb-24">
+    <PageWrapper className="min-h-screen bg-snow pb-24">
       {/* Toast */}
       <div className={cn(
         "fixed top-4 left-1/2 -translate-x-1/2 bg-ink text-white px-4 py-2 rounded-full font-medium text-sm z-50 transition-all shadow-lg flex items-center gap-2",
         showToast ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"
       )}>
-        <CheckCircle2 className="w-4 h-4 text-teal" /> Copied link!
+        <CheckCircle2 className="w-4 h-4 text-sage" /> Copied link!
       </div>
 
       {/* Hero Header */}
@@ -75,7 +75,7 @@ export function RemedyDetail() {
                 onClick={() => setActiveTab(tab)}
                 className={cn(
                   "py-4 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors relative",
-                  activeTab === tab ? "border-coral text-coral" : "border-transparent text-ink-muted hover:text-ink"
+                  activeTab === tab ? "border-forest text-forest" : "border-transparent text-ink-muted hover:text-ink"
                 )}
               >
                 {tab}
@@ -101,7 +101,7 @@ export function RemedyDetail() {
           <div className="space-y-4 animate-fade-in">
             {remedy.howToUse.split('\n').map((step, idx) => (
               <div key={idx} className="flex gap-4 bg-white p-5 rounded-2xl shadow-sm border border-gray-50">
-                <div className="w-8 h-8 shrink-0 bg-teal/10 text-teal-dark rounded-full flex items-center justify-center font-bold">
+                <div className="w-8 h-8 shrink-0 bg-sage/10 text-sage-dark rounded-full flex items-center justify-center font-bold">
                   {idx + 1}
                 </div>
                 <p className="text-ink mt-1">{step.replace(/^\d+\.\s*/, '')}</p>
@@ -112,25 +112,48 @@ export function RemedyDetail() {
 
         {activeTab === 'Research' && (
           <div className="space-y-4 animate-fade-in">
-            <p className="text-ink-muted mb-4">Scientific studies backing this remedy:</p>
-            {remedy.researchLinks.map((link, idx) => (
-              <a 
-                key={idx} 
-                href={link.url} 
-                target="_blank" 
-                rel="noreferrer"
-                className="group flex justify-between items-center bg-white p-5 rounded-2xl shadow-sm border border-gray-50 hover:border-coral/30 hover:shadow-md transition-all"
-              >
-                <span className="font-medium text-ink group-hover:text-coral transition-colors">{link.label}</span>
-                <ExternalLink className="w-4 h-4 text-ink-muted group-hover:text-coral" />
-              </a>
-            ))}
+            <p className="text-ink-muted mb-4 font-medium">Clinical Evidence</p>
+            {remedy.researchPapers ? (
+              remedy.researchPapers.map((paper, idx) => (
+                <a 
+                  key={idx} 
+                  href={paper.url} 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="group block bg-white p-5 rounded-2xl shadow-sm border border-gray-50 hover:border-forest/30 hover:shadow-md transition-all relative overflow-hidden"
+                >
+                  <div className="absolute top-0 left-0 w-1 h-full bg-forest/20 group-hover:bg-forest transition-colors" />
+                  <div className="pl-3">
+                    <p className="text-xs font-bold text-forest uppercase tracking-wider mb-1">{paper.journal}</p>
+                    <div className="flex justify-between items-start gap-4">
+                      <p className="text-ink font-medium group-hover:text-forest transition-colors leading-relaxed">
+                        "{paper.keyFinding}"
+                      </p>
+                      <ExternalLink className="w-4 h-4 text-ink-muted group-hover:text-forest shrink-0 mt-1" />
+                    </div>
+                  </div>
+                </a>
+              ))
+            ) : (
+              remedy.researchLinks.map((link, idx) => (
+                <a 
+                  key={idx} 
+                  href={link.url} 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="group flex justify-between items-center bg-white p-5 rounded-2xl shadow-sm border border-gray-50 hover:border-forest/30 hover:shadow-md transition-all"
+                >
+                  <span className="font-medium text-ink group-hover:text-forest transition-colors">{link.label}</span>
+                  <ExternalLink className="w-4 h-4 text-ink-muted group-hover:text-forest" />
+                </a>
+              ))
+            )}
           </div>
         )}
 
         {activeTab === 'Warnings' && (
-          <div className="bg-yellow/10 border border-yellow/30 p-6 rounded-2xl flex gap-4 animate-fade-in">
-            <AlertTriangle className="w-6 h-6 text-yellow-dark shrink-0" />
+          <div className="bg-amber/10 border border-amber/30 p-6 rounded-2xl flex gap-4 animate-fade-in">
+            <AlertTriangle className="w-6 h-6 text-amber-dark shrink-0" />
             <p className="text-ink-muted leading-relaxed text-sm">{remedy.warnings}</p>
           </div>
         )}
@@ -143,11 +166,11 @@ export function RemedyDetail() {
             onClick={() => toggleFavorite(remedy)}
             className={cn(
               "p-4 rounded-2xl shadow-sm border transition-colors flex items-center justify-center",
-              favorite ? "bg-coral/10 border-coral text-coral" : "bg-white border-gray-200 text-ink-muted hover:text-coral"
+              favorite ? "bg-forest/10 border-forest text-forest" : "bg-white border-gray-200 text-ink-muted hover:text-forest"
             )}
             aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
           >
-            <Heart className={cn("w-6 h-6", favorite && "fill-coral")} />
+            <Heart className={cn("w-6 h-6", favorite && "fill-forest")} />
           </button>
           
           <button 

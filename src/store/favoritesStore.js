@@ -1,34 +1,89 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { supabase } from '../lib/supabase';
+import { useAuthStore } from './authStore';
 
-export const useFavoritesStore = create(
-  persist(
-    (set, get) => ({
-      favorites: [],
-      addFavorite: (remedy) => {
-        const { favorites } = get();
-        if (!favorites.some(f => f.id === remedy.id)) {
-          set({ favorites: [...favorites, remedy] });
-        }
-      },
-      removeFavorite: (id) => {
-        set((state) => ({
-          favorites: state.favorites.filter(f => f.id !== id)
-        }));
-      },
-      isFavorite: (id) => {
-        return get().favorites.some(f => f.id === id);
-      },
-      toggleFavorite: (remedy) => {
-        if (get().isFavorite(remedy.id)) {
-          get().removeFavorite(remedy.id);
-        } else {
-          get().addFavorite(remedy);
-        }
-      }
-    }),
-    {
-      name: 'clotsolid-favorites',
+export const useFavoritesStore = create((set, get) => ({
+  favorites: [],
+  isLoading: false,
+
+  fetchFavorites: async () => {
+    const user = useAuthStore.getState().user;
+    if (!user) return;
+    
+    set({ isLoading: true });
+    try {
+      // We fetch favorite records and join with remedies
+      const { data, error } = await supabase
+        .from('favorites')
+        .select('*, remedies(*)')
+        .eq('user_id', user.id);
+        
+      if (error) throw error;
+      
+      // Extract the remedy objects
+      const remedies = data.map(f => f.remedies);
+      set({ favorites: remedies });
+    } catch (error) {
+      console.error('Error fetching favorites:', error);
+    } finally {
+      set({ isLoading: false });
     }
-  )
-);
+  },
+
+  addFavorite: async (remedy) => {
+    const user = useAuthStore.getState().user;
+    if (!user) return;
+
+    // Optimistic update
+    const { favorites } = get();
+    if (!favorites.some(f => f.id === remedy.id)) {
+      set({ favorites: [...favorites, remedy] });
+    }
+
+    try {
+      const { error } = await supabase
+        .from('favorites')
+        .insert({ user_id: user.id, remedy_id: remedy.id });
+        
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error adding favorite:', error);
+      // Revert optimistic update
+      set({ favorites: favorites.filter(f => f.id !== remedy.id) });
+    }
+  },
+
+  removeFavorite: async (id) => {
+    const user = useAuthStore.getState().user;
+    if (!user) return;
+
+    // Optimistic update
+    const { favorites } = get();
+    set({ favorites: favorites.filter(f => f.id !== id) });
+
+    try {
+      const { error } = await supabase
+        .from('favorites')
+        .delete()
+        .match({ user_id: user.id, remedy_id: id });
+        
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error removing favorite:', error);
+      // Revert optimistic update by re-fetching
+      get().fetchFavorites();
+    }
+  },
+
+  isFavorite: (id) => {
+    return get().favorites.some(f => f.id === id);
+  },
+
+  toggleFavorite: (remedy) => {
+    if (get().isFavorite(remedy.id)) {
+      get().removeFavorite(remedy.id);
+    } else {
+      get().addFavorite(remedy);
+    }
+  }
+}));

@@ -8,7 +8,7 @@ export function RatingStars({ rating, reviewCount, className }) {
 
   return (
     <div className={cn("flex items-center gap-1.5", className)}>
-      <div className="flex text-yellow">
+      <div className="flex text-amber">
         {[...Array(fullStars)].map((_, i) => (
           <Star key={`full-${i}`} className="w-4 h-4 fill-current" />
         ))}

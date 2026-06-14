@@ -36,8 +36,8 @@ export function SymptomSearch() {
   };
 
   return (
-    <PageWrapper className="min-h-screen bg-cream pb-24 md:pb-8">
-      <div className="sticky top-0 md:top-16 z-30 bg-cream/80 backdrop-blur-md pt-6 pb-4 px-6">
+    <PageWrapper className="min-h-screen bg-snow pb-24 md:pb-8">
+      <div className="sticky top-0 md:top-16 z-30 bg-snow/80 backdrop-blur-md pt-6 pb-4 px-6">
         <div className="max-w-2xl mx-auto">
           <div onKeyDown={handleKeyDown}>
             <SearchBar 

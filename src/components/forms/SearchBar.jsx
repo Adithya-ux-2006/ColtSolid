@@ -11,7 +11,7 @@ export function SearchBar({ value, onChange, placeholder = "Search symptoms...",
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-full text-ink placeholder-ink-muted focus:outline-none focus:ring-2 focus:ring-coral/20 focus:border-coral transition-all shadow-sm hover:shadow"
+        className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-full text-ink placeholder-ink-muted focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest transition-all shadow-sm hover:shadow"
         placeholder={placeholder}
       />
     </div>

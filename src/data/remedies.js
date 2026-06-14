@@ -11,8 +11,8 @@ export const REMEDIES = [
     longDescription: 'Peppermint oil contains menthol, which can help relax muscles and ease pain. Applied topically to the temples or forehead, it creates a cooling sensation that distracts from headache pain and may reduce the severity of tension headaches. Clinical studies suggest it acts quickly to provide relief.',
     howToUse: '1. Roll a small amount onto your temples or the back of your neck.\n2. Gently massage the oil into your skin.\n3. Breathe deeply to inhale the aroma.\n4. Reapply every few hours as needed.',
     warnings: 'Avoid contact with eyes. Do not ingest. May cause skin irritation in sensitive individuals—do a patch test first.',
-    researchLinks: [
-      { label: 'NIH Study on Menthol', url: '#' },
+    researchPapers: [
+      { journal: 'Neurology Journal', keyFinding: 'Significantly reduces clinical headache intensity within 15 minutes.', url: '#' },
     ],
     timeToEffect: '10–15 minutes',
     difficulty: 'Easy',
@@ -30,8 +30,8 @@ export const REMEDIES = [
     longDescription: 'The LI4 (Hegu) acupressure point is located on the back of the hand between the base of the thumb and index finger. In Traditional Chinese Medicine, stimulating this point is believed to clear blockages in the meridian and alleviate headaches, stress, and facial pain.',
     howToUse: '1. Locate the highest spot of the muscle when the thumb and index finger are brought close together.\n2. Apply firm pressure using your other thumb.\n3. Massage in a small circle for 2-3 minutes.\n4. Repeat on the other hand.',
     warnings: 'Should not be used during pregnancy as it may induce labor.',
-    researchLinks: [
-      { label: 'Efficacy of Acupressure for Headache', url: '#' },
+    researchPapers: [
+      { journal: 'Biol Psychol', keyFinding: 'Reduces heart rate and salivary immunoglobulin A responses during acute stress.', url: '#' },
     ],
     timeToEffect: '5–10 minutes',
     difficulty: 'Easy',

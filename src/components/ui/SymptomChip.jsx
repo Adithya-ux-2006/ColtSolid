@@ -3,9 +3,9 @@ import { cn } from '../../utils/cn';
 export function SymptomChip({ symptom, isSelected, onClick, className }) {
   // Map colors explicitly to avoid purge issues
   const colorStyles = {
-    coral: 'bg-coral/10 border-coral text-coral-dark',
-    teal: 'bg-teal/10 border-teal text-teal-dark',
-    yellow: 'bg-yellow/20 border-yellow text-yellow-dark',
+    forest: 'bg-forest/10 border-forest text-forest-dark',
+    sage: 'bg-sage/20 border-sage text-forest',
+    amber: 'bg-amber/10 border-amber text-amber-dark',
   };
 
   return (

@@ -7,12 +7,10 @@ import { useAppointmentStore } from '../store/appointmentStore';
 import { cn } from '../utils/cn';
 
 export function Appointments() {
-  const { appointments, add, update, remove } = useAppointmentStore(state => ({
-    appointments: state.appointments,
-    add: state.add,
-    update: state.update,
-    remove: state.delete
-  }));
+  const appointments = useAppointmentStore(state => state.appointments);
+  const add = useAppointmentStore(state => state.add);
+  const update = useAppointmentStore(state => state.update);
+  const remove = useAppointmentStore(state => state.delete);
 
   const [activeTab, setActiveTab] = useState('Upcoming');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,13 +47,13 @@ export function Appointments() {
   };
 
   const typeColors = {
-    General: 'border-coral',
-    Specialist: 'border-teal',
-    Telehealth: 'border-yellow'
+    General: 'border-forest',
+    Specialist: 'border-sage',
+    Telehealth: 'border-amber'
   };
 
   return (
-    <PageWrapper className="min-h-screen bg-cream pb-24 md:pb-8 pt-6 relative">
+    <PageWrapper className="min-h-screen bg-snow pb-24 md:pb-8 pt-6 relative">
       <div className="max-w-3xl mx-auto px-6">
         <div className="flex justify-between items-end mb-6">
           <div>
@@ -64,7 +62,7 @@ export function Appointments() {
           </div>
           <button 
             onClick={handleOpenNew}
-            className="hidden sm:flex items-center gap-2 px-4 py-2 bg-coral text-white rounded-full font-medium hover:bg-coral-dark transition-colors shadow-coral"
+            className="hidden sm:flex items-center gap-2 px-4 py-2 bg-forest text-white rounded-full font-medium hover:bg-forest-dark transition-colors shadow-forest"
           >
             <Plus className="w-4 h-4" /> New
           </button>
@@ -101,7 +99,7 @@ export function Appointments() {
                   <h3 className="font-bold text-lg text-ink pr-12">{apt.title}</h3>
                   <span className={cn(
                     "px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wider",
-                    apt.status === 'Upcoming' ? "bg-teal/10 text-teal-dark" : "bg-gray-100 text-ink-muted"
+                    apt.status === 'Upcoming' ? "bg-sage/10 text-sage-dark" : "bg-gray-100 text-ink-muted"
                   )}>
                     {apt.status}
                   </span>
@@ -115,7 +113,7 @@ export function Appointments() {
                   </div>
                   <div className="flex items-center gap-2 text-sm text-ink-muted">
                     <CalendarIcon className="w-4 h-4" />
-                    <span>{apt.date} at {apt.time}</span>
+                    <span>{apt.apt_date || apt.date} at {apt.apt_time || apt.time}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-ink-muted">
                     <MapPin className="w-4 h-4" />
@@ -138,7 +136,7 @@ export function Appointments() {
                   </button>
                   <button 
                     onClick={() => handleDelete(apt.id)}
-                    className="p-2 text-ink-muted hover:text-coral hover:bg-coral/5 rounded-lg transition-colors flex items-center gap-1 text-sm font-medium"
+                    className="p-2 text-ink-muted hover:text-forest hover:bg-forest/5 rounded-lg transition-colors flex items-center gap-1 text-sm font-medium"
                   >
                     <Trash2 className="w-4 h-4" /> Delete
                   </button>
@@ -159,7 +157,7 @@ export function Appointments() {
         {/* FAB for Mobile */}
         <button 
           onClick={handleOpenNew}
-          className="sm:hidden fixed bottom-20 right-6 w-14 h-14 bg-coral text-white rounded-full shadow-coral flex items-center justify-center hover:bg-coral-dark transition-colors z-40"
+          className="sm:hidden fixed bottom-20 right-6 w-14 h-14 bg-forest text-white rounded-full shadow-forest flex items-center justify-center hover:bg-forest-dark transition-colors z-40"
         >
           <Plus className="w-6 h-6" />
         </button>

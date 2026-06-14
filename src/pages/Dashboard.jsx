@@ -28,7 +28,7 @@ export function Dashboard() {
   const upcomingAppointment = appointments.find(a => a.status === 'Upcoming');
 
   return (
-    <PageWrapper className="min-h-screen bg-cream pb-24 md:pb-8 pt-6 md:pt-10">
+    <PageWrapper className="min-h-screen bg-snow pb-24 md:pb-8 pt-6 md:pt-10">
       <div className="max-w-5xl mx-auto px-6 space-y-10">
         {/* Header */}
         <header>
@@ -40,16 +40,16 @@ export function Dashboard() {
 
         {/* Stats Row */}
         <div className="grid grid-cols-3 gap-4">
-          <StatCard icon={Bookmark} value={favorites.length} label="Saved" color="coral" />
-          <StatCard icon={CalendarIcon} value={appointments.length} label="Appts" color="teal" />
-          <StatCard icon={Activity} value={12} label="Searches" color="yellow" />
+          <StatCard icon={Bookmark} value={favorites.length} label="Saved" color="forest" />
+          <StatCard icon={CalendarIcon} value={appointments.length} label="Appts" color="sage" />
+          <StatCard icon={Activity} value={12} label="Searches" color="amber" />
         </div>
 
         {/* Quick Search */}
         <section>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-ink">Quick Search</h2>
-            <Link to="/search" className="text-sm font-medium text-coral hover:text-coral-dark flex items-center gap-1">
+            <Link to="/search" className="text-sm font-medium text-forest hover:text-forest-dark flex items-center gap-1">
               View all <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -82,7 +82,7 @@ export function Dashboard() {
         <section>
           <h2 className="text-xl font-bold text-ink mb-4">Next Appointment</h2>
           {upcomingAppointment ? (
-            <div className="bg-white rounded-2xl p-6 shadow-sm border-l-4 border-coral flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="bg-white rounded-2xl p-6 shadow-sm border-l-4 border-forest flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
                 <h3 className="font-bold text-lg text-ink">{upcomingAppointment.title}</h3>
                 <p className="text-ink-muted">{upcomingAppointment.doctor}</p>
@@ -118,9 +118,9 @@ export function Dashboard() {
 
 function StatCard({ icon: Icon, value, label, color }) {
   const colorMap = {
-    coral: 'bg-coral/10 text-coral',
-    teal: 'bg-teal/10 text-teal-dark',
-    yellow: 'bg-yellow/20 text-yellow-dark'
+    forest: 'bg-forest/10 text-forest',
+    sage: 'bg-sage/10 text-sage-dark',
+    amber: 'bg-amber/20 text-amber-dark'
   };
 
   return (

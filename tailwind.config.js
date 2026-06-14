@@ -7,11 +7,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        coral:  { DEFAULT: '#FF6B6B', light: '#FF8E8E', dark: '#E55555' },
-        teal:   { DEFAULT: '#4ECDC4', light: '#72D9D2', dark: '#3BADA5' },
-        yellow: { DEFAULT: '#FFD93D', light: '#FFE472', dark: '#E5C22A' },
-        cream:  { DEFAULT: '#FFFAF5', dark: '#FFF0E0' },
-        ink:    { DEFAULT: '#2D3748', muted: '#718096' },
+        forest:  { DEFAULT: '#2D6A4F', light: '#52B788', dark: '#1B4332' },
+        sage:    { DEFAULT: '#95D5B2', light: '#B7E4C7', dark: '#74C69D' },
+        amber:   { DEFAULT: '#F4A261', light: '#F9C784', dark: '#E76F51' },
+        snow:    { DEFAULT: '#FAFAF8', dark: '#F0F0EC' },
+        ink:     { DEFAULT: '#1A2E2A', muted: '#4A6572', subtle: '#8FA3A0' },
       },
       borderRadius: {
         'xl': '1rem',
@@ -21,7 +21,7 @@ export default {
       boxShadow: {
         'card': '0 4px 20px rgba(0,0,0,0.06)',
         'card-hover': '0 8px 30px rgba(0,0,0,0.12)',
-        'coral': '0 4px 20px rgba(255,107,107,0.3)',
+        'forest': '0 4px 20px rgba(45,106,79,0.3)',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

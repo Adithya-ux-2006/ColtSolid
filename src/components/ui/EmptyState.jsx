@@ -5,8 +5,8 @@ export function EmptyState({ icon: Icon, title, description, ctaLabel, ctaHref, 
   return (
     <div className={cn("flex flex-col items-center justify-center text-center p-8", className)}>
       {Icon && (
-        <div className="w-16 h-16 bg-cream-dark rounded-full flex items-center justify-center mb-4">
-          <Icon className="w-8 h-8 text-coral" />
+        <div className="w-16 h-16 bg-snow-dark rounded-full flex items-center justify-center mb-4">
+          <Icon className="w-8 h-8 text-forest" />
         </div>
       )}
       <h3 className="text-xl font-bold text-ink mb-2">{title}</h3>
@@ -15,7 +15,7 @@ export function EmptyState({ icon: Icon, title, description, ctaLabel, ctaHref, 
       {ctaLabel && ctaHref && (
         <Link 
           to={ctaHref}
-          className="px-6 py-2.5 bg-coral text-white rounded-full font-medium hover:bg-coral-dark transition-colors shadow-coral"
+          className="px-6 py-2.5 bg-forest text-white rounded-full font-medium hover:bg-forest-dark transition-colors shadow-forest"
         >
           {ctaLabel}
         </Link>
