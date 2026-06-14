@@ -159,7 +159,7 @@ export function Profile() {
           {expandedSection === 'about' && (
             <div className="p-5 pt-0 text-sm text-ink-muted leading-relaxed border-t border-gray-50">
               ClotSolid is a student-focused health platform designed to provide evidence-backed remedies for common ailments. 
-              Built as a demo application, it relies on local storage for persistence and contains mock data. 
+              Your profile, favorites, and appointments are synced through Supabase. 
               Always consult a certified medical professional for serious health concerns.
             </div>
           )}

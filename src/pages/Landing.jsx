@@ -2,9 +2,11 @@ import { Link } from 'react-router-dom';
 import { ShieldCheck, Stethoscope, GraduationCap } from 'lucide-react';
 import { SymptomChip } from '../components/ui';
 import { PageWrapper } from '../components/layout';
-import { SYMPTOMS } from '../data/symptoms';
+import { useCatalogStore } from '../store/catalogStore';
 
 export function Landing() {
+  const symptoms = useCatalogStore((state) => state.symptoms);
+
   return (
     <PageWrapper className="min-h-screen bg-snow flex flex-col">
       {/* Hero Section */}
@@ -46,7 +48,7 @@ export function Landing() {
         <div className="max-w-6xl mx-auto px-6">
           <p className="text-sm font-semibold text-ink-muted uppercase tracking-wider mb-4">Common Symptoms</p>
           <div className="flex overflow-x-auto gap-4 pb-4 no-scrollbar -mx-6 px-6 snap-x">
-            {SYMPTOMS.map(symptom => (
+            {symptoms.map(symptom => (
               <Link key={symptom.id} to="/login" className="snap-start">
                 <SymptomChip symptom={symptom} isSelected={false} />
               </Link>

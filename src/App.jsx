@@ -1,7 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { Navbar, BottomNav } from './components/layout';
 import { useAuthStore } from './store/authStore';
+import { useFavoritesStore } from './store/favoritesStore';
+import { useAppointmentStore } from './store/appointmentStore';
+import { useCatalogStore } from './store/catalogStore';
 
 // Pages
 import { Landing } from './pages/Landing';
@@ -16,12 +20,17 @@ import { Appointments } from './pages/Appointments';
 import { Profile } from './pages/Profile';
 
 function ProtectedRoute({ children }) {
-  const isAuthenticated = useAuthStore(state => state.isAuthenticated);
-  
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isInitialized = useAuthStore((state) => state.isInitialized);
+
+  if (!isInitialized) {
+    return null;
+  }
+
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
-  
+
   return children;
 }
 
@@ -53,6 +62,44 @@ function AnimatedRoutes() {
 }
 
 function App() {
+  const initialize = useAuthStore((state) => state.initialize);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isInitialized = useAuthStore((state) => state.isInitialized);
+  const fetchFavorites = useFavoritesStore((state) => state.fetchFavorites);
+  const fetchAppointments = useAppointmentStore((state) => state.fetchAppointments);
+  const clearAppointments = useAppointmentStore((state) => state.clear);
+  const fetchCatalog = useCatalogStore((state) => state.fetchCatalog);
+  const clearFavorites = useFavoritesStore((state) => state.clear);
+  const [bootstrapped, setBootstrapped] = useState(false);
+
+  useEffect(() => {
+    let dispose = () => {};
+
+    initialize().then((cleanup) => {
+      dispose = cleanup || (() => {});
+      setBootstrapped(true);
+    });
+
+    fetchCatalog();
+
+    return () => dispose();
+  }, [fetchCatalog, initialize]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      clearFavorites();
+      clearAppointments();
+      return;
+    }
+
+    fetchFavorites();
+    fetchAppointments();
+  }, [clearAppointments, clearFavorites, fetchAppointments, fetchFavorites, isAuthenticated]);
+
+  if (!bootstrapped && !isInitialized) {
+    return null;
+  }
+
   return (
     <BrowserRouter>
       <div className="flex flex-col min-h-screen">

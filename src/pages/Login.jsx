@@ -7,22 +7,26 @@ import { useAuthStore } from '../store/authStore';
 export function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const login = useAuthStore(state => state.login);
+  const isLoading = useAuthStore(state => state.isLoading);
   const navigate = useNavigate();
 
   const isFormValid = email.trim() !== '' && password.trim() !== '';
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isFormValid) return;
-    
-    setIsLoading(true);
-    setTimeout(() => {
-      login({ email });
-      setIsLoading(false);
+
+    setErrorMessage('');
+    const result = await login({ email, password });
+
+    if (result.success) {
       navigate('/dashboard');
-    }, 800);
+      return;
+    }
+
+    setErrorMessage(result.error?.message || 'Unable to sign in.');
   };
 
   return (
@@ -69,10 +73,13 @@ export function Login() {
           >
             {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sign In'}
           </button>
+
+          {errorMessage ? (
+            <p className="text-sm text-red-600">{errorMessage}</p>
+          ) : null}
         </form>
 
         <div className="mt-8 text-center text-sm">
-          <p className="text-ink-muted mb-2">Demo: use any credentials</p>
           <p className="text-ink">
             Don't have an account?{' '}
             <Link to="/register" className="text-forest font-semibold hover:underline">

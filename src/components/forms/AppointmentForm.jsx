@@ -2,8 +2,16 @@ import { useState, useEffect } from 'react';
 import { cn } from '../../utils/cn';
 
 export function AppointmentForm({ initialData, onSubmit, onCancel }) {
+  const normalizedInitialData = initialData
+    ? {
+        ...initialData,
+        date: initialData.date || initialData.apt_date || '',
+        time: initialData.time || initialData.apt_time || '',
+      }
+    : null;
+
   const [formData, setFormData] = useState(
-    initialData || {
+    normalizedInitialData || {
       title: '',
       doctor: '',
       date: '',
@@ -150,7 +158,7 @@ export function AppointmentForm({ initialData, onSubmit, onCancel }) {
           disabled={!isFormValid}
           className="flex-1 py-2.5 rounded-xl font-medium bg-forest text-white hover:bg-forest-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {initialData ? 'Update' : 'Schedule'}
+          {normalizedInitialData ? 'Update' : 'Schedule'}
         </button>
       </div>
     </form>

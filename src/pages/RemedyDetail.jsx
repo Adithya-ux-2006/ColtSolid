@@ -4,18 +4,25 @@ import { ArrowLeft, Heart, Share, AlertTriangle, ExternalLink, Calendar as Calen
 import { PageWrapper } from '../components/layout';
 import { CategoryBadge, RatingStars } from '../components/ui';
 import { useFavoritesStore } from '../store/favoritesStore';
-import { REMEDIES } from '../data/remedies';
+import { useCatalogStore } from '../store/catalogStore';
 import { cn } from '../utils/cn';
 
 export function RemedyDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toggleFavorite, isFavorite } = useFavoritesStore();
+  const remedies = useCatalogStore((state) => state.remedies);
+  const isCatalogLoading = useCatalogStore((state) => state.isLoading);
+  const hasLoaded = useCatalogStore((state) => state.hasLoaded);
   
   const [activeTab, setActiveTab] = useState('Overview');
   const [showToast, setShowToast] = useState(false);
 
-  const remedy = REMEDIES.find(r => r.id === id);
+  const remedy = remedies.find(r => r.id === id);
+  if (!hasLoaded && isCatalogLoading) {
+    return <PageWrapper className="min-h-screen bg-snow p-8 text-center">Loading remedy...</PageWrapper>;
+  }
+
   if (!remedy) return <div className="p-8 text-center">Remedy not found</div>;
 
   const favorite = isFavorite(remedy.id);
@@ -113,7 +120,7 @@ export function RemedyDetail() {
         {activeTab === 'Research' && (
           <div className="space-y-4 animate-fade-in">
             <p className="text-ink-muted mb-4 font-medium">Clinical Evidence</p>
-            {remedy.researchPapers ? (
+            {remedy.researchPapers?.length ? (
               remedy.researchPapers.map((paper, idx) => (
                 <a 
                   key={idx} 
@@ -134,7 +141,7 @@ export function RemedyDetail() {
                   </div>
                 </a>
               ))
-            ) : (
+            ) : remedy.researchLinks?.length ? (
               remedy.researchLinks.map((link, idx) => (
                 <a 
                   key={idx} 
@@ -147,6 +154,10 @@ export function RemedyDetail() {
                   <ExternalLink className="w-4 h-4 text-ink-muted group-hover:text-forest" />
                 </a>
               ))
+            ) : (
+              <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-50 text-sm text-ink-muted">
+                Research links are not available for this remedy yet.
+              </div>
             )}
           </div>
         )}

@@ -12,8 +12,9 @@ export function Register() {
     year: '',
     password: ''
   });
-  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const register = useAuthStore(state => state.register);
+  const isLoading = useAuthStore(state => state.isLoading);
   const navigate = useNavigate();
 
   const isFormValid = Object.values(formData).every(val => val.trim() !== '');
@@ -22,21 +23,25 @@ export function Register() {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isFormValid) return;
-    
-    setIsLoading(true);
-    setTimeout(() => {
-      register({
-        name: formData.name,
-        email: formData.email,
-        university: formData.university,
-        year: formData.year
-      });
-      setIsLoading(false);
+
+    setErrorMessage('');
+    const result = await register({
+      name: formData.name,
+      email: formData.email,
+      university: formData.university,
+      year: formData.year,
+      password: formData.password,
+    });
+
+    if (result.success) {
       navigate('/dashboard');
-    }, 800);
+      return;
+    }
+
+    setErrorMessage(result.error?.message || 'Unable to create account.');
   };
 
   return (
@@ -129,10 +134,13 @@ export function Register() {
           >
             {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Register'}
           </button>
+
+          {errorMessage ? (
+            <p className="text-sm text-red-600">{errorMessage}</p>
+          ) : null}
         </form>
 
         <div className="mt-8 text-center text-sm">
-          <p className="text-ink-muted mb-2">Demo: use any credentials</p>
           <p className="text-ink">
             Already have an account?{' '}
             <Link to="/login" className="text-forest font-semibold hover:underline">

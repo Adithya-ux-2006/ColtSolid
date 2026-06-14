@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Calendar as CalendarIcon, ArrowRight, Activity, Bookmark, Search as SearchIcon } from 'lucide-react';
+import { Calendar as CalendarIcon, ArrowRight, Activity, Bookmark } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { SymptomChip, RemedyCard, EmptyState } from '../components/ui';
 import { useAuthStore } from '../store/authStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useAppointmentStore } from '../store/appointmentStore';
-import { SYMPTOMS } from '../data/symptoms';
-import { REMEDIES } from '../data/remedies';
+import { useCatalogStore } from '../store/catalogStore';
 
 export function Dashboard() {
   const { user } = useAuthStore();
   const { favorites } = useFavoritesStore();
   const { appointments } = useAppointmentStore();
+  const symptoms = useCatalogStore((state) => state.symptoms);
+  const remedies = useCatalogStore((state) => state.remedies);
   const navigate = useNavigate();
 
   const [greeting, setGreeting] = useState('');
@@ -24,7 +25,7 @@ export function Dashboard() {
     else setGreeting('Good evening');
   }, []);
 
-  const featuredRemedies = REMEDIES.filter(r => r.isFeatured).slice(0, 4);
+  const featuredRemedies = remedies.filter(r => r.isFeatured).slice(0, 4);
   const upcomingAppointment = appointments.find(a => a.status === 'Upcoming');
 
   return (
@@ -54,7 +55,7 @@ export function Dashboard() {
             </Link>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {SYMPTOMS.map(symptom => (
+            {symptoms.map(symptom => (
               <SymptomChip 
                 key={symptom.id} 
                 symptom={symptom} 
@@ -88,9 +89,9 @@ export function Dashboard() {
                 <p className="text-ink-muted">{upcomingAppointment.doctor}</p>
                 <div className="flex items-center gap-4 mt-2 text-sm text-ink-muted font-medium">
                   <span className="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded-md">
-                    <CalendarIcon className="w-4 h-4" /> {upcomingAppointment.date}
+                    <CalendarIcon className="w-4 h-4" /> {upcomingAppointment.apt_date || upcomingAppointment.date}
                   </span>
-                  <span>{upcomingAppointment.time}</span>
+                  <span>{upcomingAppointment.apt_time || upcomingAppointment.time}</span>
                 </div>
               </div>
               <Link 

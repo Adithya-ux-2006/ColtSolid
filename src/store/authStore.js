@@ -1,28 +1,68 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 
+const buildUser = async (session) => {
+  if (!session?.user) return null;
+
+  const { data: profile, error } = await supabase
+    .from('user_profiles')
+    .select('*')
+    .eq('id', session.user.id)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  return { ...session.user, ...profile };
+};
+
 export const useAuthStore = create((set, get) => ({
   user: null,
   isAuthenticated: false,
-  isLoading: false,
+  isLoading: true,
+  isInitialized: false,
+  authSubscription: null,
 
   checkSession: async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        const { data: profile } = await supabase
-          .from('user_profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
-          
-        set({ user: { ...session.user, ...profile }, isAuthenticated: true });
+        const user = await buildUser(session);
+        set({ user, isAuthenticated: true, isLoading: false, isInitialized: true });
       } else {
-        set({ user: null, isAuthenticated: false });
+        set({ user: null, isAuthenticated: false, isLoading: false, isInitialized: true });
       }
     } catch (error) {
       console.error('Error checking session:', error);
+      set({ user: null, isAuthenticated: false, isLoading: false, isInitialized: true });
     }
+  },
+
+  initialize: async () => {
+    if (get().authSubscription) return () => {};
+
+    await get().checkSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      try {
+        if (!session) {
+          set({ user: null, isAuthenticated: false, isLoading: false, isInitialized: true });
+          return;
+        }
+
+        const user = await buildUser(session);
+        set({ user, isAuthenticated: true, isLoading: false, isInitialized: true });
+      } catch (error) {
+        console.error('Auth state change error:', error);
+        set({ user: null, isAuthenticated: false, isLoading: false, isInitialized: true });
+      }
+    });
+
+    set({ authSubscription: subscription });
+
+    return () => {
+      subscription.unsubscribe();
+      set({ authSubscription: null });
+    };
   },
 
   login: async ({ email, password }) => {
@@ -30,14 +70,9 @@ export const useAuthStore = create((set, get) => ({
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      
-      const { data: profile } = await supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('id', data.user.id)
-        .single();
-        
-      set({ user: { ...data.user, ...profile }, isAuthenticated: true });
+
+      const user = await buildUser({ user: data.user });
+      set({ user, isAuthenticated: true });
       return { success: true };
     } catch (error) {
       console.error('Login error:', error);
@@ -50,14 +85,13 @@ export const useAuthStore = create((set, get) => ({
   register: async (details) => {
     set({ isLoading: true });
     try {
-      // 1. Sign up user
       const { data, error } = await supabase.auth.signUp({
         email: details.email,
         password: details.password
       });
       if (error) throw error;
+      if (!data.user) throw new Error('User signup did not return a user record.');
 
-      // 2. Create profile
       const avatar = details.name.split(' ').map(n => n[0]).join('').toUpperCase() || 'U';
       const { error: profileError } = await supabase
         .from('user_profiles')
@@ -73,7 +107,9 @@ export const useAuthStore = create((set, get) => ({
 
       set({ 
         user: { ...data.user, name: details.name, university: details.university, year: details.year, avatar },
-        isAuthenticated: true 
+        isAuthenticated: true,
+        isLoading: false,
+        isInitialized: true
       });
       return { success: true };
     } catch (error) {

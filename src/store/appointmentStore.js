@@ -6,6 +6,8 @@ export const useAppointmentStore = create((set, get) => ({
   appointments: [],
   isLoading: false,
 
+  clear: () => set({ appointments: [] }),
+
   fetchAppointments: async () => {
     const user = useAuthStore.getState().user;
     if (!user) return;

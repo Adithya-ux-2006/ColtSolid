@@ -1,18 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search as SearchIcon, Frown } from 'lucide-react';
+import { Frown } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { SearchBar } from '../components/forms';
 import { SymptomChip, LoadingSkeleton, EmptyState } from '../components/ui';
 import { useSearch } from '../hooks/useSearch';
-import { SYMPTOMS } from '../data/symptoms';
+import { useCatalogStore } from '../store/catalogStore';
 
 export function SymptomSearch() {
   const { searchTerm, setSearchTerm, debouncedTerm } = useSearch('', 300);
   const [isSearching, setIsSearching] = useState(false);
+  const symptoms = useCatalogStore((state) => state.symptoms);
+  const isCatalogLoading = useCatalogStore((state) => state.isLoading);
   const navigate = useNavigate();
 
-  const filteredSymptoms = SYMPTOMS.filter(s => 
+  const filteredSymptoms = symptoms.filter(s => 
     s.label.toLowerCase().includes(debouncedTerm.toLowerCase())
   );
 
@@ -54,7 +56,7 @@ export function SymptomSearch() {
           {searchTerm ? 'Search Results' : 'Browse by Symptom'}
         </h2>
 
-        {isSearching ? (
+        {isSearching || isCatalogLoading ? (
           <div className="grid grid-cols-2 gap-4">
             <LoadingSkeleton count={4} className="h-20" />
           </div>

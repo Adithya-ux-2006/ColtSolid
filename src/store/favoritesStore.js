@@ -2,6 +2,22 @@ import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { useAuthStore } from './authStore';
 
+const mapRemedy = (remedy) => ({
+  id: remedy.id,
+  name: remedy.name,
+  category: remedy.category,
+  rating: remedy.rating,
+  reviewCount: remedy.review_count,
+  shortDescription: remedy.short_description,
+  longDescription: remedy.long_description,
+  howToUse: remedy.how_to_use,
+  warnings: remedy.warnings,
+  timeToEffect: remedy.time_to_effect,
+  difficulty: remedy.difficulty,
+  cost: remedy.cost,
+  isFeatured: remedy.is_featured,
+});
+
 export const useFavoritesStore = create((set, get) => ({
   favorites: [],
   isLoading: false,
@@ -20,8 +36,7 @@ export const useFavoritesStore = create((set, get) => ({
         
       if (error) throw error;
       
-      // Extract the remedy objects
-      const remedies = data.map(f => f.remedies);
+      const remedies = data.map((favorite) => mapRemedy(favorite.remedies));
       set({ favorites: remedies });
     } catch (error) {
       console.error('Error fetching favorites:', error);
@@ -78,6 +93,8 @@ export const useFavoritesStore = create((set, get) => ({
   isFavorite: (id) => {
     return get().favorites.some(f => f.id === id);
   },
+
+  clear: () => set({ favorites: [] }),
 
   toggleFavorite: (remedy) => {
     if (get().isFavorite(remedy.id)) {

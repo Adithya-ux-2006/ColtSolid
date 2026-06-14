@@ -3,8 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, SlidersHorizontal, AlertCircle } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { RemedyCard, LoadingSkeleton, EmptyState } from '../components/ui';
-import { SYMPTOMS } from '../data/symptoms';
-import { REMEDIES } from '../data/remedies';
+import { useCatalogStore } from '../store/catalogStore';
 import { cn } from '../utils/cn';
 
 export function Results() {
@@ -16,19 +15,21 @@ export function Results() {
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState('All');
   const [sort, setSort] = useState('Best Rated');
+  const symptoms = useCatalogStore((state) => state.symptoms);
+  const remedies = useCatalogStore((state) => state.remedies);
+  const isCatalogLoading = useCatalogStore((state) => state.isLoading);
+  const hasLoaded = useCatalogStore((state) => state.hasLoaded);
 
-  const symptom = SYMPTOMS.find(s => s.id === symptomId);
+  const symptom = symptoms.find(s => s.id === symptomId);
 
   useEffect(() => {
-    // Fake loading delay
-    const timer = setTimeout(() => setIsLoading(false), 800);
-    return () => clearTimeout(timer);
-  }, [symptomId]);
+    setIsLoading(isCatalogLoading);
+  }, [isCatalogLoading]);
 
   const filteredAndSortedRemedies = useMemo(() => {
     if (!symptomId) return [];
     
-    let result = REMEDIES.filter(r => r.symptoms.includes(symptomId));
+    let result = remedies.filter(r => r.symptoms.includes(symptomId));
     
     if (filter !== 'All') {
       result = result.filter(r => r.category === filter);
@@ -45,7 +46,17 @@ export function Results() {
     });
 
     return result;
-  }, [symptomId, filter, sort]);
+  }, [symptomId, filter, remedies, sort]);
+
+  if (!hasLoaded && isLoading) {
+    return (
+      <PageWrapper className="min-h-screen bg-snow pb-24 md:pb-8 pt-8 px-6">
+        <div className="max-w-5xl mx-auto">
+          <LoadingSkeleton count={6} />
+        </div>
+      </PageWrapper>
+    );
+  }
 
   if (!symptom) {
     return (
@@ -133,8 +144,8 @@ export function Results() {
             icon={AlertCircle}
             title="No remedies match"
             description={`We couldn't find any ${filter} remedies for ${symptom.label}.`}
-            ctaLabel="Clear Filters"
-            ctaHref="#" // Use an inline handler instead, handled in onClick below, but the component expects href. We can modify or just reset state.
+            ctaLabel="Back to Search"
+            ctaHref="/search"
           />
         )}
         
