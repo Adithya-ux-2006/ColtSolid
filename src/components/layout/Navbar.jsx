@@ -6,7 +6,7 @@ export function Navbar() {
   const location = useLocation();
 
   // Don't show navbar on landing page
-  if (location.pathname === '/') return null;
+  if (location.pathname === '/' || location.pathname === '/onboarding') return null;
 
   return (
     <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-gray-100 hidden md:block">

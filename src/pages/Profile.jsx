@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, ChevronDown, Check, GraduationCap, Leaf, ShieldAlert } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
+import { FAQAccordion } from '../components/ui';
 import { useAuthStore } from '../store/authStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useAppointmentStore } from '../store/appointmentStore';
 import { getInitials } from '../utils/mappers';
+import { FAQ_ITEMS } from '../constants/onboarding';
 
 export function Profile() {
   const { user, logout, updateUser } = useAuthStore();
@@ -175,9 +177,11 @@ export function Profile() {
           </button>
           {expandedSection === 'about' && (
             <div className="p-5 pt-0 text-sm text-ink-muted leading-relaxed border-t border-gray-50">
-              ClotSolid is a student-focused health platform designed to provide evidence-backed remedies for common ailments. 
-              Your profile, favorites, and appointments are synced through Supabase. 
-              Always consult a certified medical professional for serious health concerns.
+              <p className="mb-4">
+                ClotSolid is a student-focused health platform designed to provide evidence-backed remedies for common ailments.
+                Your profile, favorites, and appointments are synced through Supabase. Always consult a certified medical professional for serious health concerns.
+              </p>
+              <FAQAccordion items={FAQ_ITEMS.slice(0, 3)} />
             </div>
           )}
         </div>

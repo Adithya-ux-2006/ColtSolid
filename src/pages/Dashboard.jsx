@@ -7,6 +7,15 @@ import { useAuthStore } from '../store/authStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useAppointmentStore } from '../store/appointmentStore';
 import { useCatalogStore } from '../store/catalogStore';
+import { CONDITIONS } from '../constants/onboarding';
+
+const CONDITION_TO_SYMPTOM = {
+  headache: 'headache',
+  cold: 'cold',
+  anxiety: 'anxiety',
+  insomnia: 'insomnia',
+  nausea: 'nausea',
+};
 
 export function Dashboard() {
   const { user } = useAuthStore();
@@ -27,6 +36,11 @@ export function Dashboard() {
 
   const featuredRemedies = remedies.filter(r => r.isFeatured).slice(0, 4);
   const upcomingAppointment = appointments.find(a => a.status === 'Upcoming');
+  const selectedConditionChips = CONDITIONS.filter((condition) => user?.common_conditions?.includes(condition.value));
+
+  const greetingSubtitle = user?.gender
+    ? 'We tailored today\'s remedy flow around the profile details you shared.'
+    : 'Ready to feel better today?';
 
   return (
     <PageWrapper className="min-h-screen bg-snow pb-24 md:pb-8 pt-6 md:pt-10">
@@ -36,7 +50,7 @@ export function Dashboard() {
           <h1 className="text-3xl font-extrabold text-ink mb-2">
             {greeting}, {user?.name?.split(' ')[0] || 'there'} <span className="inline-block animate-wave">👋</span>
           </h1>
-          <p className="text-ink-muted">Ready to feel better today?</p>
+          <p className="text-ink-muted">{greetingSubtitle}</p>
         </header>
 
         {/* Stats Row */}
@@ -54,6 +68,29 @@ export function Dashboard() {
               View all <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
+
+          {selectedConditionChips.length > 0 ? (
+            <div className="mb-5">
+              <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-ink-muted">Your Conditions</p>
+              <div className="flex flex-wrap gap-3">
+                {selectedConditionChips.map((condition) => (
+                  <button
+                    key={condition.value}
+                    type="button"
+                    onClick={() => {
+                      const symptomId = CONDITION_TO_SYMPTOM[condition.value];
+                      navigate(symptomId ? `/results?symptom=${symptomId}` : '/search');
+                    }}
+                    className="flex items-center gap-2 rounded-full border border-forest bg-forest px-4 py-2 text-sm font-semibold text-white shadow-forest transition-transform hover:scale-[1.02]"
+                  >
+                    <span>{condition.emoji}</span>
+                    <span>{condition.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {symptoms.map(symptom => (
               <SymptomChip 

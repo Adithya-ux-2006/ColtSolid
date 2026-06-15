@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { useAuthStore } from '../store/authStore';
+import { cn } from '../utils/cn';
+import { GENDER_OPTIONS } from '../constants/onboarding';
 
 export function Register() {
   const [formData, setFormData] = useState({
@@ -10,6 +12,7 @@ export function Register() {
     email: '',
     university: '',
     year: '',
+    gender: '',
     password: ''
   });
   const [errorMessage, setErrorMessage] = useState('');
@@ -18,7 +21,8 @@ export function Register() {
   const isLoading = useAuthStore(state => state.isLoading);
   const navigate = useNavigate();
 
-  const isFormValid = Object.values(formData).every(val => val.trim() !== '');
+  const isFormValid = [formData.name, formData.email, formData.university, formData.year, formData.password]
+    .every((value) => value.trim() !== '');
 
   const handleChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -35,6 +39,7 @@ export function Register() {
       email: formData.email,
       university: formData.university,
       year: formData.year,
+      gender: formData.gender,
       password: formData.password,
     });
 
@@ -44,7 +49,7 @@ export function Register() {
         return;
       }
 
-      navigate('/dashboard');
+      navigate('/onboarding');
       return;
     }
 
@@ -118,6 +123,36 @@ export function Register() {
                 <option value="Senior">Senior</option>
                 <option value="Graduate">Graduate</option>
               </select>
+            </div>
+          </div>
+
+          <div>
+            <div className="mb-2">
+              <p className="block text-sm font-medium text-ink">How do you identify?</p>
+              <p className="mt-1 text-sm text-ink-muted">
+                Helps us personalize remedy recommendations and filter contraindications.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {GENDER_OPTIONS.map((option) => {
+                const isSelected = formData.gender === option.value;
+
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setFormData((prev) => ({ ...prev, gender: option.value }))}
+                    className={cn(
+                      'rounded-full border px-4 py-2 text-sm font-medium transition-all',
+                      isSelected
+                        ? 'scale-105 border-forest bg-forest text-white'
+                        : 'border-ink bg-white text-ink hover:border-forest hover:text-forest'
+                    )}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 

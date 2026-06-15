@@ -4,11 +4,14 @@ import { CategoryBadge } from './CategoryBadge';
 import { RatingStars } from './RatingStars';
 import { cn } from '../../utils/cn';
 import { useFavoritesStore } from '../../store/favoritesStore';
+import { useAuthStore } from '../../store/authStore';
 import { Link } from 'react-router-dom';
 
 export function RemedyCard({ remedy, className }) {
   const { toggleFavorite, isFavorite } = useFavoritesStore();
+  const userAllergies = useAuthStore((state) => state.user?.known_allergies ?? []);
   const favorite = isFavorite(remedy.id);
+  const hasAllergyWarning = remedy.allergen_tags?.some((tag) => userAllergies.includes(tag));
 
   return (
     <motion.div
@@ -17,20 +20,28 @@ export function RemedyCard({ remedy, className }) {
         "bg-white rounded-2xl p-5 shadow-card hover:shadow-card-hover transition-shadow relative group flex flex-col h-full",
         className
       )}
-    >
-      <div className="flex justify-between items-start mb-3">
-        <CategoryBadge category={remedy.category} />
-        <motion.button
-          whileTap={{ scale: 0.9 }}
-          onClick={(e) => {
-            e.preventDefault();
-            toggleFavorite(remedy);
-          }}
-          className="text-ink-muted hover:text-forest transition-colors p-1 -mr-1 -mt-1"
-          aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
-        >
-          <Heart className={cn("w-5 h-5", favorite && "fill-forest text-forest")} />
-        </motion.button>
+      >
+        <div className="flex justify-between items-start mb-3">
+          <div className="space-y-2">
+            <CategoryBadge category={remedy.category} />
+            {hasAllergyWarning ? (
+              <div className="inline-flex items-center gap-1 rounded-full bg-amber/20 px-2.5 py-1 text-xs font-semibold text-amber-dark">
+                <span aria-hidden="true">⚠️</span>
+                <span>Check allergies</span>
+              </div>
+            ) : null}
+          </div>
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={(e) => {
+              e.preventDefault();
+              toggleFavorite(remedy);
+            }}
+            className="text-ink-muted hover:text-forest transition-colors p-1 -mr-1 -mt-1"
+            aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
+          >
+            <Heart className={cn("w-5 h-5", favorite && "fill-forest text-forest")} />
+          </motion.button>
       </div>
 
       <h3 className="font-bold text-lg text-ink mb-2 line-clamp-1">{remedy.name}</h3>

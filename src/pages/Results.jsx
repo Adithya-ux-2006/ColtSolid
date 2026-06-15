@@ -4,16 +4,25 @@ import { ArrowLeft, SlidersHorizontal, AlertCircle } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { RemedyCard, LoadingSkeleton, EmptyState } from '../components/ui';
 import { useCatalogStore } from '../store/catalogStore';
+import { useAuthStore } from '../store/authStore';
+import { mapTreatmentPrefsToFilters } from '../constants/onboarding';
 import { cn } from '../utils/cn';
+
+const FILTER_OPTIONS = ['All', 'Natural', 'TCM', 'Conventional', 'Lifestyle'];
 
 export function Results() {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const symptomId = queryParams.get('symptom');
+  const userTreatmentPrefs = useAuthStore((state) => state.user?.treatment_prefs ?? []);
+  const defaultFilters = useMemo(() => {
+    const mappedPrefs = mapTreatmentPrefsToFilters(userTreatmentPrefs);
+    return mappedPrefs.length > 0 ? mappedPrefs : ['All'];
+  }, [userTreatmentPrefs]);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [filter, setFilter] = useState('All');
+  const [filters, setFilters] = useState(defaultFilters);
   const [sort, setSort] = useState('Best Rated');
   const symptoms = useCatalogStore((state) => state.symptoms);
   const remedies = useCatalogStore((state) => state.remedies);
@@ -26,13 +35,18 @@ export function Results() {
     setIsLoading(isCatalogLoading);
   }, [isCatalogLoading]);
 
+  useEffect(() => {
+    setFilters(defaultFilters);
+  }, [defaultFilters, symptomId]);
+
   const filteredAndSortedRemedies = useMemo(() => {
     if (!symptomId) return [];
     
     let result = remedies.filter(r => r.symptoms.includes(symptomId));
+    const activeFilters = filters.includes('All') ? [] : filters;
     
-    if (filter !== 'All') {
-      result = result.filter(r => r.category === filter);
+    if (activeFilters.length > 0) {
+      result = result.filter(r => activeFilters.includes(r.category));
     }
 
     result.sort((a, b) => {
@@ -46,7 +60,7 @@ export function Results() {
     });
 
     return result;
-  }, [symptomId, filter, remedies, sort]);
+  }, [filters, remedies, sort, symptomId]);
 
   if (!hasLoaded && isLoading) {
     return (
@@ -72,7 +86,20 @@ export function Results() {
     );
   }
 
-  const filters = ['All', 'Natural', 'TCM', 'Conventional', 'Lifestyle'];
+  const toggleFilter = (value) => {
+    if (value === 'All') {
+      setFilters(['All']);
+      return;
+    }
+
+    setFilters((current) => {
+      const next = current.includes(value)
+        ? current.filter((item) => item !== value)
+        : [...current.filter((item) => item !== 'All'), value];
+
+      return next.length > 0 ? next : ['All'];
+    });
+  };
 
   return (
     <PageWrapper className="min-h-screen bg-snow pb-24 md:pb-8">
@@ -95,13 +122,13 @@ export function Results() {
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex overflow-x-auto no-scrollbar gap-2 pb-1 -mx-6 px-6 sm:mx-0 sm:px-0 sm:pb-0">
-              {filters.map(f => (
+              {FILTER_OPTIONS.map(f => (
                 <button
                   key={f}
-                  onClick={() => setFilter(f)}
+                  onClick={() => toggleFilter(f)}
                   className={cn(
                     "px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors",
-                    filter === f 
+                    filters.includes(f)
                       ? "bg-ink text-white" 
                       : "bg-gray-100 text-ink hover:bg-gray-200"
                   )}
@@ -143,17 +170,17 @@ export function Results() {
           <EmptyState 
             icon={AlertCircle}
             title="No remedies match"
-            description={`We couldn't find any ${filter} remedies for ${symptom.label}.`}
+            description={`We couldn't find any ${filters.join(', ')} remedies for ${symptom.label}.`}
             ctaLabel="Back to Search"
             ctaHref="/search"
           />
         )}
         
         {!isLoading && filteredAndSortedRemedies.length === 0 && (
-          <div className="text-center mt-[-20px]">
-             <button onClick={() => setFilter('All')} className="text-forest font-medium hover:underline">
+         <div className="text-center mt-[-20px]">
+             <button onClick={() => setFilters(['All'])} className="text-forest font-medium hover:underline">
                Clear Filters
-             </button>
+              </button>
           </div>
         )}
       </div>

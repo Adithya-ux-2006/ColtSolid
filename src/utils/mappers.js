@@ -23,6 +23,8 @@ export function mapRemedy(remedy) {
     longDescription: remedy.long_description ?? remedy.longDescription,
     howToUse: remedy.how_to_use ?? remedy.howToUse,
     warnings: remedy.warnings,
+    allergen_tags: remedy.allergen_tags ?? [],
+    contraindications: remedy.contraindications ?? [],
     timeToEffect: remedy.time_to_effect ?? remedy.timeToEffect,
     difficulty: remedy.difficulty,
     cost: remedy.cost,

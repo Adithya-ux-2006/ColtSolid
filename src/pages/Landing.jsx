@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import { ShieldCheck, Stethoscope, GraduationCap } from 'lucide-react';
-import { SymptomChip } from '../components/ui';
+import { SymptomChip, FAQAccordion } from '../components/ui';
 import { PageWrapper } from '../components/layout';
 import { useCatalogStore } from '../store/catalogStore';
+import { FAQ_ITEMS } from '../constants/onboarding';
 
 export function Landing() {
   const symptoms = useCatalogStore((state) => state.symptoms);
@@ -49,7 +50,7 @@ export function Landing() {
           <p className="text-sm font-semibold text-ink-muted uppercase tracking-wider mb-4">Common Symptoms</p>
           <div className="flex overflow-x-auto gap-4 pb-4 no-scrollbar -mx-6 px-6 snap-x">
             {symptoms.map(symptom => (
-              <Link key={symptom.id} to="/login" className="snap-start">
+              <Link key={symptom.id} to={`/search`} className="snap-start">
                 <SymptomChip symptom={symptom} isSelected={false} />
               </Link>
             ))}
@@ -76,6 +77,18 @@ export function Landing() {
               title="Built for Students" 
               description="Cost-effective, accessible, and fast-acting solutions designed for busy academic schedules."
             />
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white px-6 py-20">
+        <div className="mx-auto max-w-[720px] text-center">
+          <h2 className="text-3xl font-extrabold text-ink">Frequently Asked Questions</h2>
+          <p className="mt-3 text-lg text-ink-muted">
+            Everything you need to know before your first search.
+          </p>
+          <div className="mt-10 text-left">
+            <FAQAccordion items={FAQ_ITEMS} />
           </div>
         </div>
       </section>

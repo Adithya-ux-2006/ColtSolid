@@ -7,7 +7,7 @@ export function BottomNav() {
   const { isAuthenticated } = useAuthStore();
   const location = useLocation();
 
-  if (!isAuthenticated || location.pathname === '/') return null;
+  if (!isAuthenticated || location.pathname === '/' || location.pathname === '/onboarding') return null;
 
   const navItems = [
     { to: '/dashboard', icon: Home, label: 'Home' },

@@ -19,6 +19,8 @@ CREATE TABLE IF NOT EXISTS public.remedies (
     long_description TEXT NOT NULL,
     how_to_use TEXT NOT NULL,
     warnings TEXT NOT NULL,
+    allergen_tags TEXT[] DEFAULT '{}' NOT NULL,
+    contraindications TEXT[] DEFAULT '{}' NOT NULL,
     time_to_effect TEXT NOT NULL,
     difficulty TEXT NOT NULL,
     cost TEXT NOT NULL,
@@ -46,6 +48,11 @@ CREATE TABLE IF NOT EXISTS public.users (
     name TEXT NOT NULL,
     university TEXT,
     year TEXT,
+    gender TEXT,
+    common_conditions TEXT[] DEFAULT '{}' NOT NULL,
+    known_allergies TEXT[] DEFAULT '{}' NOT NULL,
+    treatment_prefs TEXT[] DEFAULT '{}' NOT NULL,
+    has_completed_onboarding BOOLEAN DEFAULT false,
     prefer_natural BOOLEAN DEFAULT false NOT NULL,
     avoid_medication BOOLEAN DEFAULT false NOT NULL,
     vegetarian_remedies BOOLEAN DEFAULT false NOT NULL,
@@ -109,17 +116,19 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-  INSERT INTO public.users (id, name, university, year)
+  INSERT INTO public.users (id, name, university, year, gender)
   VALUES (
     NEW.id,
     COALESCE(NEW.raw_user_meta_data ->> 'name', 'Student'),
     NEW.raw_user_meta_data ->> 'university',
-    NEW.raw_user_meta_data ->> 'year'
+    NEW.raw_user_meta_data ->> 'year',
+    COALESCE(NEW.raw_user_meta_data ->> 'gender', '')
   )
   ON CONFLICT (id) DO UPDATE SET
     name = EXCLUDED.name,
     university = EXCLUDED.university,
-    year = EXCLUDED.year;
+    year = EXCLUDED.year,
+    gender = EXCLUDED.gender;
 
   RETURN NEW;
 END;

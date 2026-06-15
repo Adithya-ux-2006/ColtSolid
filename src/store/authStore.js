@@ -20,6 +20,11 @@ const buildUser = async (session) => {
     name: profile?.name || metadata.name || '',
     university: profile?.university || metadata.university || '',
     year: profile?.year || metadata.year || '',
+    gender: profile?.gender || metadata.gender || '',
+    common_conditions: profile?.common_conditions ?? [],
+    known_allergies: profile?.known_allergies ?? [],
+    treatment_prefs: profile?.treatment_prefs ?? [],
+    has_completed_onboarding: profile?.has_completed_onboarding ?? false,
     preferNatural: profile?.prefer_natural ?? false,
     avoidMedication: profile?.avoid_medication ?? false,
     vegetarianRemedies: profile?.vegetarian_remedies ?? false,
@@ -107,12 +112,25 @@ export const useAuthStore = create((set, get) => ({
             name: details.name,
             university: details.university,
             year: details.year,
+            gender: details.gender || '',
             avatar,
           },
         },
       });
       if (error) throw error;
       if (!data.user) throw new Error('User signup did not return a user record.');
+
+      const { error: profileError } = await supabase
+        .from('users')
+        .update({
+          name: details.name,
+          university: details.university,
+          year: details.year,
+          gender: details.gender || '',
+        })
+        .eq('id', data.user.id);
+
+      if (profileError) throw profileError;
 
       if (data.session) {
         const user = await buildUser(data.session);
@@ -157,6 +175,7 @@ export const useAuthStore = create((set, get) => ({
         name: updates.name,
         university: updates.university,
         year: updates.year,
+        gender: updates.gender,
         prefer_natural: updates.preferNatural,
         avoid_medication: updates.avoidMedication,
         vegetarian_remedies: updates.vegetarianRemedies,
@@ -173,6 +192,41 @@ export const useAuthStore = create((set, get) => ({
       set((state) => ({ user: { ...state.user, ...updates } }));
     } catch (error) {
       console.error('Update profile error:', error);
+    }
+  },
+
+  saveOnboarding: async ({ commonConditions, knownAllergies, treatmentPrefs }) => {
+    const { user } = get();
+    if (!user) {
+      return { success: false, error: new Error('No authenticated user found.') };
+    }
+
+    try {
+      const updates = {
+        common_conditions: commonConditions,
+        known_allergies: knownAllergies,
+        treatment_prefs: treatmentPrefs,
+        has_completed_onboarding: true,
+      };
+
+      const { error } = await supabase
+        .from('users')
+        .update(updates)
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      set((state) => ({
+        user: {
+          ...state.user,
+          ...updates,
+        },
+      }));
+
+      return { success: true };
+    } catch (error) {
+      console.error('Save onboarding error:', error);
+      return { success: false, error };
     }
   }
 }));

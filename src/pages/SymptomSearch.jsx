@@ -3,16 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import { Frown } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { SearchBar } from '../components/forms';
-import { SymptomChip, LoadingSkeleton, EmptyState } from '../components/ui';
+import { SymptomChip, LoadingSkeleton, EmptyState, TrialGateModal } from '../components/ui';
 import { useSearch } from '../hooks/useSearch';
+import { useTrialGate } from '../hooks/useTrialGate';
 import { useCatalogStore } from '../store/catalogStore';
+import { useAuthStore } from '../store/authStore';
 
 export function SymptomSearch() {
   const { searchTerm, setSearchTerm, debouncedTerm } = useSearch('', 300);
   const [isSearching, setIsSearching] = useState(false);
   const symptoms = useCatalogStore((state) => state.symptoms);
   const isCatalogLoading = useCatalogStore((state) => state.isLoading);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const { searchCount, showGate, incrementSearch } = useTrialGate();
   const navigate = useNavigate();
+
+  const remainingSearches = Math.max(3 - searchCount, 0);
 
   const filteredSymptoms = symptoms.filter(s => 
     s.label.toLowerCase().includes(debouncedTerm.toLowerCase())
@@ -28,6 +34,8 @@ export function SymptomSearch() {
   }, [searchTerm, debouncedTerm]);
 
   const handleSelect = (symptomId) => {
+    const result = incrementSearch();
+    if (result.blocked) return;
     navigate(`/results?symptom=${symptomId}`);
   };
 
@@ -48,6 +56,9 @@ export function SymptomSearch() {
               placeholder="What are you feeling today? (e.g. headache)" 
             />
           </div>
+          {!isAuthenticated && (remainingSearches === 1 || remainingSearches === 2) ? (
+            <p className="mt-3 text-sm text-ink-subtle">{remainingSearches} free searches remaining</p>
+          ) : null}
         </div>
       </div>
 
@@ -79,6 +90,8 @@ export function SymptomSearch() {
           />
         )}
       </div>
+
+      <TrialGateModal isOpen={showGate} />
     </PageWrapper>
   );
 }
