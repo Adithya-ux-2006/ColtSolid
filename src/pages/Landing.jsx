@@ -29,7 +29,7 @@ export function Landing() {
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <Link 
-              to="/register" 
+              to="/search" 
               className="w-full sm:w-auto px-8 py-4 bg-forest text-white rounded-full font-bold text-lg hover:bg-forest-dark transition-all shadow-forest hover:shadow-lg transform hover:-translate-y-1"
             >
               Get Started

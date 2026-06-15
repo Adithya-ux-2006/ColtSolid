@@ -29,3 +29,9 @@ export function saveQuickRemedy(email, remedyId) {
 
   return nextValue;
 }
+
+export function clearQuickSaves() {
+  if (typeof window === 'undefined') return;
+
+  window.localStorage.removeItem(QUICK_SAVES_KEY);
+}

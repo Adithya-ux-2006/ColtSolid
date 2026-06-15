@@ -6,8 +6,7 @@ export function Navbar() {
   const user = useAuthStore((state) => state.user);
   const location = useLocation();
 
-  // Don't show navbar on landing page
-  if (location.pathname === '/' || location.pathname === '/onboarding') return null;
+  if (location.pathname === '/onboarding') return null;
 
   return (
     <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-gray-100 hidden md:block">
@@ -31,9 +30,10 @@ export function Navbar() {
           </div>
         ) : (
           <div className="flex items-center gap-4">
-            <Link to="/login" className="text-ink font-medium">Log In</Link>
+            <Link to="/search" className="text-ink-muted hover:text-ink font-medium">Search Remedies</Link>
+            <Link to="/login" className="rounded-full border border-gray-200 px-4 py-2 text-ink font-medium hover:bg-snow transition-colors">Log In</Link>
             <Link to="/register" className="px-4 py-2 rounded-full bg-forest text-white font-medium hover:bg-forest-dark transition-colors">
-              Get Started
+              Sign Up Free
             </Link>
           </div>
         )}

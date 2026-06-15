@@ -1,6 +1,21 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { getInitials } from '../utils/mappers';
+import { clearQuickSaves, getQuickSaves } from '../utils/quickSave';
+
+async function importQuickSavedFavorites(userId) {
+  const quickSaves = getQuickSaves();
+  const remedyIds = quickSaves?.remedyIds || [];
+
+  if (remedyIds.length === 0) return;
+
+  const rows = remedyIds.map((remedyId) => ({ user_id: userId, remedy_id: remedyId }));
+  const { error } = await supabase.from('favorites').upsert(rows, { onConflict: 'user_id,remedy_id' });
+
+  if (error) throw error;
+
+  clearQuickSaves();
+}
 
 const buildUser = async (session) => {
   if (!session?.user) return null;
@@ -134,6 +149,7 @@ export const useAuthStore = create((set, get) => ({
       if (profileError) throw profileError;
 
       if (data.session) {
+        await importQuickSavedFavorites(data.user.id);
         const user = await buildUser(data.session);
         set({
           user,
@@ -141,6 +157,9 @@ export const useAuthStore = create((set, get) => ({
           isLoading: false,
           isInitialized: true,
         });
+
+        const { useFavoritesStore } = await import('./favoritesStore');
+        await useFavoritesStore.getState().fetchFavorites();
       } else {
         set({
           user: null,
@@ -153,6 +172,7 @@ export const useAuthStore = create((set, get) => ({
       return {
         success: true,
         needsEmailConfirmation: !data.session,
+        hasCompletedOnboarding: data.session ? (get().user?.has_completed_onboarding ?? false) : false,
       };
     } catch (error) {
       console.error('Registration error:', error);

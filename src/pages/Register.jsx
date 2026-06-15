@@ -63,7 +63,7 @@ export function Register() {
         return;
       }
 
-      navigate('/onboarding');
+      navigate(result.hasCompletedOnboarding ? '/dashboard' : '/onboarding');
       return;
     }
 

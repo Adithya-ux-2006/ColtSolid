@@ -55,6 +55,11 @@ export function SymptomSearch() {
     <PageWrapper className="min-h-screen bg-snow pb-24 md:pb-8">
       <div className="sticky top-0 md:top-16 z-30 bg-snow/80 backdrop-blur-md pt-6 pb-4 px-6">
         <div className="max-w-2xl mx-auto">
+          <div className="mb-5">
+            <h1 className="text-3xl font-extrabold text-ink">Find relief for your symptoms</h1>
+            <p className="mt-2 text-base text-ink-muted">Choose a symptom below or type how you're feeling</p>
+          </div>
+
           <div onKeyDown={handleKeyDown}>
             <SearchBar 
               value={searchTerm} 
@@ -66,7 +71,7 @@ export function SymptomSearch() {
             <div className="mt-4 rounded-xl bg-sage/20 px-4 py-3 text-sm text-forest">
               <div className="flex items-start justify-between gap-3">
                 <p className="leading-relaxed">
-                  ✨ Get personalized results - Sign up free to match remedies to your symptoms and allergies.
+                  ✨ Personalize your results - Sign up free to match remedies to your allergy profile.
                 </p>
                 <button type="button" onClick={dismissBanner} className="text-forest/70 transition-colors hover:text-forest">
                   <X className="h-4 w-4" />
@@ -91,13 +96,14 @@ export function SymptomSearch() {
             <LoadingSkeleton count={4} className="h-20" />
           </div>
         ) : filteredSymptoms.length > 0 ? (
-          <div className="flex flex-wrap gap-3">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
             {filteredSymptoms.map(symptom => (
               <SymptomChip 
                 key={symptom.id} 
                 symptom={symptom} 
                 isSelected={false}
                 onClick={() => handleSelect(symptom.id)}
+                className="min-h-[88px] w-full justify-center rounded-2xl px-4 py-4 text-base font-semibold"
               />
             ))}
           </div>

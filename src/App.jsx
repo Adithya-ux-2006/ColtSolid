@@ -23,6 +23,8 @@ import { Onboarding } from './pages/Onboarding';
 function ProtectedRoute({ children }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isInitialized = useAuthStore((state) => state.isInitialized);
+  const hasCompletedOnboarding = useAuthStore((state) => state.user?.has_completed_onboarding ?? false);
+  const location = useLocation();
 
   if (!isInitialized) {
     return null;
@@ -30,6 +32,10 @@ function ProtectedRoute({ children }) {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (!hasCompletedOnboarding && location.pathname !== '/onboarding') {
+    return <Navigate to="/onboarding" replace />;
   }
 
   return children;
