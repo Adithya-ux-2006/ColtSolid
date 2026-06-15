@@ -11,6 +11,7 @@ import { cn } from '../utils/cn';
 const FILTER_OPTIONS = ['All', 'Natural', 'TCM', 'Conventional', 'Lifestyle'];
 const VIEWED_SYMPTOMS_KEY = 'clotsolid_viewed_symptoms';
 const HISTORY_DISMISSED_KEY = 'clotsolid_history_dismissed';
+const EMPTY_ARRAY = [];
 const HISTORY_LABELS = {
   headache: 'Headache',
   cold: 'Cold & Flu',
@@ -25,7 +26,7 @@ export function Results() {
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const symptomId = queryParams.get('symptom');
-  const userTreatmentPrefs = useAuthStore((state) => state.user?.treatment_prefs ?? []);
+  const userTreatmentPrefs = useAuthStore((state) => state.user?.treatment_prefs ?? EMPTY_ARRAY);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const defaultFilters = useMemo(() => {
     const mappedPrefs = mapTreatmentPrefsToFilters(userTreatmentPrefs);

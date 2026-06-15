@@ -9,11 +9,13 @@ import { useFavoritesStore } from '../../store/favoritesStore';
 import { useAuthStore } from '../../store/authStore';
 import { Link } from 'react-router-dom';
 
+const EMPTY_ARRAY = [];
+
 export function RemedyCard({ remedy, className }) {
-  const { toggleFavorite, isFavorite } = useFavoritesStore();
-  const userAllergies = useAuthStore((state) => state.user?.known_allergies ?? []);
+  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
+  const favorite = useFavoritesStore((state) => state.isFavorite(remedy.id));
+  const userAllergies = useAuthStore((state) => state.user?.known_allergies ?? EMPTY_ARRAY);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const favorite = isFavorite(remedy.id);
   const hasAllergyWarning = remedy.allergen_tags?.some((tag) => userAllergies.includes(tag));
   const [showQuickSave, setShowQuickSave] = useState(false);
   const quickSaveRef = useRef(null);

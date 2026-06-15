@@ -18,9 +18,9 @@ const CONDITION_TO_SYMPTOM = {
 };
 
 export function Dashboard() {
-  const { user } = useAuthStore();
-  const { favorites } = useFavoritesStore();
-  const { appointments } = useAppointmentStore();
+  const user = useAuthStore((state) => state.user);
+  const favorites = useFavoritesStore((state) => state.favorites);
+  const appointments = useAppointmentStore((state) => state.appointments);
   const symptoms = useCatalogStore((state) => state.symptoms);
   const remedies = useCatalogStore((state) => state.remedies);
   const navigate = useNavigate();

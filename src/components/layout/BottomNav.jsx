@@ -13,7 +13,7 @@ const LOCKED_MESSAGES = {
 };
 
 export function BottomNav() {
-  const { isAuthenticated } = useAuthStore();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const location = useLocation();
   const [toastMessage, setToastMessage] = useState('');
 

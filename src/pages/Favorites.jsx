@@ -4,7 +4,7 @@ import { RemedyCard, EmptyState } from '../components/ui';
 import { useFavoritesStore } from '../store/favoritesStore';
 
 export function Favorites() {
-  const { favorites } = useFavoritesStore();
+  const favorites = useFavoritesStore((state) => state.favorites);
 
   return (
     <PageWrapper className="min-h-screen bg-snow pb-24 md:pb-8 pt-6">

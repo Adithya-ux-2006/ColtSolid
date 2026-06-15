@@ -12,7 +12,7 @@ import { cn } from '../utils/cn';
 export function RemedyDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { toggleFavorite, isFavorite } = useFavoritesStore();
+  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const notifyNearbyLaunch = useAuthStore((state) => state.enableNearbyLaunchNotification);
   const notifyNearbyEnabled = useAuthStore((state) => state.user?.notify_nearby_launch ?? false);
@@ -29,7 +29,7 @@ export function RemedyDetail() {
   const heartAreaRef = useRef(null);
 
   const remedy = remedies.find(r => r.id === id);
-  const favorite = remedy ? isFavorite(remedy.id) : false;
+  const favorite = useFavoritesStore((state) => (remedy ? state.isFavorite(remedy.id) : false));
   const truncatedRemedyName = remedy?.name?.length > 30 ? `${remedy.name.slice(0, 27)}...` : remedy?.name || '';
 
   useEffect(() => {
@@ -317,7 +317,7 @@ export function RemedyDetail() {
       </div>
 
       {/* Sticky Bottom Bar */}
-      <div className="fixed bottom-0 md:bottom-auto md:top-[calc(100vh-100px)] left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t border-gray-100 z-40 md:bg-transparent md:border-none md:pointer-events-none flex justify-center">
+      <div className="fixed bottom-16 md:bottom-auto md:top-[calc(100vh-100px)] left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t border-gray-100 z-40 md:bg-transparent md:border-none md:pointer-events-none flex justify-center">
         <div className="max-w-3xl w-full mx-auto flex gap-3 md:pointer-events-auto">
           <div ref={heartAreaRef} className="relative">
             <button 

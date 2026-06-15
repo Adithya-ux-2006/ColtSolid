@@ -10,9 +10,11 @@ import { getInitials } from '../utils/mappers';
 import { FAQ_ITEMS } from '../constants/onboarding';
 
 export function Profile() {
-  const { user, logout, updateUser } = useAuthStore();
-  const { favorites } = useFavoritesStore();
-  const { appointments } = useAppointmentStore();
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+  const updateUser = useAuthStore((state) => state.updateUser);
+  const favorites = useFavoritesStore((state) => state.favorites);
+  const appointments = useAppointmentStore((state) => state.appointments);
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
