@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Heart, Share, AlertTriangle, ExternalLink, Calendar as CalendarIcon, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Heart, Share, AlertTriangle, ExternalLink, Calendar as CalendarIcon, CheckCircle2, Loader2, MapPin } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PageWrapper } from '../components/layout';
-import { CategoryBadge, RatingStars, EmailQuickSaveCard } from '../components/ui';
+import { CategoryBadge, RatingStars, EmailQuickSaveCard, NearbyShopCard } from '../components/ui';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { cn } from '../utils/cn';
+import { fetchNearbyShops } from '../utils/nearbyShops';
 
 export function RemedyDetail() {
   const { id } = useParams();
@@ -26,6 +27,9 @@ export function RemedyDetail() {
   const [showExitIntent, setShowExitIntent] = useState(false);
   const [isSavingNearby, setIsSavingNearby] = useState(false);
   const [nearbyMessage, setNearbyMessage] = useState('');
+  const [nearbyPlaces, setNearbyPlaces] = useState([]);
+  const [isLoadingNearby, setIsLoadingNearby] = useState(false);
+  const [nearbyError, setNearbyError] = useState('');
   const heartAreaRef = useRef(null);
 
   const remedy = remedies.find(r => r.id === id);
@@ -118,6 +122,42 @@ export function RemedyDetail() {
 
     setIsSavingNearby(false);
     setNearbyMessage(result.success ? 'We will let you know when nearby stores go live in your area.' : 'Unable to save this preference right now.');
+  };
+
+  const handleFindNearby = async () => {
+    if (!navigator.geolocation || !remedy) {
+      setNearbyError('Location services are unavailable on this device.');
+      return;
+    }
+
+    setNearbyError('');
+    setIsLoadingNearby(true);
+
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords }) => {
+        try {
+          const places = await fetchNearbyShops({
+            remedyName: remedy.name,
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+          });
+
+          setNearbyPlaces(places);
+          if (places.length === 0) {
+            setNearbyError('No nearby shops matched this remedy within 5 km. Try again from a different location.');
+          }
+        } catch (error) {
+          setNearbyError(error.message || 'Unable to load nearby shops right now.');
+        } finally {
+          setIsLoadingNearby(false);
+        }
+      },
+      (error) => {
+        setIsLoadingNearby(false);
+        setNearbyError(error.code === 1 ? 'Location access was denied. Enable location to find nearby shops.' : 'Unable to access your location right now.');
+      },
+      { enableHighAccuracy: true, timeout: 12000 }
+    );
   };
 
   const tabs = ['Overview', 'How to Use', 'Research', 'Warnings'];
@@ -283,36 +323,52 @@ export function RemedyDetail() {
         )}
 
         <div className="mx-4 mt-4 rounded-2xl border border-amber/40 bg-amber/10 p-5">
-          <p className="text-lg font-semibold text-ink">📍 Find this remedy near you</p>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-lg font-semibold text-ink">📍 Find Nearby</p>
+              <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+                Search pharmacies, medical stores, Ayurvedic stores, and herbal shops within 5 km of your location.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleFindNearby}
+              disabled={isLoadingNearby}
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-forest px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {isLoadingNearby ? <Loader2 className="h-4 w-4 animate-spin" /> : <MapPin className="h-4 w-4" />}
+              {isLoadingNearby ? 'Searching nearby...' : 'Use My Location'}
+            </button>
+          </div>
+
+          {nearbyError ? (
+            <div className="mt-4 rounded-2xl border border-amber/30 bg-white/80 px-4 py-3 text-sm text-amber-dark">
+              {nearbyError}
+            </div>
+          ) : null}
+
+          {nearbyPlaces.length > 0 ? (
+            <div className="mt-4 space-y-3">
+              {nearbyPlaces.map((place) => (
+                <NearbyShopCard key={place.id} place={place} />
+              ))}
+            </div>
+          ) : null}
 
           {isAuthenticated ? (
-            <>
-              <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-                Nearby pharmacy and health store locations are coming soon.
-              </p>
-              <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-                We'll notify you when this feature launches in your area.
-              </p>
+            <div className="mt-4 rounded-2xl bg-white/70 px-4 py-3 text-sm text-ink-muted">
+              <p>Want launch updates too? We'll still notify you when broader nearby inventory support expands.</p>
               <button
                 type="button"
                 onClick={handleNearbyNotify}
                 disabled={notifyNearbyEnabled || isSavingNearby}
-                className="mt-4 rounded-xl bg-forest px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-3 rounded-xl bg-forest px-4 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {notifyNearbyEnabled ? 'Notification Enabled' : isSavingNearby ? 'Saving...' : 'Notify Me When Live'}
               </button>
-              {nearbyMessage ? <p className="mt-3 text-sm text-forest">{nearbyMessage}</p> : null}
-            </>
-          ) : (
-            <>
-              <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-                See nearby pharmacies and health stores that carry this remedy. Available with a free account.
-              </p>
-              <Link to="/register" className="mt-4 inline-flex rounded-xl bg-forest px-4 py-3 text-sm font-semibold text-white">
-                Sign Up to Get Notified
-              </Link>
-            </>
-          )}
+              {nearbyMessage ? <p className="mt-2 text-sm text-forest">{nearbyMessage}</p> : null}
+            </div>
+          ) : null}
         </div>
       </div>
 

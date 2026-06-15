@@ -26,6 +26,15 @@ export function Results() {
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const symptomId = queryParams.get('symptom');
+  const aiQuery = queryParams.get('query') || '';
+  const searchSource = queryParams.get('source');
+  const aiSymptomIds = useMemo(
+    () => (queryParams.get('symptoms') || '')
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean),
+    [location.search]
+  );
   const userTreatmentPrefs = useAuthStore((state) => state.user?.treatment_prefs ?? EMPTY_ARRAY);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const defaultFilters = useMemo(() => {
@@ -42,8 +51,17 @@ export function Results() {
   const remedies = useCatalogStore((state) => state.remedies);
   const isCatalogLoading = useCatalogStore((state) => state.isLoading);
   const hasLoaded = useCatalogStore((state) => state.hasLoaded);
+  const isAiSearch = searchSource === 'ai' && aiSymptomIds.length > 0;
+  const selectedSymptomIds = useMemo(
+    () => (isAiSearch ? Array.from(new Set(aiSymptomIds)) : symptomId ? [symptomId] : []),
+    [aiSymptomIds, isAiSearch, symptomId]
+  );
 
   const symptom = symptoms.find(s => s.id === symptomId);
+  const detectedSymptoms = useMemo(
+    () => symptoms.filter((item) => selectedSymptomIds.includes(item.id)),
+    [selectedSymptomIds, symptoms]
+  );
 
   useEffect(() => {
     setIsLoading(isCatalogLoading);
@@ -57,21 +75,29 @@ export function Results() {
     const isDismissed = window.localStorage.getItem(HISTORY_DISMISSED_KEY) === 'true';
     setHideHistoryTeaser(isDismissed);
 
-    if (isAuthenticated || !symptomId) return;
+    if (isAuthenticated || selectedSymptomIds.length === 0) return;
 
     const raw = window.localStorage.getItem(VIEWED_SYMPTOMS_KEY);
     const current = raw ? JSON.parse(raw) : [];
-    const withoutCurrent = current.filter((item) => item !== symptomId);
-    const next = [...withoutCurrent, symptomId].slice(-6);
+    const next = selectedSymptomIds.reduce((accumulator, currentSymptomId) => {
+      const withoutCurrent = accumulator.filter((item) => item !== currentSymptomId);
+      return [...withoutCurrent, currentSymptomId].slice(-6);
+    }, current);
 
     window.localStorage.setItem(VIEWED_SYMPTOMS_KEY, JSON.stringify(next));
     setViewedSymptoms(next);
-  }, [isAuthenticated, symptomId]);
+  }, [isAuthenticated, selectedSymptomIds]);
 
   const filteredAndSortedRemedies = useMemo(() => {
-    if (!symptomId) return [];
-    
-    let result = remedies.filter(r => r.symptoms.includes(symptomId));
+    if (selectedSymptomIds.length === 0) return [];
+
+    let result = remedies
+      .map((remedy) => ({
+        ...remedy,
+        matchCount: selectedSymptomIds.filter((selectedSymptomId) => remedy.symptoms.includes(selectedSymptomId)).length,
+      }))
+      .filter((remedy) => remedy.matchCount > 0);
+
     const activeFilters = filters.includes('All') ? [] : filters;
     
     if (activeFilters.length > 0) {
@@ -79,17 +105,17 @@ export function Results() {
     }
 
     result.sort((a, b) => {
-      if (sort === 'Best Rated') return b.rating - a.rating;
-      if (sort === 'Most Researched') return b.reviewCount - a.reviewCount;
+      if (sort === 'Best Rated') return b.matchCount - a.matchCount || b.rating - a.rating;
+      if (sort === 'Most Researched') return b.matchCount - a.matchCount || b.reviewCount - a.reviewCount;
       if (sort === 'Easiest') {
         const diffMap = { 'Easy': 1, 'Moderate': 2, 'Requires prescription': 3 };
-        return diffMap[a.difficulty] - diffMap[b.difficulty];
+        return b.matchCount - a.matchCount || diffMap[a.difficulty] - diffMap[b.difficulty];
       }
       return 0;
     });
 
     return result;
-  }, [filters, remedies, sort, symptomId]);
+  }, [filters, remedies, selectedSymptomIds, sort]);
 
   if (!hasLoaded && isLoading) {
     return (
@@ -101,7 +127,7 @@ export function Results() {
     );
   }
 
-  if (!symptom) {
+  if (!isAiSearch && !symptom) {
     return (
       <PageWrapper className="min-h-screen bg-snow pt-20 px-6">
         <EmptyState 
@@ -135,6 +161,9 @@ export function Results() {
   const historyHeadline = viewedLabels.length > 1
     ? `${viewedLabels[0]} and ${viewedLabels[1]}${viewedSymptoms.length > 2 ? ' and more' : ''}`
     : viewedLabels[0];
+  const emptyStateContext = isAiSearch
+    ? detectedSymptoms.map((detectedSymptom) => detectedSymptom.label).join(', ')
+    : symptom?.label || 'your selected symptoms';
 
   return (
     <PageWrapper className="min-h-screen bg-snow pb-24 md:pb-8">
@@ -147,7 +176,15 @@ export function Results() {
             </button>
             <div>
               <h1 className="text-2xl font-bold text-ink flex items-center gap-2">
-                <span>{symptom.emoji}</span> {symptom.label}
+                {isAiSearch ? (
+                  <>
+                    <span>AI Matched Remedies</span>
+                  </>
+                ) : (
+                  <>
+                    <span>{symptom.emoji}</span> {symptom.label}
+                  </>
+                )}
               </h1>
               <p className="text-sm text-ink-muted">
                 {isLoading ? 'Finding remedies...' : `${filteredAndSortedRemedies.length} remedies found`}
@@ -191,6 +228,27 @@ export function Results() {
 
       {/* Grid */}
       <div className="max-w-5xl mx-auto px-6 pt-8">
+        {isAiSearch ? (
+          <div className="mb-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+            <p className="text-sm font-semibold text-forest">Detected symptoms</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {detectedSymptoms.map((detectedSymptom) => (
+                <span
+                  key={detectedSymptom.id}
+                  className="rounded-full bg-sage/20 px-3 py-1.5 text-sm font-medium text-forest"
+                >
+                  {detectedSymptom.emoji} {detectedSymptom.label}
+                </span>
+              ))}
+            </div>
+            {aiQuery ? (
+              <p className="mt-3 text-sm leading-relaxed text-ink-muted">
+                Based on: "{aiQuery}"
+              </p>
+            ) : null}
+          </div>
+        ) : null}
+
         {shouldShowHistoryTeaser ? (
           <div className="mb-4 rounded-2xl border-l-4 border-forest bg-sage/20 p-4 text-sm text-forest">
             <p className="font-semibold">🧠 We noticed you've looked at {historyHeadline} remedies</p>
@@ -246,7 +304,7 @@ export function Results() {
           <EmptyState 
             icon={AlertCircle}
             title="No remedies match"
-            description={`We couldn't find any ${filters.join(', ')} remedies for ${symptom.label}.`}
+            description={`We couldn't find any ${filters.join(', ')} remedies for ${emptyStateContext}.`}
             ctaLabel="Back to Search"
             ctaHref="/search"
           />
