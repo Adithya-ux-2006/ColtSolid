@@ -1,6 +1,8 @@
 import { Heart } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { CategoryBadge } from './CategoryBadge';
+import { EmailQuickSaveCard } from './EmailQuickSaveCard';
 import { RatingStars } from './RatingStars';
 import { cn } from '../../utils/cn';
 import { useFavoritesStore } from '../../store/favoritesStore';
@@ -10,8 +12,35 @@ import { Link } from 'react-router-dom';
 export function RemedyCard({ remedy, className }) {
   const { toggleFavorite, isFavorite } = useFavoritesStore();
   const userAllergies = useAuthStore((state) => state.user?.known_allergies ?? []);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const favorite = isFavorite(remedy.id);
   const hasAllergyWarning = remedy.allergen_tags?.some((tag) => userAllergies.includes(tag));
+  const [showQuickSave, setShowQuickSave] = useState(false);
+  const quickSaveRef = useRef(null);
+
+  useEffect(() => {
+    if (!showQuickSave) return undefined;
+
+    const handlePointerDown = (event) => {
+      if (!quickSaveRef.current?.contains(event.target)) {
+        setShowQuickSave(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    return () => document.removeEventListener('mousedown', handlePointerDown);
+  }, [showQuickSave]);
+
+  const handleHeartClick = (event) => {
+    event.preventDefault();
+
+    if (!isAuthenticated) {
+      setShowQuickSave((current) => !current);
+      return;
+    }
+
+    toggleFavorite(remedy);
+  };
 
   return (
     <motion.div
@@ -31,17 +60,31 @@ export function RemedyCard({ remedy, className }) {
               </div>
             ) : null}
           </div>
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            onClick={(e) => {
-              e.preventDefault();
-              toggleFavorite(remedy);
-            }}
-            className="text-ink-muted hover:text-forest transition-colors p-1 -mr-1 -mt-1"
-            aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
-          >
-            <Heart className={cn("w-5 h-5", favorite && "fill-forest text-forest")} />
-          </motion.button>
+          <div ref={quickSaveRef} className="relative">
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              onClick={handleHeartClick}
+              className="text-ink-muted hover:text-forest transition-colors p-1 -mr-1 -mt-1"
+              aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
+            >
+              <Heart className={cn('w-5 h-5', favorite && 'fill-forest text-forest')} />
+            </motion.button>
+
+            {showQuickSave ? (
+              <motion.div
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                className="absolute right-0 top-10 z-20 w-[280px] rounded-2xl border border-gray-100 border-l-4 border-l-forest bg-white p-4 shadow-card"
+              >
+                <EmailQuickSaveCard
+                  remedyId={remedy.id}
+                  title="🤍 Save this remedy"
+                  description=""
+                />
+              </motion.div>
+            ) : null}
+          </div>
       </div>
 
       <h3 className="font-bold text-lg text-ink mb-2 line-clamp-1">{remedy.name}</h3>

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { useAuthStore } from '../store/authStore';
@@ -20,6 +20,20 @@ export function Register() {
   const register = useAuthStore(state => state.register);
   const isLoading = useAuthStore(state => state.isLoading);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const nameInputRef = useRef(null);
+  const emailInputRef = useRef(null);
+  const emailParam = searchParams.get('email');
+
+  useEffect(() => {
+    if (!emailParam) {
+      emailInputRef.current?.focus();
+      return;
+    }
+
+    setFormData((prev) => ({ ...prev, email: emailParam }));
+    nameInputRef.current?.focus();
+  }, [emailParam]);
 
   const isFormValid = [formData.name, formData.email, formData.university, formData.year, formData.password]
     .every((value) => value.trim() !== '');
@@ -74,6 +88,7 @@ export function Register() {
               id="name"
               name="name"
               type="text"
+              ref={nameInputRef}
               value={formData.name}
               onChange={handleChange}
               className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest transition-all"
@@ -86,11 +101,15 @@ export function Register() {
               id="email"
               name="email"
               type="email"
+              ref={emailInputRef}
               value={formData.email}
               onChange={handleChange}
               className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest transition-all"
               required
             />
+            {emailParam ? (
+              <p className="mt-1 text-sm text-forest">✓ We'll keep your saved remedies linked to this account.</p>
+            ) : null}
           </div>
           
           <div className="grid grid-cols-2 gap-4">

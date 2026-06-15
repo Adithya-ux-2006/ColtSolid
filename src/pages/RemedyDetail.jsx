@@ -1,31 +1,99 @@
-import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, Share, AlertTriangle, ExternalLink, Calendar as CalendarIcon, CheckCircle2 } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { PageWrapper } from '../components/layout';
-import { CategoryBadge, RatingStars } from '../components/ui';
+import { CategoryBadge, RatingStars, EmailQuickSaveCard } from '../components/ui';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useCatalogStore } from '../store/catalogStore';
+import { useAuthStore } from '../store/authStore';
 import { cn } from '../utils/cn';
 
 export function RemedyDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toggleFavorite, isFavorite } = useFavoritesStore();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const notifyNearbyLaunch = useAuthStore((state) => state.enableNearbyLaunchNotification);
+  const notifyNearbyEnabled = useAuthStore((state) => state.user?.notify_nearby_launch ?? false);
   const remedies = useCatalogStore((state) => state.remedies);
   const isCatalogLoading = useCatalogStore((state) => state.isLoading);
   const hasLoaded = useCatalogStore((state) => state.hasLoaded);
   
   const [activeTab, setActiveTab] = useState('Overview');
   const [showToast, setShowToast] = useState(false);
+  const [showQuickSave, setShowQuickSave] = useState(false);
+  const [showExitIntent, setShowExitIntent] = useState(false);
+  const [isSavingNearby, setIsSavingNearby] = useState(false);
+  const [nearbyMessage, setNearbyMessage] = useState('');
+  const heartAreaRef = useRef(null);
 
   const remedy = remedies.find(r => r.id === id);
-  if (!hasLoaded && isCatalogLoading) {
-    return <PageWrapper className="min-h-screen bg-snow p-8 text-center">Loading remedy...</PageWrapper>;
-  }
+  const favorite = remedy ? isFavorite(remedy.id) : false;
+  const truncatedRemedyName = remedy?.name?.length > 30 ? `${remedy.name.slice(0, 27)}...` : remedy?.name || '';
 
-  if (!remedy) return <div className="p-8 text-center">Remedy not found</div>;
+  useEffect(() => {
+    if (!showQuickSave) return undefined;
 
-  const favorite = isFavorite(remedy.id);
+    const handlePointerDown = (event) => {
+      if (!heartAreaRef.current?.contains(event.target)) {
+        setShowQuickSave(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    return () => document.removeEventListener('mousedown', handlePointerDown);
+  }, [showQuickSave]);
+
+  useEffect(() => {
+    if (isAuthenticated || !remedy?.id) return undefined;
+
+    const sessionKey = `clotsolid_exit_intent_${remedy.id}`;
+    if (window.sessionStorage.getItem(sessionKey) === 'shown') {
+      return undefined;
+    }
+
+    let hasTriggered = false;
+    let maxScrollY = window.scrollY;
+    let scrolledDeepEnough = false;
+
+    const cleanup = () => {
+      document.removeEventListener('mouseleave', handleMouseLeave);
+      window.removeEventListener('scroll', handleScroll);
+    };
+
+    const triggerExitIntent = () => {
+      if (hasTriggered) return;
+      hasTriggered = true;
+      window.sessionStorage.setItem(sessionKey, 'shown');
+      setShowExitIntent(true);
+      cleanup();
+    };
+
+    const handleMouseLeave = (event) => {
+      if (event.clientY <= 0) {
+        triggerExitIntent();
+      }
+    };
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > maxScrollY) {
+        maxScrollY = currentScrollY;
+      }
+      if (maxScrollY > 400) {
+        scrolledDeepEnough = true;
+      }
+      if (scrolledDeepEnough && maxScrollY - currentScrollY > 200) {
+        triggerExitIntent();
+      }
+    };
+
+    document.addEventListener('mouseleave', handleMouseLeave);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return cleanup;
+  }, [isAuthenticated, remedy?.id]);
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -33,7 +101,32 @@ export function RemedyDetail() {
     setTimeout(() => setShowToast(false), 2000);
   };
 
+  const handleFavoriteClick = () => {
+    if (!isAuthenticated) {
+      setShowQuickSave((current) => !current);
+      return;
+    }
+
+    toggleFavorite(remedy);
+  };
+
+  const handleNearbyNotify = async () => {
+    setIsSavingNearby(true);
+    setNearbyMessage('');
+
+    const result = await notifyNearbyLaunch();
+
+    setIsSavingNearby(false);
+    setNearbyMessage(result.success ? 'We will let you know when nearby stores go live in your area.' : 'Unable to save this preference right now.');
+  };
+
   const tabs = ['Overview', 'How to Use', 'Research', 'Warnings'];
+
+  if (!hasLoaded && isCatalogLoading) {
+    return <PageWrapper className="min-h-screen bg-snow p-8 text-center">Loading remedy...</PageWrapper>;
+  }
+
+  if (!remedy) return <div className="p-8 text-center">Remedy not found</div>;
 
   return (
     <PageWrapper className="min-h-screen bg-snow pb-24">
@@ -163,26 +256,98 @@ export function RemedyDetail() {
         )}
 
         {activeTab === 'Warnings' && (
-          <div className="bg-amber/10 border border-amber/30 p-6 rounded-2xl flex gap-4 animate-fade-in">
-            <AlertTriangle className="w-6 h-6 text-amber-dark shrink-0" />
-            <p className="text-ink-muted leading-relaxed text-sm">{remedy.warnings}</p>
+          <div className="space-y-5 animate-fade-in">
+            <div className="bg-amber/10 border border-amber/30 p-6 rounded-2xl flex gap-4">
+              <AlertTriangle className="w-6 h-6 text-amber-dark shrink-0" />
+              <p className="text-ink-muted leading-relaxed text-sm">{remedy.warnings}</p>
+            </div>
+
+            {!isAuthenticated ? (
+              <div className="rounded-2xl border-l-4 border-forest bg-[#F7F1E7] p-5 shadow-card">
+                <p className="text-lg font-semibold text-forest">💊 Want to track this remedy?</p>
+                <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+                  Save it to your favorites, set reminders, and get personalized allergy warnings based on your health profile.
+                </p>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <Link to="/register" className="rounded-xl bg-forest px-4 py-3 text-sm font-semibold text-white">
+                    Create Free Account
+                  </Link>
+                  <Link to="/login" className="rounded-xl border border-gray-200 px-4 py-3 text-sm font-semibold text-ink">
+                    Log In
+                  </Link>
+                </div>
+                <p className="mt-3 text-xs text-ink-subtle">Free forever. No credit card.</p>
+              </div>
+            ) : null}
           </div>
         )}
+
+        <div className="mx-4 mt-4 rounded-2xl border border-amber/40 bg-amber/10 p-5">
+          <p className="text-lg font-semibold text-ink">📍 Find this remedy near you</p>
+
+          {isAuthenticated ? (
+            <>
+              <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+                Nearby pharmacy and health store locations are coming soon.
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+                We'll notify you when this feature launches in your area.
+              </p>
+              <button
+                type="button"
+                onClick={handleNearbyNotify}
+                disabled={notifyNearbyEnabled || isSavingNearby}
+                className="mt-4 rounded-xl bg-forest px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {notifyNearbyEnabled ? 'Notification Enabled' : isSavingNearby ? 'Saving...' : 'Notify Me When Live'}
+              </button>
+              {nearbyMessage ? <p className="mt-3 text-sm text-forest">{nearbyMessage}</p> : null}
+            </>
+          ) : (
+            <>
+              <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+                See nearby pharmacies and health stores that carry this remedy. Available with a free account.
+              </p>
+              <Link to="/register" className="mt-4 inline-flex rounded-xl bg-forest px-4 py-3 text-sm font-semibold text-white">
+                Sign Up to Get Notified
+              </Link>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Sticky Bottom Bar */}
       <div className="fixed bottom-0 md:bottom-auto md:top-[calc(100vh-100px)] left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t border-gray-100 z-40 md:bg-transparent md:border-none md:pointer-events-none flex justify-center">
         <div className="max-w-3xl w-full mx-auto flex gap-3 md:pointer-events-auto">
-          <button 
-            onClick={() => toggleFavorite(remedy)}
-            className={cn(
-              "p-4 rounded-2xl shadow-sm border transition-colors flex items-center justify-center",
-              favorite ? "bg-forest/10 border-forest text-forest" : "bg-white border-gray-200 text-ink-muted hover:text-forest"
-            )}
-            aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
-          >
-            <Heart className={cn("w-6 h-6", favorite && "fill-forest")} />
-          </button>
+          <div ref={heartAreaRef} className="relative">
+            <button 
+              onClick={handleFavoriteClick}
+              className={cn(
+                "p-4 rounded-2xl shadow-sm border transition-colors flex items-center justify-center",
+                favorite ? "bg-forest/10 border-forest text-forest" : "bg-white border-gray-200 text-ink-muted hover:text-forest"
+              )}
+              aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
+            >
+              <Heart className={cn("w-6 h-6", favorite && "fill-forest")} />
+            </button>
+
+            <AnimatePresence>
+              {showQuickSave ? (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 8 }}
+                className="absolute bottom-full left-0 mb-3 w-[280px] rounded-2xl border border-gray-100 border-l-4 border-l-forest bg-white p-4 shadow-card"
+              >
+                <EmailQuickSaveCard
+                  remedyId={remedy.id}
+                  title="🤍 Save this remedy"
+                  description=""
+                />
+              </motion.div>
+              ) : null}
+            </AnimatePresence>
+          </div>
           
           <button 
             onClick={() => navigate('/appointments')}
@@ -193,6 +358,30 @@ export function RemedyDetail() {
           </button>
         </div>
       </div>
+
+      <AnimatePresence>
+        {!isAuthenticated && showExitIntent ? (
+        <motion.div
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 100, opacity: 0 }}
+          className="fixed inset-x-0 bottom-0 z-50 px-4"
+        >
+          <div className="mx-auto max-w-2xl rounded-t-3xl bg-white p-5 shadow-2xl">
+            <EmailQuickSaveCard
+              remedyId={remedy.id}
+              title="Before you go..."
+              description={`Save "${truncatedRemedyName}" to find it again later.`}
+              helperText=""
+              showDivider={false}
+              showAuthLinks={false}
+              showSecondaryDismiss={true}
+              onDismiss={() => setShowExitIntent(false)}
+            />
+          </div>
+        </motion.div>
+      ) : null}
+      </AnimatePresence>
     </PageWrapper>
   );
 }

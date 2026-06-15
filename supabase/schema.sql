@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS public.users (
     known_allergies TEXT[] DEFAULT '{}' NOT NULL,
     treatment_prefs TEXT[] DEFAULT '{}' NOT NULL,
     has_completed_onboarding BOOLEAN DEFAULT false,
+    notify_nearby_launch BOOLEAN DEFAULT false,
     prefer_natural BOOLEAN DEFAULT false NOT NULL,
     avoid_medication BOOLEAN DEFAULT false NOT NULL,
     vegetarian_remedies BOOLEAN DEFAULT false NOT NULL,

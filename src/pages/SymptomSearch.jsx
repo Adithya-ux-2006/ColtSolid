@@ -1,28 +1,31 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Frown } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Frown, X } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { SearchBar } from '../components/forms';
-import { SymptomChip, LoadingSkeleton, EmptyState, TrialGateModal } from '../components/ui';
+import { SymptomChip, LoadingSkeleton, EmptyState } from '../components/ui';
 import { useSearch } from '../hooks/useSearch';
-import { useTrialGate } from '../hooks/useTrialGate';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
+
+const SEARCH_NUDGE_DISMISSED_KEY = 'clotsolid_nudge_dismissed';
 
 export function SymptomSearch() {
   const { searchTerm, setSearchTerm, debouncedTerm } = useSearch('', 300);
   const [isSearching, setIsSearching] = useState(false);
+  const [isBannerDismissed, setIsBannerDismissed] = useState(false);
   const symptoms = useCatalogStore((state) => state.symptoms);
   const isCatalogLoading = useCatalogStore((state) => state.isLoading);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const { searchCount, showGate, incrementSearch } = useTrialGate();
   const navigate = useNavigate();
-
-  const remainingSearches = Math.max(3 - searchCount, 0);
 
   const filteredSymptoms = symptoms.filter(s => 
     s.label.toLowerCase().includes(debouncedTerm.toLowerCase())
   );
+
+  useEffect(() => {
+    setIsBannerDismissed(window.localStorage.getItem(SEARCH_NUDGE_DISMISSED_KEY) === 'true');
+  }, []);
 
   useEffect(() => {
     if (searchTerm !== debouncedTerm) {
@@ -34,9 +37,12 @@ export function SymptomSearch() {
   }, [searchTerm, debouncedTerm]);
 
   const handleSelect = (symptomId) => {
-    const result = incrementSearch();
-    if (result.blocked) return;
     navigate(`/results?symptom=${symptomId}`);
+  };
+
+  const dismissBanner = () => {
+    window.localStorage.setItem(SEARCH_NUDGE_DISMISSED_KEY, 'true');
+    setIsBannerDismissed(true);
   };
 
   const handleKeyDown = (e) => {
@@ -56,8 +62,21 @@ export function SymptomSearch() {
               placeholder="What are you feeling today? (e.g. headache)" 
             />
           </div>
-          {!isAuthenticated && (remainingSearches === 1 || remainingSearches === 2) ? (
-            <p className="mt-3 text-sm text-ink-subtle">{remainingSearches} free searches remaining</p>
+          {!isAuthenticated && !isBannerDismissed ? (
+            <div className="mt-4 rounded-xl bg-sage/20 px-4 py-3 text-sm text-forest">
+              <div className="flex items-start justify-between gap-3">
+                <p className="leading-relaxed">
+                  ✨ Get personalized results - Sign up free to match remedies to your symptoms and allergies.
+                </p>
+                <button type="button" onClick={dismissBanner} className="text-forest/70 transition-colors hover:text-forest">
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="mt-3 flex gap-2">
+                <Link to="/register" className="rounded-full bg-forest px-3 py-1.5 font-semibold text-white">Sign Up</Link>
+                <Link to="/login" className="rounded-full border border-forest px-3 py-1.5 font-semibold text-forest">Log In</Link>
+              </div>
+            </div>
           ) : null}
         </div>
       </div>
@@ -91,7 +110,6 @@ export function SymptomSearch() {
         )}
       </div>
 
-      <TrialGateModal isOpen={showGate} />
     </PageWrapper>
   );
 }

@@ -24,7 +24,7 @@ export function Landing() {
           </h1>
           
           <p className="text-xl text-ink-muted max-w-2xl mx-auto leading-relaxed">
-            Evidence-based natural and conventional remedies — curated by medical researchers, built for college life.
+            No sign up needed. Search your symptoms and find evidence-backed remedies instantly.
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
@@ -41,6 +41,16 @@ export function Landing() {
               Log In
             </Link>
           </div>
+
+          <p className="text-sm font-medium text-ink-muted">
+            Free to use · Research-backed · Built for students · No credit card
+          </p>
+
+          <div className="grid grid-cols-3 gap-3 pt-4">
+            <StatCard value="30+" label="Remedies" />
+            <StatCard value="4" label="Remedy Types" />
+            <StatCard value="60+" label="Research Papers" />
+          </div>
         </div>
       </section>
 
@@ -50,7 +60,7 @@ export function Landing() {
           <p className="text-sm font-semibold text-ink-muted uppercase tracking-wider mb-4">Common Symptoms</p>
           <div className="flex overflow-x-auto gap-4 pb-4 no-scrollbar -mx-6 px-6 snap-x">
             {symptoms.map(symptom => (
-              <Link key={symptom.id} to={`/search`} className="snap-start">
+              <Link key={symptom.id} to={`/results?symptom=${symptom.id}`} className="snap-start">
                 <SymptomChip symptom={symptom} isSelected={false} />
               </Link>
             ))}
@@ -102,6 +112,15 @@ export function Landing() {
         <p className="text-sm text-ink-muted">© 2026 ClotSolid. Not a substitute for professional medical advice.</p>
       </footer>
     </PageWrapper>
+  );
+}
+
+function StatCard({ value, label }) {
+  return (
+    <div className="rounded-xl bg-white p-4 text-center shadow-card">
+      <p className="text-2xl font-extrabold text-forest">{value}</p>
+      <p className="mt-1 text-sm text-ink-muted">{label}</p>
+    </div>
   );
 }
 

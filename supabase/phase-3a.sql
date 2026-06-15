@@ -3,7 +3,8 @@ ALTER TABLE public.users
   ADD COLUMN IF NOT EXISTS common_conditions text[] DEFAULT '{}',
   ADD COLUMN IF NOT EXISTS known_allergies text[] DEFAULT '{}',
   ADD COLUMN IF NOT EXISTS treatment_prefs text[] DEFAULT '{}',
-  ADD COLUMN IF NOT EXISTS has_completed_onboarding boolean DEFAULT false;
+  ADD COLUMN IF NOT EXISTS has_completed_onboarding boolean DEFAULT false,
+  ADD COLUMN IF NOT EXISTS notify_nearby_launch boolean DEFAULT false;
 
 ALTER TABLE public.remedies
   ADD COLUMN IF NOT EXISTS allergen_tags text[] DEFAULT '{}',

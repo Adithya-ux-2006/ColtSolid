@@ -25,6 +25,7 @@ const buildUser = async (session) => {
     known_allergies: profile?.known_allergies ?? [],
     treatment_prefs: profile?.treatment_prefs ?? [],
     has_completed_onboarding: profile?.has_completed_onboarding ?? false,
+    notify_nearby_launch: profile?.notify_nearby_launch ?? false,
     preferNatural: profile?.prefer_natural ?? false,
     avoidMedication: profile?.avoid_medication ?? false,
     vegetarianRemedies: profile?.vegetarian_remedies ?? false,
@@ -226,6 +227,32 @@ export const useAuthStore = create((set, get) => ({
       return { success: true };
     } catch (error) {
       console.error('Save onboarding error:', error);
+      return { success: false, error };
+    }
+  },
+
+  enableNearbyLaunchNotification: async () => {
+    const { user } = get();
+    if (!user) return { success: false, error: new Error('No authenticated user found.') };
+
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({ notify_nearby_launch: true })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      set((state) => ({
+        user: {
+          ...state.user,
+          notify_nearby_launch: true,
+        },
+      }));
+
+      return { success: true };
+    } catch (error) {
+      console.error('Enable nearby launch notification error:', error);
       return { success: false, error };
     }
   }

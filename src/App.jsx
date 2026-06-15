@@ -23,6 +23,8 @@ import { Onboarding } from './pages/Onboarding';
 function ProtectedRoute({ children }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isInitialized = useAuthStore((state) => state.isInitialized);
+  const hasCompletedOnboarding = useAuthStore((state) => state.user?.has_completed_onboarding ?? false);
+  const location = useLocation();
 
   if (!isInitialized) {
     return null;
@@ -32,29 +34,29 @@ function ProtectedRoute({ children }) {
     return <Navigate to="/login" replace />;
   }
 
+  if (!hasCompletedOnboarding && location.pathname !== '/onboarding') {
+    return <Navigate to="/onboarding" replace />;
+  }
+
   return children;
+}
+
+function OnboardingRoute() {
+  const hasCompletedOnboarding = useAuthStore((state) => state.user?.has_completed_onboarding ?? false);
+
+  if (hasCompletedOnboarding) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <Onboarding />;
 }
 
 function AnimatedRoutes() {
   const location = useLocation();
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isInitialized = useAuthStore((state) => state.isInitialized);
-  const hasCompletedOnboarding = useAuthStore((state) => state.user?.has_completed_onboarding ?? false);
 
   if (!isInitialized) {
     return null;
-  }
-
-  if (isAuthenticated && !hasCompletedOnboarding && location.pathname !== '/onboarding') {
-    return <Navigate to="/onboarding" replace />;
-  }
-
-  if (isAuthenticated && hasCompletedOnboarding && location.pathname === '/onboarding') {
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  if (isAuthenticated && hasCompletedOnboarding && (location.pathname === '/login' || location.pathname === '/register')) {
-    return <Navigate to="/dashboard" replace />;
   }
 
   return (
@@ -73,7 +75,7 @@ function AnimatedRoutes() {
         <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
         <Route path="/appointments" element={<ProtectedRoute><Appointments /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-        <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+        <Route path="/onboarding" element={<ProtectedRoute><OnboardingRoute /></ProtectedRoute>} />
         
         {/* Catch-all redirect */}
         <Route path="*" element={<Navigate to="/" replace />} />
