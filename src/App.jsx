@@ -42,16 +42,6 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
-function OnboardingRoute() {
-  const hasCompletedOnboarding = useAuthStore((state) => state.user?.has_completed_onboarding ?? false);
-
-  if (hasCompletedOnboarding) {
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  return <Onboarding />;
-}
-
 function AnimatedRoutes() {
   const location = useLocation();
   const isInitialized = useAuthStore((state) => state.isInitialized);
@@ -77,7 +67,7 @@ function AnimatedRoutes() {
         <Route path="/appointments" element={<ProtectedRoute><Appointments /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute><AdminGuard><AdminAnalytics /></AdminGuard></ProtectedRoute>} />
-        <Route path="/onboarding" element={<ProtectedRoute><OnboardingRoute /></ProtectedRoute>} />
+        <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
         
         {/* Catch-all redirect */}
         <Route path="*" element={<Navigate to="/" replace />} />

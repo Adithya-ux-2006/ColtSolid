@@ -32,6 +32,7 @@ export function Onboarding() {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const saveOnboarding = useAuthStore((state) => state.saveOnboarding);
+  const hasCompletedOnboarding = useAuthStore((state) => state.user?.has_completed_onboarding ?? false);
   const [stepIndex, setStepIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isSaving, setIsSaving] = useState(false);
@@ -54,6 +55,12 @@ export function Onboarding() {
 
     return () => window.clearTimeout(timer);
   }, [navigate, showComplete]);
+
+  useEffect(() => {
+    if (!hasCompletedOnboarding || showComplete) return;
+
+    navigate('/dashboard', { replace: true });
+  }, [hasCompletedOnboarding, navigate, showComplete]);
 
   const handleNoneAwareToggle = (value, selectedValues, setSelectedValues) => {
     if (value === 'none') {
