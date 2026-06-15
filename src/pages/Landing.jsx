@@ -45,12 +45,14 @@ export function Landing() {
           <p className="text-sm font-medium text-ink-muted">
             Free to use · Research-backed · Built for students · No credit card
           </p>
+        </div>
+      </section>
 
-          <div className="grid grid-cols-3 gap-3 pt-4">
-            <StatCard value="30+" label="Remedies" />
-            <StatCard value="4" label="Remedy Types" />
-            <StatCard value="60+" label="Research Papers" />
-          </div>
+      <section className="px-6 pb-10">
+        <div className="mx-auto grid max-w-4xl grid-cols-3 gap-3">
+          <StatCard value="30+" label="Remedies" />
+          <StatCard value="4" label="Remedy Types" />
+          <StatCard value="60+" label="Research Papers" />
         </div>
       </section>
 
@@ -119,7 +121,7 @@ function StatCard({ value, label }) {
   return (
     <div className="rounded-xl bg-white p-4 text-center shadow-card">
       <p className="text-2xl font-extrabold text-forest">{value}</p>
-      <p className="mt-1 text-sm text-ink-muted">{label}</p>
+      <p className="mt-1 text-sm leading-tight text-ink-muted">{label}</p>
     </div>
   );
 }

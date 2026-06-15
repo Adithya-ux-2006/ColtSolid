@@ -27,8 +27,8 @@ export function RemedyCard({ remedy, className }) {
       }
     };
 
-    document.addEventListener('mousedown', handlePointerDown);
-    return () => document.removeEventListener('mousedown', handlePointerDown);
+    document.addEventListener('pointerdown', handlePointerDown);
+    return () => document.removeEventListener('pointerdown', handlePointerDown);
   }, [showQuickSave]);
 
   const handleHeartClick = (event) => {

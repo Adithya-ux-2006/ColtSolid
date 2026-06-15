@@ -67,7 +67,7 @@ export const FAQ_ITEMS = [
   },
   {
     question: 'How do I save a remedy?',
-    answer: 'Tap the heart icon on any remedy card or on the Remedy Detail page. Saved remedies appear in your Favorites tab. You must be logged in to save favorites.',
+    answer: 'Tap the heart icon on any remedy card or on the Remedy Detail page. If you are signed in, it saves to Favorites. If not, you can quick-save it with your email and finish creating an account later.',
   },
   {
     question: 'What do the warning badges mean?',
