@@ -7,6 +7,8 @@ import { cn } from '../utils/cn';
 import { GENDER_OPTIONS } from '../constants/onboarding';
 
 export function Register() {
+  const [searchParams] = useSearchParams();
+  const emailParam = searchParams.get('email');
   const [formData, setFormData] = useState({
     name: '',
     email: emailParam || '',
@@ -20,10 +22,8 @@ export function Register() {
   const register = useAuthStore(state => state.register);
   const isLoading = useAuthStore(state => state.isLoading);
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const nameInputRef = useRef(null);
   const emailInputRef = useRef(null);
-  const emailParam = searchParams.get('email');
 
   useEffect(() => {
     if (!emailParam) {
