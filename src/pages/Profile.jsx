@@ -94,7 +94,7 @@ export function Profile() {
                   value={editForm.universityName} 
                   onChange={e => setEditForm({...editForm, universityName: e.target.value})}
                   className="w-full px-3 py-2 border rounded-xl"
-                  placeholder="University"
+                  placeholder="Enter your university name"
                 />
                 <input 
                   type="email" 
@@ -109,11 +109,12 @@ export function Profile() {
                   className="w-full px-3 py-2 border rounded-xl bg-white"
                 >
                   <option value="">Select year</option>
-                  <option value="1st Year">1st Year</option>
-                  <option value="2nd Year">2nd Year</option>
-                  <option value="3rd Year">3rd Year</option>
-                  <option value="4th Year">4th Year</option>
-                  <option value="Postgraduate">Postgraduate</option>
+                  <option value="Freshman / 1st Year">Freshman / 1st Year</option>
+                  <option value="Sophomore / 2nd Year">Sophomore / 2nd Year</option>
+                  <option value="Junior / 3rd Year">Junior / 3rd Year</option>
+                  <option value="Senior / 4th Year">Senior / 4th Year</option>
+                  <option value="Graduate Student">Graduate Student</option>
+                  <option value="Doctoral / PhD Student">Doctoral / PhD Student</option>
                   <option value="Other">Other</option>
                 </select>
                 <div className="flex flex-wrap gap-2">

@@ -6,7 +6,15 @@ import { useAuthStore } from '../store/authStore';
 import { cn } from '../utils/cn';
 import { GENDER_OPTIONS } from '../constants/onboarding';
 
-const CURRENT_YEAR_OPTIONS = ['1st Year', '2nd Year', '3rd Year', '4th Year', 'Postgraduate', 'Other'];
+const CURRENT_YEAR_OPTIONS = [
+  'Freshman / 1st Year',
+  'Sophomore / 2nd Year',
+  'Junior / 3rd Year',
+  'Senior / 4th Year',
+  'Graduate Student',
+  'Doctoral / PhD Student',
+  'Other',
+];
 
 export function Register() {
   const [searchParams] = useSearchParams();
@@ -111,7 +119,7 @@ export function Register() {
               placeholder="you@example.com"
               required
             />
-            <p className="mt-1 text-sm text-ink-muted">This is your primary login and contact email.</p>
+            <p className="mt-1 text-sm text-ink-muted">This email will be used to sign in and receive important account updates.</p>
             {emailParam ? (
               <p className="mt-1 text-sm text-forest">✓ We'll keep your saved remedies linked to this account.</p>
             ) : null}
@@ -128,7 +136,7 @@ export function Register() {
               className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest transition-all"
               placeholder="you@campus.edu"
             />
-            <p className="mt-1 text-sm text-ink-muted">Used to connect you with your campus community and future student remedy sharing features.</p>
+            <p className="mt-1 text-sm text-ink-muted">Optional. Helps connect you with students from your university community.</p>
           </div>
           
           <div className="grid grid-cols-2 gap-4">
@@ -141,11 +149,12 @@ export function Register() {
                 value={formData.universityName}
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest transition-all"
-                placeholder="University of Toronto"
+                placeholder="Enter your university name"
               />
+              <p className="mt-1 text-sm text-ink-muted">Optional. Used to personalize campus-specific insights and community features.</p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-ink mb-1" htmlFor="currentYear">Current Year (Optional)</label>
+              <label className="block text-sm font-medium text-ink mb-1" htmlFor="currentYear">Current Year of Study (Optional)</label>
               <select
                 id="currentYear"
                 name="currentYear"
@@ -165,7 +174,7 @@ export function Register() {
             <div className="mb-2">
               <p className="block text-sm font-medium text-ink">Sex / Gender Information *</p>
               <p className="mt-1 text-sm text-ink-muted">
-                Used to personalize remedy recommendations and safety guidance.
+                Helps us provide safer and more relevant remedy recommendations.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
