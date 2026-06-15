@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { cn } from '../../utils/cn';
+import { useState } from 'react';
 
 export function AppointmentForm({ initialData, onSubmit, onCancel }) {
   const normalizedInitialData = initialData
@@ -22,18 +21,8 @@ export function AppointmentForm({ initialData, onSubmit, onCancel }) {
     }
   );
 
-  const [isFormValid, setIsFormValid] = useState(false);
-
-  useEffect(() => {
-    const { title, doctor, date, time, location } = formData;
-    setIsFormValid(
-      title.trim() !== '' &&
-      doctor.trim() !== '' &&
-      date.trim() !== '' &&
-      time.trim() !== '' &&
-      location.trim() !== ''
-    );
-  }, [formData]);
+  const isFormValid = [formData.title, formData.doctor, formData.date, formData.time, formData.location]
+    .every((value) => value.trim() !== '');
 
   const handleChange = (e) => {
     const { name, value } = e.target;

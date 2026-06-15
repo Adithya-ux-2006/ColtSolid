@@ -24,6 +24,7 @@ export function Navbar() {
             <Link to="/search" className="text-ink-muted hover:text-ink font-medium">Search</Link>
             <Link to="/favorites" className="text-ink-muted hover:text-ink font-medium">Favorites</Link>
             <Link to="/appointments" className="text-ink-muted hover:text-ink font-medium">Appointments</Link>
+            {user?.is_admin ? <Link to="/admin" className="text-ink-muted hover:text-ink font-medium">Admin</Link> : null}
             <Link to="/profile" className="w-9 h-9 rounded-full bg-forest/10 text-forest flex items-center justify-center font-bold">
               {user?.avatar || 'U'}
             </Link>

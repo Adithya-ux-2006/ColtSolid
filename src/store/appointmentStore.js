@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 import { useAuthStore } from './authStore';
 import { mapAppointment } from '../utils/mappers';
 
-export const useAppointmentStore = create((set, get) => ({
+export const useAppointmentStore = create((set) => ({
   appointments: [],
   isLoading: false,
 

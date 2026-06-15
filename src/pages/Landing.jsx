@@ -4,6 +4,7 @@ import { SymptomChip, FAQAccordion } from '../components/ui';
 import { PageWrapper } from '../components/layout';
 import { useCatalogStore } from '../store/catalogStore';
 import { FAQ_ITEMS } from '../constants/onboarding';
+import { trackSearchEvent } from '../utils/analytics';
 
 export function Landing() {
   const symptoms = useCatalogStore((state) => state.symptoms);
@@ -62,7 +63,12 @@ export function Landing() {
           <p className="text-sm font-semibold text-ink-muted uppercase tracking-wider mb-4">Common Symptoms</p>
           <div className="flex overflow-x-auto gap-4 pb-4 no-scrollbar -mx-6 px-6 snap-x">
             {symptoms.map(symptom => (
-              <Link key={symptom.id} to={`/results?symptom=${symptom.id}`} className="snap-start">
+              <Link
+                key={symptom.id}
+                to={`/results?symptom=${symptom.id}`}
+                className="snap-start"
+                onClick={() => trackSearchEvent({ source: 'landing_chip', symptomIds: [symptom.id] }).catch(() => {})}
+              >
                 <SymptomChip symptom={symptom} isSelected={false} />
               </Link>
             ))}

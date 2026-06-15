@@ -9,7 +9,7 @@ import { GENDER_OPTIONS } from '../constants/onboarding';
 export function Register() {
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
+    email: emailParam || '',
     university: '',
     year: '',
     gender: '',
@@ -31,7 +31,6 @@ export function Register() {
       return;
     }
 
-    setFormData((prev) => ({ ...prev, email: emailParam }));
     nameInputRef.current?.focus();
   }, [emailParam]);
 

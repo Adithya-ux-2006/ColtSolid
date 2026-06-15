@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Frown, Loader2, Sparkles, X } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
@@ -8,6 +8,7 @@ import { useSearch } from '../hooks/useSearch';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { detectSymptomsFromText } from '../utils/aiSymptomSearch';
+import { trackSearchEvent } from '../utils/analytics';
 
 const SEARCH_NUDGE_DISMISSED_KEY = 'clotsolid_nudge_dismissed';
 const AI_EXAMPLES = [
@@ -18,8 +19,9 @@ const AI_EXAMPLES = [
 
 export function SymptomSearch() {
   const { searchTerm, setSearchTerm, debouncedTerm } = useSearch('', 300);
-  const [isSearching, setIsSearching] = useState(false);
-  const [isBannerDismissed, setIsBannerDismissed] = useState(false);
+  const [isBannerDismissed, setIsBannerDismissed] = useState(
+    () => typeof window !== 'undefined' && window.localStorage.getItem(SEARCH_NUDGE_DISMISSED_KEY) === 'true'
+  );
   const [aiQuery, setAiQuery] = useState('');
   const [aiError, setAiError] = useState('');
   const [isAiSearching, setIsAiSearching] = useState(false);
@@ -27,25 +29,14 @@ export function SymptomSearch() {
   const isCatalogLoading = useCatalogStore((state) => state.isLoading);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const navigate = useNavigate();
+  const isSearching = searchTerm !== debouncedTerm;
 
   const filteredSymptoms = symptoms.filter(s => 
     s.label.toLowerCase().includes(debouncedTerm.toLowerCase())
   );
 
-  useEffect(() => {
-    setIsBannerDismissed(window.localStorage.getItem(SEARCH_NUDGE_DISMISSED_KEY) === 'true');
-  }, []);
-
-  useEffect(() => {
-    if (searchTerm !== debouncedTerm) {
-      setIsSearching(true);
-    } else {
-      const timer = setTimeout(() => setIsSearching(false), 600); // Fake delay for UX
-      return () => clearTimeout(timer);
-    }
-  }, [searchTerm, debouncedTerm]);
-
   const handleSelect = (symptomId) => {
+    trackSearchEvent({ source: 'chip', symptomIds: [symptomId] }).catch(() => {});
     navigate(`/results?symptom=${symptomId}`);
   };
 
@@ -83,6 +74,12 @@ export function SymptomSearch() {
         query: trimmedQuery,
         symptoms: result.detectedSymptoms.join(','),
       });
+
+      trackSearchEvent({
+        source: 'ai',
+        queryText: trimmedQuery,
+        symptomIds: result.detectedSymptoms,
+      }).catch(() => {});
 
       navigate(`/results?${params.toString()}`);
     } catch (error) {

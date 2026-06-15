@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { useAuthStore } from './authStore';
 import { mapRemedy } from '../utils/mappers';
+import { trackRemedyEvent } from '../utils/analytics';
 
 export const useFavoritesStore = create((set, get) => ({
   favorites: [],
@@ -44,8 +45,14 @@ export const useFavoritesStore = create((set, get) => ({
       const { error } = await supabase
         .from('favorites')
         .insert({ user_id: user.id, remedy_id: remedy.id });
-        
+         
       if (error) throw error;
+
+      trackRemedyEvent({
+        remedyId: remedy.id,
+        eventType: 'saved',
+        metadata: { method: 'favorites' },
+      }).catch(() => {});
     } catch (error) {
       console.error('Error adding favorite:', error);
       // Revert optimistic update

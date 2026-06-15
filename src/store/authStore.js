@@ -40,6 +40,7 @@ const buildUser = async (session) => {
     known_allergies: profile?.known_allergies ?? [],
     treatment_prefs: profile?.treatment_prefs ?? [],
     has_completed_onboarding: profile?.has_completed_onboarding ?? false,
+    is_admin: profile?.is_admin ?? false,
     notify_nearby_launch: profile?.notify_nearby_launch ?? false,
     preferNatural: profile?.prefer_natural ?? false,
     avoidMedication: profile?.avoid_medication ?? false,

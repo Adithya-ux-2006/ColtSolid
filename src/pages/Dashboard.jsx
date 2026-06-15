@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Calendar as CalendarIcon, ArrowRight, Activity, Bookmark } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
@@ -25,13 +25,11 @@ export function Dashboard() {
   const remedies = useCatalogStore((state) => state.remedies);
   const navigate = useNavigate();
 
-  const [greeting, setGreeting] = useState('');
-
-  useEffect(() => {
+  const greeting = useMemo(() => {
     const hour = new Date().getHours();
-    if (hour < 12) setGreeting('Good morning');
-    else if (hour < 18) setGreeting('Good afternoon');
-    else setGreeting('Good evening');
+    if (hour < 12) return 'Good morning';
+    if (hour < 18) return 'Good afternoon';
+    return 'Good evening';
   }, []);
 
   const featuredRemedies = remedies.filter(r => r.isFeatured).slice(0, 4);

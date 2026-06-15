@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { Navbar, BottomNav } from './components/layout';
+import { Navbar, BottomNav, AdminGuard } from './components/layout';
 import { useAuthStore } from './store/authStore';
 import { useFavoritesStore } from './store/favoritesStore';
 import { useAppointmentStore } from './store/appointmentStore';
@@ -19,6 +19,7 @@ import { Favorites } from './pages/Favorites';
 import { Appointments } from './pages/Appointments';
 import { Profile } from './pages/Profile';
 import { Onboarding } from './pages/Onboarding';
+import { AdminAnalytics } from './pages/AdminAnalytics';
 
 function ProtectedRoute({ children }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -75,6 +76,7 @@ function AnimatedRoutes() {
         <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
         <Route path="/appointments" element={<ProtectedRoute><Appointments /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/admin" element={<ProtectedRoute><AdminGuard><AdminAnalytics /></AdminGuard></ProtectedRoute>} />
         <Route path="/onboarding" element={<ProtectedRoute><OnboardingRoute /></ProtectedRoute>} />
         
         {/* Catch-all redirect */}

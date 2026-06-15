@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Heart, Share, AlertTriangle, ExternalLink, Calendar as CalendarIcon, CheckCircle2, Loader2, MapPin } from 'lucide-react';
+import { ArrowLeft, Heart, Share, AlertTriangle, ExternalLink, Calendar as CalendarIcon, CheckCircle2, ThumbsDown, ThumbsUp } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PageWrapper } from '../components/layout';
-import { CategoryBadge, RatingStars, EmailQuickSaveCard, NearbyShopCard } from '../components/ui';
+import { CategoryBadge, RatingStars, EmailQuickSaveCard, Modal } from '../components/ui';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { cn } from '../utils/cn';
-import { fetchNearbyShops } from '../utils/nearbyShops';
+import { createRemedyFeedback, trackRemedyEvent, updateRemedyFeedback } from '../utils/analytics';
 
 export function RemedyDetail() {
   const { id } = useParams();
@@ -27,14 +27,22 @@ export function RemedyDetail() {
   const [showExitIntent, setShowExitIntent] = useState(false);
   const [isSavingNearby, setIsSavingNearby] = useState(false);
   const [nearbyMessage, setNearbyMessage] = useState('');
-  const [nearbyPlaces, setNearbyPlaces] = useState([]);
-  const [isLoadingNearby, setIsLoadingNearby] = useState(false);
-  const [nearbyError, setNearbyError] = useState('');
+  const [feedbackVote, setFeedbackVote] = useState('');
+  const [feedbackText, setFeedbackText] = useState('');
+  const [feedbackRecordId, setFeedbackRecordId] = useState('');
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+  const [feedbackSuccessMessage, setFeedbackSuccessMessage] = useState('');
   const heartAreaRef = useRef(null);
 
   const remedy = remedies.find(r => r.id === id);
   const favorite = useFavoritesStore((state) => (remedy ? state.isFavorite(remedy.id) : false));
   const truncatedRemedyName = remedy?.name?.length > 30 ? `${remedy.name.slice(0, 27)}...` : remedy?.name || '';
+
+  useEffect(() => {
+    if (!remedy?.id) return;
+
+    trackRemedyEvent({ remedyId: remedy.id, eventType: 'viewed' }).catch(() => {});
+  }, [remedy?.id]);
 
   useEffect(() => {
     if (!showQuickSave) return undefined;
@@ -115,6 +123,11 @@ export function RemedyDetail() {
   };
 
   const handleNearbyNotify = async () => {
+    if (!isAuthenticated) {
+      setNearbyMessage('Thanks! We\'ll let you know when this feature launches.');
+      return;
+    }
+
     setIsSavingNearby(true);
     setNearbyMessage('');
 
@@ -124,40 +137,37 @@ export function RemedyDetail() {
     setNearbyMessage(result.success ? 'We will let you know when nearby stores go live in your area.' : 'Unable to save this preference right now.');
   };
 
-  const handleFindNearby = async () => {
-    if (!navigator.geolocation || !remedy) {
-      setNearbyError('Location services are unavailable on this device.');
-      return;
+  const handleFeedbackVote = async (vote) => {
+    if (!remedy) return;
+
+    try {
+      const feedbackId = await createRemedyFeedback({ remedyId: remedy.id, vote });
+      setFeedbackVote(vote);
+      setFeedbackRecordId(feedbackId);
+      setFeedbackText('');
+      setFeedbackSuccessMessage('');
+      setIsFeedbackModalOpen(true);
+    } catch {
+      setFeedbackSuccessMessage('Thanks for the feedback.');
     }
+  };
 
-    setNearbyError('');
-    setIsLoadingNearby(true);
+  const handleFeedbackSubmit = async () => {
+    try {
+      if (feedbackRecordId && feedbackText.trim()) {
+        await updateRemedyFeedback(feedbackRecordId, feedbackText.trim());
+      }
+      setFeedbackSuccessMessage('Thanks for the feedback.');
+      setIsFeedbackModalOpen(false);
+    } catch {
+      setFeedbackSuccessMessage('Thanks for the feedback.');
+      setIsFeedbackModalOpen(false);
+    }
+  };
 
-    navigator.geolocation.getCurrentPosition(
-      async ({ coords }) => {
-        try {
-          const places = await fetchNearbyShops({
-            remedyName: remedy.name,
-            latitude: coords.latitude,
-            longitude: coords.longitude,
-          });
-
-          setNearbyPlaces(places);
-          if (places.length === 0) {
-            setNearbyError('No nearby shops matched this remedy within 5 km. Try again from a different location.');
-          }
-        } catch (error) {
-          setNearbyError(error.message || 'Unable to load nearby shops right now.');
-        } finally {
-          setIsLoadingNearby(false);
-        }
-      },
-      (error) => {
-        setIsLoadingNearby(false);
-        setNearbyError(error.code === 1 ? 'Location access was denied. Enable location to find nearby shops.' : 'Unable to access your location right now.');
-      },
-      { enableHighAccuracy: true, timeout: 12000 }
-    );
+  const closeFeedbackModal = () => {
+    setIsFeedbackModalOpen(false);
+    setFeedbackSuccessMessage('Thanks for the feedback.');
   };
 
   const tabs = ['Overview', 'How to Use', 'Research', 'Warnings'];
@@ -260,6 +270,7 @@ export function RemedyDetail() {
                   href={paper.url} 
                   target="_blank" 
                   rel="noreferrer"
+                  onClick={() => trackRemedyEvent({ remedyId: remedy.id, eventType: 'research_clicked', metadata: { url: paper.url, label: paper.journal } }).catch(() => {})}
                   className="group block bg-white p-5 rounded-2xl shadow-sm border border-gray-50 hover:border-forest/30 hover:shadow-md transition-all relative overflow-hidden"
                 >
                   <div className="absolute top-0 left-0 w-1 h-full bg-forest/20 group-hover:bg-forest transition-colors" />
@@ -281,6 +292,7 @@ export function RemedyDetail() {
                   href={link.url} 
                   target="_blank" 
                   rel="noreferrer"
+                  onClick={() => trackRemedyEvent({ remedyId: remedy.id, eventType: 'research_clicked', metadata: { url: link.url, label: link.label } }).catch(() => {})}
                   className="group flex justify-between items-center bg-white p-5 rounded-2xl shadow-sm border border-gray-50 hover:border-forest/30 hover:shadow-md transition-all"
                 >
                   <span className="font-medium text-ink group-hover:text-forest transition-colors">{link.label}</span>
@@ -323,52 +335,50 @@ export function RemedyDetail() {
         )}
 
         <div className="mx-4 mt-4 rounded-2xl border border-amber/40 bg-amber/10 p-5">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <p className="text-lg font-semibold text-ink">📍 Find Nearby</p>
+              <div className="flex items-center gap-3">
+                <p className="text-lg font-semibold text-ink">Nearby Shops</p>
+                <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-forest shadow-sm">Coming Soon</span>
+              </div>
               <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-                Search pharmacies, medical stores, Ayurvedic stores, and herbal shops within 5 km of your location.
+                We're working on helping students find nearby pharmacies, medical stores, and wellness shops.
               </p>
             </div>
             <button
               type="button"
-              onClick={handleFindNearby}
-              disabled={isLoadingNearby}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-forest px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+              onClick={handleNearbyNotify}
+              disabled={isAuthenticated && (notifyNearbyEnabled || isSavingNearby)}
+              className="inline-flex items-center justify-center rounded-xl bg-forest px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
             >
-              {isLoadingNearby ? <Loader2 className="h-4 w-4 animate-spin" /> : <MapPin className="h-4 w-4" />}
-              {isLoadingNearby ? 'Searching nearby...' : 'Use My Location'}
+              {isAuthenticated && notifyNearbyEnabled ? 'Notification Enabled' : isSavingNearby ? 'Saving...' : 'Notify Me When Available'}
             </button>
           </div>
 
-          {nearbyError ? (
-            <div className="mt-4 rounded-2xl border border-amber/30 bg-white/80 px-4 py-3 text-sm text-amber-dark">
-              {nearbyError}
-            </div>
-          ) : null}
+          {nearbyMessage ? <p className="mt-4 text-sm text-forest">{nearbyMessage}</p> : null}
+        </div>
 
-          {nearbyPlaces.length > 0 ? (
-            <div className="mt-4 space-y-3">
-              {nearbyPlaces.map((place) => (
-                <NearbyShopCard key={place.id} place={place} />
-              ))}
-            </div>
-          ) : null}
-
-          {isAuthenticated ? (
-            <div className="mt-4 rounded-2xl bg-white/70 px-4 py-3 text-sm text-ink-muted">
-              <p>Want launch updates too? We'll still notify you when broader nearby inventory support expands.</p>
-              <button
-                type="button"
-                onClick={handleNearbyNotify}
-                disabled={notifyNearbyEnabled || isSavingNearby}
-                className="mt-3 rounded-xl bg-forest px-4 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {notifyNearbyEnabled ? 'Notification Enabled' : isSavingNearby ? 'Saving...' : 'Notify Me When Live'}
-              </button>
-              {nearbyMessage ? <p className="mt-2 text-sm text-forest">{nearbyMessage}</p> : null}
-            </div>
-          ) : null}
+        <div className="mx-4 mt-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+          <p className="text-lg font-semibold text-ink">Was this helpful?</p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={() => handleFeedbackVote('helpful')}
+              className="inline-flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-3 text-sm font-semibold text-ink transition-colors hover:border-forest hover:text-forest"
+            >
+              <ThumbsUp className="h-4 w-4" />
+              Helpful
+            </button>
+            <button
+              type="button"
+              onClick={() => handleFeedbackVote('not_helpful')}
+              className="inline-flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-3 text-sm font-semibold text-ink transition-colors hover:border-forest hover:text-forest"
+            >
+              <ThumbsDown className="h-4 w-4" />
+              Not Helpful
+            </button>
+          </div>
+          {feedbackSuccessMessage ? <p className="mt-4 text-sm text-forest">{feedbackSuccessMessage}</p> : null}
         </div>
       </div>
 
@@ -438,6 +448,40 @@ export function RemedyDetail() {
         </motion.div>
       ) : null}
       </AnimatePresence>
+
+      <Modal
+        isOpen={isFeedbackModalOpen}
+        onClose={closeFeedbackModal}
+        title="What could be improved?"
+      >
+        <div className="space-y-4">
+          <p className="text-sm text-ink-muted">
+            {feedbackVote === 'helpful' ? 'What worked well, or what would make this even better?' : 'Tell us what felt missing, unclear, or unhelpful.'}
+          </p>
+          <textarea
+            value={feedbackText}
+            onChange={(event) => setFeedbackText(event.target.value)}
+            placeholder="Optional feedback"
+            className="min-h-[120px] w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest"
+          />
+          <div className="flex justify-end gap-3">
+            <button
+              type="button"
+              onClick={closeFeedbackModal}
+              className="rounded-xl border border-gray-200 px-4 py-3 text-sm font-semibold text-ink"
+            >
+              Skip
+            </button>
+            <button
+              type="button"
+              onClick={handleFeedbackSubmit}
+              className="rounded-xl bg-forest px-4 py-3 text-sm font-semibold text-white"
+            >
+              Submit Feedback
+            </button>
+          </div>
+        </div>
+      </Modal>
     </PageWrapper>
   );
 }

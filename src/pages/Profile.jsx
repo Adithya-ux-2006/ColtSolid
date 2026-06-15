@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogOut, ChevronDown, Check, GraduationCap, Leaf, ShieldAlert } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
@@ -33,19 +33,6 @@ export function Profile() {
 
   const [expandedSection, setExpandedSection] = useState(null);
 
-  useEffect(() => {
-    setEditForm({
-      name: user?.name || '',
-      university: user?.university || '',
-      year: user?.year || '',
-    });
-    setPrefs({
-      natural: user?.preferNatural ?? false,
-      vegetarian: user?.vegetarianRemedies ?? false,
-      avoidMeds: user?.avoidMedication ?? false,
-    });
-  }, [user]);
-
   if (!user) return null;
 
   const handleLogout = () => {
@@ -62,6 +49,20 @@ export function Profile() {
       avatar: getInitials(editForm.name)
     });
     setIsEditing(false);
+  };
+
+  const startEditing = () => {
+    setEditForm({
+      name: user?.name || '',
+      university: user?.university || '',
+      year: user?.year || '',
+    });
+    setPrefs({
+      natural: user?.preferNatural ?? false,
+      vegetarian: user?.vegetarianRemedies ?? false,
+      avoidMeds: user?.avoidMedication ?? false,
+    });
+    setIsEditing(true);
   };
 
   return (
@@ -117,7 +118,7 @@ export function Profile() {
                 </div>
                 <div>
                   <button 
-                    onClick={() => setIsEditing(true)}
+                    onClick={startEditing}
                     className="text-sm font-semibold text-forest hover:underline"
                   >
                     Edit Profile
@@ -202,7 +203,7 @@ export function Profile() {
 
 function ToggleOption({ icon: Icon, label, checked, onChange }) {
   return (
-    <label className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors">
+    <button type="button" onClick={onChange} className="flex w-full items-center justify-between p-3 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors">
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-full bg-snow-dark flex items-center justify-center text-ink-muted">
           <Icon className="w-4 h-4" />
@@ -212,6 +213,6 @@ function ToggleOption({ icon: Icon, label, checked, onChange }) {
       <div className={`w-12 h-6 rounded-full p-1 transition-colors ${checked ? 'bg-forest' : 'bg-gray-200'}`}>
         <div className={`w-4 h-4 rounded-full bg-white transition-transform ${checked ? 'translate-x-6' : 'translate-x-0'}`} />
       </div>
-    </label>
+    </button>
   );
 }

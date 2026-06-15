@@ -5,7 +5,6 @@ export * from './FAQAccordion';
 export * from './LockToast';
 export * from './LoadingSkeleton';
 export * from './Modal';
-export * from './NearbyShopCard';
 export * from './RatingStars';
 export * from './RemedyCard';
 export * from './SymptomChip';

@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS public.users (
     known_allergies TEXT[] DEFAULT '{}' NOT NULL,
     treatment_prefs TEXT[] DEFAULT '{}' NOT NULL,
     has_completed_onboarding BOOLEAN DEFAULT false,
+    is_admin BOOLEAN DEFAULT false,
     notify_nearby_launch BOOLEAN DEFAULT false,
     prefer_natural BOOLEAN DEFAULT false NOT NULL,
     avoid_medication BOOLEAN DEFAULT false NOT NULL,
@@ -82,6 +83,36 @@ CREATE TABLE IF NOT EXISTS public.appointments (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS public.search_events (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    session_id TEXT,
+    source TEXT NOT NULL,
+    query_text TEXT DEFAULT '',
+    symptom_ids TEXT[] DEFAULT '{}' NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public.remedy_events (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    session_id TEXT,
+    remedy_id TEXT REFERENCES public.remedies(id) ON DELETE CASCADE,
+    event_type TEXT NOT NULL,
+    metadata JSONB DEFAULT '{}'::jsonb NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public.remedy_feedback (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    session_id TEXT,
+    remedy_id TEXT REFERENCES public.remedies(id) ON DELETE CASCADE,
+    vote TEXT NOT NULL,
+    feedback_text TEXT DEFAULT '',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
 -- 2. Row Level Security (RLS) Policies
 
 ALTER TABLE public.symptoms ENABLE ROW LEVEL SECURITY;
@@ -91,6 +122,9 @@ ALTER TABLE public.research_papers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.favorites ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.appointments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.search_events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.remedy_events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.remedy_feedback ENABLE ROW LEVEL SECURITY;
 
 -- Public read access for core data
 DROP POLICY IF EXISTS "Allow public read access to symptoms" ON public.symptoms;
@@ -157,5 +191,38 @@ CREATE POLICY "Users can view their own appointments" ON public.appointments FOR
 CREATE POLICY "Users can insert their own appointments" ON public.appointments FOR INSERT WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Users can update their own appointments" ON public.appointments FOR UPDATE USING (auth.uid() = user_id);
 CREATE POLICY "Users can delete their own appointments" ON public.appointments FOR DELETE USING (auth.uid() = user_id);
+
+-- Validation analytics policies
+DROP POLICY IF EXISTS "Anyone can insert search events" ON public.search_events;
+DROP POLICY IF EXISTS "Authenticated users can read search events" ON public.search_events;
+DROP POLICY IF EXISTS "Authenticated admins can read search events" ON public.search_events;
+CREATE POLICY "Anyone can insert search events" ON public.search_events FOR INSERT WITH CHECK (true);
+CREATE POLICY "Authenticated admins can read search events" ON public.search_events FOR SELECT USING (
+    EXISTS (
+        SELECT 1 FROM public.users WHERE users.id = auth.uid() AND users.is_admin = true
+    )
+);
+
+DROP POLICY IF EXISTS "Anyone can insert remedy events" ON public.remedy_events;
+DROP POLICY IF EXISTS "Authenticated users can read remedy events" ON public.remedy_events;
+DROP POLICY IF EXISTS "Authenticated admins can read remedy events" ON public.remedy_events;
+CREATE POLICY "Anyone can insert remedy events" ON public.remedy_events FOR INSERT WITH CHECK (true);
+CREATE POLICY "Authenticated admins can read remedy events" ON public.remedy_events FOR SELECT USING (
+    EXISTS (
+        SELECT 1 FROM public.users WHERE users.id = auth.uid() AND users.is_admin = true
+    )
+);
+
+DROP POLICY IF EXISTS "Anyone can insert remedy feedback" ON public.remedy_feedback;
+DROP POLICY IF EXISTS "Anyone can update remedy feedback" ON public.remedy_feedback;
+DROP POLICY IF EXISTS "Authenticated users can read remedy feedback" ON public.remedy_feedback;
+DROP POLICY IF EXISTS "Authenticated admins can read remedy feedback" ON public.remedy_feedback;
+CREATE POLICY "Anyone can insert remedy feedback" ON public.remedy_feedback FOR INSERT WITH CHECK (true);
+CREATE POLICY "Anyone can update remedy feedback" ON public.remedy_feedback FOR UPDATE USING (true) WITH CHECK (true);
+CREATE POLICY "Authenticated admins can read remedy feedback" ON public.remedy_feedback FOR SELECT USING (
+    EXISTS (
+        SELECT 1 FROM public.users WHERE users.id = auth.uid() AND users.is_admin = true
+    )
+);
 
 -- Seed catalog data separately with supabase/seed.sql.

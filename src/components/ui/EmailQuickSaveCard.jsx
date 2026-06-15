@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { saveQuickRemedy } from '../../utils/quickSave';
+import { trackRemedyEvent } from '../../utils/analytics';
 
 export function EmailQuickSaveCard({
   remedyId,
@@ -22,6 +23,11 @@ export function EmailQuickSaveCard({
     if (!email.trim()) return;
 
     const value = saveQuickRemedy(email.trim(), remedyId);
+    trackRemedyEvent({
+      remedyId,
+      eventType: 'saved',
+      metadata: { method: 'email_quick_save' },
+    }).catch(() => {});
     setSavedEmail(value.email);
     setIsSaved(true);
   };

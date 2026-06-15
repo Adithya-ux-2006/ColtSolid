@@ -1,3 +1,5 @@
+/* global process */
+
 const FALLBACK_SYMPTOM_PATTERNS = {
   headache: ['headache', 'migraine', 'temple pain', 'head pain', 'pressure in my head'],
   cold: ['cold', 'fever', 'sore throat', 'throat hurts', 'cough', 'runny nose', 'congestion', 'chills'],

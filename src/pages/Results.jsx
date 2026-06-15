@@ -29,7 +29,7 @@ export function Results() {
   const aiQuery = queryParams.get('query') || '';
   const searchSource = queryParams.get('source');
   const aiSymptomIds = useMemo(
-    () => (queryParams.get('symptoms') || '')
+    () => (new URLSearchParams(location.search).get('symptoms') || '')
       .split(',')
       .map((item) => item.trim())
       .filter(Boolean),
@@ -42,19 +42,21 @@ export function Results() {
     return mappedPrefs.length > 0 ? mappedPrefs : ['All'];
   }, [userTreatmentPrefs]);
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [filters, setFilters] = useState(defaultFilters);
+  const [filterState, setFilterState] = useState(null);
   const [sort, setSort] = useState('Best Rated');
-  const [viewedSymptoms, setViewedSymptoms] = useState([]);
-  const [hideHistoryTeaser, setHideHistoryTeaser] = useState(false);
   const symptoms = useCatalogStore((state) => state.symptoms);
   const remedies = useCatalogStore((state) => state.remedies);
   const isCatalogLoading = useCatalogStore((state) => state.isLoading);
   const hasLoaded = useCatalogStore((state) => state.hasLoaded);
   const isAiSearch = searchSource === 'ai' && aiSymptomIds.length > 0;
+  const isLoading = isCatalogLoading;
   const selectedSymptomIds = useMemo(
     () => (isAiSearch ? Array.from(new Set(aiSymptomIds)) : symptomId ? [symptomId] : []),
     [aiSymptomIds, isAiSearch, symptomId]
+  );
+  const filterContextKey = useMemo(
+    () => `${selectedSymptomIds.join(',')}|${defaultFilters.join(',')}`,
+    [defaultFilters, selectedSymptomIds]
   );
 
   const symptom = symptoms.find(s => s.id === symptomId);
@@ -62,19 +64,12 @@ export function Results() {
     () => symptoms.filter((item) => selectedSymptomIds.includes(item.id)),
     [selectedSymptomIds, symptoms]
   );
+  const filters = filterState?.key === filterContextKey ? filterState.values : defaultFilters;
+  const [hideHistoryTeaser, setHideHistoryTeaser] = useState(
+    () => typeof window !== 'undefined' && window.localStorage.getItem(HISTORY_DISMISSED_KEY) === 'true'
+  );
 
   useEffect(() => {
-    setIsLoading(isCatalogLoading);
-  }, [isCatalogLoading]);
-
-  useEffect(() => {
-    setFilters(defaultFilters);
-  }, [defaultFilters, symptomId]);
-
-  useEffect(() => {
-    const isDismissed = window.localStorage.getItem(HISTORY_DISMISSED_KEY) === 'true';
-    setHideHistoryTeaser(isDismissed);
-
     if (isAuthenticated || selectedSymptomIds.length === 0) return;
 
     const raw = window.localStorage.getItem(VIEWED_SYMPTOMS_KEY);
@@ -85,8 +80,14 @@ export function Results() {
     }, current);
 
     window.localStorage.setItem(VIEWED_SYMPTOMS_KEY, JSON.stringify(next));
-    setViewedSymptoms(next);
   }, [isAuthenticated, selectedSymptomIds]);
+
+  const viewedSymptoms = typeof window === 'undefined'
+    ? []
+    : (() => {
+        const raw = window.localStorage.getItem(VIEWED_SYMPTOMS_KEY);
+        return raw ? JSON.parse(raw) : [];
+      })();
 
   const filteredAndSortedRemedies = useMemo(() => {
     if (selectedSymptomIds.length === 0) return [];
@@ -143,16 +144,20 @@ export function Results() {
 
   const toggleFilter = (value) => {
     if (value === 'All') {
-      setFilters(['All']);
+      setFilterState({ key: filterContextKey, values: ['All'] });
       return;
     }
 
-    setFilters((current) => {
-      const next = current.includes(value)
-        ? current.filter((item) => item !== value)
-        : [...current.filter((item) => item !== 'All'), value];
+    setFilterState((currentState) => {
+      const currentFilters = currentState?.key === filterContextKey ? currentState.values : filters;
+      const next = currentFilters.includes(value)
+        ? currentFilters.filter((item) => item !== value)
+        : [...currentFilters.filter((item) => item !== 'All'), value];
 
-      return next.length > 0 ? next : ['All'];
+      return {
+        key: filterContextKey,
+        values: next.length > 0 ? next : ['All'],
+      };
     });
   };
 
@@ -312,10 +317,10 @@ export function Results() {
         
         {!isLoading && filteredAndSortedRemedies.length === 0 && (
          <div className="text-center mt-[-20px]">
-             <button onClick={() => setFilters(['All'])} className="text-forest font-medium hover:underline">
-               Clear Filters
-              </button>
-          </div>
+             <button onClick={() => setFilterState({ key: filterContextKey, values: ['All'] })} className="text-forest font-medium hover:underline">
+                Clear Filters
+               </button>
+           </div>
         )}
       </div>
     </PageWrapper>
