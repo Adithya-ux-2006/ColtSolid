@@ -17,6 +17,38 @@ async function importQuickSavedFavorites(userId) {
   clearQuickSaves();
 }
 
+async function updateUserProfileRow(userId, updates) {
+  const { error } = await supabase
+    .from('users')
+    .update(updates)
+    .eq('id', userId);
+
+  if (!error) return;
+
+  const isMissingNewColumn = /column .* does not exist/i.test(error.message || '')
+    || /could not find the '.*' column of 'users' in the schema cache/i.test(error.message || '');
+  if (!isMissingNewColumn) throw error;
+
+  const fallbackUpdates = {
+    name: updates.name,
+    university: updates.university_name ?? updates.university,
+    year: updates.current_year ?? updates.year,
+    gender: updates.gender,
+    prefer_natural: updates.prefer_natural,
+    avoid_medication: updates.avoid_medication,
+    vegetarian_remedies: updates.vegetarian_remedies,
+  };
+
+  Object.keys(fallbackUpdates).forEach((key) => fallbackUpdates[key] === undefined && delete fallbackUpdates[key]);
+
+  const { error: fallbackError } = await supabase
+    .from('users')
+    .update(fallbackUpdates)
+    .eq('id', userId);
+
+  if (fallbackError) throw fallbackError;
+}
+
 const buildUser = async (session) => {
   if (!session?.user) return null;
 
@@ -32,9 +64,13 @@ const buildUser = async (session) => {
 
   return {
     ...session.user,
+    ...profile,
     name: profile?.name || metadata.name || '',
-    university: profile?.university || metadata.university || '',
-    year: profile?.year || metadata.year || '',
+    university_email: profile?.university_email || metadata.university_email || '',
+    university_name: profile?.university_name || profile?.university || metadata.university_name || metadata.university || '',
+    current_year: profile?.current_year || profile?.year || metadata.current_year || metadata.year || '',
+    university: profile?.university_name || profile?.university || metadata.university_name || metadata.university || '',
+    year: profile?.current_year || profile?.year || metadata.current_year || metadata.year || '',
     gender: profile?.gender || metadata.gender || '',
     common_conditions: profile?.common_conditions ?? [],
     known_allergies: profile?.known_allergies ?? [],
@@ -46,7 +82,6 @@ const buildUser = async (session) => {
     avoidMedication: profile?.avoid_medication ?? false,
     vegetarianRemedies: profile?.vegetarian_remedies ?? false,
     avatar: metadata.avatar || getInitials(profile?.name || metadata.name || ''),
-    ...profile,
   };
 };
 
@@ -127,8 +162,9 @@ export const useAuthStore = create((set, get) => ({
         options: {
           data: {
             name: details.name,
-            university: details.university,
-            year: details.year,
+            university_email: details.universityEmail || '',
+            university_name: details.universityName || '',
+            current_year: details.currentYear || '',
             gender: details.gender || '',
             avatar,
           },
@@ -137,17 +173,15 @@ export const useAuthStore = create((set, get) => ({
       if (error) throw error;
       if (!data.user) throw new Error('User signup did not return a user record.');
 
-      const { error: profileError } = await supabase
-        .from('users')
-        .update({
-          name: details.name,
-          university: details.university,
-          year: details.year,
-          gender: details.gender || '',
-        })
-        .eq('id', data.user.id);
-
-      if (profileError) throw profileError;
+      await updateUserProfileRow(data.user.id, {
+        name: details.name,
+        university_email: details.universityEmail || '',
+        university_name: details.universityName || '',
+        current_year: details.currentYear || '',
+        university: details.universityName || '',
+        year: details.currentYear || '',
+        gender: details.gender || '',
+      });
 
       if (data.session) {
         await importQuickSavedFavorites(data.user.id);
@@ -195,8 +229,11 @@ export const useAuthStore = create((set, get) => ({
     try {
       const dbUpdates = {
         name: updates.name,
-        university: updates.university,
-        year: updates.year,
+        university_email: updates.universityEmail,
+        university_name: updates.universityName,
+        current_year: updates.currentYear,
+        university: updates.universityName,
+        year: updates.currentYear,
         gender: updates.gender,
         prefer_natural: updates.preferNatural,
         avoid_medication: updates.avoidMedication,
@@ -205,13 +242,33 @@ export const useAuthStore = create((set, get) => ({
 
       Object.keys(dbUpdates).forEach((key) => dbUpdates[key] === undefined && delete dbUpdates[key]);
 
-      const { error } = await supabase
-        .from('users')
-        .update(dbUpdates)
-        .eq('id', user.id);
-        
-      if (error) throw error;
-      set((state) => ({ user: { ...state.user, ...updates } }));
+      const metadataUpdates = {
+        name: updates.name,
+        university_email: updates.universityEmail,
+        university_name: updates.universityName,
+        current_year: updates.currentYear,
+        gender: updates.gender,
+      };
+
+      Object.keys(metadataUpdates).forEach((key) => metadataUpdates[key] === undefined && delete metadataUpdates[key]);
+
+      if (Object.keys(metadataUpdates).length > 0) {
+        const { error: authUpdateError } = await supabase.auth.updateUser({ data: metadataUpdates });
+        if (authUpdateError) throw authUpdateError;
+      }
+
+      await updateUserProfileRow(user.id, dbUpdates);
+      set((state) => ({
+        user: {
+          ...state.user,
+          ...updates,
+          university_name: updates.universityName ?? state.user.university_name,
+          current_year: updates.currentYear ?? state.user.current_year,
+          university_email: updates.universityEmail ?? state.user.university_email,
+          university: updates.universityName ?? state.user.university,
+          year: updates.currentYear ?? state.user.year,
+        },
+      }));
     } catch (error) {
       console.error('Update profile error:', error);
     }

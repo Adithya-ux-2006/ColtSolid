@@ -6,14 +6,17 @@ import { useAuthStore } from '../store/authStore';
 import { cn } from '../utils/cn';
 import { GENDER_OPTIONS } from '../constants/onboarding';
 
+const CURRENT_YEAR_OPTIONS = ['1st Year', '2nd Year', '3rd Year', '4th Year', 'Postgraduate', 'Other'];
+
 export function Register() {
   const [searchParams] = useSearchParams();
   const emailParam = searchParams.get('email');
   const [formData, setFormData] = useState({
     name: '',
     email: emailParam || '',
-    university: '',
-    year: '',
+    universityEmail: '',
+    universityName: '',
+    currentYear: '',
     gender: '',
     password: ''
   });
@@ -34,7 +37,7 @@ export function Register() {
     nameInputRef.current?.focus();
   }, [emailParam]);
 
-  const isFormValid = [formData.name, formData.email, formData.university, formData.year, formData.password]
+  const isFormValid = [formData.name, formData.email, formData.gender, formData.password]
     .every((value) => value.trim() !== '');
 
   const handleChange = (e) => {
@@ -50,8 +53,9 @@ export function Register() {
     const result = await register({
       name: formData.name,
       email: formData.email,
-      university: formData.university,
-      year: formData.year,
+      universityEmail: formData.universityEmail,
+      universityName: formData.universityName,
+      currentYear: formData.currentYear,
       gender: formData.gender,
       password: formData.password,
     });
@@ -95,7 +99,7 @@ export function Register() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-ink mb-1" htmlFor="email">University Email</label>
+            <label className="block text-sm font-medium text-ink mb-1" htmlFor="email">Personal Email *</label>
             <input
               id="email"
               name="email"
@@ -104,51 +108,64 @@ export function Register() {
               value={formData.email}
               onChange={handleChange}
               className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest transition-all"
+              placeholder="you@example.com"
               required
             />
+            <p className="mt-1 text-sm text-ink-muted">This is your primary login and contact email.</p>
             {emailParam ? (
               <p className="mt-1 text-sm text-forest">✓ We'll keep your saved remedies linked to this account.</p>
             ) : null}
           </div>
+
+          <div>
+            <label className="block text-sm font-medium text-ink mb-1" htmlFor="universityEmail">University Email (Optional)</label>
+            <input
+              id="universityEmail"
+              name="universityEmail"
+              type="email"
+              value={formData.universityEmail}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest transition-all"
+              placeholder="you@campus.edu"
+            />
+            <p className="mt-1 text-sm text-ink-muted">Used to connect you with your campus community and future student remedy sharing features.</p>
+          </div>
           
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-ink mb-1" htmlFor="university">University</label>
+              <label className="block text-sm font-medium text-ink mb-1" htmlFor="universityName">University (Optional)</label>
               <input
-                id="university"
-                name="university"
+                id="universityName"
+                name="universityName"
                 type="text"
-                value={formData.university}
+                value={formData.universityName}
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest transition-all"
-                required
+                placeholder="University of Toronto"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-ink mb-1" htmlFor="year">Year</label>
+              <label className="block text-sm font-medium text-ink mb-1" htmlFor="currentYear">Current Year (Optional)</label>
               <select
-                id="year"
-                name="year"
-                value={formData.year}
+                id="currentYear"
+                name="currentYear"
+                value={formData.currentYear}
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest transition-all bg-white"
-                required
               >
                 <option value="">Select</option>
-                <option value="Freshman">Freshman</option>
-                <option value="Sophomore">Sophomore</option>
-                <option value="Junior">Junior</option>
-                <option value="Senior">Senior</option>
-                <option value="Graduate">Graduate</option>
+                {CURRENT_YEAR_OPTIONS.map((option) => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
               </select>
             </div>
           </div>
 
           <div>
             <div className="mb-2">
-              <p className="block text-sm font-medium text-ink">How do you identify?</p>
+              <p className="block text-sm font-medium text-ink">Sex / Gender Information *</p>
               <p className="mt-1 text-sm text-ink-muted">
-                Helps us personalize remedy recommendations and filter contraindications.
+                Used to personalize remedy recommendations and safety guidance.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">

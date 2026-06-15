@@ -7,7 +7,7 @@ import { useAuthStore } from '../store/authStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useAppointmentStore } from '../store/appointmentStore';
 import { getInitials } from '../utils/mappers';
-import { FAQ_ITEMS } from '../constants/onboarding';
+import { FAQ_ITEMS, GENDER_OPTIONS } from '../constants/onboarding';
 
 export function Profile() {
   const user = useAuthStore((state) => state.user);
@@ -20,8 +20,10 @@ export function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
     name: user?.name || '',
-    university: user?.university || '',
-    year: user?.year || ''
+    universityEmail: user?.university_email || '',
+    universityName: user?.university_name || user?.university || '',
+    currentYear: user?.current_year || user?.year || '',
+    gender: user?.gender || ''
   });
   
   // Health preferences (mock state for UI)
@@ -54,8 +56,10 @@ export function Profile() {
   const startEditing = () => {
     setEditForm({
       name: user?.name || '',
-      university: user?.university || '',
-      year: user?.year || '',
+      universityEmail: user?.university_email || '',
+      universityName: user?.university_name || user?.university || '',
+      currentYear: user?.current_year || user?.year || '',
+      gender: user?.gender || '',
     });
     setPrefs({
       natural: user?.preferNatural ?? false,
@@ -87,22 +91,54 @@ export function Profile() {
                 />
                 <input 
                   type="text" 
-                  value={editForm.university} 
-                  onChange={e => setEditForm({...editForm, university: e.target.value})}
+                  value={editForm.universityName} 
+                  onChange={e => setEditForm({...editForm, universityName: e.target.value})}
                   className="w-full px-3 py-2 border rounded-xl"
                   placeholder="University"
                 />
+                <input 
+                  type="email" 
+                  value={editForm.universityEmail} 
+                  onChange={e => setEditForm({...editForm, universityEmail: e.target.value})}
+                  className="w-full px-3 py-2 border rounded-xl"
+                  placeholder="University email (optional)"
+                />
                 <select 
-                  value={editForm.year} 
-                  onChange={e => setEditForm({...editForm, year: e.target.value})}
+                  value={editForm.currentYear} 
+                  onChange={e => setEditForm({...editForm, currentYear: e.target.value})}
                   className="w-full px-3 py-2 border rounded-xl bg-white"
                 >
-                  <option value="Freshman">Freshman</option>
-                  <option value="Sophomore">Sophomore</option>
-                  <option value="Junior">Junior</option>
-                  <option value="Senior">Senior</option>
-                  <option value="Graduate">Graduate</option>
+                  <option value="">Select year</option>
+                  <option value="1st Year">1st Year</option>
+                  <option value="2nd Year">2nd Year</option>
+                  <option value="3rd Year">3rd Year</option>
+                  <option value="4th Year">4th Year</option>
+                  <option value="Postgraduate">Postgraduate</option>
+                  <option value="Other">Other</option>
                 </select>
+                <div className="flex flex-wrap gap-2">
+                  {['male', 'female', 'non-binary-other', 'prefer-not-to-say'].map((option) => {
+                    const labels = {
+                      male: 'Male',
+                      female: 'Female',
+                      'non-binary-other': 'Non-binary / Other',
+                      'prefer-not-to-say': 'Prefer not to say',
+                    };
+
+                    const isSelected = editForm.gender === option;
+
+                    return (
+                      <button
+                        key={option}
+                        type="button"
+                        onClick={() => setEditForm({ ...editForm, gender: option })}
+                        className={isSelected ? 'rounded-full border border-forest bg-forest px-4 py-2 text-sm font-medium text-white' : 'rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-ink'}
+                      >
+                        {labels[option]}
+                      </button>
+                    );
+                  })}
+                </div>
                 <div className="flex gap-2 justify-center md:justify-start pt-2">
                   <button onClick={() => setIsEditing(false)} className="px-4 py-1.5 rounded-full text-sm font-medium border text-ink">Cancel</button>
                   <button onClick={handleSaveProfile} className="px-4 py-1.5 rounded-full text-sm font-medium bg-forest text-white">Save</button>
@@ -114,8 +150,10 @@ export function Profile() {
                 <p className="text-ink-muted mb-3">{user.email}</p>
                 <div className="flex items-center justify-center md:justify-start gap-2 text-sm font-medium text-ink bg-gray-50 inline-flex px-3 py-1.5 rounded-lg mb-4">
                   <GraduationCap className="w-4 h-4 text-forest" />
-                  <span>{user.university} • {user.year}</span>
+                  <span>{user.university_name || user.university || 'No university added'}{user.current_year || user.year ? ` • ${user.current_year || user.year}` : ''}</span>
                 </div>
+                {user.university_email ? <p className="text-sm text-ink-muted mb-2">University email: {user.university_email}</p> : null}
+                <p className="text-sm text-ink-muted mb-4">Sex / Gender: {user.gender ? GENDER_OPTIONS.find((option) => option.value === user.gender)?.label || user.gender : 'Not provided'}</p>
                 <div>
                   <button 
                     onClick={startEditing}

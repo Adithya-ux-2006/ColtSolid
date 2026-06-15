@@ -46,6 +46,9 @@ CREATE TABLE IF NOT EXISTS public.research_papers (
 CREATE TABLE IF NOT EXISTS public.users (
     id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
     name TEXT NOT NULL,
+    university_email TEXT,
+    university_name TEXT,
+    current_year TEXT,
     university TEXT,
     year TEXT,
     gender TEXT,
@@ -151,16 +154,24 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-  INSERT INTO public.users (id, name, university, year, gender)
+  INSERT INTO public.users (id, name, university_email, university_name, current_year, university, year, gender)
   VALUES (
     NEW.id,
     COALESCE(NEW.raw_user_meta_data ->> 'name', 'Student'),
+    NEW.raw_user_meta_data ->> 'university_email',
+    NEW.raw_user_meta_data ->> 'university_name',
+    NEW.raw_user_meta_data ->> 'current_year',
+    NEW.raw_user_meta_data ->> 'university_name',
+    NEW.raw_user_meta_data ->> 'current_year',
     NEW.raw_user_meta_data ->> 'university',
     NEW.raw_user_meta_data ->> 'year',
     COALESCE(NEW.raw_user_meta_data ->> 'gender', '')
   )
   ON CONFLICT (id) DO UPDATE SET
     name = EXCLUDED.name,
+    university_email = EXCLUDED.university_email,
+    university_name = EXCLUDED.university_name,
+    current_year = EXCLUDED.current_year,
     university = EXCLUDED.university,
     year = EXCLUDED.year,
     gender = EXCLUDED.gender;
