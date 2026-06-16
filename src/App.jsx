@@ -6,6 +6,7 @@ import { useAuthStore } from './store/authStore';
 import { useFavoritesStore } from './store/favoritesStore';
 import { useAppointmentStore } from './store/appointmentStore';
 import { useCatalogStore } from './store/catalogStore';
+import { AiChatPanel } from './components/ai/AiChatPanel';
 
 // Pages
 import { Landing } from './pages/Landing';
@@ -122,6 +123,7 @@ function App() {
         <main className="flex-1 relative">
           <AnimatedRoutes />
         </main>
+        <AiChatPanel />
         <BottomNav />
       </div>
     </BrowserRouter>

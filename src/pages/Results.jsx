@@ -5,6 +5,7 @@ import { PageWrapper } from '../components/layout';
 import { RemedyCard, LoadingSkeleton, EmptyState } from '../components/ui';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
+import { getClosestSymptomCategory, searchRemedies } from '../hooks/useSearch';
 import { mapTreatmentPrefsToFilters } from '../constants/onboarding';
 import { cn } from '../utils/cn';
 
@@ -25,16 +26,8 @@ export function Results() {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
-  const symptomId = queryParams.get('symptom');
-  const aiQuery = queryParams.get('query') || '';
-  const searchSource = queryParams.get('source');
-  const aiSymptomIds = useMemo(
-    () => (new URLSearchParams(location.search).get('symptoms') || '')
-      .split(',')
-      .map((item) => item.trim())
-      .filter(Boolean),
-    [location.search]
-  );
+  const symptomParam = queryParams.get('symptom');
+  const queryParam = queryParams.get('q') || '';
   const userTreatmentPrefs = useAuthStore((state) => state.user?.treatment_prefs ?? EMPTY_ARRAY);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const defaultFilters = useMemo(() => {
@@ -48,29 +41,47 @@ export function Results() {
   const remedies = useCatalogStore((state) => state.remedies);
   const isCatalogLoading = useCatalogStore((state) => state.isLoading);
   const hasLoaded = useCatalogStore((state) => state.hasLoaded);
-  const isAiSearch = searchSource === 'ai' && aiSymptomIds.length > 0;
+  const [fallbackMatch, setFallbackMatch] = useState({ query: '', category: null });
+  const isFreeTextSearch = Boolean(queryParam.trim());
+  const closestCategory = fallbackMatch.query === queryParam ? fallbackMatch.category : null;
   const isLoading = isCatalogLoading;
   const selectedSymptomIds = useMemo(
-    () => (isAiSearch ? Array.from(new Set(aiSymptomIds)) : symptomId ? [symptomId] : []),
-    [aiSymptomIds, isAiSearch, symptomId]
+    () => (symptomParam ? [symptomParam] : closestCategory && closestCategory !== 'none' ? [closestCategory] : []),
+    [closestCategory, symptomParam]
   );
   const filterContextKey = useMemo(
     () => `${selectedSymptomIds.join(',')}|${defaultFilters.join(',')}`,
     [defaultFilters, selectedSymptomIds]
   );
 
-  const symptom = symptoms.find(s => s.id === symptomId);
-  const detectedSymptoms = useMemo(
-    () => symptoms.filter((item) => selectedSymptomIds.includes(item.id)),
-    [selectedSymptomIds, symptoms]
-  );
+  const symptom = symptoms.find(s => s.id === symptomParam);
   const filters = filterState?.key === filterContextKey ? filterState.values : defaultFilters;
   const [hideHistoryTeaser, setHideHistoryTeaser] = useState(
     () => typeof window !== 'undefined' && window.localStorage.getItem(HISTORY_DISMISSED_KEY) === 'true'
   );
 
   useEffect(() => {
-    if (isAuthenticated || selectedSymptomIds.length === 0) return;
+    if (!isFreeTextSearch || isCatalogLoading || searchRemedies(queryParam, remedies).length > 0) {
+      return;
+    }
+
+    let isCurrent = true;
+
+    getClosestSymptomCategory(queryParam)
+      .then((category) => {
+        if (isCurrent) setFallbackMatch({ query: queryParam, category });
+      })
+      .catch(() => {
+        if (isCurrent) setFallbackMatch({ query: queryParam, category: 'none' });
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [isCatalogLoading, isFreeTextSearch, queryParam, remedies]);
+
+  useEffect(() => {
+    if (isAuthenticated || selectedSymptomIds.length === 0 || isFreeTextSearch) return;
 
     const raw = window.localStorage.getItem(VIEWED_SYMPTOMS_KEY);
     const current = raw ? JSON.parse(raw) : [];
@@ -80,7 +91,7 @@ export function Results() {
     }, current);
 
     window.localStorage.setItem(VIEWED_SYMPTOMS_KEY, JSON.stringify(next));
-  }, [isAuthenticated, selectedSymptomIds]);
+  }, [isAuthenticated, isFreeTextSearch, selectedSymptomIds]);
 
   const viewedSymptoms = typeof window === 'undefined'
     ? []
@@ -90,6 +101,28 @@ export function Results() {
       })();
 
   const filteredAndSortedRemedies = useMemo(() => {
+    const localQueryResults = isFreeTextSearch ? searchRemedies(queryParam, remedies) : [];
+    if (isFreeTextSearch && localQueryResults.length > 0) {
+      let result = localQueryResults.map((remedy) => ({ ...remedy, matchCount: 1 }));
+      const activeFilters = filters.includes('All') ? [] : filters;
+
+      if (activeFilters.length > 0) {
+        result = result.filter(r => activeFilters.includes(r.category));
+      }
+
+      result.sort((a, b) => {
+        if (sort === 'Best Rated') return b.rating - a.rating;
+        if (sort === 'Most Researched') return b.reviewCount - a.reviewCount;
+        if (sort === 'Easiest') {
+          const diffMap = { 'Easy': 1, 'Moderate': 2, 'Requires prescription': 3 };
+          return diffMap[a.difficulty] - diffMap[b.difficulty];
+        }
+        return 0;
+      });
+
+      return result;
+    }
+
     if (selectedSymptomIds.length === 0) return [];
 
     let result = remedies
@@ -116,7 +149,7 @@ export function Results() {
     });
 
     return result;
-  }, [filters, remedies, selectedSymptomIds, sort]);
+  }, [filters, isFreeTextSearch, queryParam, remedies, selectedSymptomIds, sort]);
 
   if (!hasLoaded && isLoading) {
     return (
@@ -128,7 +161,7 @@ export function Results() {
     );
   }
 
-  if (!isAiSearch && !symptom) {
+  if (!isFreeTextSearch && !symptom) {
     return (
       <PageWrapper className="min-h-screen bg-snow pt-20 px-6">
         <EmptyState 
@@ -166,9 +199,9 @@ export function Results() {
   const historyHeadline = viewedLabels.length > 1
     ? `${viewedLabels[0]} and ${viewedLabels[1]}${viewedSymptoms.length > 2 ? ' and more' : ''}`
     : viewedLabels[0];
-  const emptyStateContext = isAiSearch
-    ? detectedSymptoms.map((detectedSymptom) => detectedSymptom.label).join(', ')
-    : symptom?.label || 'your selected symptoms';
+  const isClosestMatch = isFreeTextSearch && searchRemedies(queryParam, remedies).length === 0 && closestCategory && closestCategory !== 'none';
+  const emptyStateContext = isFreeTextSearch ? `"${queryParam}"` : symptom?.label || 'your selected symptoms';
+  const headerTitle = isFreeTextSearch ? `Results for '${queryParam}'` : `Remedies for ${symptom?.label || ''}`;
 
   return (
     <PageWrapper className="min-h-screen bg-snow pb-24 md:pb-8">
@@ -181,15 +214,8 @@ export function Results() {
             </button>
             <div>
               <h1 className="text-2xl font-bold text-ink flex items-center gap-2">
-                {isAiSearch ? (
-                  <>
-                    <span>AI Matched Remedies</span>
-                  </>
-                ) : (
-                  <>
-                    <span>{symptom.emoji}</span> {symptom.label}
-                  </>
-                )}
+                {!isFreeTextSearch && symptom?.emoji ? <span>{symptom.emoji}</span> : null}
+                {headerTitle}
               </h1>
               <p className="text-sm text-ink-muted">
                 {isLoading ? 'Finding remedies...' : `${filteredAndSortedRemedies.length} remedies found`}
@@ -233,24 +259,9 @@ export function Results() {
 
       {/* Grid */}
       <div className="max-w-5xl mx-auto px-6 pt-8">
-        {isAiSearch ? (
-          <div className="mb-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
-            <p className="text-sm font-semibold text-forest">Detected symptoms</p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {detectedSymptoms.map((detectedSymptom) => (
-                <span
-                  key={detectedSymptom.id}
-                  className="rounded-full bg-sage/20 px-3 py-1.5 text-sm font-medium text-forest"
-                >
-                  {detectedSymptom.emoji} {detectedSymptom.label}
-                </span>
-              ))}
-            </div>
-            {aiQuery ? (
-              <p className="mt-3 text-sm leading-relaxed text-ink-muted">
-                Based on: "{aiQuery}"
-              </p>
-            ) : null}
+        {isClosestMatch ? (
+          <div className="mb-4 rounded-2xl border border-sage/40 bg-sage/10 p-4 text-sm text-forest shadow-sm">
+            Showing closest results for "{queryParam}"
           </div>
         ) : null}
 
@@ -309,7 +320,7 @@ export function Results() {
           <EmptyState 
             icon={AlertCircle}
             title="No remedies match"
-            description={`We couldn't find any ${filters.join(', ')} remedies for ${emptyStateContext}.`}
+            description={isFreeTextSearch ? `We couldn't find exact or close matches for ${emptyStateContext}. Try the AI Health Assistant from the side icon for personalised advice.` : `We couldn't find any ${filters.join(', ')} remedies for ${emptyStateContext}.`}
             ctaLabel="Back to Search"
             ctaHref="/search"
           />

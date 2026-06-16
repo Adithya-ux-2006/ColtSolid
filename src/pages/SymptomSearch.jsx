@@ -1,43 +1,55 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Frown, Loader2, Sparkles, X } from 'lucide-react';
+import { ArrowRight, Bot, Frown, Search, X } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { SearchBar } from '../components/forms';
-import { SymptomChip, LoadingSkeleton, EmptyState } from '../components/ui';
-import { useSearch } from '../hooks/useSearch';
+import { SymptomChip, LoadingSkeleton } from '../components/ui';
+import { searchRemedies, useSearch } from '../hooks/useSearch';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
-import { detectSymptomsFromText } from '../utils/aiSymptomSearch';
 import { trackSearchEvent } from '../utils/analytics';
 
 const SEARCH_NUDGE_DISMISSED_KEY = 'clotsolid_nudge_dismissed';
-const AI_EXAMPLES = [
-  'My throat hurts and I have a fever',
-  'I feel stressed and cannot sleep',
-  'I have nausea after eating',
-];
+const QUICK_SYMPTOMS = ['headache', 'cold', 'anxiety', 'insomnia', 'nausea', 'stress'];
+
+function openAiAssistant() {
+  window.dispatchEvent(new CustomEvent('cs-open-ai-chat'));
+}
 
 export function SymptomSearch() {
   const { searchTerm, setSearchTerm, debouncedTerm } = useSearch('', 300);
   const [isBannerDismissed, setIsBannerDismissed] = useState(
     () => typeof window !== 'undefined' && window.localStorage.getItem(SEARCH_NUDGE_DISMISSED_KEY) === 'true'
   );
-  const [aiQuery, setAiQuery] = useState('');
-  const [aiError, setAiError] = useState('');
-  const [isAiSearching, setIsAiSearching] = useState(false);
   const symptoms = useCatalogStore((state) => state.symptoms);
+  const remedies = useCatalogStore((state) => state.remedies);
   const isCatalogLoading = useCatalogStore((state) => state.isLoading);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const navigate = useNavigate();
   const isSearching = searchTerm !== debouncedTerm;
+  const trimmedQuery = debouncedTerm.trim();
 
-  const filteredSymptoms = symptoms.filter(s => 
-    s.label.toLowerCase().includes(debouncedTerm.toLowerCase())
+  const quickSymptoms = useMemo(
+    () => QUICK_SYMPTOMS.map((id) => symptoms.find((symptom) => symptom.id === id)).filter(Boolean),
+    [symptoms]
   );
+  const localResults = useMemo(
+    () => searchRemedies(trimmedQuery, remedies),
+    [remedies, trimmedQuery]
+  );
+  const shouldShowDropdown = searchTerm.trim().length >= 2;
 
   const handleSelect = (symptomId) => {
     trackSearchEvent({ source: 'chip', symptomIds: [symptomId] }).catch(() => {});
     navigate(`/results?symptom=${symptomId}`);
+  };
+
+  const goToResults = () => {
+    const query = searchTerm.trim();
+    if (!query) return;
+
+    trackSearchEvent({ source: 'text', queryText: query }).catch(() => {});
+    navigate(`/results?q=${encodeURIComponent(query)}`);
   };
 
   const dismissBanner = () => {
@@ -45,47 +57,10 @@ export function SymptomSearch() {
     setIsBannerDismissed(true);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && filteredSymptoms.length > 0) {
-      handleSelect(filteredSymptoms[0].id);
-    }
-  };
-
-  const handleAiSearch = async () => {
-    const trimmedQuery = aiQuery.trim();
-    if (!trimmedQuery) return;
-
-    setAiError('');
-    setIsAiSearching(true);
-
-    try {
-      const result = await detectSymptomsFromText(
-        trimmedQuery,
-        symptoms.map(({ id, label }) => ({ id, label }))
-      );
-
-      if (!result.detectedSymptoms?.length) {
-        setAiError('We could not confidently match that description to symptoms in the catalog. Try adding clearer symptom words like headache, fever, nausea, or stress.');
-        return;
-      }
-
-      const params = new URLSearchParams({
-        source: 'ai',
-        query: trimmedQuery,
-        symptoms: result.detectedSymptoms.join(','),
-      });
-
-      trackSearchEvent({
-        source: 'ai',
-        queryText: trimmedQuery,
-        symptomIds: result.detectedSymptoms,
-      }).catch(() => {});
-
-      navigate(`/results?${params.toString()}`);
-    } catch (error) {
-      setAiError(error.message || 'Unable to analyze your symptoms right now.');
-    } finally {
-      setIsAiSearching(false);
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      goToResults();
     }
   };
 
@@ -94,62 +69,80 @@ export function SymptomSearch() {
       <div className="sticky top-0 md:top-16 z-30 bg-snow/80 backdrop-blur-md pt-6 pb-4 px-6">
         <div className="max-w-2xl mx-auto">
           <div className="mb-5">
-            <h1 className="text-3xl font-extrabold text-ink">Find relief for your symptoms</h1>
-            <p className="mt-2 text-base text-ink-muted">Choose a symptom below or type how you're feeling</p>
+            <h1 className="text-3xl font-extrabold text-ink">Find relief for any symptom</h1>
+            <p className="mt-2 text-base text-ink-muted">Type what you feel. Common symptoms below are quick picks only.</p>
           </div>
 
-          <div className="rounded-3xl border border-gray-100 bg-white p-4 shadow-card">
-            <div className="flex items-center gap-2 text-sm font-semibold text-forest">
-              <Sparkles className="h-4 w-4" />
-              AI Symptom Search
-            </div>
-            <textarea
-              value={aiQuery}
-              onChange={(event) => setAiQuery(event.target.value)}
-              placeholder="Describe how you feel..."
-              className="mt-3 min-h-[104px] w-full resize-none rounded-2xl border border-gray-200 px-4 py-3 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest"
+          <div onKeyDown={handleKeyDown} className="relative">
+            <SearchBar
+              value={searchTerm}
+              onChange={setSearchTerm}
+              placeholder="Search backache, period cramps, sore throat..."
             />
-            <div className="mt-3 flex flex-wrap gap-2">
-              {AI_EXAMPLES.map((example) => (
+
+            {shouldShowDropdown ? (
+              <div className="absolute left-0 right-0 top-full z-40 mt-3 overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-xl">
                 <button
-                  key={example}
                   type="button"
-                  onClick={() => setAiQuery(example)}
-                  className="rounded-full bg-snow px-3 py-1.5 text-xs font-medium text-ink-muted transition-colors hover:bg-sage/20 hover:text-forest"
+                  onClick={goToResults}
+                  className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-ink transition-colors hover:bg-snow"
                 >
-                  {example}
+                  <span className="flex min-w-0 items-center gap-3">
+                    <Search className="h-4 w-4 shrink-0 text-forest" />
+                    <span className="truncate font-semibold">{searchTerm}</span>
+                  </span>
+                  <ArrowRight className="h-4 w-4 shrink-0 text-ink-muted" />
                 </button>
-              ))}
-            </div>
-            <button
-              type="button"
-              onClick={handleAiSearch}
-              disabled={isAiSearching || !aiQuery.trim() || isCatalogLoading}
-              className="mt-4 inline-flex items-center gap-2 rounded-xl bg-forest px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-forest-dark disabled:cursor-not-allowed disabled:opacity-70"
-            >
-              {isAiSearching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-              {isAiSearching ? 'Analyzing symptoms...' : 'Analyze Symptoms'}
-            </button>
-            {aiError ? (
-              <div className="mt-3 rounded-2xl border border-amber/30 bg-amber/10 px-4 py-3 text-sm text-amber-dark">
-                {aiError}
+
+                <div className="border-t border-gray-100 px-4 py-3">
+                  {isSearching || isCatalogLoading ? (
+                    <div className="space-y-2">
+                      <LoadingSkeleton count={3} className="h-8" />
+                    </div>
+                  ) : localResults.length > 0 ? (
+                    <>
+                      <p className="text-xs font-bold uppercase tracking-wider text-ink-muted">Remedies found</p>
+                      <div className="mt-2 space-y-1">
+                        {localResults.slice(0, 4).map((remedy) => (
+                          <Link
+                            key={remedy.id}
+                            to={`/remedy/${remedy.id}`}
+                            className="block rounded-2xl px-2 py-2 text-sm font-semibold text-ink transition-colors hover:bg-sage/10"
+                          >
+                            <span className="mr-2">{remedy.category === 'TCM' ? '☯️' : remedy.category === 'Lifestyle' ? '💪' : '🌿'}</span>
+                            {remedy.name}
+                          </Link>
+                        ))}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={goToResults}
+                        className="mt-3 text-sm font-semibold text-forest hover:underline"
+                      >
+                        See all {localResults.length} results →
+                      </button>
+                    </>
+                  ) : (
+                    <div className="py-2 text-sm text-ink-muted">
+                      <p className="font-semibold text-ink">No exact matches found</p>
+                      <button
+                        type="button"
+                        onClick={openAiAssistant}
+                        className="mt-2 inline-flex items-center gap-2 font-semibold text-forest hover:underline"
+                      >
+                        Try our AI Assistant for personalised advice <Bot className="h-4 w-4" />
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             ) : null}
           </div>
 
-          <div onKeyDown={handleKeyDown} className="mt-4">
-            <SearchBar 
-              value={searchTerm} 
-              onChange={setSearchTerm} 
-              placeholder="What are you feeling today? (e.g. headache)" 
-            />
-          </div>
           {!isAuthenticated && !isBannerDismissed ? (
             <div className="mt-4 rounded-xl bg-sage/20 px-4 py-3 text-sm text-forest">
               <div className="flex items-start justify-between gap-3">
-                <p className="leading-relaxed">
-                  ✨ Personalize your results - Sign up free to match remedies to your allergy profile.
-                </p>
+                <p className="leading-relaxed">Personalize your results - Sign up free to match remedies to your allergy profile.</p>
                 <button type="button" onClick={dismissBanner} className="text-forest/70 transition-colors hover:text-forest">
                   <X className="h-4 w-4" />
                 </button>
@@ -164,20 +157,18 @@ export function SymptomSearch() {
       </div>
 
       <div className="max-w-2xl mx-auto px-6 pt-4">
-        <h2 className="text-sm font-semibold text-ink-muted uppercase tracking-wider mb-6">
-          {searchTerm ? 'Search Results' : 'Browse by Symptom'}
-        </h2>
+        <h2 className="mb-6 text-sm font-semibold uppercase tracking-wider text-ink-muted">Common symptoms</h2>
 
-        {isSearching || isCatalogLoading ? (
+        {isCatalogLoading ? (
           <div className="grid grid-cols-2 gap-4">
-            <LoadingSkeleton count={4} className="h-20" />
+            <LoadingSkeleton count={6} className="h-20" />
           </div>
-        ) : filteredSymptoms.length > 0 ? (
+        ) : quickSymptoms.length > 0 ? (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-            {filteredSymptoms.map(symptom => (
-              <SymptomChip 
-                key={symptom.id} 
-                symptom={symptom} 
+            {quickSymptoms.map((symptom) => (
+              <SymptomChip
+                key={symptom.id}
+                symptom={symptom}
                 isSelected={false}
                 onClick={() => handleSelect(symptom.id)}
                 className="min-h-[88px] w-full justify-center rounded-2xl px-4 py-4 text-base font-semibold"
@@ -185,14 +176,12 @@ export function SymptomSearch() {
             ))}
           </div>
         ) : (
-          <EmptyState 
-            icon={Frown}
-            title="No symptoms found"
-            description="We don't have that symptom yet. Try: headache, cold, anxiety..."
-          />
+          <div className="rounded-3xl bg-white p-6 text-center text-ink-muted shadow-card">
+            <Frown className="mx-auto h-8 w-8" />
+            <p className="mt-3 font-semibold">Common symptoms are unavailable right now.</p>
+          </div>
         )}
       </div>
-
     </PageWrapper>
   );
 }
