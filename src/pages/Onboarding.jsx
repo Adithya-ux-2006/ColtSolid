@@ -5,25 +5,27 @@ import { CheckCircle2, ChevronLeft } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { useAuthStore } from '../store/authStore';
 import { cn } from '../utils/cn';
-import { CONDITIONS, ALLERGIES, PREFS } from '../constants/onboarding';
+import { CONDITIONS, ALLERGIES, GENDER_OPTIONS, PREFS } from '../constants/onboarding';
 
 const STEPS = [
   {
+    key: 'gender',
+    title: 'Sex / Gender Information *',
+    options: GENDER_OPTIONS,
+  },
+  {
     key: 'conditions',
-    title: 'Which of these do you commonly experience?',
-    subtext: "Select all that apply. We'll prioritize these on your dashboard.",
+    title: 'Health Conditions',
     options: CONDITIONS,
   },
   {
     key: 'allergies',
-    title: 'Do you have any known allergies?',
-    subtext: "We'll flag remedies that may affect you.",
+    title: 'Allergies & Sensitivities',
     options: ALLERGIES,
   },
   {
     key: 'prefs',
-    title: 'What kind of remedies do you prefer?',
-    subtext: 'Select up to 2. This sets your default filter.',
+    title: 'Remedy Preferences',
     options: PREFS,
   },
 ];
@@ -38,10 +40,13 @@ export function Onboarding() {
   const [isSaving, setIsSaving] = useState(false);
   const [showComplete, setShowComplete] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [selectionWarning, setSelectionWarning] = useState('');
+  const [gender, setGender] = useState(user?.gender ?? '');
   const [conditions, setConditions] = useState(user?.common_conditions ?? []);
   const [allergies, setAllergies] = useState(user?.known_allergies ?? []);
   const [prefs, setPrefs] = useState(user?.treatment_prefs ?? []);
+  const [otherAllergy, setOtherAllergy] = useState(
+    () => (user?.known_allergies ?? []).find((value) => value.startsWith('other:'))?.slice(6).trim() || ''
+  );
 
   const currentStep = STEPS[stepIndex];
   const progress = useMemo(() => stepIndex + 1, [stepIndex]);
@@ -76,15 +81,8 @@ export function Onboarding() {
   };
 
   const handlePrefToggle = (value) => {
-    setSelectionWarning('');
-
     if (prefs.includes(value)) {
       setPrefs(prefs.filter((item) => item !== value));
-      return;
-    }
-
-    if (prefs.length >= 2) {
-      setSelectionWarning('Max 2 selected. Deselect one to change.');
       return;
     }
 
@@ -94,25 +92,36 @@ export function Onboarding() {
   const handleBack = () => {
     if (stepIndex === 0) return;
     setDirection(-1);
-    setSelectionWarning('');
     setStepIndex((current) => current - 1);
   };
 
   const handleContinue = async () => {
     setErrorMessage('');
 
+    if (currentStep.key === 'gender' && !gender) {
+      setErrorMessage('Select a sex or gender option to continue.');
+      return;
+    }
+
     if (stepIndex < STEPS.length - 1) {
       setDirection(1);
-      setSelectionWarning('');
       setStepIndex((current) => current + 1);
       return;
     }
 
     setIsSaving(true);
 
+    const trimmedOtherAllergy = otherAllergy.trim();
+    const normalizedAllergies = allergies.filter((value) => value !== 'none' && !value.startsWith('other:'));
+
+    if (trimmedOtherAllergy) {
+      normalizedAllergies.push(`other:${trimmedOtherAllergy}`);
+    }
+
     const result = await saveOnboarding({
+      gender,
       commonConditions: conditions.filter((value) => value !== 'none'),
-      knownAllergies: allergies.filter((value) => value !== 'none'),
+      knownAllergies: normalizedAllergies,
       treatmentPrefs: prefs,
     });
 
@@ -169,7 +178,7 @@ export function Onboarding() {
               </div>
             ))}
           </div>
-          <p className="text-sm font-medium text-ink-muted">Step {progress} of 3</p>
+          <p className="text-sm font-medium text-ink-muted">Step {progress} of 4</p>
         </div>
 
         <div className="relative flex-1 overflow-hidden rounded-[2rem] border border-white/70 bg-white/60 p-6 shadow-sm backdrop-blur md:p-10">
@@ -187,13 +196,23 @@ export function Onboarding() {
                 <h1 className="text-3xl font-extrabold leading-tight text-ink md:text-4xl">
                   {currentStep.title}
                 </h1>
-                <p className="mt-3 text-base text-ink-muted md:text-lg">{currentStep.subtext}</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+              <div className={cn(
+                'grid gap-3',
+                currentStep.key === 'gender' ? 'grid-cols-1' : 'grid-cols-2 md:grid-cols-3'
+              )}>
                 {currentStep.options.map((option) => {
-                  const isSelected = selectedValues.includes(option.value);
+                  const isSelected = currentStep.key === 'gender'
+                    ? gender === option.value
+                    : selectedValues.includes(option.value);
                   const handleClick = () => {
+                    if (currentStep.key === 'gender') {
+                      setErrorMessage('');
+                      setGender(option.value);
+                      return;
+                    }
+
                     if (currentStep.key === 'conditions') {
                       handleNoneAwareToggle(option.value, conditions, setConditions);
                       return;
@@ -219,15 +238,25 @@ export function Onboarding() {
                           : 'border-forest bg-white text-forest hover:bg-forest/5'
                       )}
                     >
-                      <div className="mb-2 text-2xl">{option.emoji}</div>
+                      {'emoji' in option && option.emoji ? <div className="mb-2 text-2xl">{option.emoji}</div> : null}
                       <div className="text-sm font-semibold leading-snug md:text-base">{option.label}</div>
                     </button>
                   );
                 })}
               </div>
 
-              {currentStep.key === 'prefs' && selectionWarning ? (
-                <p className="text-sm font-medium text-amber-dark">{selectionWarning}</p>
+              {currentStep.key === 'allergies' ? (
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-ink" htmlFor="otherAllergy">Other Allergies (Optional)</label>
+                  <input
+                    id="otherAllergy"
+                    type="text"
+                    value={otherAllergy}
+                    onChange={(event) => setOtherAllergy(event.target.value)}
+                    className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-ink focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest"
+                    placeholder="Add another allergy"
+                  />
+                </div>
               ) : null}
 
               {errorMessage ? <p className="text-sm font-medium text-red-600">{errorMessage}</p> : null}

@@ -6,39 +6,44 @@ export const GENDER_OPTIONS = [
 ];
 
 export const CONDITIONS = [
-  { value: 'headache', label: 'Headaches / Migraines', emoji: '🤕' },
-  { value: 'cold', label: 'Cold & Flu', emoji: '🤧' },
-  { value: 'anxiety', label: 'Anxiety & Stress', emoji: '😰' },
-  { value: 'insomnia', label: 'Sleep Issues / Insomnia', emoji: '😴' },
-  { value: 'nausea', label: 'Nausea / Digestive Issues', emoji: '🤢' },
-  { value: 'muscle-pain', label: 'Muscle Pain / Body Aches', emoji: '💪' },
-  { value: 'menstrual', label: 'Menstrual Discomfort', emoji: '🩸' },
-  { value: 'respiratory', label: 'Respiratory Issues', emoji: '🫁' },
-  { value: 'fatigue', label: 'Brain Fog / Fatigue', emoji: '🧠' },
-  { value: 'none', label: 'None of the above', emoji: '😶' },
+  { value: 'asthma', label: 'Asthma', emoji: '🫁' },
+  { value: 'diabetes', label: 'Diabetes', emoji: '🩸' },
+  { value: 'high-blood-pressure', label: 'High Blood Pressure', emoji: '🫀' },
+  { value: 'heart-conditions', label: 'Heart Conditions', emoji: '❤️' },
+  { value: 'migraines', label: 'Migraines', emoji: '🤕' },
+  { value: 'anxiety', label: 'Anxiety', emoji: '😰' },
+  { value: 'depression', label: 'Depression', emoji: '🌧️' },
+  { value: 'ibs-digestive-issues', label: 'IBS / Digestive Issues', emoji: '🤢' },
+  { value: 'pcos', label: 'PCOS', emoji: '🌙' },
+  { value: 'thyroid-disorders', label: 'Thyroid Disorders', emoji: '🦋' },
+  { value: 'none', label: 'None', emoji: '○' },
 ];
 
 export const ALLERGIES = [
-  { value: 'pollen', label: 'Pollen / Seasonal', emoji: '🌿' },
-  { value: 'nuts', label: 'Nuts (peanut, tree nuts)', emoji: '🥜' },
-  { value: 'gluten', label: 'Gluten / Wheat', emoji: '🌾' },
-  { value: 'dairy', label: 'Dairy / Lactose', emoji: '🥛' },
-  { value: 'fish', label: 'Fish / Shellfish', emoji: '🐟' },
+  { value: 'nuts', label: 'Nuts', emoji: '🥜' },
+  { value: 'dairy', label: 'Dairy', emoji: '🥛' },
+  { value: 'eggs', label: 'Eggs', emoji: '🥚' },
+  { value: 'soy', label: 'Soy', emoji: '🫘' },
+  { value: 'gluten', label: 'Gluten', emoji: '🌾' },
+  { value: 'shellfish', label: 'Shellfish', emoji: '🦐' },
+  { value: 'pollen', label: 'Pollen', emoji: '🌿' },
   { value: 'herbal', label: 'Herbal Supplements', emoji: '🌱' },
-  { value: 'antibiotics', label: 'Penicillin / Antibiotics', emoji: '💊' },
-  { value: 'insect', label: 'Bee stings / Insect venom', emoji: '🐝' },
-  { value: 'none', label: 'No known allergies', emoji: '🚫' },
+  { value: 'turmeric', label: 'Turmeric', emoji: '🟡' },
+  { value: 'ashwagandha', label: 'Ashwagandha', emoji: '🍃' },
+  { value: 'tulsi', label: 'Tulsi', emoji: '🌿' },
+  { value: 'ginger', label: 'Ginger', emoji: '🫚' },
+  { value: 'aloe-vera', label: 'Aloe Vera', emoji: '🪴' },
+  { value: 'essential-oils', label: 'Essential Oils', emoji: '🧴' },
+  { value: 'medication-allergies', label: 'Medication Allergies', emoji: '💊' },
+  { value: 'none', label: 'None', emoji: '○' },
 ];
 
 export const PREFS = [
-  { value: 'natural', label: 'Natural & herbal first', emoji: '🌿' },
-  { value: 'conventional', label: 'Conventional medicine', emoji: '🏥' },
-  { value: 'tcm', label: 'Traditional (TCM / Ayurveda)', emoji: '☯️' },
-  { value: 'open', label: 'Open to everything', emoji: '⚖️' },
-  { value: 'budget', label: 'Budget-friendly options', emoji: '💸' },
-  { value: 'vegan', label: 'Vegan / Plant-based only', emoji: '🥗' },
-  { value: 'fast', label: 'Fast-acting relief', emoji: '⚡' },
-  { value: 'research', label: 'Evidence / Research-backed', emoji: '🔬' },
+  { value: 'natural', label: 'Natural Remedies', emoji: '🌿' },
+  { value: 'ayurveda', label: 'Ayurveda', emoji: '🌼' },
+  { value: 'tcm', label: 'Traditional Chinese Medicine (TCM)', emoji: '☯️' },
+  { value: 'lifestyle', label: 'Lifestyle Changes', emoji: '🚶' },
+  { value: 'research', label: 'Research-backed Only', emoji: '🔬' },
 ];
 
 export const FAQ_ITEMS = [
@@ -78,7 +83,8 @@ export const FAQ_ITEMS = [
 
 const PREF_TO_FILTER = {
   natural: 'Natural',
-  conventional: 'Conventional',
+  ayurveda: 'Natural',
+  lifestyle: 'Lifestyle',
   tcm: 'TCM',
 };
 

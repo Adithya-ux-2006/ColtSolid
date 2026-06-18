@@ -9,14 +9,6 @@ import { useAppointmentStore } from '../store/appointmentStore';
 import { useCatalogStore } from '../store/catalogStore';
 import { CONDITIONS } from '../constants/onboarding';
 
-const CONDITION_TO_SYMPTOM = {
-  headache: 'headache',
-  cold: 'cold',
-  anxiety: 'anxiety',
-  insomnia: 'insomnia',
-  nausea: 'nausea',
-};
-
 export function Dashboard() {
   const user = useAuthStore((state) => state.user);
   const favorites = useFavoritesStore((state) => state.favorites);
@@ -36,9 +28,7 @@ export function Dashboard() {
   const upcomingAppointment = appointments.find(a => a.status === 'Upcoming');
   const selectedConditionChips = CONDITIONS.filter((condition) => user?.common_conditions?.includes(condition.value));
 
-  const greetingSubtitle = user?.gender
-    ? 'We tailored today\'s remedy flow around the profile details you shared.'
-    : 'Ready to feel better today?';
+  const greetingSubtitle = 'Ready to feel better today?';
 
   return (
     <PageWrapper className="min-h-screen bg-snow pb-24 md:pb-8 pt-6 md:pt-10">
@@ -76,8 +66,7 @@ export function Dashboard() {
                     key={condition.value}
                     type="button"
                     onClick={() => {
-                      const symptomId = CONDITION_TO_SYMPTOM[condition.value];
-                      navigate(symptomId ? `/results?symptom=${symptomId}` : '/search');
+                      navigate('/search');
                     }}
                     className="flex items-center gap-2 rounded-full border border-forest bg-forest px-4 py-2 text-sm font-semibold text-white shadow-forest transition-transform hover:scale-[1.02]"
                   >

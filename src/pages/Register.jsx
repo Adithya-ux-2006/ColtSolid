@@ -4,17 +4,6 @@ import { Loader2 } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { useAuthStore } from '../store/authStore';
 import { cn } from '../utils/cn';
-import { GENDER_OPTIONS } from '../constants/onboarding';
-
-const CURRENT_YEAR_OPTIONS = [
-  'Freshman / 1st Year',
-  'Sophomore / 2nd Year',
-  'Junior / 3rd Year',
-  'Senior / 4th Year',
-  'Graduate Student',
-  'Doctoral / PhD Student',
-  'Other',
-];
 
 export function Register() {
   const [searchParams] = useSearchParams();
@@ -22,11 +11,8 @@ export function Register() {
   const [formData, setFormData] = useState({
     name: '',
     email: emailParam || '',
-    universityEmail: '',
-    universityName: '',
-    currentYear: '',
-    gender: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   });
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -45,8 +31,8 @@ export function Register() {
     nameInputRef.current?.focus();
   }, [emailParam]);
 
-  const isFormValid = [formData.name, formData.email, formData.gender, formData.password]
-    .every((value) => value.trim() !== '');
+  const isFormValid = [formData.name, formData.email, formData.password, formData.confirmPassword]
+    .every((value) => value.trim() !== '') && formData.password === formData.confirmPassword;
 
   const handleChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -58,13 +44,15 @@ export function Register() {
 
     setErrorMessage('');
     setSuccessMessage('');
+
+    if (formData.password !== formData.confirmPassword) {
+      setErrorMessage('Passwords do not match.');
+      return;
+    }
+
     const result = await register({
       name: formData.name,
       email: formData.email,
-      universityEmail: formData.universityEmail,
-      universityName: formData.universityName,
-      currentYear: formData.currentYear,
-      gender: formData.gender,
       password: formData.password,
     });
 
@@ -119,85 +107,9 @@ export function Register() {
               placeholder="you@example.com"
               required
             />
-            <p className="mt-1 text-sm text-ink-muted">This email will be used to sign in and receive important account updates.</p>
             {emailParam ? (
               <p className="mt-1 text-sm text-forest">✓ We'll keep your saved remedies linked to this account.</p>
             ) : null}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-ink mb-1" htmlFor="universityEmail">University Email (Optional)</label>
-            <input
-              id="universityEmail"
-              name="universityEmail"
-              type="email"
-              value={formData.universityEmail}
-              onChange={handleChange}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest transition-all"
-              placeholder="you@campus.edu"
-            />
-            <p className="mt-1 text-sm text-ink-muted">Optional. Helps connect you with students from your university community.</p>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-ink mb-1" htmlFor="universityName">University (Optional)</label>
-              <input
-                id="universityName"
-                name="universityName"
-                type="text"
-                value={formData.universityName}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest transition-all"
-                placeholder="Enter your university name"
-              />
-              <p className="mt-1 text-sm text-ink-muted">Optional. Used to personalize campus-specific insights and community features.</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-ink mb-1" htmlFor="currentYear">Current Year of Study (Optional)</label>
-              <select
-                id="currentYear"
-                name="currentYear"
-                value={formData.currentYear}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest transition-all bg-white"
-              >
-                <option value="">Select</option>
-                {CURRENT_YEAR_OPTIONS.map((option) => (
-                  <option key={option} value={option}>{option}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <div className="mb-2">
-              <p className="block text-sm font-medium text-ink">Sex / Gender Information *</p>
-              <p className="mt-1 text-sm text-ink-muted">
-                Helps us provide safer and more relevant remedy recommendations.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {GENDER_OPTIONS.map((option) => {
-                const isSelected = formData.gender === option.value;
-
-                return (
-                  <button
-                    key={option.value}
-                    type="button"
-                    onClick={() => setFormData((prev) => ({ ...prev, gender: option.value }))}
-                    className={cn(
-                      'rounded-full border px-4 py-2 text-sm font-medium transition-all',
-                      isSelected
-                        ? 'scale-105 border-forest bg-forest text-white'
-                        : 'border-ink bg-white text-ink hover:border-forest hover:text-forest'
-                    )}
-                  >
-                    {option.label}
-                  </button>
-                );
-              })}
-            </div>
           </div>
 
           <div>
@@ -209,6 +121,24 @@ export function Register() {
               value={formData.password}
               onChange={handleChange}
               className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest transition-all"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-ink mb-1" htmlFor="confirmPassword">Confirm Password</label>
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className={cn(
+                'w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 transition-all',
+                formData.confirmPassword && formData.password !== formData.confirmPassword
+                  ? 'border-red-300 focus:border-red-400'
+                  : 'border-gray-200 focus:border-forest'
+              )}
               required
             />
           </div>

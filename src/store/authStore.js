@@ -34,6 +34,10 @@ async function updateUserProfileRow(userId, updates) {
     university: updates.university_name ?? updates.university,
     year: updates.current_year ?? updates.year,
     gender: updates.gender,
+    common_conditions: updates.common_conditions,
+    known_allergies: updates.known_allergies,
+    treatment_prefs: updates.treatment_prefs,
+    has_completed_onboarding: updates.has_completed_onboarding,
     prefer_natural: updates.prefer_natural,
     avoid_medication: updates.avoid_medication,
     vegetarian_remedies: updates.vegetarian_remedies,
@@ -162,10 +166,6 @@ export const useAuthStore = create((set, get) => ({
         options: {
           data: {
             name: details.name,
-            university_email: details.universityEmail || '',
-            university_name: details.universityName || '',
-            current_year: details.currentYear || '',
-            gender: details.gender || '',
             avatar,
           },
         },
@@ -175,12 +175,6 @@ export const useAuthStore = create((set, get) => ({
 
       await updateUserProfileRow(data.user.id, {
         name: details.name,
-        university_email: details.universityEmail || '',
-        university_name: details.universityName || '',
-        current_year: details.currentYear || '',
-        university: details.universityName || '',
-        year: details.currentYear || '',
-        gender: details.gender || '',
       });
 
       if (data.session) {
@@ -274,7 +268,7 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  saveOnboarding: async ({ commonConditions, knownAllergies, treatmentPrefs }) => {
+  saveOnboarding: async ({ gender, commonConditions, knownAllergies, treatmentPrefs }) => {
     const { user } = get();
     if (!user) {
       return { success: false, error: new Error('No authenticated user found.') };
@@ -282,18 +276,20 @@ export const useAuthStore = create((set, get) => ({
 
     try {
       const updates = {
+        gender,
         common_conditions: commonConditions,
         known_allergies: knownAllergies,
         treatment_prefs: treatmentPrefs,
         has_completed_onboarding: true,
       };
 
-      const { error } = await supabase
-        .from('users')
-        .update(updates)
-        .eq('id', user.id);
+      await updateUserProfileRow(user.id, updates);
 
-      if (error) throw error;
+      const { error: authError } = await supabase.auth.updateUser({
+        data: { gender },
+      });
+
+      if (authError) throw authError;
 
       set((state) => ({
         user: {

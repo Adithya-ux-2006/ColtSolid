@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, ChevronDown, Check, GraduationCap, Leaf, ShieldAlert } from 'lucide-react';
+import { LogOut, ChevronDown } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { FAQAccordion } from '../components/ui';
 import { useAuthStore } from '../store/authStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useAppointmentStore } from '../store/appointmentStore';
 import { getInitials } from '../utils/mappers';
-import { FAQ_ITEMS, GENDER_OPTIONS } from '../constants/onboarding';
+import { ALLERGIES, CONDITIONS, FAQ_ITEMS, GENDER_OPTIONS, PREFS } from '../constants/onboarding';
+
+const ONBOARDING_LABELS = new Map(
+  [...CONDITIONS, ...ALLERGIES, ...PREFS].map((option) => [option.value, option.label])
+);
 
 export function Profile() {
   const user = useAuthStore((state) => state.user);
@@ -20,22 +24,16 @@ export function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
     name: user?.name || '',
-    universityEmail: user?.university_email || '',
-    universityName: user?.university_name || user?.university || '',
-    currentYear: user?.current_year || user?.year || '',
     gender: user?.gender || ''
-  });
-  
-  // Health preferences (mock state for UI)
-  const [prefs, setPrefs] = useState({
-    natural: user?.preferNatural ?? false,
-    vegetarian: user?.vegetarianRemedies ?? false,
-    avoidMeds: user?.avoidMedication ?? false
   });
 
   const [expandedSection, setExpandedSection] = useState(null);
 
   if (!user) return null;
+
+  const selectedConditions = user.common_conditions ?? [];
+  const selectedAllergies = user.known_allergies ?? [];
+  const selectedPrefs = user.treatment_prefs ?? [];
 
   const handleLogout = () => {
     logout();
@@ -45,9 +43,6 @@ export function Profile() {
   const handleSaveProfile = () => {
     updateUser({
       ...editForm,
-      preferNatural: prefs.natural,
-      avoidMedication: prefs.avoidMeds,
-      vegetarianRemedies: prefs.vegetarian,
       avatar: getInitials(editForm.name)
     });
     setIsEditing(false);
@@ -56,17 +51,20 @@ export function Profile() {
   const startEditing = () => {
     setEditForm({
       name: user?.name || '',
-      universityEmail: user?.university_email || '',
-      universityName: user?.university_name || user?.university || '',
-      currentYear: user?.current_year || user?.year || '',
       gender: user?.gender || '',
     });
-    setPrefs({
-      natural: user?.preferNatural ?? false,
-      vegetarian: user?.vegetarianRemedies ?? false,
-      avoidMeds: user?.avoidMedication ?? false,
-    });
     setIsEditing(true);
+  };
+
+  const formatValue = (value) => {
+    if (!value) return value;
+    if (value.startsWith('other:')) return value.slice(6).trim();
+    if (ONBOARDING_LABELS.has(value)) return ONBOARDING_LABELS.get(value);
+
+    return value
+      .split('-')
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(' ');
   };
 
   return (
@@ -89,34 +87,6 @@ export function Profile() {
                   className="w-full px-3 py-2 border rounded-xl"
                   placeholder="Name"
                 />
-                <input 
-                  type="text" 
-                  value={editForm.universityName} 
-                  onChange={e => setEditForm({...editForm, universityName: e.target.value})}
-                  className="w-full px-3 py-2 border rounded-xl"
-                  placeholder="Enter your university name"
-                />
-                <input 
-                  type="email" 
-                  value={editForm.universityEmail} 
-                  onChange={e => setEditForm({...editForm, universityEmail: e.target.value})}
-                  className="w-full px-3 py-2 border rounded-xl"
-                  placeholder="University email (optional)"
-                />
-                <select 
-                  value={editForm.currentYear} 
-                  onChange={e => setEditForm({...editForm, currentYear: e.target.value})}
-                  className="w-full px-3 py-2 border rounded-xl bg-white"
-                >
-                  <option value="">Select year</option>
-                  <option value="Freshman / 1st Year">Freshman / 1st Year</option>
-                  <option value="Sophomore / 2nd Year">Sophomore / 2nd Year</option>
-                  <option value="Junior / 3rd Year">Junior / 3rd Year</option>
-                  <option value="Senior / 4th Year">Senior / 4th Year</option>
-                  <option value="Graduate Student">Graduate Student</option>
-                  <option value="Doctoral / PhD Student">Doctoral / PhD Student</option>
-                  <option value="Other">Other</option>
-                </select>
                 <div className="flex flex-wrap gap-2">
                   {['male', 'female', 'non-binary-other', 'prefer-not-to-say'].map((option) => {
                     const labels = {
@@ -149,11 +119,6 @@ export function Profile() {
               <div>
                 <h1 className="text-2xl font-bold text-ink mb-1">{user.name}</h1>
                 <p className="text-ink-muted mb-3">{user.email}</p>
-                <div className="flex items-center justify-center md:justify-start gap-2 text-sm font-medium text-ink bg-gray-50 inline-flex px-3 py-1.5 rounded-lg mb-4">
-                  <GraduationCap className="w-4 h-4 text-forest" />
-                  <span>{user.university_name || user.university || 'No university added'}{user.current_year || user.year ? ` • ${user.current_year || user.year}` : ''}</span>
-                </div>
-                {user.university_email ? <p className="text-sm text-ink-muted mb-2">University email: {user.university_email}</p> : null}
                 <p className="text-sm text-ink-muted mb-4">Sex / Gender: {user.gender ? GENDER_OPTIONS.find((option) => option.value === user.gender)?.label || user.gender : 'Not provided'}</p>
                 <div>
                   <button 
@@ -180,31 +145,15 @@ export function Profile() {
           </div>
         </div>
 
-        {/* Health Preferences */}
+        {/* Health Profile */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-50 overflow-hidden">
           <div className="p-5 border-b border-gray-50">
-            <h2 className="font-bold text-lg text-ink">Health Preferences</h2>
-            <p className="text-sm text-ink-muted">Personalize your ClotSolid experience.</p>
+            <h2 className="font-bold text-lg text-ink">Health Profile</h2>
           </div>
-          <div className="p-2">
-            <ToggleOption 
-              icon={Leaf} 
-              label="Prefer Natural Remedies" 
-              checked={prefs.natural} 
-              onChange={() => setPrefs(p => ({...p, natural: !p.natural}))} 
-            />
-            <ToggleOption 
-              icon={ShieldAlert} 
-              label="Avoid Heavy Medication" 
-              checked={prefs.avoidMeds} 
-              onChange={() => setPrefs(p => ({...p, avoidMeds: !p.avoidMeds}))} 
-            />
-            <ToggleOption 
-              icon={Check} 
-              label="Vegetarian Friendly Only" 
-              checked={prefs.vegetarian} 
-              onChange={() => setPrefs(p => ({...p, vegetarian: !p.vegetarian}))} 
-            />
+          <div className="space-y-5 p-5">
+            <ProfileGroup title="Health Conditions" values={selectedConditions.map(formatValue)} emptyLabel="None selected" />
+            <ProfileGroup title="Allergies & Sensitivities" values={selectedAllergies.map(formatValue)} emptyLabel="None selected" />
+            <ProfileGroup title="Remedy Preferences" values={selectedPrefs.map(formatValue)} emptyLabel="None selected" />
           </div>
         </div>
 
@@ -240,18 +189,21 @@ export function Profile() {
   );
 }
 
-function ToggleOption({ icon: Icon, label, checked, onChange }) {
+function ProfileGroup({ title, values, emptyLabel }) {
   return (
-    <button type="button" onClick={onChange} className="flex w-full items-center justify-between p-3 rounded-xl hover:bg-gray-50 cursor-pointer transition-colors">
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-snow-dark flex items-center justify-center text-ink-muted">
-          <Icon className="w-4 h-4" />
+    <div className="space-y-2">
+      <h3 className="text-sm font-semibold uppercase tracking-wide text-ink-muted">{title}</h3>
+      {values.length > 0 ? (
+        <div className="flex flex-wrap gap-2">
+          {values.map((value) => (
+            <span key={value} className="rounded-full bg-snow px-3 py-1.5 text-sm font-medium text-ink">
+              {value}
+            </span>
+          ))}
         </div>
-        <span className="font-medium text-ink">{label}</span>
-      </div>
-      <div className={`w-12 h-6 rounded-full p-1 transition-colors ${checked ? 'bg-forest' : 'bg-gray-200'}`}>
-        <div className={`w-4 h-4 rounded-full bg-white transition-transform ${checked ? 'translate-x-6' : 'translate-x-0'}`} />
-      </div>
-    </button>
+      ) : (
+        <p className="text-sm text-ink-muted">{emptyLabel}</p>
+      )}
+    </div>
   );
 }
