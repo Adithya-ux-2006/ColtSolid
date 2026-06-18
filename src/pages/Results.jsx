@@ -7,7 +7,8 @@ import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { getClosestSymptomCategory, searchRemedies } from '../hooks/useSearch';
 import { cn } from '../utils/cn';
-import { getGuestAllergies, remedyMatchesAllergies } from '../utils/guestProfile';
+import { getGuestAllergies, getGuestConditions, isRemedySafeForUser } from '../utils/guestProfile';
+import { matchQueryToSymptoms, getRankedRemediesForSymptoms } from '../utils/symptomSearch';
 
 const FILTER_OPTIONS = ['All', 'Natural', 'TCM', 'Conventional', 'Lifestyle'];
 const VIEWED_SYMPTOMS_KEY = 'clotsolid_viewed_symptoms';
@@ -29,24 +30,39 @@ export function Results() {
   const symptomParam = queryParams.get('symptom');
   const queryParam = queryParams.get('q') || '';
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies ?? EMPTY_ARRAY);
+  const userConditions = useAuthStore((state) => state.user?.common_conditions);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const guestAllergies = useMemo(() => (!isAuthenticated ? getGuestAllergies() : EMPTY_ARRAY), [isAuthenticated]);
+  const guestConditions = useMemo(() => (!isAuthenticated ? getGuestConditions() : EMPTY_ARRAY), [isAuthenticated]);
   const activeAllergies = isAuthenticated ? userKnownAllergies : guestAllergies;
+  const activeConditions = isAuthenticated ? userConditions : guestConditions;
   const defaultFilters = useMemo(() => ['All'], []);
 
   const [filterState, setFilterState] = useState(null);
   const [sort, setSort] = useState('Best Rated');
   const symptoms = useCatalogStore((state) => state.symptoms);
   const remedies = useCatalogStore((state) => state.remedies);
+  const symptomRemedies = useCatalogStore((state) => state.symptomRemedies);
   const isCatalogLoading = useCatalogStore((state) => state.isLoading);
   const hasLoaded = useCatalogStore((state) => state.hasLoaded);
   const [fallbackMatch, setFallbackMatch] = useState({ query: '', category: null });
   const isFreeTextSearch = Boolean(queryParam.trim());
   const closestCategory = fallbackMatch.query === queryParam ? fallbackMatch.category : null;
   const isLoading = isCatalogLoading;
+
+  const matchedSymptomIds = useMemo(
+    () => (isFreeTextSearch ? matchQueryToSymptoms(queryParam, symptoms) : []),
+    [isFreeTextSearch, queryParam, symptoms]
+  );
+
   const selectedSymptomIds = useMemo(
-    () => (symptomParam ? [symptomParam] : closestCategory && closestCategory !== 'none' ? [closestCategory] : []),
-    [closestCategory, symptomParam]
+    () => {
+      if (symptomParam) return [symptomParam];
+      if (matchedSymptomIds.length > 0) return matchedSymptomIds;
+      if (closestCategory && closestCategory !== 'none') return [closestCategory];
+      return [];
+    },
+    [closestCategory, matchedSymptomIds, symptomParam]
   );
   const filterContextKey = useMemo(
     () => `${selectedSymptomIds.join(',')}|${defaultFilters.join(',')}`,
@@ -60,7 +76,7 @@ export function Results() {
   );
 
   useEffect(() => {
-    if (!isFreeTextSearch || isCatalogLoading || searchRemedies(queryParam, remedies).length > 0) {
+    if (!isFreeTextSearch || isCatalogLoading || matchedSymptomIds.length > 0 || searchRemedies(queryParam, remedies).length > 0) {
       return;
     }
 
@@ -77,7 +93,7 @@ export function Results() {
     return () => {
       isCurrent = false;
     };
-  }, [isCatalogLoading, isFreeTextSearch, queryParam, remedies]);
+  }, [isCatalogLoading, isFreeTextSearch, matchedSymptomIds, queryParam, remedies]);
 
   useEffect(() => {
     if (isAuthenticated || selectedSymptomIds.length === 0 || isFreeTextSearch) return;
@@ -100,25 +116,22 @@ export function Results() {
       })();
 
   const filteredAndSortedRemedies = useMemo(() => {
-    const localQueryResults = isFreeTextSearch ? searchRemedies(queryParam, remedies) : [];
-    if (isFreeTextSearch && localQueryResults.length > 0) {
-      let result = localQueryResults.map((remedy) => ({ ...remedy, matchCount: 1 }));
-      const activeFilters = filters.includes('All') ? [] : filters;
+    if (selectedSymptomIds.length > 0) {
+      let result = getRankedRemediesForSymptoms(selectedSymptomIds, symptomRemedies, remedies);
 
+      const activeFilters = filters.includes('All') ? [] : filters;
       if (activeFilters.length > 0) {
         result = result.filter(r => activeFilters.includes(r.category));
       }
 
-      if (activeAllergies.length > 0) {
-        result = result.filter((remedy) => !remedyMatchesAllergies(remedy, activeAllergies));
-      }
+      result = result.filter((remedy) => isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions }));
 
       result.sort((a, b) => {
-        if (sort === 'Best Rated') return b.rating - a.rating;
-        if (sort === 'Most Researched') return b.reviewCount - a.reviewCount;
+        if (sort === 'Best Rated') return b._priorityRank - a._priorityRank || b.rating - a.rating;
+        if (sort === 'Most Researched') return b._priorityRank - a._priorityRank || b.reviewCount - a.reviewCount;
         if (sort === 'Easiest') {
           const diffMap = { 'Easy': 1, 'Moderate': 2, 'Requires prescription': 3 };
-          return diffMap[a.difficulty] - diffMap[b.difficulty];
+          return b._priorityRank - a._priorityRank || diffMap[a.difficulty] - diffMap[b.difficulty];
         }
         return 0;
       });
@@ -126,37 +139,30 @@ export function Results() {
       return result;
     }
 
-    if (selectedSymptomIds.length === 0) return [];
+    if (!isFreeTextSearch) return [];
 
-    let result = remedies
-      .map((remedy) => ({
-        ...remedy,
-        matchCount: selectedSymptomIds.filter((selectedSymptomId) => remedy.symptoms.includes(selectedSymptomId)).length,
-      }))
-      .filter((remedy) => remedy.matchCount > 0);
+    let result = searchRemedies(queryParam, remedies);
+    if (result.length === 0) return [];
 
     const activeFilters = filters.includes('All') ? [] : filters;
-    
     if (activeFilters.length > 0) {
       result = result.filter(r => activeFilters.includes(r.category));
     }
 
-    if (activeAllergies.length > 0) {
-      result = result.filter((remedy) => !remedyMatchesAllergies(remedy, activeAllergies));
-    }
+    result = result.filter((remedy) => isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions }));
 
     result.sort((a, b) => {
-      if (sort === 'Best Rated') return b.matchCount - a.matchCount || b.rating - a.rating;
-      if (sort === 'Most Researched') return b.matchCount - a.matchCount || b.reviewCount - a.reviewCount;
+      if (sort === 'Best Rated') return b.rating - a.rating;
+      if (sort === 'Most Researched') return b.reviewCount - a.reviewCount;
       if (sort === 'Easiest') {
         const diffMap = { 'Easy': 1, 'Moderate': 2, 'Requires prescription': 3 };
-        return b.matchCount - a.matchCount || diffMap[a.difficulty] - diffMap[b.difficulty];
+        return diffMap[a.difficulty] - diffMap[b.difficulty];
       }
       return 0;
     });
 
     return result;
-  }, [activeAllergies, filters, isFreeTextSearch, queryParam, remedies, selectedSymptomIds, sort]);
+  }, [activeAllergies, activeConditions, filters, isFreeTextSearch, queryParam, remedies, selectedSymptomIds, sort, symptomRemedies]);
 
   if (!hasLoaded && isLoading) {
     return (
@@ -206,7 +212,7 @@ export function Results() {
   const historyHeadline = viewedLabels.length > 1
     ? `${viewedLabels[0]} and ${viewedLabels[1]}${viewedSymptoms.length > 2 ? ' and more' : ''}`
     : viewedLabels[0];
-  const isClosestMatch = isFreeTextSearch && searchRemedies(queryParam, remedies).length === 0 && closestCategory && closestCategory !== 'none';
+  const isClosestMatch = isFreeTextSearch && selectedSymptomIds.length > 0 && !symptomParam && matchedSymptomIds.length === 0 && closestCategory && closestCategory !== 'none';
   const emptyStateContext = isFreeTextSearch ? `"${queryParam}"` : symptom?.label || 'your selected symptoms';
   const headerTitle = isFreeTextSearch ? `Results for '${queryParam}'` : `Remedies for ${symptom?.label || ''}`;
 
@@ -223,6 +229,9 @@ export function Results() {
               <h1 className="text-2xl font-bold text-ink flex items-center gap-2">
                 {!isFreeTextSearch && symptom?.emoji ? <span>{symptom.emoji}</span> : null}
                 {headerTitle}
+                {(selectedSymptomIds.length > 0 && !symptomParam) ? (
+                  <span className="text-xs font-semibold text-white bg-forest rounded-full px-2.5 py-0.5">Recommended</span>
+                ) : null}
               </h1>
               <p className="text-sm text-ink-muted">
                 {isLoading ? 'Finding remedies...' : `${filteredAndSortedRemedies.length} remedies found`}

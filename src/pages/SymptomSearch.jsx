@@ -8,10 +8,15 @@ import { searchRemedies, useSearch } from '../hooks/useSearch';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { trackSearchEvent } from '../utils/analytics';
-import { getGuestAllergies, remedyMatchesAllergies } from '../utils/guestProfile';
+import { getGuestAllergies, getGuestConditions, isRemedySafeForUser } from '../utils/guestProfile';
+import { matchQueryToSymptoms, getRankedRemediesForSymptoms } from '../utils/symptomSearch';
 
 const SEARCH_NUDGE_DISMISSED_KEY = 'clotsolid_nudge_dismissed';
 const QUICK_SYMPTOMS = ['headache', 'cold', 'anxiety', 'insomnia', 'nausea', 'stress'];
+
+function categoryEmoji(category) {
+  return category === 'TCM' ? '☯️' : category === 'Lifestyle' ? '💪' : '🌿';
+}
 
 function openAiAssistant() {
   window.dispatchEvent(new CustomEvent('cs-open-ai-chat'));
@@ -24,23 +29,52 @@ export function SymptomSearch() {
   );
   const symptoms = useCatalogStore((state) => state.symptoms);
   const remedies = useCatalogStore((state) => state.remedies);
+  const symptomRemedies = useCatalogStore((state) => state.symptomRemedies);
   const isCatalogLoading = useCatalogStore((state) => state.isLoading);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies);
   const navigate = useNavigate();
   const isSearching = searchTerm !== debouncedTerm;
   const trimmedQuery = debouncedTerm.trim();
+  const userConditions = useAuthStore((state) => state.user?.common_conditions);
   const guestAllergies = useMemo(() => (!isAuthenticated ? getGuestAllergies() : []), [isAuthenticated]);
+  const guestConditions = useMemo(() => (!isAuthenticated ? getGuestConditions() : []), [isAuthenticated]);
   const activeAllergies = isAuthenticated ? userKnownAllergies : guestAllergies;
+  const activeConditions = isAuthenticated ? userConditions : guestConditions;
 
   const quickSymptoms = useMemo(
     () => QUICK_SYMPTOMS.map((id) => symptoms.find((symptom) => symptom.id === id)).filter(Boolean),
     [symptoms]
   );
-  const localResults = useMemo(
-    () => searchRemedies(trimmedQuery, remedies).filter((remedy) => !remedyMatchesAllergies(remedy, activeAllergies)),
-    [activeAllergies, remedies, trimmedQuery]
+
+  const matchedSymptomIds = useMemo(
+    () => (trimmedQuery.length >= 2 ? matchQueryToSymptoms(trimmedQuery, symptoms) : []),
+    [symptoms, trimmedQuery]
   );
+
+  const safeFilter = useMemo(
+    () => (remedy) => isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions }),
+    [activeAllergies, activeConditions]
+  );
+
+  const symptomRankedResults = useMemo(
+    () => {
+      if (matchedSymptomIds.length === 0) return [];
+      return getRankedRemediesForSymptoms(matchedSymptomIds, symptomRemedies, remedies)
+        .filter(safeFilter);
+    },
+    [matchedSymptomIds, remedies, safeFilter, symptomRemedies]
+  );
+
+  const textFallbackResults = useMemo(
+    () => {
+      if (symptomRankedResults.length > 0) return [];
+      return searchRemedies(trimmedQuery, remedies).filter(safeFilter);
+    },
+    [remedies, trimmedQuery, symptomRankedResults.length, safeFilter]
+  );
+
+  const dropdownResults = symptomRankedResults.length > 0 ? symptomRankedResults : textFallbackResults;
   const shouldShowDropdown = searchTerm.trim().length >= 2;
 
   const handleSelect = (symptomId) => {
@@ -103,18 +137,25 @@ export function SymptomSearch() {
                     <div className="space-y-2">
                       <LoadingSkeleton count={3} className="h-8" />
                     </div>
-                  ) : localResults.length > 0 ? (
+                  ) : dropdownResults.length > 0 ? (
                     <>
-                      <p className="text-xs font-bold uppercase tracking-wider text-ink-muted">Remedies found</p>
+                      <p className="text-xs font-bold uppercase tracking-wider text-ink-muted">
+                        {symptomRankedResults.length > 0 ? 'Recommended remedies' : 'Remedies found'}
+                      </p>
                       <div className="mt-2 space-y-1">
-                        {localResults.slice(0, 4).map((remedy) => (
+                        {dropdownResults.slice(0, 4).map((remedy) => (
                           <Link
                             key={remedy.id}
                             to={`/remedy/${remedy.id}`}
                             className="block rounded-2xl px-2 py-2 text-sm font-semibold text-ink transition-colors hover:bg-sage/10"
                           >
-                            <span className="mr-2">{remedy.category === 'TCM' ? '☯️' : remedy.category === 'Lifestyle' ? '💪' : '🌿'}</span>
+                            <span className="mr-2">{categoryEmoji(remedy.category)}</span>
                             {remedy.name}
+                            {remedy._evidenceScore ? (
+                              <span className="ml-2 text-xs text-ink-muted font-normal">
+                                E{[...Array(3)].map((_, i) => i < remedy._evidenceScore / 3.4 ? '●' : '○').join('')}
+                              </span>
+                            ) : null}
                           </Link>
                         ))}
                       </div>
@@ -123,7 +164,7 @@ export function SymptomSearch() {
                         onClick={goToResults}
                         className="mt-3 text-sm font-semibold text-forest hover:underline"
                       >
-                        See all {localResults.length} results →
+                        See all {dropdownResults.length} results →
                       </button>
                     </>
                   ) : (

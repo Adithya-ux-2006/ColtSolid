@@ -26,3 +26,19 @@ export function remedyMatchesAllergies(remedy, allergies = []) {
 
   return (remedy.allergen_tags || []).some((tag) => allergies.includes(tag));
 }
+
+export function remedyHasContraindication(remedy, conditions = []) {
+  if (!remedy || !conditions?.length) return false;
+
+  return (remedy.contraindications || []).some((ci) => conditions.includes(ci));
+}
+
+export function getGuestConditions() {
+  return getGuestProfile().common_conditions ?? [];
+}
+
+export function isRemedySafeForUser(remedy, { allergies, conditions }) {
+  if (remedyMatchesAllergies(remedy, allergies)) return false;
+  if (remedyHasContraindication(remedy, conditions)) return false;
+  return true;
+}

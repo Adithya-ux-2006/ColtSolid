@@ -8,7 +8,7 @@ import { cn } from '../../utils/cn';
 import { useFavoritesStore } from '../../store/favoritesStore';
 import { useAuthStore } from '../../store/authStore';
 import { Link } from 'react-router-dom';
-import { getGuestAllergies, remedyMatchesAllergies } from '../../utils/guestProfile';
+import { getGuestAllergies, getGuestConditions, isRemedySafeForUser } from '../../utils/guestProfile';
 
 const EMPTY_ARRAY = [];
 
@@ -18,8 +18,10 @@ export function RemedyCard({ remedy, className }) {
   const userAllergies = useAuthStore((state) => state.user?.known_allergies ?? EMPTY_ARRAY);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const guestAllergies = !isAuthenticated ? getGuestAllergies() : EMPTY_ARRAY;
+  const guestConditions = !isAuthenticated ? getGuestConditions() : EMPTY_ARRAY;
   const activeAllergies = isAuthenticated ? userAllergies : guestAllergies;
-  const hasAllergyWarning = remedyMatchesAllergies(remedy, activeAllergies);
+  const activeConditions = !isAuthenticated ? guestConditions : EMPTY_ARRAY;
+  const hasSafetyWarning = !isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions });
   const [showQuickSave, setShowQuickSave] = useState(false);
   const quickSaveRef = useRef(null);
 
@@ -58,10 +60,10 @@ export function RemedyCard({ remedy, className }) {
         <div className="flex justify-between items-start mb-3">
           <div className="space-y-2">
             <CategoryBadge category={remedy.category} />
-            {hasAllergyWarning ? (
+            {hasSafetyWarning ? (
               <div className="inline-flex items-center gap-1 rounded-full bg-amber/20 px-2.5 py-1 text-xs font-semibold text-amber-dark">
                 <span aria-hidden="true">⚠️</span>
-                <span>Check allergies</span>
+                <span>Check safety</span>
               </div>
             ) : null}
           </div>
@@ -104,6 +106,14 @@ export function RemedyCard({ remedy, className }) {
         <span className="bg-snow-dark px-2 py-1 rounded-md">{remedy.cost}</span>
         <span>•</span>
         <span>{remedy.timeToEffect}</span>
+        {remedy._evidenceScore ? (
+          <>
+            <span>•</span>
+            <span className="text-forest font-semibold" title="Evidence level">
+              E{remedy._evidenceScore}/10
+            </span>
+          </>
+        ) : null}
       </div>
 
       <Link
