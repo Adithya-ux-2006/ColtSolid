@@ -8,6 +8,7 @@ import { searchRemedies, useSearch } from '../hooks/useSearch';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { trackSearchEvent } from '../utils/analytics';
+import { getGuestAllergies, remedyMatchesAllergies } from '../utils/guestProfile';
 
 const SEARCH_NUDGE_DISMISSED_KEY = 'clotsolid_nudge_dismissed';
 const QUICK_SYMPTOMS = ['headache', 'cold', 'anxiety', 'insomnia', 'nausea', 'stress'];
@@ -25,17 +26,20 @@ export function SymptomSearch() {
   const remedies = useCatalogStore((state) => state.remedies);
   const isCatalogLoading = useCatalogStore((state) => state.isLoading);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies ?? []);
   const navigate = useNavigate();
   const isSearching = searchTerm !== debouncedTerm;
   const trimmedQuery = debouncedTerm.trim();
+  const guestAllergies = useMemo(() => (!isAuthenticated ? getGuestAllergies() : []), [isAuthenticated]);
+  const activeAllergies = isAuthenticated ? userKnownAllergies : guestAllergies;
 
   const quickSymptoms = useMemo(
     () => QUICK_SYMPTOMS.map((id) => symptoms.find((symptom) => symptom.id === id)).filter(Boolean),
     [symptoms]
   );
   const localResults = useMemo(
-    () => searchRemedies(trimmedQuery, remedies),
-    [remedies, trimmedQuery]
+    () => searchRemedies(trimmedQuery, remedies).filter((remedy) => !remedyMatchesAllergies(remedy, activeAllergies)),
+    [activeAllergies, remedies, trimmedQuery]
   );
   const shouldShowDropdown = searchTerm.trim().length >= 2;
 

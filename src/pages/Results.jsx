@@ -8,6 +8,7 @@ import { useAuthStore } from '../store/authStore';
 import { getClosestSymptomCategory, searchRemedies } from '../hooks/useSearch';
 import { mapTreatmentPrefsToFilters } from '../constants/onboarding';
 import { cn } from '../utils/cn';
+import { getGuestAllergies, remedyMatchesAllergies } from '../utils/guestProfile';
 
 const FILTER_OPTIONS = ['All', 'Natural', 'TCM', 'Conventional', 'Lifestyle'];
 const VIEWED_SYMPTOMS_KEY = 'clotsolid_viewed_symptoms';
@@ -29,7 +30,10 @@ export function Results() {
   const symptomParam = queryParams.get('symptom');
   const queryParam = queryParams.get('q') || '';
   const userTreatmentPrefs = useAuthStore((state) => state.user?.treatment_prefs ?? EMPTY_ARRAY);
+  const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies ?? EMPTY_ARRAY);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const guestAllergies = useMemo(() => (!isAuthenticated ? getGuestAllergies() : EMPTY_ARRAY), [isAuthenticated]);
+  const activeAllergies = isAuthenticated ? userKnownAllergies : guestAllergies;
   const defaultFilters = useMemo(() => {
     const mappedPrefs = mapTreatmentPrefsToFilters(userTreatmentPrefs);
     return mappedPrefs.length > 0 ? mappedPrefs : ['All'];
@@ -110,6 +114,10 @@ export function Results() {
         result = result.filter(r => activeFilters.includes(r.category));
       }
 
+      if (activeAllergies.length > 0) {
+        result = result.filter((remedy) => !remedyMatchesAllergies(remedy, activeAllergies));
+      }
+
       result.sort((a, b) => {
         if (sort === 'Best Rated') return b.rating - a.rating;
         if (sort === 'Most Researched') return b.reviewCount - a.reviewCount;
@@ -138,6 +146,10 @@ export function Results() {
       result = result.filter(r => activeFilters.includes(r.category));
     }
 
+    if (activeAllergies.length > 0) {
+      result = result.filter((remedy) => !remedyMatchesAllergies(remedy, activeAllergies));
+    }
+
     result.sort((a, b) => {
       if (sort === 'Best Rated') return b.matchCount - a.matchCount || b.rating - a.rating;
       if (sort === 'Most Researched') return b.matchCount - a.matchCount || b.reviewCount - a.reviewCount;
@@ -149,7 +161,7 @@ export function Results() {
     });
 
     return result;
-  }, [filters, isFreeTextSearch, queryParam, remedies, selectedSymptomIds, sort]);
+  }, [activeAllergies, filters, isFreeTextSearch, queryParam, remedies, selectedSymptomIds, sort]);
 
   if (!hasLoaded && isLoading) {
     return (

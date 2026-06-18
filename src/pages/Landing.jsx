@@ -1,13 +1,18 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, Stethoscope, GraduationCap } from 'lucide-react';
-import { SymptomChip, FAQAccordion } from '../components/ui';
+import { SymptomChip, FAQAccordion, Modal } from '../components/ui';
+import { QuestionnaireFlow } from '../components/onboarding/QuestionnaireFlow';
 import { PageWrapper } from '../components/layout';
 import { useCatalogStore } from '../store/catalogStore';
 import { FAQ_ITEMS } from '../constants/onboarding';
 import { trackSearchEvent } from '../utils/analytics';
+import { saveGuestProfile } from '../utils/guestProfile';
 
 export function Landing() {
   const symptoms = useCatalogStore((state) => state.symptoms);
+  const navigate = useNavigate();
+  const [isQuestionnaireOpen, setIsQuestionnaireOpen] = useState(false);
 
   return (
     <PageWrapper className="min-h-screen bg-snow flex flex-col">
@@ -29,12 +34,13 @@ export function Landing() {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-            <Link 
-              to="/search" 
+            <button
+              type="button"
+              onClick={() => setIsQuestionnaireOpen(true)}
               className="w-full sm:w-auto px-8 py-4 bg-forest text-white rounded-full font-bold text-lg hover:bg-forest-dark transition-all shadow-forest hover:shadow-lg transform hover:-translate-y-1"
             >
               Get Started
-            </Link>
+            </button>
             <Link 
               to="/login" 
               className="w-full sm:w-auto px-8 py-4 bg-white text-sage-dark border-2 border-sage rounded-full font-bold text-lg hover:bg-sage/5 transition-all"
@@ -119,6 +125,28 @@ export function Landing() {
         </div>
         <p className="text-sm text-ink-muted">© 2026 ClotSolid. Not a substitute for professional medical advice.</p>
       </footer>
+
+      <Modal isOpen={isQuestionnaireOpen} onClose={() => setIsQuestionnaireOpen(false)} title="Quick Health Questionnaire">
+        <QuestionnaireFlow
+          compact
+          completeMessage="Your search is ready."
+          initialValues={{}}
+          onSubmit={async ({ gender, commonConditions, knownAllergies, treatmentPrefs }) => {
+            saveGuestProfile({
+              gender,
+              common_conditions: commonConditions,
+              known_allergies: knownAllergies,
+              treatment_prefs: treatmentPrefs,
+            });
+
+            return { success: true };
+          }}
+          onComplete={() => {
+            setIsQuestionnaireOpen(false);
+            navigate('/search');
+          }}
+        />
+      </Modal>
     </PageWrapper>
   );
 }
