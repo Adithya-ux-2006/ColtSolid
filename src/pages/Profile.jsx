@@ -7,10 +7,10 @@ import { useAuthStore } from '../store/authStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useAppointmentStore } from '../store/appointmentStore';
 import { getInitials } from '../utils/mappers';
-import { ALLERGIES, CONDITIONS, FAQ_ITEMS, GENDER_OPTIONS, PREFS } from '../constants/onboarding';
+import { ALLERGIES, CONDITIONS, FAQ_ITEMS, GENDER_OPTIONS } from '../constants/onboarding';
 
 const ONBOARDING_LABELS = new Map(
-  [...CONDITIONS, ...ALLERGIES, ...PREFS].map((option) => [option.value, option.label])
+  [...CONDITIONS, ...ALLERGIES].map((option) => [option.value, option.label])
 );
 
 export function Profile() {
@@ -33,7 +33,6 @@ export function Profile() {
 
   const selectedConditions = user.common_conditions ?? [];
   const selectedAllergies = user.known_allergies ?? [];
-  const selectedPrefs = user.treatment_prefs ?? [];
 
   const handleLogout = () => {
     logout();
@@ -153,7 +152,6 @@ export function Profile() {
           <div className="space-y-5 p-5">
             <ProfileGroup title="Health Conditions" values={selectedConditions.map(formatValue)} emptyLabel="None selected" />
             <ProfileGroup title="Allergies & Sensitivities" values={selectedAllergies.map(formatValue)} emptyLabel="None selected" />
-            <ProfileGroup title="Remedy Preferences" values={selectedPrefs.map(formatValue)} emptyLabel="None selected" />
           </div>
         </div>
 

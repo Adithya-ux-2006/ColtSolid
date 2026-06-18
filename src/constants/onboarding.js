@@ -38,14 +38,6 @@ export const ALLERGIES = [
   { value: 'none', label: 'None', emoji: '○' },
 ];
 
-export const PREFS = [
-  { value: 'natural', label: 'Natural Remedies', emoji: '🌿' },
-  { value: 'ayurveda', label: 'Ayurveda', emoji: '🌼' },
-  { value: 'tcm', label: 'Traditional Chinese Medicine (TCM)', emoji: '☯️' },
-  { value: 'lifestyle', label: 'Lifestyle Changes', emoji: '🚶' },
-  { value: 'research', label: 'Research-backed Only', emoji: '🔬' },
-];
-
 export const FAQ_ITEMS = [
   {
     question: 'Are these remedies safe to use?',
@@ -81,17 +73,4 @@ export const FAQ_ITEMS = [
   },
 ];
 
-const PREF_TO_FILTER = {
-  natural: 'Natural',
-  ayurveda: 'Natural',
-  lifestyle: 'Lifestyle',
-  tcm: 'TCM',
-};
 
-export function mapTreatmentPrefsToFilters(prefs = []) {
-  const mapped = prefs
-    .map((pref) => PREF_TO_FILTER[pref])
-    .filter(Boolean);
-
-  return [...new Set(mapped)];
-}

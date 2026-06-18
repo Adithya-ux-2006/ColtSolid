@@ -131,12 +131,11 @@ export function Landing() {
           compact
           completeMessage="Your search is ready."
           initialValues={{}}
-          onSubmit={async ({ gender, commonConditions, knownAllergies, treatmentPrefs }) => {
+          onSubmit={async ({ gender, commonConditions, knownAllergies }) => {
             saveGuestProfile({
               gender,
               common_conditions: commonConditions,
               known_allergies: knownAllergies,
-              treatment_prefs: treatmentPrefs,
             });
 
             return { success: true };

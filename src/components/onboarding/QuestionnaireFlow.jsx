@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CheckCircle2, ChevronLeft } from 'lucide-react';
-import { CONDITIONS, ALLERGIES, GENDER_OPTIONS, PREFS } from '../../constants/onboarding';
+import { CONDITIONS, ALLERGIES, GENDER_OPTIONS } from '../../constants/onboarding';
 import { cn } from '../../utils/cn';
 
 const STEPS = [
@@ -20,11 +20,6 @@ const STEPS = [
     title: 'Allergies & Sensitivities',
     options: ALLERGIES,
   },
-  {
-    key: 'prefs',
-    title: 'Remedy Preferences',
-    options: PREFS,
-  },
 ];
 
 export function QuestionnaireFlow({
@@ -42,7 +37,6 @@ export function QuestionnaireFlow({
   const [gender, setGender] = useState(initialValues?.gender ?? '');
   const [conditions, setConditions] = useState(initialValues?.common_conditions ?? []);
   const [allergies, setAllergies] = useState(initialValues?.known_allergies ?? []);
-  const [prefs, setPrefs] = useState(initialValues?.treatment_prefs ?? []);
   const [otherAllergy, setOtherAllergy] = useState(
     () => (initialValues?.known_allergies ?? []).find((value) => value.startsWith('other:'))?.slice(6).trim() || ''
   );
@@ -61,15 +55,6 @@ export function QuestionnaireFlow({
       : [...selectedValues.filter((item) => item !== 'none'), value];
 
     setSelectedValues(nextValues);
-  };
-
-  const handlePrefToggle = (value) => {
-    if (prefs.includes(value)) {
-      setPrefs(prefs.filter((item) => item !== value));
-      return;
-    }
-
-    setPrefs([...prefs, value]);
   };
 
   const handleBack = () => {
@@ -105,7 +90,6 @@ export function QuestionnaireFlow({
       gender,
       commonConditions: conditions.filter((value) => value !== 'none'),
       knownAllergies: normalizedAllergies,
-      treatmentPrefs: prefs,
     });
 
     setIsSaving(false);
@@ -142,9 +126,7 @@ export function QuestionnaireFlow({
 
   const selectedValues = currentStep.key === 'conditions'
     ? conditions
-    : currentStep.key === 'allergies'
-      ? allergies
-      : prefs;
+    : allergies;
 
   return (
     <div className={cn('mx-auto flex flex-col rounded-[2rem] bg-transparent', compact ? 'max-w-2xl' : 'min-h-[82vh] max-w-3xl')}>
@@ -161,7 +143,7 @@ export function QuestionnaireFlow({
             </div>
           ))}
         </div>
-        <p className="text-sm font-medium text-ink-muted">Step {progress} of 4</p>
+        <p className="text-sm font-medium text-ink-muted">Step {progress} of 3</p>
       </div>
 
       <div className={cn('relative flex-1 overflow-hidden rounded-[2rem] border border-white/70 bg-white/60 shadow-sm backdrop-blur', compact ? 'p-5 md:p-6' : 'p-6 md:p-10')}>
@@ -202,8 +184,6 @@ export function QuestionnaireFlow({
                     handleNoneAwareToggle(option.value, allergies, setAllergies);
                     return;
                   }
-
-                  handlePrefToggle(option.value);
                 };
 
                 return (

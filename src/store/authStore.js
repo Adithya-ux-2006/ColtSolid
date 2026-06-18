@@ -36,11 +36,7 @@ async function updateUserProfileRow(userId, updates) {
     gender: updates.gender,
     common_conditions: updates.common_conditions,
     known_allergies: updates.known_allergies,
-    treatment_prefs: updates.treatment_prefs,
     has_completed_onboarding: updates.has_completed_onboarding,
-    prefer_natural: updates.prefer_natural,
-    avoid_medication: updates.avoid_medication,
-    vegetarian_remedies: updates.vegetarian_remedies,
   };
 
   Object.keys(fallbackUpdates).forEach((key) => fallbackUpdates[key] === undefined && delete fallbackUpdates[key]);
@@ -78,13 +74,9 @@ const buildUser = async (session) => {
     gender: profile?.gender || metadata.gender || '',
     common_conditions: profile?.common_conditions ?? [],
     known_allergies: profile?.known_allergies ?? [],
-    treatment_prefs: profile?.treatment_prefs ?? [],
     has_completed_onboarding: profile?.has_completed_onboarding ?? false,
     is_admin: profile?.is_admin ?? false,
     notify_nearby_launch: profile?.notify_nearby_launch ?? false,
-    preferNatural: profile?.prefer_natural ?? false,
-    avoidMedication: profile?.avoid_medication ?? false,
-    vegetarianRemedies: profile?.vegetarian_remedies ?? false,
     avatar: metadata.avatar || getInitials(profile?.name || metadata.name || ''),
   };
 };
@@ -229,9 +221,6 @@ export const useAuthStore = create((set, get) => ({
         university: updates.universityName,
         year: updates.currentYear,
         gender: updates.gender,
-        prefer_natural: updates.preferNatural,
-        avoid_medication: updates.avoidMedication,
-        vegetarian_remedies: updates.vegetarianRemedies,
       };
 
       Object.keys(dbUpdates).forEach((key) => dbUpdates[key] === undefined && delete dbUpdates[key]);
@@ -268,7 +257,7 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  saveOnboarding: async ({ gender, commonConditions, knownAllergies, treatmentPrefs }) => {
+  saveOnboarding: async ({ gender, commonConditions, knownAllergies }) => {
     const { user } = get();
     if (!user) {
       return { success: false, error: new Error('No authenticated user found.') };
@@ -279,17 +268,10 @@ export const useAuthStore = create((set, get) => ({
         gender,
         common_conditions: commonConditions,
         known_allergies: knownAllergies,
-        treatment_prefs: treatmentPrefs,
         has_completed_onboarding: true,
       };
 
       await updateUserProfileRow(user.id, updates);
-
-      const { error: authError } = await supabase.auth.updateUser({
-        data: { gender },
-      });
-
-      if (authError) throw authError;
 
       set((state) => ({
         user: {

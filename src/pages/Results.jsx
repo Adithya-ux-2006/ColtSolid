@@ -6,7 +6,6 @@ import { RemedyCard, LoadingSkeleton, EmptyState } from '../components/ui';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { getClosestSymptomCategory, searchRemedies } from '../hooks/useSearch';
-import { mapTreatmentPrefsToFilters } from '../constants/onboarding';
 import { cn } from '../utils/cn';
 import { getGuestAllergies, remedyMatchesAllergies } from '../utils/guestProfile';
 
@@ -29,15 +28,11 @@ export function Results() {
   const queryParams = new URLSearchParams(location.search);
   const symptomParam = queryParams.get('symptom');
   const queryParam = queryParams.get('q') || '';
-  const userTreatmentPrefs = useAuthStore((state) => state.user?.treatment_prefs ?? EMPTY_ARRAY);
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies ?? EMPTY_ARRAY);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const guestAllergies = useMemo(() => (!isAuthenticated ? getGuestAllergies() : EMPTY_ARRAY), [isAuthenticated]);
   const activeAllergies = isAuthenticated ? userKnownAllergies : guestAllergies;
-  const defaultFilters = useMemo(() => {
-    const mappedPrefs = mapTreatmentPrefsToFilters(userTreatmentPrefs);
-    return mappedPrefs.length > 0 ? mappedPrefs : ['All'];
-  }, [userTreatmentPrefs]);
+  const defaultFilters = useMemo(() => ['All'], []);
 
   const [filterState, setFilterState] = useState(null);
   const [sort, setSort] = useState('Best Rated');
