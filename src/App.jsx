@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { Navbar, BottomNav, AdminGuard } from './components/layout';
 import { useAuthStore } from './store/authStore';
@@ -43,8 +42,7 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
-function AnimatedRoutes() {
-  const location = useLocation();
+function AppRoutes() {
   const isInitialized = useAuthStore((state) => state.isInitialized);
 
   if (!isInitialized) {
@@ -52,28 +50,26 @@ function AnimatedRoutes() {
   }
 
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        {/* Public Routes */}
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/search" element={<SymptomSearch />} />
-        <Route path="/results" element={<Results />} />
-        <Route path="/remedy/:id" element={<RemedyDetail />} />
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/" element={<Landing />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/search" element={<SymptomSearch />} />
+      <Route path="/results" element={<Results />} />
+      <Route path="/remedy/:id" element={<RemedyDetail />} />
 
-        {/* Protected Routes */}
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
-        <Route path="/appointments" element={<ProtectedRoute><Appointments /></ProtectedRoute>} />
-        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-        <Route path="/admin" element={<ProtectedRoute><AdminGuard><AdminAnalytics /></AdminGuard></ProtectedRoute>} />
-        <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-        
-        {/* Catch-all redirect */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </AnimatePresence>
+      {/* Protected Routes */}
+      <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+      <Route path="/appointments" element={<ProtectedRoute><Appointments /></ProtectedRoute>} />
+      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+      <Route path="/admin" element={<ProtectedRoute><AdminGuard><AdminAnalytics /></AdminGuard></ProtectedRoute>} />
+      <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+      
+      {/* Catch-all redirect */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 
@@ -121,7 +117,7 @@ function App() {
       <div className="flex flex-col min-h-screen">
         <Navbar />
         <main className="flex-1 relative">
-          <AnimatedRoutes />
+          <AppRoutes />
         </main>
         <AiChatPanel />
         <BottomNav />
