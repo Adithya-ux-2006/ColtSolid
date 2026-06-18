@@ -22,7 +22,7 @@ export function getGuestAllergies() {
 }
 
 export function remedyMatchesAllergies(remedy, allergies = []) {
-  if (!allergies.length) return false;
+  if (!remedy || !allergies.length) return false;
 
   return (remedy.allergen_tags || []).some((tag) => allergies.includes(tag));
 }

@@ -29,7 +29,7 @@ export function searchRemedies(query, remedies) {
   const words = getSearchWords(query);
   if (words.length === 0) return [];
 
-  return remedies.filter((remedy) => {
+  return (remedies || []).filter((remedy) => {
     const searchableText = [
       remedy.name,
       remedy.shortDescription,
