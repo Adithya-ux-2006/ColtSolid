@@ -26,7 +26,7 @@ export function SymptomSearch() {
   const remedies = useCatalogStore((state) => state.remedies);
   const isCatalogLoading = useCatalogStore((state) => state.isLoading);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies ?? []);
+  const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies);
   const navigate = useNavigate();
   const isSearching = searchTerm !== debouncedTerm;
   const trimmedQuery = debouncedTerm.trim();
