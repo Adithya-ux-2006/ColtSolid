@@ -21,16 +21,61 @@ export function getGuestAllergies() {
   return getGuestProfile().known_allergies ?? [];
 }
 
+const INGREDIENT_ALIASES = {
+  'aloe-vera': ['aloe vera'],
+  'turmeric': ['turmeric', 'curcumin'],
+  'ginger': ['ginger', 'ginger root', 'ginger root extract'],
+  'ashwagandha': ['ashwagandha', 'ashwagandha root extract'],
+  'essential-oils': ['peppermint oil', 'menthol', 'herbal oil', 'essential oil'],
+  'herbal': ['herbal', 'herbal oil', 'herbal supplement', 'cellulose capsule', 'cellulose'],
+  'pollen': ['pollen', 'bee pollen'],
+  'nuts': ['nuts'],
+  'dairy': ['dairy', 'milk'],
+};
+
+function normalizeIngredient(ingredient) {
+  return ingredient.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim();
+}
+
+function allergyMatchesIngredient(allergy, ingredient) {
+  const normalized = normalizeIngredient(ingredient);
+  if (normalized.includes(allergy)) return true;
+
+  const aliases = INGREDIENT_ALIASES[allergy] || [];
+  return aliases.some((alias) => normalized.includes(alias));
+}
+
 export function remedyMatchesAllergies(remedy, allergies = []) {
   if (!remedy || !allergies.length) return false;
 
-  return (remedy.allergen_tags || []).some((tag) => allergies.includes(tag));
+  const normalizedAllergies = allergies.map((a) => a.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim()).filter(Boolean);
+
+  const tags = (remedy.allergen_tags || []).map((t) => t.toLowerCase());
+  for (const allergy of normalizedAllergies) {
+    if (tags.some((tag) => tag === allergy || tag.includes(allergy) || allergy.includes(tag))) {
+      return true;
+    }
+  }
+
+  const ingredients = (remedy.ingredients || []).map(normalizeIngredient).filter(Boolean);
+  for (const allergy of normalizedAllergies) {
+    for (const ingredient of ingredients) {
+      if (allergyMatchesIngredient(allergy, ingredient)) return true;
+    }
+  }
+
+  return false;
 }
 
 export function remedyHasContraindication(remedy, conditions = []) {
   if (!remedy || !conditions?.length) return false;
 
-  return (remedy.contraindications || []).some((ci) => conditions.includes(ci));
+  const normalizedConditions = conditions.map((c) => c.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim()).filter(Boolean);
+  const contraindications = (remedy.contraindications || []).map((c) => c.toLowerCase());
+
+  return normalizedConditions.some((condition) =>
+    contraindications.some((ci) => ci.includes(condition) || condition.includes(ci))
+  );
 }
 
 export function getGuestConditions() {

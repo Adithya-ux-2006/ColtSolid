@@ -12,11 +12,22 @@ export function getInitials(name = '') {
 export function mapRemedy(remedy) {
   if (!remedy) return null;
 
+  const symptomItems = remedy.remedy_symptoms || [];
+  const allSymptoms = symptomItems.map((item) => item.symptom_id);
+  const primarySymptoms = symptomItems
+    .filter((item) => !item.match_strength || item.match_strength === 'primary')
+    .map((item) => item.symptom_id);
+  const secondarySymptoms = symptomItems
+    .filter((item) => item.match_strength === 'secondary')
+    .map((item) => item.symptom_id);
+
   return {
     id: remedy.id,
     name: remedy.name,
     category: remedy.category,
-    symptoms: remedy.remedy_symptoms?.map((item) => item.symptom_id) || remedy.symptoms || [],
+    symptoms: allSymptoms.length > 0 ? allSymptoms : (remedy.symptoms || []),
+    primarySymptoms: primarySymptoms.length > 0 ? primarySymptoms : (allSymptoms.length > 0 ? allSymptoms : (remedy.symptoms || [])),
+    secondarySymptoms: secondarySymptoms.length > 0 ? secondarySymptoms : [],
     rating: remedy.rating,
     reviewCount: remedy.review_count ?? remedy.reviewCount,
     shortDescription: remedy.short_description ?? remedy.shortDescription,
@@ -25,6 +36,7 @@ export function mapRemedy(remedy) {
     warnings: remedy.warnings,
     allergen_tags: remedy.allergen_tags ?? [],
     contraindications: remedy.contraindications ?? [],
+    ingredients: remedy.ingredients ?? [],
     timeToEffect: remedy.time_to_effect ?? remedy.timeToEffect,
     difficulty: remedy.difficulty,
     cost: remedy.cost,

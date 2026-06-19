@@ -37,7 +37,7 @@ export const useCatalogStore = create((set, get) => ({
         supabase.from('symptoms').select('*').order('label'),
         supabase
           .from('remedies')
-          .select('*, remedy_symptoms(symptom_id), research_papers(title, journal, url, key_findings)')
+          .select('*, remedy_symptoms(symptom_id, match_strength), research_papers(title, journal, url, key_findings)')
           .order('name'),
       ]);
 

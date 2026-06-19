@@ -42,7 +42,11 @@ export function searchRemedies(query, remedies) {
       ...(remedy.contraindications || []),
     ].join(' ').toLowerCase();
 
-    return words.some((word) => searchableText.includes(word));
+    if (words.length === 1) {
+      return words.some((word) => searchableText.includes(word));
+    }
+
+    return words.every((word) => searchableText.includes(word));
   });
 }
 

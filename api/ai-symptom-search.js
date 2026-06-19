@@ -7,6 +7,21 @@ const FALLBACK_SYMPTOM_PATTERNS = {
   insomnia: ['cannot sleep', 'cant sleep', 'insomnia', 'trouble sleeping', 'awake all night', 'sleep issues'],
   nausea: ['nausea', 'nauseous', 'feel sick', 'vomit', 'upset stomach', 'queasy'],
   stress: ['stress', 'stressed', 'burned out', 'overwhelmed', 'tense'],
+  back_pain: ['back pain', 'backache', 'lower back pain', 'back hurt'],
+  leg_pain: ['leg pain', 'leg hurt', 'leg ache'],
+  knee_pain: ['knee pain', 'knee hurt'],
+  neck_pain: ['neck pain', 'stiff neck', 'neck hurt'],
+  shoulder_pain: ['shoulder pain', 'shoulder hurt'],
+  eye_pain: ['eye pain', 'eye hurt', 'eye ache'],
+  eye_strain: ['eye strain', 'tired eyes', 'screen fatigue', 'dry eyes'],
+  ear_pain: ['ear pain', 'earache', 'ear hurt'],
+  sore_throat: ['sore throat', 'scratchy throat', 'throat pain'],
+  period_cramps: ['period cramps', 'menstrual pain', 'period pain', 'cramps'],
+  fever: ['fever', 'high temperature'],
+  skin_rash: ['skin rash', 'rash', 'itchy skin'],
+  bloating: ['bloating', 'bloated', 'gas'],
+  hangover: ['hangover'],
+  fatigue: ['fatigue', 'tired', 'low energy', 'exhausted'],
 };
 
 function json(res, statusCode, payload) {

@@ -13,6 +13,8 @@ const SYMPTOM_ALIASES = {
   'stiff neck': 'neck_pain',
   'shoulder pain': 'shoulder_pain',
   'shoulder hurt': 'shoulder_pain',
+  'eye pain': 'eye_pain',
+  'eye hurt': 'eye_pain',
   'sore throat': 'sore_throat',
   'scratchy throat': 'sore_throat',
   'throat pain': 'sore_throat',
@@ -86,16 +88,8 @@ export function matchQueryToSymptoms(query, symptoms) {
   }
 
   for (const [alias, symptomId] of Object.entries(SYMPTOM_ALIASES)) {
-    if (normalized.includes(alias) || alias.includes(normalized)) {
+    if (normalized === alias || normalized.startsWith(alias + ' ') || normalized.endsWith(' ' + alias) || normalized.includes(' ' + alias + ' ')) {
       matchedIds.add(symptomId);
-    }
-  }
-
-  for (const s of symptoms) {
-    const lowerLabel = s.label.toLowerCase();
-    const lowerId = s.id.toLowerCase();
-    if (lowerLabel.includes(normalized) || lowerId.includes(normalized) || normalized.includes(lowerLabel) || normalized.includes(lowerId)) {
-      matchedIds.add(s.id);
     }
   }
 
@@ -104,7 +98,7 @@ export function matchQueryToSymptoms(query, symptoms) {
     for (const s of symptoms) {
       const lowerLabel = s.label.toLowerCase();
       const matchCount = words.filter(w => lowerLabel.includes(w)).length;
-      if (matchCount >= Math.min(2, words.length)) {
+      if (matchCount === words.length) {
         matchedIds.add(s.id);
       }
     }
@@ -122,7 +116,8 @@ export function getRankedRemediesForSymptoms(symptomIds, symptomRemediesMap, rem
   }
 
   const hasCuratedData = symptomRemediesMap && Object.keys(symptomRemediesMap).length > 0;
-  const scored = [];
+  const primaryScored = [];
+  const secondaryScored = [];
 
   for (const symptomId of symptomIds) {
     if (hasCuratedData) {
@@ -131,37 +126,52 @@ export function getRankedRemediesForSymptoms(symptomIds, symptomRemediesMap, rem
         for (const entry of entries) {
           const remedy = remedyMap[entry.remedyId];
           if (!remedy) continue;
-          scored.push({
+          const isPrimary = remedy.primarySymptoms?.includes(symptomId) || !remedy.secondarySymptoms?.includes(symptomId);
+          const bucket = isPrimary ? primaryScored : secondaryScored;
+          bucket.push({
             ...remedy,
             _matchSymptomId: symptomId,
             _evidenceScore: entry.evidenceScore,
             _priorityRank: entry.priorityRank,
+            _isPrimary: isPrimary,
           });
         }
         continue;
       }
     }
 
-    // Fallback: use remedy.symptoms array matching
     for (const remedy of remedies) {
-      if (remedy.symptoms?.includes(symptomId)) {
+      if (remedy.primarySymptoms?.includes(symptomId)) {
         const paperCount = remedy.researchPapers?.length || 0;
-        scored.push({
+        primaryScored.push({
           ...remedy,
           _matchSymptomId: symptomId,
           _evidenceScore: Math.min(paperCount * 3 + 1, 10),
           _priorityRank: 5,
+          _isPrimary: true,
+        });
+      } else if (remedy.secondarySymptoms?.includes(symptomId)) {
+        const paperCount = remedy.researchPapers?.length || 0;
+        secondaryScored.push({
+          ...remedy,
+          _matchSymptomId: symptomId,
+          _evidenceScore: Math.min(paperCount * 3 + 1, 10),
+          _priorityRank: 3,
+          _isPrimary: false,
         });
       }
     }
   }
 
   const seen = new Map();
-  for (const item of scored) {
+  const allScored = [...primaryScored, ...secondaryScored];
+  for (const item of allScored) {
     const existing = seen.get(item.id);
     if (!existing) {
       seen.set(item.id, item);
-    } else if (item._priorityRank > existing._priorityRank) {
+    } else if (item._isPrimary && !existing._isPrimary) {
+      seen.set(item.id, item);
+    } else if (item._isPrimary === existing._isPrimary && item._priorityRank > existing._priorityRank) {
       seen.set(item.id, {
         ...existing,
         _evidenceScore: Math.max(existing._evidenceScore, item._evidenceScore),
@@ -172,6 +182,7 @@ export function getRankedRemediesForSymptoms(symptomIds, symptomRemediesMap, rem
   const deduped = Array.from(seen.values());
 
   deduped.sort((a, b) => {
+    if (a._isPrimary !== b._isPrimary) return a._isPrimary ? -1 : 1;
     if (b._priorityRank !== a._priorityRank) return b._priorityRank - a._priorityRank;
     if (b._evidenceScore !== a._evidenceScore) return b._evidenceScore - a._evidenceScore;
     return (b.rating || 0) - (a.rating || 0);
