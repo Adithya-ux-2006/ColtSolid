@@ -83,10 +83,10 @@ export function AdminAnalytics() {
   const notHelpfulCount = summary?.feedback.filter((item) => item.vote === 'not_helpful').length || 0;
 
   return (
-    <PageWrapper className="min-h-screen bg-snow pb-24 md:pb-8 pt-6">
+    <PageWrapper className="min-h-screen bg-cream pb-24 md:pb-8 pt-6">
       <div className="mx-auto max-w-5xl px-6 space-y-8">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-sm font-semibold text-forest shadow-sm">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-sm font-semibold text-coral shadow-sm">
             <BarChart3 className="h-4 w-4" />
             Validation Dashboard
           </div>
@@ -95,7 +95,7 @@ export function AdminAnalytics() {
         </div>
 
         {isLoading ? <p className="text-ink-muted">Loading analytics...</p> : null}
-        {errorMessage ? <p className="rounded-2xl bg-amber/10 px-4 py-3 text-sm text-amber-dark">{errorMessage}</p> : null}
+        {errorMessage ? <p className="rounded-2xl bg-yellow/10 px-4 py-3 text-sm text-yellow-dark">{errorMessage}</p> : null}
 
         {!isLoading && !errorMessage ? (
           <>
@@ -122,7 +122,7 @@ function StatCard({ icon: Icon, label, value }) {
   return (
     <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
       <div className="flex items-center gap-2 text-sm font-medium text-ink-muted">
-        <Icon className="h-4 w-4 text-forest" />
+        <Icon className="h-4 w-4 text-coral" />
         {label}
       </div>
       <p className="mt-3 text-3xl font-extrabold text-ink">{value}</p>
@@ -136,14 +136,14 @@ function RankedList({ title, items, emptyLabel }) {
       <h2 className="text-lg font-bold text-ink">{title}</h2>
       <div className="mt-4 space-y-3">
         {items.length > 0 ? items.map((item, index) => (
-          <div key={item.key} className="flex items-center justify-between gap-4 rounded-xl bg-snow px-4 py-3">
+          <div key={item.key} className="flex items-center justify-between gap-4 rounded-xl bg-cream px-4 py-3">
             <div className="flex items-center gap-3">
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-forest/10 text-xs font-bold text-forest">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-coral/10 text-xs font-bold text-coral">
                 {index + 1}
               </span>
               <span className="text-sm font-medium text-ink">{item.label}</span>
             </div>
-            <span className="text-sm font-semibold text-forest">{item.count}</span>
+            <span className="text-sm font-semibold text-coral">{item.count}</span>
           </div>
         )) : <p className="text-sm text-ink-muted">{emptyLabel}</p>}
       </div>

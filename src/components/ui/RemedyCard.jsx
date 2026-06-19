@@ -1,127 +1,49 @@
-import { Heart } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
-import { CategoryBadge } from './CategoryBadge';
-import { EmailQuickSaveCard } from './EmailQuickSaveCard';
-import { RatingStars } from './RatingStars';
-import { cn } from '../../utils/cn';
-import { useFavoritesStore } from '../../store/favoritesStore';
-import { useAuthStore } from '../../store/authStore';
 import { Link } from 'react-router-dom';
-import { getGuestAllergies, getGuestConditions, isRemedySafeForUser } from '../../utils/guestProfile';
+import { cn } from '../../utils/cn';
+import { CategoryTag } from './CategoryTag';
 
-const EMPTY_ARRAY = [];
-
-export function RemedyCard({ remedy, className }) {
-  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
-  const favorite = useFavoritesStore((state) => state.isFavorite(remedy.id));
-  const userAllergies = useAuthStore((state) => state.user?.known_allergies ?? EMPTY_ARRAY);
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const guestAllergies = !isAuthenticated ? getGuestAllergies() : EMPTY_ARRAY;
-  const guestConditions = !isAuthenticated ? getGuestConditions() : EMPTY_ARRAY;
-  const activeAllergies = isAuthenticated ? userAllergies : guestAllergies;
-  const activeConditions = !isAuthenticated ? guestConditions : EMPTY_ARRAY;
-  const hasSafetyWarning = !isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions });
-  const [showQuickSave, setShowQuickSave] = useState(false);
-  const quickSaveRef = useRef(null);
-
-  useEffect(() => {
-    if (!showQuickSave) return undefined;
-
-    const handlePointerDown = (event) => {
-      if (!quickSaveRef.current?.contains(event.target)) {
-        setShowQuickSave(false);
-      }
-    };
-
-    document.addEventListener('pointerdown', handlePointerDown);
-    return () => document.removeEventListener('pointerdown', handlePointerDown);
-  }, [showQuickSave]);
-
-  const handleHeartClick = (event) => {
-    event.preventDefault();
-
-    if (!isAuthenticated) {
-      setShowQuickSave((current) => !current);
-      return;
-    }
-
-    toggleFavorite(remedy);
-  };
-
-  return (
-    <motion.div
-      whileHover={{ y: -2 }}
-      className={cn(
-        "bg-white rounded-2xl p-5 shadow-card hover:shadow-card-hover transition-shadow relative group flex flex-col h-full",
-        className
-      )}
-      >
-        <div className="flex justify-between items-start mb-3">
-          <div className="space-y-2">
-            <CategoryBadge category={remedy.category} />
-            {hasSafetyWarning ? (
-              <div className="inline-flex items-center gap-1 rounded-full bg-amber/20 px-2.5 py-1 text-xs font-semibold text-amber-dark">
-                <span aria-hidden="true">⚠️</span>
-                <span>Check safety</span>
-              </div>
-            ) : null}
-          </div>
-          <div ref={quickSaveRef} className="relative">
-            <motion.button
-              whileTap={{ scale: 0.9 }}
-              onClick={handleHeartClick}
-              className="text-ink-muted hover:text-forest transition-colors p-1 -mr-1 -mt-1"
-              aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
-            >
-              <Heart className={cn('w-5 h-5', favorite && 'fill-forest text-forest')} />
-            </motion.button>
-
-            {showQuickSave ? (
-              <motion.div
-                initial={{ opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                className="absolute right-0 top-10 z-20 w-[280px] rounded-2xl border border-gray-100 border-l-4 border-l-forest bg-white p-4 shadow-card"
-              >
-                <EmailQuickSaveCard
-                  remedyId={remedy.id}
-                  title="🤍 Save this remedy"
-                  description=""
-                />
-              </motion.div>
-            ) : null}
-          </div>
-      </div>
-
-      <h3 className="font-bold text-lg text-ink mb-2 line-clamp-1">{remedy.name}</h3>
-      
-      <p className="text-sm text-ink-muted line-clamp-2 mb-4 flex-grow">
-        {remedy.shortDescription}
-      </p>
-
-      <RatingStars rating={remedy.rating} reviewCount={remedy.reviewCount} className="mb-4" />
-
-      <div className="flex items-center gap-2 mb-4 text-xs font-medium text-ink-muted">
-        <span className="bg-snow-dark px-2 py-1 rounded-md">{remedy.cost}</span>
-        <span>•</span>
-        <span>{remedy.timeToEffect}</span>
-        {remedy._evidenceScore ? (
-          <>
-            <span>•</span>
-            <span className="text-forest font-semibold" title="Evidence level">
-              E{remedy._evidenceScore}/10
-            </span>
-          </>
-        ) : null}
-      </div>
-
+export function RemedyCard({ remedy, className, featured }) {
+  if (featured) {
+    return (
       <Link
         to={`/remedy/${remedy.id}`}
-        className="w-full mt-auto text-center py-2.5 rounded-xl text-sm font-semibold text-forest bg-forest/5 hover:bg-forest/10 transition-colors"
+        className={cn(
+          "block bg-white rounded-2xl p-6 shadow-card hover:shadow-card-hover transition-shadow",
+          className
+        )}
       >
-        View Details &rarr;
+        <div className="flex items-center gap-2 mb-3">
+          <CategoryTag category={remedy.category} />
+          <span className="text-xs font-medium text-coral">Featured</span>
+        </div>
+        <h3 className="text-xl font-semibold text-ink mb-2">{remedy.name}</h3>
+        <p className="text-ink-muted mb-4">{remedy.shortDescription}</p>
+        <div className="flex items-center gap-4 text-sm text-ink-muted">
+          <span className="flex items-center gap-1">{remedy.timeToEffect}</span>
+          <span className="flex items-center gap-1">{remedy.difficulty}</span>
+        </div>
       </Link>
-    </motion.div>
+    );
+  }
+
+  return (
+    <Link
+      to={`/remedy/${remedy.id}`}
+      className={cn(
+        "block bg-white rounded-2xl p-5 shadow-soft hover:shadow-card transition-shadow",
+        className
+      )}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <CategoryTag category={remedy.category} className="mb-2" />
+          <h3 className="text-base font-semibold text-ink truncate">{remedy.name}</h3>
+        </div>
+      </div>
+      <p className="text-sm text-ink-muted mt-1 line-clamp-1">{remedy.shortDescription}</p>
+      <div className="flex items-center gap-3 mt-3 text-xs text-ink-muted">
+        <span>{remedy.timeToEffect}</span>
+      </div>
+    </Link>
   );
 }

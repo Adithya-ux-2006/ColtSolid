@@ -8,7 +8,7 @@ export function AdminGuard({ children }) {
 
   if (!isInitialized || !user) {
     return (
-      <PageWrapper className="min-h-screen bg-snow px-6 py-12">
+      <PageWrapper className="min-h-screen bg-cream px-6 py-12">
         <div className="mx-auto max-w-xl text-center text-ink-muted">Checking admin access...</div>
       </PageWrapper>
     );

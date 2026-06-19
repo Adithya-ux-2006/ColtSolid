@@ -145,7 +145,7 @@ export function AppointmentForm({ initialData, onSubmit, onCancel }) {
         <button
           type="submit"
           disabled={!isFormValid}
-          className="flex-1 py-2.5 rounded-xl font-medium bg-forest text-white hover:bg-forest-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 py-2.5 rounded-xl font-medium bg-coral text-white hover:bg-coral-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {normalizedInitialData ? 'Update' : 'Schedule'}
         </button>

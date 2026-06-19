@@ -137,7 +137,7 @@ export function QuestionnaireFlow({
               <div
                 className={cn(
                   'h-full rounded-full transition-all duration-300',
-                  index < progress ? 'w-full bg-forest' : 'w-0 bg-forest'
+                  index < progress ? 'w-full bg-coral' : 'w-0 bg-coral'
                 )}
               />
             </div>
@@ -194,8 +194,8 @@ export function QuestionnaireFlow({
                     className={cn(
                       'min-h-[88px] rounded-2xl border px-4 py-4 text-left transition-all',
                       isSelected
-                        ? 'border-forest bg-forest text-white'
-                        : 'border-forest bg-white text-forest hover:bg-forest/5'
+                        ? 'border-coral bg-coral text-white'
+                        : 'border-coral bg-white text-forest hover:bg-coral/5'
                     )}
                   >
                     {'emoji' in option && option.emoji ? <div className="mb-2 text-2xl">{option.emoji}</div> : null}
@@ -213,7 +213,7 @@ export function QuestionnaireFlow({
                   type="text"
                   value={otherAllergy}
                   onChange={(event) => setOtherAllergy(event.target.value)}
-                  className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-ink focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest"
+                  className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-ink focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-coral"
                   placeholder="Add another allergy"
                 />
               </div>
@@ -239,7 +239,7 @@ export function QuestionnaireFlow({
           type="button"
           onClick={handleContinue}
           disabled={isSaving}
-          className="rounded-full bg-forest px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-forest-dark disabled:cursor-not-allowed disabled:opacity-70"
+          className="rounded-full bg-coral px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-coral-dark disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isSaving ? 'Saving...' : 'Continue'}
         </button>

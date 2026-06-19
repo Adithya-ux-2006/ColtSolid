@@ -9,31 +9,25 @@ export function Navbar() {
   if (location.pathname === '/onboarding') return null;
 
   return (
-    <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-gray-100 hidden md:block">
+    <nav className="bg-cream sticky top-0 z-40 hidden md:block">
       <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link to={isAuthenticated ? '/dashboard' : '/'} className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-forest flex items-center justify-center text-white font-bold">
-            C
-          </div>
-          <span className="font-bold text-xl text-ink">ClotSolid</span>
+        <Link to={isAuthenticated ? '/dashboard' : '/'} className="flex items-center gap-1.5">
+          <span className="text-xl font-bold text-ink">ClotSolid</span>
+          <span className="w-2 h-2 rounded-full bg-coral" />
         </Link>
-        
+
         {isAuthenticated ? (
           <div className="flex items-center gap-6">
-            <Link to="/dashboard" className="text-ink-muted hover:text-ink font-medium">Dashboard</Link>
-            <Link to="/search" className="text-ink-muted hover:text-ink font-medium">Search</Link>
-            <Link to="/favorites" className="text-ink-muted hover:text-ink font-medium">Favorites</Link>
-            <Link to="/appointments" className="text-ink-muted hover:text-ink font-medium">Appointments</Link>
-            {user?.is_admin ? <Link to="/admin" className="text-ink-muted hover:text-ink font-medium">Admin</Link> : null}
-            <Link to="/profile" className="w-9 h-9 rounded-full bg-forest/10 text-forest flex items-center justify-center font-bold">
-              {user?.avatar || 'U'}
+            <Link to="/search" className="text-ink-muted hover:text-ink text-sm font-medium">Search</Link>
+            <Link to="/profile" className="w-8 h-8 rounded-full bg-coral/10 text-coral flex items-center justify-center text-sm font-semibold">
+              {(user?.name?.[0] || 'U').toUpperCase()}
             </Link>
           </div>
         ) : (
           <div className="flex items-center gap-4">
-            <Link to="/search" className="text-ink-muted hover:text-ink font-medium">Search Remedies</Link>
-            <Link to="/login" className="rounded-full border border-gray-200 px-4 py-2 text-ink font-medium hover:bg-snow transition-colors">Log In</Link>
-            <Link to="/register" className="px-4 py-2 rounded-full bg-forest text-white font-medium hover:bg-forest-dark transition-colors">
+            <Link to="/search" className="text-ink-muted hover:text-ink text-sm font-medium">Search</Link>
+            <Link to="/login" className="text-ink-muted hover:text-ink text-sm font-medium">Log In</Link>
+            <Link to="/register" className="px-4 py-2 rounded-xl bg-coral text-white text-sm font-medium hover:bg-coral-dark transition-colors">
               Sign Up Free
             </Link>
           </div>

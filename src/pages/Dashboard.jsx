@@ -1,19 +1,17 @@
 import { useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Calendar as CalendarIcon, ArrowRight, Activity, Bookmark } from 'lucide-react';
+import { Search, Calendar, Heart } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
-import { SymptomChip, RemedyCard, EmptyState } from '../components/ui';
+import { EmptyState } from '../components/ui';
 import { useAuthStore } from '../store/authStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useAppointmentStore } from '../store/appointmentStore';
 import { useCatalogStore } from '../store/catalogStore';
-import { CONDITIONS } from '../constants/onboarding';
 
 export function Dashboard() {
   const user = useAuthStore((state) => state.user);
   const favorites = useFavoritesStore((state) => state.favorites);
   const appointments = useAppointmentStore((state) => state.appointments);
-  const symptoms = useCatalogStore((state) => state.symptoms);
   const remedies = useCatalogStore((state) => state.remedies);
   const navigate = useNavigate();
 
@@ -24,137 +22,101 @@ export function Dashboard() {
     return 'Good evening';
   }, []);
 
-  const featuredRemedies = remedies.filter(r => r.isFeatured).slice(0, 4);
-  const upcomingAppointment = appointments.find(a => a.status === 'Upcoming');
-  const selectedConditionChips = CONDITIONS.filter((condition) => user?.common_conditions?.includes(condition.value));
+  const favoriteRemedies = useMemo(
+    () => remedies.filter(r => favorites.some(f => f.remedy_id === r.id)).slice(0, 5),
+    [remedies, favorites]
+  );
 
-  const greetingSubtitle = 'Ready to feel better today?';
+  const upcomingAppointment = appointments.find(a => a.status === 'Upcoming');
 
   return (
-    <PageWrapper className="min-h-screen bg-snow pb-24 md:pb-8 pt-6 md:pt-10">
-      <div className="max-w-5xl mx-auto px-6 space-y-10">
-        {/* Header */}
+    <PageWrapper className="min-h-screen bg-cream pb-24 md:pb-16 pt-8">
+      <div className="max-w-2xl mx-auto px-6 space-y-10">
+        {/* Greeting */}
         <header>
-          <h1 className="text-3xl font-extrabold text-ink mb-2">
-            {greeting}, {user?.name?.split(' ')[0] || 'there'} <span className="inline-block animate-wave">👋</span>
+          <h1 className="text-3xl md:text-display font-bold text-ink mb-2">
+            {greeting}, {user?.name?.split(' ')[0] || 'there'}
           </h1>
-          <p className="text-ink-muted">{greetingSubtitle}</p>
+          <p className="text-ink-muted">Ready to find relief?</p>
         </header>
 
-        {/* Stats Row */}
-        <div className="grid grid-cols-3 gap-4">
-          <StatCard icon={Bookmark} value={favorites.length} label="Saved" color="forest" />
-          <StatCard icon={CalendarIcon} value={appointments.length} label="Appts" color="sage" />
-          <StatCard icon={Activity} value={12} label="Searches" color="amber" />
-        </div>
-
-        {/* Quick Search */}
+        {/* Quick Action */}
         <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-ink">Quick Search</h2>
-            <Link to="/search" className="text-sm font-medium text-forest hover:text-forest-dark flex items-center gap-1">
-              View all <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-
-          {selectedConditionChips.length > 0 ? (
-            <div className="mb-5">
-              <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-ink-muted">Your Conditions</p>
-              <div className="flex flex-wrap gap-3">
-                {selectedConditionChips.map((condition) => (
-                  <button
-                    key={condition.value}
-                    type="button"
-                    onClick={() => {
-                      navigate('/search');
-                    }}
-                    className="flex items-center gap-2 rounded-full border border-forest bg-forest px-4 py-2 text-sm font-semibold text-white shadow-forest transition-transform hover:scale-[1.02]"
-                  >
-                    <span>{condition.emoji}</span>
-                    <span>{condition.label}</span>
-                  </button>
-                ))}
-              </div>
+          <button
+            onClick={() => navigate('/search')}
+            className="w-full bg-white rounded-2xl p-6 shadow-card hover:shadow-card-hover transition-shadow text-left flex items-center gap-4"
+          >
+            <div className="w-12 h-12 rounded-xl bg-coral/10 flex items-center justify-center shrink-0">
+              <Search className="w-6 h-6 text-coral" />
             </div>
-          ) : null}
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {symptoms.map(symptom => (
-              <SymptomChip 
-                key={symptom.id} 
-                symptom={symptom} 
-                isSelected={false}
-                onClick={() => navigate(`/results?symptom=${symptom.id}`)}
-                className="w-full justify-center"
-              />
-            ))}
-          </div>
+            <div>
+              <p className="font-semibold text-ink">Search Symptoms</p>
+              <p className="text-sm text-ink-muted">Find evidence-backed remedies</p>
+            </div>
+          </button>
         </section>
 
-        {/* Featured Remedies */}
+        {/* Saved Remedies */}
         <section>
-          <h2 className="text-xl font-bold text-ink mb-4">Featured Remedies</h2>
-          <div className="flex overflow-x-auto gap-5 pb-4 no-scrollbar snap-x -mx-6 px-6 md:mx-0 md:px-0">
-            {featuredRemedies.map(remedy => (
-              <div key={remedy.id} className="snap-start min-w-[280px] w-[280px] md:w-1/3 shrink-0">
-                <RemedyCard remedy={remedy} />
-              </div>
-            ))}
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-heading font-semibold text-ink">Saved Remedies</h2>
+            {favoriteRemedies.length > 0 && (
+              <Link to="/favorites" className="text-sm text-teal font-medium hover:underline">
+                View all
+              </Link>
+            )}
           </div>
+          {favoriteRemedies.length > 0 ? (
+            <div className="space-y-3">
+              {favoriteRemedies.map((remedy) => (
+                <Link
+                  key={remedy.id}
+                  to={`/remedy/${remedy.id}`}
+                  className="block bg-white rounded-2xl p-4 shadow-soft hover:shadow-card transition-shadow"
+                >
+                  <p className="font-semibold text-ink">{remedy.name}</p>
+                  <p className="text-sm text-ink-muted mt-0.5">{remedy.shortDescription}</p>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              icon={Heart}
+              title="No saved remedies yet"
+              description="Save remedies while searching to find them here."
+              ctaLabel="Search Remedies"
+              ctaHref="/search"
+              className="bg-white rounded-2xl shadow-soft"
+            />
+          )}
         </section>
 
         {/* Upcoming Appointment */}
         <section>
-          <h2 className="text-xl font-bold text-ink mb-4">Next Appointment</h2>
+          <h2 className="text-heading font-semibold text-ink mb-4">Next Appointment</h2>
           {upcomingAppointment ? (
-            <div className="bg-white rounded-2xl p-6 shadow-sm border-l-4 border-forest flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div>
-                <h3 className="font-bold text-lg text-ink">{upcomingAppointment.title}</h3>
-                <p className="text-ink-muted">{upcomingAppointment.doctor}</p>
-                <div className="flex items-center gap-4 mt-2 text-sm text-ink-muted font-medium">
-                  <span className="flex items-center gap-1 bg-gray-50 px-2 py-1 rounded-md">
-                    <CalendarIcon className="w-4 h-4" /> {upcomingAppointment.date}
-                  </span>
-                  <span>{upcomingAppointment.time}</span>
-                </div>
+            <div className="bg-white rounded-2xl p-6 shadow-card">
+              <h3 className="font-semibold text-ink mb-1">{upcomingAppointment.title}</h3>
+              <p className="text-sm text-ink-muted mb-2">{upcomingAppointment.doctor}</p>
+              <div className="flex items-center gap-4 text-sm text-ink-muted">
+                <span className="flex items-center gap-1">
+                  <Calendar className="w-4 h-4" /> {upcomingAppointment.date}
+                </span>
+                <span>{upcomingAppointment.time}</span>
               </div>
-              <Link 
-                to="/appointments"
-                className="px-4 py-2 border border-gray-200 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
-              >
-                Manage
-              </Link>
             </div>
           ) : (
-            <EmptyState 
-              icon={CalendarIcon}
+            <EmptyState
+              icon={Calendar}
               title="No upcoming appointments"
-              description="Schedule a checkup or consultation if symptoms persist."
+              description="Schedule a checkup if symptoms persist."
               ctaLabel="Book Appointment"
               ctaHref="/appointments"
-              className="bg-white rounded-2xl shadow-sm border border-gray-100"
+              className="bg-white rounded-2xl shadow-soft"
             />
           )}
         </section>
       </div>
     </PageWrapper>
-  );
-}
-
-function StatCard({ icon: Icon, value, label, color }) {
-  const colorMap = {
-    forest: 'bg-forest/10 text-forest',
-    sage: 'bg-sage/10 text-sage-dark',
-    amber: 'bg-amber/20 text-amber-dark'
-  };
-
-  return (
-    <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-50 flex flex-col items-center justify-center text-center">
-      <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-2 ${colorMap[color]}`}>
-        <Icon className="w-5 h-5" />
-      </div>
-      <span className="text-2xl font-bold text-ink">{value}</span>
-      <span className="text-xs font-medium text-ink-muted uppercase tracking-wider">{label}</span>
-    </div>
   );
 }

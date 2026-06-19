@@ -7,25 +7,31 @@ export default {
   theme: {
     extend: {
       colors: {
-        forest:  { DEFAULT: '#2D6A4F', light: '#52B788', dark: '#1B4332' },
-        sage:    { DEFAULT: '#95D5B2', light: '#B7E4C7', dark: '#74C69D' },
-        amber:   { DEFAULT: '#F4A261', light: '#F9C784', dark: '#E76F51' },
-        snow:    { DEFAULT: '#FAFAF8', dark: '#F0F0EC' },
-        ink:     { DEFAULT: '#1A2E2A', muted: '#4A6572', subtle: '#8FA3A0' },
+        coral:   { DEFAULT: '#FF6B6B', light: '#FF8E8E', dark: '#E05555' },
+        teal:    { DEFAULT: '#4ECDC4', light: '#7EDDD6', dark: '#3BB5AD' },
+        yellow:  { DEFAULT: '#FFD93D', light: '#FFE366', dark: '#F0C220' },
+        cream:   { DEFAULT: '#FFFAF5', dark: '#FFF5ED' },
+        ink:     { DEFAULT: '#1A1F2E', muted: '#5A6270', subtle: '#9CA3AF' },
       },
       borderRadius: {
         'xl': '1rem',
-        '2xl': '1.5rem',
-        '3xl': '2rem',
+        '2xl': '1.25rem',
+        '3xl': '1.5rem',
       },
       boxShadow: {
-        'card': '0 4px 20px rgba(0,0,0,0.06)',
-        'card-hover': '0 8px 30px rgba(0,0,0,0.12)',
-        'forest': '0 4px 20px rgba(45,106,79,0.3)',
+        'soft': '0 2px 16px rgba(0,0,0,0.04)',
+        'card': '0 4px 24px rgba(0,0,0,0.06)',
+        'card-hover': '0 8px 32px rgba(0,0,0,0.08)',
+        'coral': '0 4px 20px rgba(255,107,107,0.25)',
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-      }
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+      fontSize: {
+        'display': ['3.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
+        'heading': ['1.75rem', { lineHeight: '1.25' }],
+        'body': ['1.125rem', { lineHeight: '1.6' }],
+      },
     },
   },
   plugins: [],

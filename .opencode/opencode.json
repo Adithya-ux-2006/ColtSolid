@@ -1,0 +1,26 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "skills": {
+    "paths": [".opencode/skills"]
+  },
+  "agent": {
+    "council-design-reviewer": {
+      "model": "anthropic/claude-sonnet-4-6",
+      "mode": "subagent",
+      "description": "Reviews UI components for design system compliance, accessibility, and visual consistency.",
+      "permission": { "edit": "deny", "bash": "deny", "glob": "allow", "grep": "allow", "read": "allow" }
+    },
+    "council-code-reviewer": {
+      "model": "anthropic/claude-sonnet-4-6",
+      "mode": "subagent",
+      "description": "Reviews code for correctness, performance, security, and adherence to project patterns.",
+      "permission": { "edit": "deny", "bash": "deny", "glob": "allow", "grep": "allow", "read": "allow" }
+    },
+    "council-security-reviewer": {
+      "model": "anthropic/claude-sonnet-4-6",
+      "mode": "subagent",
+      "description": "Reviews code for XSS, injection, data exposure, and other security vulnerabilities.",
+      "permission": { "edit": "deny", "bash": "deny", "glob": "allow", "grep": "allow", "read": "allow" }
+    }
+  }
+}

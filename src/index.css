@@ -3,16 +3,32 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @screen md {
+    html {
+      font-size: 18px;
+    }
+  }
+
   body {
-    @apply font-sans bg-snow text-ink antialiased;
+    @apply font-sans bg-cream text-ink antialiased;
   }
 }
 
-/* Hide scrollbar for horizontal scroll areas */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+@layer components {
+  .section-heading {
+    @apply text-heading font-semibold text-ink mb-6;
+  }
+
+  .safety-box {
+    @apply rounded-2xl bg-yellow/10 p-6 text-sm text-ink leading-relaxed;
+  }
+
+  .guidance-box {
+    @apply rounded-2xl bg-teal/5 p-6 text-sm text-ink leading-relaxed;
+  }
 }
