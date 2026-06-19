@@ -12,16 +12,16 @@ export function FAQAccordion({ items }) {
         const isOpen = openIndex === index;
 
         return (
-          <div key={item.question} className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+          <div key={item.question} className="overflow-hidden rounded-2xl bg-white shadow-soft">
             <button
               type="button"
               onClick={() => setOpenIndex(isOpen ? -1 : index)}
               className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
             >
-              <span className={cn('text-base font-semibold transition-colors', isOpen ? 'text-coral' : 'text-ink')}>
+              <span className={cn('text-sm font-semibold transition-colors', isOpen ? 'text-primary' : 'text-ink')}>
                 {item.question}
               </span>
-              <ChevronDown className={cn('h-5 w-5 shrink-0 text-ink-muted transition-transform', isOpen && 'rotate-180')} />
+              <ChevronDown className={cn('h-4 w-4 shrink-0 text-ink-muted transition-transform', isOpen && 'rotate-180')} />
             </button>
 
             <AnimatePresence initial={false}>
@@ -33,7 +33,7 @@ export function FAQAccordion({ items }) {
                   transition={{ duration: 0.22, ease: 'easeOut' }}
                   className="overflow-hidden"
                 >
-                  <div className="border-t border-gray-100 px-5 py-4 text-sm leading-relaxed text-ink-muted">
+                  <div className="border-t border-surface px-5 py-4 text-sm leading-relaxed text-ink-muted">
                     {item.answer}
                   </div>
                 </motion.div>

@@ -11,12 +11,12 @@ export function RatingStars({ rating, reviewCount, size = 'sm', className }) {
       <div className="flex items-center gap-0.5">
         {Array.from({ length: 5 }).map((_, i) => {
           if (i < fullStars) {
-            return <Star key={i} className={`${starSize} fill-yellow text-yellow`} />;
+            return <Star key={i} className={`${starSize} fill-accent text-accent`} />;
           }
           if (i === fullStars && hasHalf) {
-            return <StarHalf key={i} className={`${starSize} fill-yellow text-yellow`} />;
+            return <StarHalf key={i} className={`${starSize} fill-accent text-accent`} />;
           }
-          return <Star key={i} className={`${starSize} text-gray-200`} />;
+          return <Star key={i} className={`${starSize} text-surface-dark`} />;
         })}
       </div>
       {reviewCount !== undefined && (

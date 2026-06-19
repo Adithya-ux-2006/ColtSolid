@@ -7,30 +7,36 @@ export default {
   theme: {
     extend: {
       colors: {
-        coral:   { DEFAULT: '#FF6B6B', light: '#FF8E8E', dark: '#E05555' },
-        teal:    { DEFAULT: '#4ECDC4', light: '#7EDDD6', dark: '#3BB5AD' },
-        yellow:  { DEFAULT: '#FFD93D', light: '#FFE366', dark: '#F0C220' },
-        cream:   { DEFAULT: '#FFFAF5', dark: '#FFF5ED' },
-        ink:     { DEFAULT: '#1A1F2E', muted: '#5A6270', subtle: '#9CA3AF' },
+        primary:   { DEFAULT: '#1F5E4A', dark: '#164535', light: '#2F7D61' },
+        accent:    { DEFAULT: '#8FD9B6', light: '#B0E5CC', dark: '#6EC8A0' },
+        surface:   { DEFAULT: '#DCEFE4', light: '#E8F5EE', dark: '#C5E5D6' },
+        bg:        { DEFAULT: '#F8FBF9', dark: '#F0F6F2' },
+        ink:       { DEFAULT: '#16352B', muted: '#4A7263', subtle: '#8AA89B' },
       },
       borderRadius: {
         'xl': '1rem',
         '2xl': '1.25rem',
         '3xl': '1.5rem',
+        '4xl': '2rem',
       },
       boxShadow: {
-        'soft': '0 2px 16px rgba(0,0,0,0.04)',
-        'card': '0 4px 24px rgba(0,0,0,0.06)',
-        'card-hover': '0 8px 32px rgba(0,0,0,0.08)',
-        'coral': '0 4px 20px rgba(255,107,107,0.25)',
+        'soft': '0 2px 12px rgba(22,53,43,0.04)',
+        'card': '0 4px 20px rgba(22,53,43,0.06)',
+        'card-hover': '0 8px 30px rgba(22,53,43,0.1)',
+        'glow': '0 4px 24px rgba(143,217,182,0.3)',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       fontSize: {
-        'display': ['3.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
-        'heading': ['1.75rem', { lineHeight: '1.25' }],
-        'body': ['1.125rem', { lineHeight: '1.6' }],
+        'display': ['3rem', { lineHeight: '1.1', letterSpacing: '-0.025em' }],
+        'heading': ['1.625rem', { lineHeight: '1.25' }],
+        'body': ['1.0625rem', { lineHeight: '1.65' }],
+      },
+      backgroundImage: {
+        'gradient-card': 'linear-gradient(135deg, #DCEFE4 0%, #E8F5EE 100%)',
+        'gradient-featured': 'linear-gradient(135deg, #8FD9B6 0%, #B0E5CC 100%)',
+        'gradient-hero': 'linear-gradient(180deg, #F8FBF9 0%, #DCEFE4 100%)',
       },
     },
   },

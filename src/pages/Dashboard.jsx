@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, Calendar, Heart } from 'lucide-react';
+import { Search, Calendar, Heart, Sparkles } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { EmptyState } from '../components/ui';
 import { useAuthStore } from '../store/authStore';
@@ -30,38 +30,40 @@ export function Dashboard() {
   const upcomingAppointment = appointments.find(a => a.status === 'Upcoming');
 
   return (
-    <PageWrapper className="min-h-screen bg-cream pb-24 md:pb-16 pt-8">
+    <PageWrapper className="min-h-screen bg-bg pb-24 md:pb-16 pt-8">
       <div className="max-w-2xl mx-auto px-6 space-y-10">
         {/* Greeting */}
         <header>
+          <div className="flex items-center gap-2 mb-1">
+            <Sparkles className="w-5 h-5 text-accent-dark" />
+            <span className="text-sm font-medium text-ink-muted">{greeting}</span>
+          </div>
           <h1 className="text-3xl md:text-display font-bold text-ink mb-2">
-            {greeting}, {user?.name?.split(' ')[0] || 'there'}
+            {user?.name?.split(' ')[0] || 'there'}
           </h1>
           <p className="text-ink-muted">Ready to find relief?</p>
         </header>
 
         {/* Quick Action */}
-        <section>
-          <button
-            onClick={() => navigate('/search')}
-            className="w-full bg-white rounded-2xl p-6 shadow-card hover:shadow-card-hover transition-shadow text-left flex items-center gap-4"
-          >
-            <div className="w-12 h-12 rounded-xl bg-coral/10 flex items-center justify-center shrink-0">
-              <Search className="w-6 h-6 text-coral" />
-            </div>
-            <div>
-              <p className="font-semibold text-ink">Search Symptoms</p>
-              <p className="text-sm text-ink-muted">Find evidence-backed remedies</p>
-            </div>
-          </button>
-        </section>
+        <button
+          onClick={() => navigate('/search')}
+          className="w-full bg-gradient-card rounded-3xl p-6 shadow-card hover:shadow-card-hover transition-shadow text-left flex items-center gap-4 border border-accent/20"
+        >
+          <div className="w-12 h-12 rounded-2xl bg-white/60 flex items-center justify-center shrink-0">
+            <Search className="w-6 h-6 text-primary" />
+          </div>
+          <div>
+            <p className="font-semibold text-ink">Search Symptoms</p>
+            <p className="text-sm text-ink-muted">Find evidence-backed remedies</p>
+          </div>
+        </button>
 
         {/* Saved Remedies */}
         <section>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-heading font-semibold text-ink">Saved Remedies</h2>
+            <h2 className="section-title mb-0">Saved Remedies</h2>
             {favoriteRemedies.length > 0 && (
-              <Link to="/favorites" className="text-sm text-teal font-medium hover:underline">
+              <Link to="/favorites" className="text-sm text-primary font-medium hover:underline">
                 View all
               </Link>
             )}
@@ -72,10 +74,15 @@ export function Dashboard() {
                 <Link
                   key={remedy.id}
                   to={`/remedy/${remedy.id}`}
-                  className="block bg-white rounded-2xl p-4 shadow-soft hover:shadow-card transition-shadow"
+                  className="flex items-center gap-4 bg-white rounded-2xl p-4 shadow-soft hover:shadow-card transition-shadow"
                 >
-                  <p className="font-semibold text-ink">{remedy.name}</p>
-                  <p className="text-sm text-ink-muted mt-0.5">{remedy.shortDescription}</p>
+                  <div className="w-10 h-10 rounded-xl bg-surface flex items-center justify-center shrink-0 text-primary font-semibold text-sm">
+                    {remedy.name.charAt(0)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-ink">{remedy.name}</p>
+                    <p className="text-sm text-ink-muted truncate">{remedy.shortDescription}</p>
+                  </div>
                 </Link>
               ))}
             </div>
@@ -86,16 +93,16 @@ export function Dashboard() {
               description="Save remedies while searching to find them here."
               ctaLabel="Search Remedies"
               ctaHref="/search"
-              className="bg-white rounded-2xl shadow-soft"
+              className="bg-white rounded-3xl shadow-soft"
             />
           )}
         </section>
 
         {/* Upcoming Appointment */}
         <section>
-          <h2 className="text-heading font-semibold text-ink mb-4">Next Appointment</h2>
+          <h2 className="section-title">Next Appointment</h2>
           {upcomingAppointment ? (
-            <div className="bg-white rounded-2xl p-6 shadow-card">
+            <div className="bg-white rounded-3xl p-6 shadow-card">
               <h3 className="font-semibold text-ink mb-1">{upcomingAppointment.title}</h3>
               <p className="text-sm text-ink-muted mb-2">{upcomingAppointment.doctor}</p>
               <div className="flex items-center gap-4 text-sm text-ink-muted">
@@ -112,7 +119,7 @@ export function Dashboard() {
               description="Schedule a checkup if symptoms persist."
               ctaLabel="Book Appointment"
               ctaHref="/appointments"
-              className="bg-white rounded-2xl shadow-soft"
+              className="bg-white rounded-3xl shadow-soft"
             />
           )}
         </section>

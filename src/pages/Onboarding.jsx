@@ -9,7 +9,7 @@ export function Onboarding() {
   const saveOnboarding = useAuthStore((state) => state.saveOnboarding);
 
   return (
-    <PageWrapper className="min-h-screen bg-[#F7F1E7] px-6 py-8 md:py-12">
+    <PageWrapper className="min-h-screen bg-bg px-6 py-8 md:py-12">
       <QuestionnaireFlow
         initialValues={user}
         onSubmit={saveOnboarding}

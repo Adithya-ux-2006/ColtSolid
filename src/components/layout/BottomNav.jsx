@@ -23,12 +23,12 @@ export function BottomNav() {
   };
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 pb-safe z-40">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-surface/50 pb-safe z-40">
       <div className="flex justify-around items-center h-16">
         {navItems.map((item) => {
           const baseClassName = cn(
             'flex flex-col items-center justify-center w-full h-full gap-0.5 transition-colors',
-            location.pathname === item.to ? 'text-coral' : 'text-ink-muted hover:text-ink'
+            location.pathname === item.to ? 'text-primary' : 'text-ink-muted hover:text-ink'
           );
 
           if (item.locked) {
@@ -51,7 +51,7 @@ export function BottomNav() {
               to={item.to}
               className={({ isActive }) => cn(
                 'flex flex-col items-center justify-center w-full h-full gap-0.5 transition-colors',
-                isActive ? 'text-coral' : 'text-ink-muted hover:text-ink'
+                isActive ? 'text-primary' : 'text-ink-muted hover:text-ink'
               )}
             >
               <item.icon className="w-5 h-5" />

@@ -35,7 +35,7 @@ function renderMarkdown(text, closePanel) {
           key={`${line}-${index}`}
           to={linkMatch[2]}
           onClick={closePanel}
-          className="mt-2 inline-flex rounded-full bg-sage/20 px-3 py-1.5 text-sm font-semibold text-forest hover:bg-sage/30"
+          className="mt-2 inline-flex rounded-full bg-primary/10 px-3 py-1.5 text-sm font-semibold text-primary hover:bg-primary/20"
         >
           {linkMatch[1]}
         </Link>
@@ -146,7 +146,7 @@ export function AiChatPanel() {
         onClick={() => setIsOpen(true)}
         title="AI Health Assistant"
         className={cn(
-          'fixed bottom-24 right-4 z-50 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-coral text-white shadow-xl transition-transform hover:scale-105 hover:bg-coral-dark',
+          'fixed bottom-24 right-4 z-50 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-primary text-white shadow-xl transition-transform hover:scale-105 hover:bg-primary-dark',
           shouldPulse ? 'animate-pulse' : ''
         )}
       >
@@ -156,11 +156,11 @@ export function AiChatPanel() {
 
       <div
         className={cn(
-          'fixed inset-y-0 right-0 z-[60] flex w-full flex-col bg-cream shadow-2xl transition-transform duration-300 sm:w-[360px]',
+          'fixed inset-y-0 right-0 z-[60] flex w-full flex-col bg-bg shadow-2xl transition-transform duration-300 sm:w-[360px]',
           isOpen ? 'translate-x-0' : 'translate-x-full'
         )}
       >
-        <div className="bg-coral px-5 py-4 text-white">
+        <div className="bg-primary px-5 py-4 text-white">
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="flex items-center gap-2 text-lg font-bold">
@@ -187,7 +187,7 @@ export function AiChatPanel() {
                     key={quickStart.text}
                     type="button"
                     onClick={() => sendMessage(quickStart.text)}
-                    className="rounded-full bg-sage/20 px-3 py-1.5 text-sm font-semibold text-forest hover:bg-sage/30"
+                    className="rounded-full bg-primary/10 px-3 py-1.5 text-sm font-semibold text-primary hover:bg-primary/20"
                   >
                     {quickStart.label}
                   </button>
@@ -203,7 +203,7 @@ export function AiChatPanel() {
                   className={cn(
                     'text-sm leading-relaxed',
                     message.role === 'user'
-                      ? 'max-w-[80%] rounded-2xl rounded-tr-sm bg-coral px-4 py-3 text-white'
+                      ? 'max-w-[80%] rounded-2xl rounded-tr-sm bg-primary px-4 py-3 text-white'
                       : 'max-w-[90%] rounded-2xl rounded-tl-sm bg-white px-4 py-3 text-ink shadow-card'
                   )}
                 >
@@ -215,9 +215,9 @@ export function AiChatPanel() {
               <div className="flex justify-start">
                 <div className="rounded-2xl rounded-tl-sm bg-white px-4 py-3 text-ink shadow-card">
                   <span className="inline-flex gap-1">
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-coral" />
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-coral [animation-delay:120ms]" />
-                    <span className="h-2 w-2 animate-bounce rounded-full bg-coral [animation-delay:240ms]" />
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-primary" />
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-primary [animation-delay:120ms]" />
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-primary [animation-delay:240ms]" />
                   </span>
                 </div>
               </div>
@@ -226,7 +226,7 @@ export function AiChatPanel() {
         </div>
 
         <div className="border-t border-gray-100 bg-white p-3">
-          <div className="flex items-end gap-2 rounded-2xl border border-gray-200 bg-cream px-3 py-2 focus-within:border-coral focus-within:ring-2 focus-within:ring-coral/20">
+          <div className="flex items-end gap-2 rounded-2xl border border-gray-200 bg-bg px-3 py-2 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20">
             <textarea
               ref={textareaRef}
               value={input}
@@ -241,7 +241,7 @@ export function AiChatPanel() {
               type="button"
               onClick={() => sendMessage()}
               disabled={isLoading || !input.trim()}
-              className="mb-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-coral text-white transition-colors hover:bg-coral-dark disabled:cursor-not-allowed disabled:opacity-60"
+              className="mb-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
             >
               <ArrowUp className="h-4 w-4" />
             </button>

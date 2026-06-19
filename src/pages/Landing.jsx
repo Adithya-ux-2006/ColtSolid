@@ -11,12 +11,11 @@ export function Landing() {
   const [isQuestionnaireOpen, setIsQuestionnaireOpen] = useState(false);
 
   return (
-    <PageWrapper className="min-h-screen bg-cream flex flex-col">
+    <PageWrapper className="min-h-screen bg-gradient-hero flex flex-col">
       {/* Hero */}
       <section className="flex-1 flex flex-col justify-center px-6 py-24 max-w-2xl mx-auto w-full">
-        <div className="mb-4 inline-flex items-center gap-2">
+        <div className="mb-4">
           <span className="text-2xl font-bold text-ink">ClotSolid</span>
-          <span className="w-2 h-2 rounded-full bg-coral" />
         </div>
 
         <h1 className="text-display font-bold text-ink mb-4 tracking-tight">
@@ -26,14 +25,14 @@ export function Landing() {
         </h1>
 
         <p className="text-lg text-ink-muted mb-8 max-w-lg leading-relaxed">
-          Evidence-based remedies for common student health concerns.
+          Evidence-based remedies for common health concerns.
           No sign-up needed to search.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3">
           <Link
             to="/search"
-            className="inline-flex items-center justify-center gap-2 bg-coral text-white rounded-2xl px-8 py-4 font-semibold text-lg hover:bg-coral-dark transition-colors shadow-coral"
+            className="inline-flex items-center justify-center gap-2 bg-primary text-white rounded-2xl px-8 py-4 font-semibold text-lg hover:bg-primary-dark transition-colors shadow-glow"
           >
             Start Your Search
           </Link>
@@ -48,20 +47,20 @@ export function Landing() {
 
         <div className="mt-8 flex flex-wrap gap-6">
           <span className="flex items-center gap-1.5 text-sm text-ink-muted">
-            <Shield className="w-4 h-4 text-teal" /> Free to use
+            <Shield className="w-4 h-4 text-primary" /> Free to use
           </span>
           <span className="flex items-center gap-1.5 text-sm text-ink-muted">
-            <BookOpen className="w-4 h-4 text-teal" /> Research-backed
+            <BookOpen className="w-4 h-4 text-primary" /> Research-backed
           </span>
           <span className="flex items-center gap-1.5 text-sm text-ink-muted">
-            <Heart className="w-4 h-4 text-teal" /> Built for students
+            <Heart className="w-4 h-4 text-primary" /> Built for students
           </span>
         </div>
       </section>
 
       {/* How It Works */}
       <section className="px-6 py-16 max-w-2xl mx-auto w-full">
-        <h2 className="section-heading text-center">How It Works</h2>
+        <h2 className="section-title text-center">How It Works</h2>
         <div className="grid sm:grid-cols-3 gap-8 mt-8">
           <Step
             number="1"
@@ -84,7 +83,7 @@ export function Landing() {
       {/* FAQ */}
       <section className="bg-white px-6 py-16">
         <div className="max-w-2xl mx-auto">
-          <h2 className="section-heading text-center">Frequently Asked Questions</h2>
+          <h2 className="section-title text-center">Frequently Asked Questions</h2>
           <div className="mt-8">
             <FAQAccordion items={FAQ_ITEMS} />
           </div>
@@ -96,7 +95,6 @@ export function Landing() {
         <div className="max-w-2xl mx-auto text-center">
           <div className="flex items-center justify-center gap-1.5 mb-2">
             <span className="font-bold text-ink">ClotSolid</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-coral" />
           </div>
           <p className="text-xs text-ink-subtle leading-relaxed">
             Not a substitute for professional medical advice. &copy; 2026 ClotSolid.
@@ -129,7 +127,7 @@ export function Landing() {
 function Step({ number, title, description }) {
   return (
     <div className="text-center">
-      <div className="w-10 h-10 rounded-xl bg-coral/10 text-coral flex items-center justify-center font-bold mx-auto mb-4">
+      <div className="w-10 h-10 rounded-xl bg-surface text-primary flex items-center justify-center font-bold mx-auto mb-4">
         {number}
       </div>
       <h3 className="font-semibold text-ink mb-2">{title}</h3>

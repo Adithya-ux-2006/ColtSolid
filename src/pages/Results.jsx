@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ExternalLink, ShieldCheck } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { RemedyCard, LoadingSkeleton, EmptyState, SafetyNotice, DoctorGuidance } from '../components/ui';
 import { useCatalogStore } from '../store/catalogStore';
@@ -99,21 +99,21 @@ export function Results() {
     return featuredRemedy.researchPapers || featuredRemedy.researchLinks || [];
   }, [featuredRemedy]);
 
+  const featuredIsSafe = useMemo(() => {
+    if (!featuredRemedy) return true;
+    return isRemedySafeForUser(featuredRemedy, { allergies: activeAllergies, conditions: activeConditions });
+  }, [featuredRemedy, activeAllergies, activeConditions]);
+
   const safetyWarnings = useMemo(() => {
     if (!featuredRemedy) return null;
-    const warnings = [];
-    if (featuredRemedy.warnings) warnings.push(featuredRemedy.warnings);
-    if (!isRemedySafeForUser(featuredRemedy, { allergies: activeAllergies, conditions: activeConditions })) {
-      warnings.push('This remedy may not be suitable based on your health profile.');
-    }
-    return warnings.length > 0 ? warnings.join(' ') : null;
-  }, [featuredRemedy, activeAllergies, activeConditions]);
+    return featuredRemedy.warnings || null;
+  }, [featuredRemedy]);
 
   const headerTitle = symptom?.label || queryParam || 'Results';
 
   if (!hasLoaded && isCatalogLoading) {
     return (
-      <PageWrapper className="min-h-screen bg-cream pb-16">
+      <PageWrapper className="min-h-screen bg-bg pb-16">
         <div className="max-w-2xl mx-auto px-6 pt-8">
           <LoadingSkeleton count={4} />
         </div>
@@ -123,7 +123,7 @@ export function Results() {
 
   if (!isFreeTextSearch && !symptom && hasLoaded) {
     return (
-      <PageWrapper className="min-h-screen bg-cream pt-16 px-6">
+      <PageWrapper className="min-h-screen bg-bg pt-16 px-6">
         <EmptyState
           title="Symptom not found"
           description="Please select a valid symptom from the search page."
@@ -135,7 +135,7 @@ export function Results() {
   }
 
   return (
-    <PageWrapper className="min-h-screen bg-cream pb-24 md:pb-16">
+    <PageWrapper className="min-h-screen bg-bg pb-24 md:pb-16">
       <div className="px-6 pt-6 max-w-2xl mx-auto">
         <button
           onClick={() => navigate('/search')}
@@ -152,7 +152,7 @@ export function Results() {
         </h1>
         <p className="text-ink-muted">
           {rankedRemedies.length > 0
-            ? `${rankedRemedies.length} evidence-backed ${rankedRemedies.length === 1 ? 'remedy' : 'remedies'}`
+            ? `${rankedRemedies.length} evidence-backed ${rankedRemedies.length === 1 ? 'remedy' : 'remedies'} found`
             : 'Searching for remedies...'}
         </p>
       </div>
@@ -170,11 +170,23 @@ export function Results() {
         <div className="max-w-2xl mx-auto space-y-10 px-6">
           {featuredRemedy && (
             <section>
-              <h2 className="section-heading">Featured Remedy</h2>
-              <RemedyCard remedy={featuredRemedy} featured />
-              {safetyWarnings && (
-                <div className="mt-4">
-                  <SafetyNotice message={safetyWarnings} />
+              <RemedyCard remedy={featuredRemedy} featured isSafe={featuredIsSafe} />
+
+              {!featuredIsSafe && (
+                <SafetyNotice
+                  message="This remedy may not be suitable based on your health profile."
+                  className="mt-4"
+                />
+              )}
+
+              {safetyWarnings && featuredIsSafe && (
+                <SafetyNotice message={safetyWarnings} className="mt-4" />
+              )}
+
+              {featuredIsSafe && !safetyWarnings && (
+                <div className="flex items-center gap-2 mt-4 text-sm text-primary">
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>No conflicts with your profile</span>
                 </div>
               )}
             </section>
@@ -182,18 +194,18 @@ export function Results() {
 
           {otherRemedies.length > 0 && (
             <section>
-              <h2 className="section-heading">Other Remedies</h2>
+              <h2 className="section-title">Other Safe Remedies</h2>
               <div className="space-y-4">
                 {otherRemedies.map((remedy) => (
-                  <RemedyCard key={remedy.id} remedy={remedy} />
+                  <RemedyCard key={remedy.id} remedy={remedy} isSafe={isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions })} />
                 ))}
               </div>
             </section>
           )}
 
           {researchSources.length > 0 && (
-            <section>
-              <h2 className="section-heading">Research Sources</h2>
+            <section className="section-card">
+              <h2 className="section-title">Research Sources</h2>
               <div className="space-y-3">
                 {researchSources.map((source, idx) => (
                   <a
@@ -201,17 +213,17 @@ export function Results() {
                     href={source.url || '#'}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-3 bg-white rounded-2xl p-4 shadow-soft hover:shadow-card transition-shadow"
+                    className="flex items-center gap-3 p-4 -mx-2 rounded-2xl hover:bg-surface/50 transition-colors"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-teal uppercase tracking-wider mb-0.5">
+                      <p className="text-xs font-medium text-primary uppercase tracking-wider mb-0.5">
                         {source.journal || source.label || 'Research'}
                       </p>
                       <p className="text-sm text-ink truncate">
                         {source.keyFinding || source.label}
                       </p>
                     </div>
-                    <ExternalLink className="w-4 h-4 text-ink-muted shrink-0" />
+                    <ExternalLink className="w-4 h-4 text-ink-subtle shrink-0" />
                   </a>
                 ))}
               </div>

@@ -7,7 +7,7 @@ export function Favorites() {
   const favorites = useFavoritesStore((state) => state.favorites);
 
   return (
-    <PageWrapper className="min-h-screen bg-cream pb-24 md:pb-8 pt-6">
+    <PageWrapper className="min-h-screen bg-bg pb-24 md:pb-8 pt-6">
       <div className="max-w-5xl mx-auto px-6">
         <h1 className="text-2xl font-bold text-ink mb-2">Your Remedies</h1>
         <p className="text-sm text-ink-muted mb-8">

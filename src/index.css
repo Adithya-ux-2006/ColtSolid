@@ -10,25 +10,29 @@
 
   @screen md {
     html {
-      font-size: 18px;
+      font-size: 17px;
     }
   }
 
   body {
-    @apply font-sans bg-cream text-ink antialiased;
+    @apply font-sans bg-bg text-ink antialiased;
   }
 }
 
 @layer components {
-  .section-heading {
-    @apply text-heading font-semibold text-ink mb-6;
+  .section-title {
+    @apply text-heading font-semibold text-ink mb-5;
+  }
+
+  .card-wellness {
+    @apply bg-white rounded-3xl p-6 shadow-card;
+  }
+
+  .section-card {
+    @apply bg-white rounded-3xl p-6 shadow-card;
   }
 
   .safety-box {
-    @apply rounded-2xl bg-yellow/10 p-6 text-sm text-ink leading-relaxed;
-  }
-
-  .guidance-box {
-    @apply rounded-2xl bg-teal/5 p-6 text-sm text-ink leading-relaxed;
+    @apply rounded-3xl p-6 text-sm text-ink leading-relaxed;
   }
 }

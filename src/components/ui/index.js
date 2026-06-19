@@ -7,3 +7,4 @@ export { EmptyState } from './EmptyState';
 export { FAQAccordion } from './FAQAccordion';
 export { SafetyNotice } from './SafetyNotice';
 export { DoctorGuidance } from './DoctorGuidance';
+export { AllergyBadge } from './AllergyBadge';
