@@ -4,12 +4,13 @@ import { Search, ArrowRight, Bot } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { SearchBar } from '../components/forms/SearchBar';
 import { LoadingSkeleton } from '../components/ui';
-import { useSearch, searchRemedies } from '../hooks/useSearch';
+import { useSearch } from '../hooks/useSearch';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { trackSearchEvent } from '../utils/analytics';
 import { getGuestAllergies, getGuestConditions, isRemedySafeForUser } from '../utils/guestProfile';
-import { matchQueryToSymptoms, getRankedRemediesForSymptoms } from '../utils/symptomSearch';
+import { matchQueryToSymptoms, getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptomSearch';
+import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
 
 const SYMPTOM_CARDS = [
   { label: 'Eye Pain', emoji: '👁️', remedy: 'Visine' },
@@ -62,8 +63,9 @@ export function SymptomSearch() {
 
   const textFallbackResults = useMemo(() => {
     if (symptomRankedResults.length > 0) return [];
-    return searchRemedies(trimmedQuery, remedies).filter(safeFilter);
-  }, [remedies, trimmedQuery, symptomRankedResults.length, safeFilter]);
+    if (isEmergencyQuery(trimmedQuery)) return [];
+    return [];
+  }, [symptomRankedResults.length, trimmedQuery]);
 
   const dropdownResults = symptomRankedResults.length > 0 ? symptomRankedResults : textFallbackResults;
   const shouldShowDropdown = trimmedQuery.length >= 2;
@@ -147,7 +149,7 @@ export function SymptomSearch() {
                 ) : dropdownResults.length > 0 ? (
                   <>
                     <p className="text-xs font-bold uppercase tracking-wider text-ink-muted mb-2">
-                      {symptomRankedResults.length > 0 ? 'Recommended remedies' : 'Remedies found'}
+                      Recommended remedies
                     </p>
                     <div className="space-y-1">
                       {dropdownResults.slice(0, 5).map((remedy) => (
@@ -172,9 +174,14 @@ export function SymptomSearch() {
                       See all {dropdownResults.length} results &rarr;
                     </button>
                   </>
+                ) : isEmergencyQuery(trimmedQuery) ? (
+                  <div className="py-3 text-sm">
+                    <p className="font-semibold text-red-600">{EMERGENCY_MESSAGE}</p>
+                    <p className="text-red-500 mt-1">{EMERGENCY_ACTION}</p>
+                  </div>
                 ) : (
                   <div className="py-3 text-sm text-ink-muted">
-                    <p className="font-semibold text-ink">No exact matches found</p>
+                    <p className="font-semibold text-ink">No remedies found for this symptom.</p>
                     <button
                       type="button"
                       onClick={openAiAssistant}

@@ -5,9 +5,10 @@ import { PageWrapper } from '../components/layout';
 import { RemedyCard, LoadingSkeleton, EmptyState, SafetyNotice, DoctorGuidance } from '../components/ui';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
-import { searchRemedies, getClosestSymptomCategory } from '../hooks/useSearch';
+import { getClosestSymptomCategory } from '../hooks/useSearch';
 import { getGuestAllergies, getGuestConditions, isRemedySafeForUser } from '../utils/guestProfile';
-import { matchQueryToSymptoms, getRankedRemediesForSymptoms } from '../utils/symptomSearch';
+import { matchQueryToSymptoms, getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptomSearch';
+import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
 import { trackSearchEvent } from '../utils/analytics';
 
 const EMPTY_ARRAY = [];
@@ -53,15 +54,12 @@ export function Results() {
   const symptom = symptoms.find(s => s.id === symptomParam);
 
   useEffect(() => {
-    if (!isFreeTextSearch || isCatalogLoading || matchedSymptomIds.length > 0 || searchRemedies(queryParam, remedies).length > 0) return;
+    if (!isFreeTextSearch || isCatalogLoading || matchedSymptomIds.length > 0) return;
 
-    let isCurrent = true;
     getClosestSymptomCategory(queryParam)
-      .then((category) => { if (isCurrent) setFallbackMatch({ query: queryParam, category }); })
-      .catch(() => { if (isCurrent) setFallbackMatch({ query: queryParam, category: 'none' }); });
-
-    return () => { isCurrent = false; };
-  }, [isCatalogLoading, isFreeTextSearch, matchedSymptomIds, queryParam, remedies]);
+      .then((category) => { setFallbackMatch({ query: queryParam, category }); })
+      .catch(() => { setFallbackMatch({ query: queryParam, category: 'none' }); });
+  }, [isCatalogLoading, isFreeTextSearch, matchedSymptomIds, queryParam]);
 
   useEffect(() => {
     if (isFreeTextSearch && queryParam) {
@@ -87,8 +85,6 @@ export function Results() {
     let result;
     if (selectedSymptomIds.length > 0) {
       result = getRankedRemediesForSymptoms(selectedSymptomIds, symptomRemedies, remedies);
-    } else if (isFreeTextSearch) {
-      result = searchRemedies(queryParam, remedies);
     } else {
       return [];
     }
@@ -106,7 +102,7 @@ export function Results() {
     });
 
     return result;
-  }, [selectedSymptomIds, symptomRemedies, remedies, safeFilter, isFreeTextSearch, queryParam, sort]);
+  }, [selectedSymptomIds, symptomRemedies, remedies, safeFilter, sort]);
 
   const nonConventional = useMemo(() => rankedRemedies.filter(r => r.category !== 'Conventional'), [rankedRemedies]);
   const featuredRemedy = useMemo(() => nonConventional.length > 0 ? nonConventional[0] : null, [nonConventional]);
@@ -209,14 +205,20 @@ export function Results() {
 
       {nonConventional.length === 0 && !isCatalogLoading ? (
         <div className="max-w-2xl mx-auto px-6">
+          {isEmergencyQuery(queryParam) ? (
+            <div className="rounded-3xl border-2 border-red-300 bg-red-50 p-6">
+              <h2 className="text-xl font-bold text-red-700 mb-2">{EMERGENCY_MESSAGE}</h2>
+              <p className="text-red-600 font-medium mb-4">{EMERGENCY_ACTION}</p>
+              <p className="text-red-500 text-sm">ClotSolid does not provide self-treatment guidance for potentially serious symptoms.</p>
+            </div>
+          ) : (
           <EmptyState
-            title={rankedRemedies.length > 0 ? 'Only conventional remedies found' : 'No remedies found'}
-            description={rankedRemedies.length > 0
-              ? `We found conventional remedies for "${queryParam}", but we only surface Lifestyle, Natural, Ayurveda, and TCM options. Try a different search term.`
-              : `We couldn't find evidence-backed remedies for "${queryParam}". Try a different search term.`}
+            title="No remedies found"
+            description={`No evidence-backed remedies were found for "${queryParam}". Try a different search term.`}
             ctaLabel="Search Again"
             ctaHref="/search"
           />
+          )}
         </div>
       ) : (
         <div className="max-w-2xl mx-auto space-y-10 px-6">

@@ -1,3 +1,5 @@
+import { isEmergencySymptom } from '../constants/emergency';
+
 const SYMPTOM_ALIASES = {
   'back pain': 'back_pain',
   'backache': 'back_pain',
@@ -105,7 +107,7 @@ const SYMPTOM_ALIASES = {
   'anxious': 'anxiety',
   'panic': 'anxiety',
   'nervous': 'anxiety',
-  'panic attack': 'panic_attacks',
+  'panic attack': 'anxiety',
 
   'insomnia': 'insomnia',
   "can't sleep": 'insomnia',
@@ -207,10 +209,18 @@ const SYMPTOM_ALIASES = {
   'zits': 'acne',
 };
 
+export function isEmergencyQuery(query) {
+  return isEmergencySymptom(query);
+}
+
 export function matchQueryToSymptoms(query, symptoms) {
   if (!query || !symptoms?.length) return [];
 
   const normalized = query.toLowerCase().trim();
+  if (isEmergencyQuery(normalized)) {
+    return [];
+  }
+
   const matchedIds = new Set();
 
   const labelToId = {};
