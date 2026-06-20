@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, ShieldCheck, SlidersHorizontal, Sparkles } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
-import { RemedyCard, LoadingSkeleton, EmptyState, SafetyNotice, DoctorGuidance } from '../components/ui';
+import { RemedyCard, LoadingSkeleton, EmptyState, SafetyNotice, DoctorGuidance, SymptomDisplayCards } from '../components/ui';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { getClosestSymptomCategory } from '../hooks/useSearch';
@@ -250,6 +250,13 @@ export function Results() {
                   <span>No conflicts with your profile</span>
                 </div>
               )}
+            </section>
+          )}
+
+          {otherRemedies.length > 0 && (
+            <section>
+              <h2 className="section-title">Top Picks</h2>
+              <SymptomDisplayCards remedies={otherRemedies} />
             </section>
           )}
 

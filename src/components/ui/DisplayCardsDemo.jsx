@@ -1,53 +1,65 @@
+import { useMemo } from 'react';
 import DisplayCards from './display-cards';
+import { useCatalogStore } from '../../store/catalogStore';
 import { Sparkles, ShieldCheck, Zap, Clock } from 'lucide-react';
 
-const remedyCards = [
-  {
-    icon: <Sparkles className="size-4 text-blue-300" />,
-    title: 'Peppermint Oil',
-    description: 'Headache relief in 10-15 min',
-    date: 'Research-backed',
-    iconClassName: 'text-blue-500',
-    titleClassName: 'text-blue-500',
-    className:
-      '[grid-area:stack] hover:-translate-y-10 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[\'\'] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0',
-  },
-  {
-    icon: <ShieldCheck className="size-4 text-green-300" />,
-    title: 'Box Breathing',
-    description: 'Anxiety calm in 2-5 minutes',
-    date: '4.8 ★ rating',
-    iconClassName: 'text-green-500',
-    titleClassName: 'text-green-500',
-    className:
-      '[grid-area:stack] translate-x-12 translate-y-10 hover:-translate-y-1 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[\'\'] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0',
-  },
-  {
-    icon: <Zap className="size-4 text-amber-300" />,
-    title: 'Zinc Lozenges',
-    description: 'Cold duration reduced',
-    date: 'Clinically studied',
-    iconClassName: 'text-amber-500',
-    titleClassName: 'text-amber-500',
-    className:
-      '[grid-area:stack] translate-x-24 translate-y-20 hover:translate-y-10',
-  },
+const categoryIcons = {
+  Natural: <Sparkles className="size-4 text-blue-300" />,
+  Lifestyle: <ShieldCheck className="size-4 text-green-300" />,
+  Ayurveda: <Zap className="size-4 text-amber-300" />,
+  TCM: <Clock className="size-4 text-purple-300" />,
+};
+
+const categoryStyles = {
+  Natural: { icon: 'bg-blue-800', title: 'text-blue-500' },
+  Lifestyle: { icon: 'bg-green-800', title: 'text-green-500' },
+  Ayurveda: { icon: 'bg-amber-800', title: 'text-amber-500' },
+  TCM: { icon: 'bg-purple-800', title: 'text-purple-500' },
+};
+
+const stackClasses = [
+  '[grid-area:stack] hover:-translate-y-10 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[\'\'] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0',
+  '[grid-area:stack] translate-x-12 translate-y-10 hover:-translate-y-1 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[\'\'] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0',
+  '[grid-area:stack] translate-x-24 translate-y-20 hover:translate-y-10',
 ];
 
-const moreCards = [
-  {
-    icon: <Clock className="size-4 text-purple-300" />,
-    title: 'Sleep Hygiene',
-    description: 'Better sleep in 1-3 weeks',
-    date: 'CBT-I backed',
-    iconClassName: 'text-purple-500',
-    titleClassName: 'text-purple-500',
-    className:
-      '[grid-area:stack] hover:-translate-y-10 before:absolute before:w-[100%] before:outline-1 before:rounded-xl before:outline-border before:h-[100%] before:content-[\'\'] before:bg-blend-overlay before:bg-background/50 grayscale-[100%] hover:before:opacity-0 before:transition-opacity before:duration-700 hover:grayscale-0 before:left-0 before:top-0',
-  },
-];
+function remedyToCardProps(remedy, index) {
+  const cat = remedy.category || 'Natural';
+  const style = categoryStyles[cat] || categoryStyles.Natural;
+  return {
+    icon: categoryIcons[cat] || categoryIcons.Natural,
+    title: remedy.name || 'Remedy',
+    description: remedy.shortDescription?.slice(0, 40) + (remedy.shortDescription?.length > 40 ? '...' : '') || remedy.category || '',
+    date: remedy.timeToEffect || `★ ${remedy.rating || ''}`.trim(),
+    iconClassName: style.icon,
+    titleClassName: style.title,
+    className: stackClasses[index % stackClasses.length],
+  };
+}
 
 export function DisplayCardsRow() {
+  const remedies = useCatalogStore((state) => state.remedies);
+
+  const remedyCards = useMemo(() => {
+    return remedies
+      .filter((r) => r.isFeatured)
+      .slice(0, 3)
+      .map(remedyToCardProps);
+  }, [remedies]);
+
+  const moreCards = useMemo(() => {
+    const count = remedyCards.length;
+    return remedies
+      .filter((r) => !r.isFeatured)
+      .slice(0, 3 - count)
+      .map((r, i) => remedyToCardProps(r, i + count));
+  }, [remedies, remedyCards.length]);
+
+  if (remedyCards.length === 0 && moreCards.length === 0) return null;
+
+  const allCards = remedyCards.length > 0 ? remedyCards : moreCards;
+  const extraCards = remedyCards.length > 0 ? moreCards : [];
+
   return (
     <section className="py-20 px-6 bg-white/30">
       <div className="max-w-6xl mx-auto">
@@ -58,10 +70,29 @@ export function DisplayCardsRow() {
           Curated from clinical research across Natural, Lifestyle, Ayurveda, and TCM approaches.
         </p>
         <div className="flex flex-wrap items-start justify-center gap-8 lg:gap-16">
-          <DisplayCards cards={remedyCards} />
-          <DisplayCards cards={moreCards} />
+          <DisplayCards cards={allCards} />
+          {extraCards.length > 0 && <DisplayCards cards={extraCards} />}
         </div>
       </div>
     </section>
+  );
+}
+
+export function SymptomDisplayCards({ remedies }) {
+  if (!remedies?.length) return null;
+
+  const cards = remedies.slice(0, 6).map(remedyToCardProps);
+
+  const chunks = [];
+  for (let i = 0; i < cards.length; i += 3) {
+    chunks.push(cards.slice(i, i + 3));
+  }
+
+  return (
+    <div className="flex flex-wrap items-start justify-center gap-8 lg:gap-16">
+      {chunks.map((chunk, i) => (
+        <DisplayCards key={i} cards={chunk} />
+      ))}
+    </div>
   );
 }

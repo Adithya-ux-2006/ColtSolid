@@ -10,4 +10,4 @@ export { SafetyNotice } from './SafetyNotice';
 export { DoctorGuidance } from './DoctorGuidance';
 export { AllergyBadge } from './AllergyBadge';
 export { default as DisplayCards } from './display-cards';
-export { DisplayCardsRow } from './DisplayCardsDemo';
+export { DisplayCardsRow, SymptomDisplayCards } from './DisplayCardsDemo';
