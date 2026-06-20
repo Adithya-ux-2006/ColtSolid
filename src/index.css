@@ -36,3 +36,14 @@
     @apply rounded-3xl p-6 text-sm text-ink leading-relaxed;
   }
 }
+
+@layer utilities {
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}

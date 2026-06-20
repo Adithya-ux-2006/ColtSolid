@@ -1,6 +1,6 @@
-import { useEffect, useState, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ExternalLink, ShieldCheck } from 'lucide-react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { ArrowLeft, ShieldCheck, SlidersHorizontal, Sparkles } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { RemedyCard, LoadingSkeleton, EmptyState, SafetyNotice, DoctorGuidance } from '../components/ui';
 import { useCatalogStore } from '../store/catalogStore';
@@ -11,6 +11,7 @@ import { matchQueryToSymptoms, getRankedRemediesForSymptoms } from '../utils/sym
 import { trackSearchEvent } from '../utils/analytics';
 
 const EMPTY_ARRAY = [];
+const SORT_OPTIONS = ['Best Rated', 'Most Researched', 'Easiest'];
 
 export function Results() {
   const location = useLocation();
@@ -34,6 +35,7 @@ export function Results() {
   const hasLoaded = useCatalogStore((state) => state.hasLoaded);
 
   const [fallbackMatch, setFallbackMatch] = useState({ query: '', category: null });
+  const [sort, setSort] = useState('Best Rated');
 
   const isFreeTextSearch = Boolean(queryParam.trim());
   const matchedSymptomIds = useMemo(
@@ -76,20 +78,35 @@ export function Results() {
     }
   }, [isFreeTextSearch, queryParam, symptomParam]);
 
-  const safeFilter = useMemo(
-    () => (remedy) => isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions }),
+  const safeFilter = useCallback(
+    (remedy) => isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions }),
     [activeAllergies, activeConditions]
   );
 
   const rankedRemedies = useMemo(() => {
+    let result;
     if (selectedSymptomIds.length > 0) {
-      return getRankedRemediesForSymptoms(selectedSymptomIds, symptomRemedies, remedies).filter(safeFilter);
+      result = getRankedRemediesForSymptoms(selectedSymptomIds, symptomRemedies, remedies);
+    } else if (isFreeTextSearch) {
+      result = searchRemedies(queryParam, remedies);
+    } else {
+      return [];
     }
-    if (isFreeTextSearch) {
-      return searchRemedies(queryParam, remedies).filter(safeFilter);
-    }
-    return [];
-  }, [selectedSymptomIds, symptomRemedies, remedies, safeFilter, isFreeTextSearch, queryParam]);
+
+    result = result.filter(safeFilter);
+
+    result.sort((a, b) => {
+      if (sort === 'Best Rated') return (b._priorityRank || 0) - (a._priorityRank || 0) || (b.rating || 0) - (a.rating || 0);
+      if (sort === 'Most Researched') return (b._priorityRank || 0) - (a._priorityRank || 0) || (b.reviewCount || 0) - (a.reviewCount || 0);
+      if (sort === 'Easiest') {
+        const diffMap = { 'Easy': 1, 'Moderate': 2, 'Requires prescription': 3 };
+        return (b._priorityRank || 0) - (a._priorityRank || 0) || (diffMap[a.difficulty] || 0) - (diffMap[b.difficulty] || 0);
+      }
+      return 0;
+    });
+
+    return result;
+  }, [selectedSymptomIds, symptomRemedies, remedies, safeFilter, isFreeTextSearch, queryParam, sort]);
 
   const featuredRemedy = rankedRemedies.length > 0 ? rankedRemedies[0] : null;
   const otherRemedies = rankedRemedies.length > 1 ? rankedRemedies.slice(1) : [];
@@ -110,6 +127,8 @@ export function Results() {
   }, [featuredRemedy]);
 
   const headerTitle = symptom?.label || queryParam || 'Results';
+
+  const isClosestMatch = isFreeTextSearch && selectedSymptomIds.length > 0 && !symptomParam && matchedSymptomIds.length === 0 && fallbackMatch.category && fallbackMatch.category !== 'none';
 
   if (!hasLoaded && isCatalogLoading) {
     return (
@@ -146,15 +165,33 @@ export function Results() {
         </button>
       </div>
 
-      <div className="px-6 py-8 max-w-2xl mx-auto">
-        <h1 className="text-3xl md:text-display font-bold text-ink mb-2">
-          {headerTitle}
-        </h1>
-        <p className="text-ink-muted">
-          {rankedRemedies.length > 0
-            ? `${rankedRemedies.length} evidence-backed ${rankedRemedies.length === 1 ? 'remedy' : 'remedies'} found`
-            : 'Searching for remedies...'}
-        </p>
+      <div className="px-6 py-6 max-w-2xl mx-auto">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-3xl md:text-display font-bold text-ink mb-2">
+              {headerTitle}
+            </h1>
+            <p className="text-ink-muted">
+              {rankedRemedies.length > 0
+                ? `${rankedRemedies.length} evidence-backed ${rankedRemedies.length === 1 ? 'remedy' : 'remedies'} found`
+                : 'Searching for remedies...'}
+            </p>
+          </div>
+          {rankedRemedies.length > 1 && (
+            <div className="flex items-center gap-2 text-sm shrink-0">
+              <SlidersHorizontal className="w-4 h-4 text-ink-muted" />
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+                className="bg-transparent text-ink-muted font-medium focus:outline-none focus:text-ink cursor-pointer"
+              >
+                {SORT_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>{opt}</option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
       </div>
 
       {rankedRemedies.length === 0 && !isCatalogLoading ? (
@@ -168,6 +205,12 @@ export function Results() {
         </div>
       ) : (
         <div className="max-w-2xl mx-auto space-y-10 px-6">
+          {isClosestMatch && (
+            <div className="rounded-2xl border border-accent/40 bg-accent/10 p-4 text-sm text-primary shadow-sm">
+              Showing closest results for &ldquo;{queryParam}&rdquo;
+            </div>
+          )}
+
           {featuredRemedy && (
             <section>
               <RemedyCard remedy={featuredRemedy} featured isSafe={featuredIsSafe} />
@@ -203,6 +246,32 @@ export function Results() {
             </section>
           )}
 
+          {!isAuthenticated && rankedRemedies.length > 0 && (
+            <section className="rounded-3xl bg-gradient-card p-6 shadow-card border border-accent/20">
+              <div className="flex items-center gap-2 mb-3">
+                <Sparkles className="w-5 h-5 text-primary" />
+                <p className="text-lg font-semibold text-ink">Finding what you need?</p>
+              </div>
+              <p className="text-sm text-ink-muted leading-relaxed mb-4">
+                Sign up free to save remedies, track appointments, and get a personalized dashboard built around your symptoms.
+              </p>
+              <div className="space-y-2">
+                <Link
+                  to="/register"
+                  className="block w-full rounded-xl bg-primary px-4 py-3 text-center text-sm font-semibold text-white shadow-glow hover:bg-primary-dark transition-colors"
+                >
+                  Sign Up Free &mdash; Always Free
+                </Link>
+                <Link
+                  to="/login"
+                  className="block w-full text-center text-sm font-semibold text-primary hover:text-primary-dark transition-colors"
+                >
+                  Log In
+                </Link>
+              </div>
+            </section>
+          )}
+
           {researchSources.length > 0 && (
             <section className="section-card">
               <h2 className="section-title">Research Sources</h2>
@@ -223,7 +292,6 @@ export function Results() {
                         {source.keyFinding || source.label}
                       </p>
                     </div>
-                    <ExternalLink className="w-4 h-4 text-ink-subtle shrink-0" />
                   </a>
                 ))}
               </div>

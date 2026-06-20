@@ -1,17 +1,19 @@
 import { useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, Calendar, Heart, Sparkles } from 'lucide-react';
+import { Calendar, Heart, Activity, ArrowRight, Sparkles } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
-import { EmptyState } from '../components/ui';
+import { RemedyCard, EmptyState } from '../components/ui';
 import { useAuthStore } from '../store/authStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useAppointmentStore } from '../store/appointmentStore';
 import { useCatalogStore } from '../store/catalogStore';
+import { CONDITIONS } from '../constants/onboarding';
 
 export function Dashboard() {
   const user = useAuthStore((state) => state.user);
   const favorites = useFavoritesStore((state) => state.favorites);
   const appointments = useAppointmentStore((state) => state.appointments);
+  const symptoms = useCatalogStore((state) => state.symptoms);
   const remedies = useCatalogStore((state) => state.remedies);
   const navigate = useNavigate();
 
@@ -22,6 +24,11 @@ export function Dashboard() {
     return 'Good evening';
   }, []);
 
+  const featuredRemedies = useMemo(
+    () => remedies.filter(r => r.isFeatured).slice(0, 6),
+    [remedies]
+  );
+
   const favoriteRemedies = useMemo(
     () => remedies.filter(r => favorites.some(f => f.remedy_id === r.id)).slice(0, 5),
     [remedies, favorites]
@@ -29,36 +36,86 @@ export function Dashboard() {
 
   const upcomingAppointment = appointments.find(a => a.status === 'Upcoming');
 
+  const selectedConditionChips = useMemo(
+    () => CONDITIONS.filter((condition) => user?.common_conditions?.includes(condition.value)),
+    [user?.common_conditions]
+  );
+
   return (
-    <PageWrapper className="min-h-screen bg-bg pb-24 md:pb-16 pt-8">
-      <div className="max-w-2xl mx-auto px-6 space-y-10">
-        {/* Greeting */}
+    <PageWrapper className="min-h-screen bg-bg pb-24 md:pb-16 pt-6 md:pt-10">
+      <div className="max-w-5xl mx-auto px-6 space-y-10">
         <header>
           <div className="flex items-center gap-2 mb-1">
-            <Sparkles className="w-5 h-5 text-accent-dark" />
+            <Sparkles className="w-5 h-5 text-primary" />
             <span className="text-sm font-medium text-ink-muted">{greeting}</span>
           </div>
           <h1 className="text-3xl md:text-display font-bold text-ink mb-2">
             {user?.name?.split(' ')[0] || 'there'}
           </h1>
-          <p className="text-ink-muted">Ready to find relief?</p>
+          <p className="text-ink-muted">Ready to feel better today?</p>
         </header>
 
-        {/* Quick Action */}
-        <button
-          onClick={() => navigate('/search')}
-          className="w-full bg-gradient-card rounded-3xl p-6 shadow-card hover:shadow-card-hover transition-shadow text-left flex items-center gap-4 border border-accent/20"
-        >
-          <div className="w-12 h-12 rounded-2xl bg-white/60 flex items-center justify-center shrink-0">
-            <Search className="w-6 h-6 text-primary" />
-          </div>
-          <div>
-            <p className="font-semibold text-ink">Search Symptoms</p>
-            <p className="text-sm text-ink-muted">Find evidence-backed remedies</p>
-          </div>
-        </button>
+        <div className="grid grid-cols-3 gap-4">
+          <StatCard icon={Heart} value={favorites.length} label="Saved" />
+          <StatCard icon={Calendar} value={appointments.length} label="Appts" />
+          <StatCard icon={Activity} value={12} label="Searches" />
+        </div>
 
-        {/* Saved Remedies */}
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="section-title mb-0">Quick Search</h2>
+            <Link to="/search" className="text-sm font-medium text-primary hover:text-primary-dark flex items-center gap-1 transition-colors">
+              View all <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          {selectedConditionChips.length > 0 && (
+            <div className="mb-5">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-ink-muted">Your Conditions</p>
+              <div className="flex flex-wrap gap-2">
+                {selectedConditionChips.map((condition) => (
+                  <button
+                    key={condition.value}
+                    type="button"
+                    onClick={() => navigate('/search')}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-medium text-white shadow-soft transition-transform hover:scale-105"
+                  >
+                    <span>{condition.emoji}</span>
+                    <span>{condition.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="flex overflow-x-auto gap-3 pb-2 no-scrollbar -mx-6 px-6 snap-x">
+            {symptoms.slice(0, 8).map((symptom) => (
+              <button
+                key={symptom.id}
+                type="button"
+                onClick={() => navigate(`/results?symptom=${symptom.id}`)}
+                className="snap-start shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-soft hover:shadow-card transition-shadow text-sm font-medium text-ink border border-ink/5"
+              >
+                <span>{symptom.emoji}</span>
+                <span>{symptom.label}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {featuredRemedies.length > 0 && (
+          <section>
+            <h2 className="section-title">Featured Remedies</h2>
+            <div className="flex overflow-x-auto gap-5 pb-4 no-scrollbar -mx-6 px-6 md:mx-0 md:px-0 snap-x">
+              {featuredRemedies.map((remedy) => (
+                <div key={remedy.id} className="snap-start min-w-[280px] w-[280px] md:w-1/3 shrink-0">
+                  <RemedyCard remedy={remedy} featured />
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         <section>
           <div className="flex items-center justify-between mb-4">
             <h2 className="section-title mb-0">Saved Remedies</h2>
@@ -98,13 +155,12 @@ export function Dashboard() {
           )}
         </section>
 
-        {/* Upcoming Appointment */}
         <section>
           <h2 className="section-title">Next Appointment</h2>
           {upcomingAppointment ? (
-            <div className="bg-white rounded-3xl p-6 shadow-card">
+            <div className="bg-white rounded-3xl p-6 shadow-card border-l-4 border-primary">
               <h3 className="font-semibold text-ink mb-1">{upcomingAppointment.title}</h3>
-              <p className="text-sm text-ink-muted mb-2">{upcomingAppointment.doctor}</p>
+              <p className="text-sm text-ink-muted mb-3">{upcomingAppointment.doctor}</p>
               <div className="flex items-center gap-4 text-sm text-ink-muted">
                 <span className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" /> {upcomingAppointment.date}
@@ -125,5 +181,17 @@ export function Dashboard() {
         </section>
       </div>
     </PageWrapper>
+  );
+}
+
+function StatCard({ icon: Icon, value, label }) {
+  return (
+    <div className="bg-white p-4 rounded-2xl shadow-card flex flex-col items-center justify-center text-center">
+      <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center mb-2 text-primary">
+        <Icon className="w-5 h-5" />
+      </div>
+      <span className="text-2xl font-bold text-ink">{value}</span>
+      <span className="text-xs font-medium text-ink-muted uppercase tracking-wider">{label}</span>
+    </div>
   );
 }

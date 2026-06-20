@@ -1,4 +1,5 @@
 export { RemedyCard } from './RemedyCard';
+export { CategoryBadge } from './CategoryBadge';
 export { CategoryTag } from './CategoryTag';
 export { RatingStars } from './RatingStars';
 export { Modal } from './Modal';
