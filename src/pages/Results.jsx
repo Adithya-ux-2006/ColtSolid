@@ -5,7 +5,6 @@ import { PageWrapper } from '../components/layout';
 import { RemedyCard, LoadingSkeleton, EmptyState, DoctorGuidance, RemedyCarousel, SymptomInterpreter } from '../components/ui';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
-import { getClosestSymptomCategory } from '../hooks/useSearch';
 import { getGuestAllergies, getGuestConditions, isRemedySafeForUser } from '../utils/guestProfile';
 import { matchQueryToSymptoms, getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptomSearch';
 import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
@@ -35,7 +34,6 @@ export function Results() {
   const isCatalogLoading = useCatalogStore((state) => state.isLoading);
   const hasLoaded = useCatalogStore((state) => state.hasLoaded);
 
-  const [fallbackMatch, setFallbackMatch] = useState({ query: '', category: null });
   const [sort, setSort] = useState('Best Rated');
   const carouselsRef = useRef(null);
 
@@ -52,20 +50,10 @@ export function Results() {
   const selectedSymptomIds = useMemo(() => {
     if (symptomParam) return [symptomParam];
     if (matchedSymptomIds.length > 0) return matchedSymptomIds;
-    if (fallbackMatch.category && fallbackMatch.category !== 'none' && fallbackMatch.query === queryParam) return [fallbackMatch.category];
     return [];
-  }, [fallbackMatch.category, fallbackMatch.query, matchedSymptomIds, symptomParam, queryParam]);
+  }, [matchedSymptomIds, symptomParam]);
 
   const symptom = symptoms.find(s => s.id === symptomParam);
-
-  useEffect(() => {
-    if (!isFreeTextSearch || isCatalogLoading || matchedSymptomIds.length > 0) return;
-    if (isEmergencyQuery(queryParam)) return;
-
-    getClosestSymptomCategory(queryParam)
-      .then((category) => { setFallbackMatch({ query: queryParam, category }); })
-      .catch(() => { setFallbackMatch({ query: queryParam, category: 'none' }); });
-  }, [isCatalogLoading, isFreeTextSearch, matchedSymptomIds, queryParam]);
 
   useEffect(() => {
     if (isFreeTextSearch && queryParam) {
@@ -157,10 +145,9 @@ export function Results() {
       const exactLabel = symptoms.some(s => s.label.toLowerCase() === normalized);
       if (exactLabel) return 100;
       if (matchedSymptomIds.length > 0) return 95;
-      if (fallbackMatch.category && fallbackMatch.category !== 'none') return 70;
     }
     return 0;
-  }, [symptomParam, isFreeTextSearch, queryParam, symptoms, matchedSymptomIds, fallbackMatch]);
+  }, [symptomParam, isFreeTextSearch, queryParam, symptoms, matchedSymptomIds]);
 
   const categoryCounts = useMemo(() => {
     const counts = {};
@@ -171,8 +158,6 @@ export function Results() {
   }, [grouped]);
 
   const headerTitle = symptom?.label || matchedSymptom?.label || queryParam || 'Results';
-
-  const isClosestMatch = isFreeTextSearch && selectedSymptomIds.length > 0 && !symptomParam && matchedSymptomIds.length === 0 && fallbackMatch.category && fallbackMatch.category !== 'none';
 
   if (!hasLoaded && isCatalogLoading) {
     return (
@@ -216,9 +201,11 @@ export function Results() {
               {headerTitle}
             </h1>
             <p className="text-ink-muted">
-              {rankedRemedies.length > 0
-                ? `${nonConventional.length} evidence-backed ${nonConventional.length === 1 ? 'remedy' : 'remedies'} found`
-                : 'Searching for remedies...'}
+              {rankedRemedies.length > 0 && matchedSymptom
+                ? `Showing remedies for ${matchedSymptom.label} — ${nonConventional.length} evidence-backed ${nonConventional.length === 1 ? 'remedy' : 'remedies'} found`
+                : rankedRemedies.length > 0
+                  ? `${nonConventional.length} evidence-backed ${nonConventional.length === 1 ? 'remedy' : 'remedies'} found`
+                  : 'Searching for remedies...'}
             </p>
           </div>
           {nonConventional.length > 1 && (
@@ -238,31 +225,25 @@ export function Results() {
         </div>
       </div>
 
-      {nonConventional.length === 0 && !isCatalogLoading ? (
+      {isEmergencyQuery(queryParam) ? (
         <div className="max-w-2xl mx-auto px-6">
-          {isEmergencyQuery(queryParam) ? (
-            <div className="rounded-3xl border-2 border-red-300 bg-red-50 p-6">
-              <h2 className="text-xl font-bold text-red-700 mb-2">{EMERGENCY_MESSAGE}</h2>
-              <p className="text-red-600 font-medium mb-4">{EMERGENCY_ACTION}</p>
-              <p className="text-red-500 text-sm">ClotSolid does not provide self-treatment guidance for potentially serious symptoms.</p>
-            </div>
-          ) : (
+          <div className="rounded-3xl border-2 border-red-300 bg-red-50 p-6">
+            <h2 className="text-xl font-bold text-red-700 mb-2">{EMERGENCY_MESSAGE}</h2>
+            <p className="text-red-600 font-medium mb-4">{EMERGENCY_ACTION}</p>
+            <p className="text-red-500 text-sm">ClotSolid does not provide self-treatment guidance for potentially serious symptoms.</p>
+          </div>
+        </div>
+      ) : nonConventional.length === 0 && !isCatalogLoading ? (
+        <div className="max-w-2xl mx-auto px-6">
           <EmptyState
             title="No remedies found"
             description={`No evidence-backed remedies were found for "${queryParam}". Try a different search term.`}
             ctaLabel="Search Again"
             ctaHref="/search"
           />
-          )}
         </div>
       ) : (
         <div className="max-w-2xl mx-auto space-y-10 px-6">
-          {isClosestMatch && (
-            <div className="rounded-2xl border border-accent/40 bg-accent/10 p-4 text-sm text-primary shadow-sm">
-              Showing closest results for &ldquo;{queryParam}&rdquo;
-            </div>
-          )}
-
           <SymptomInterpreter
             symptom={matchedSymptom}
             confidence={confidence}

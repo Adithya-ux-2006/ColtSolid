@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { ArrowUp, Sparkles, X } from 'lucide-react';
 import { getApiUrl } from '../../utils/api';
 import { cn } from '../../utils/cn';
+import { useCatalogStore } from '../../store/catalogStore';
+import { matchQueryToSymptoms, getRankedRemediesForSymptoms, isEmergencyQuery } from '../../utils/symptomSearch';
 
 const HISTORY_KEY = 'cs_ai_chat_history';
 const PULSE_KEY = 'cs_ai_chat_pulse_seen';
@@ -69,6 +71,9 @@ export function AiChatPanel() {
   const scrollRef = useRef(null);
   const textareaRef = useRef(null);
   const isHidden = HIDDEN_PATHS.has(location.pathname);
+  const symptoms = useCatalogStore((s) => s.symptoms);
+  const remedies = useCatalogStore((s) => s.remedies);
+  const symptomRemedies = useCatalogStore((s) => s.symptomRemedies);
 
   useEffect(() => {
     const open = () => setIsOpen(true);
@@ -111,6 +116,38 @@ export function AiChatPanel() {
     setMessages(nextMessages);
     setInput('');
     setIsLoading(true);
+
+    if (isEmergencyQuery(content)) {
+      const reply = '**Urgent**: This symptom may require immediate medical attention.\n\nDo not rely on self-treatment guidance. Seek immediate medical care.\n\n[Get Emergency Help](/search)';
+      setMessages([...nextMessages, { role: 'assistant', content: reply }]);
+      setIsLoading(false);
+      return;
+    }
+
+    const matchedIds = matchQueryToSymptoms(content, symptoms);
+
+    if (matchedIds.length > 0) {
+      const ranked = getRankedRemediesForSymptoms(matchedIds, symptomRemedies, remedies);
+      const matchedSymptom = symptoms.find(s => matchedIds.includes(s.id));
+      const top = ranked.slice(0, 3);
+      const lifestyle = ranked.filter(r => r.category === 'Lifestyle').length;
+      const nat = ranked.filter(r => r.category === 'Natural').length;
+      const ayur = ranked.filter(r => r.category === 'Ayurveda').length;
+      const tcm = ranked.filter(r => r.category === 'TCM').length;
+      const total = lifestyle + nat + ayur + tcm;
+
+      let reply = `**Detected Symptom**: ${matchedSymptom?.label || content}\n\n**Top Recommendations**:\n`;
+      top.forEach((r, i) => {
+        reply += `${i + 1}. ${r.name} — E${r._evidenceScore || '?'}/10\n`;
+      });
+      reply += `\n**Available**: Lifestyle (${lifestyle}) · Natural (${nat}) · Ayurveda (${ayur}) · TCM (${tcm})\n\n`;
+      reply += `Showing ${total} evidence-backed remedies.\n\n`;
+      reply += `[View All Remedies](/results?q=${encodeURIComponent(content)})`;
+
+      setMessages([...nextMessages, { role: 'assistant', content: reply }]);
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const response = await fetch(getApiUrl('/api/ai-chat'), {
