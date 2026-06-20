@@ -1,8 +1,8 @@
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, SlidersHorizontal, Sparkles } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
-import { RemedyCard, LoadingSkeleton, EmptyState, DoctorGuidance, RemedyCarousel, FeaturedRecommendation } from '../components/ui';
+import { RemedyCard, LoadingSkeleton, EmptyState, DoctorGuidance, RemedyCarousel, SymptomInterpreter } from '../components/ui';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { getClosestSymptomCategory } from '../hooks/useSearch';
@@ -37,6 +37,11 @@ export function Results() {
 
   const [fallbackMatch, setFallbackMatch] = useState({ query: '', category: null });
   const [sort, setSort] = useState('Best Rated');
+  const carouselsRef = useRef(null);
+
+  const scrollToRemedies = useCallback(() => {
+    carouselsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
 
   const isFreeTextSearch = Boolean(queryParam.trim());
   const matchedSymptomIds = useMemo(
@@ -136,7 +141,36 @@ export function Results() {
     return featuredRemedy.warnings || null;
   }, [featuredRemedy]);
 
-  const headerTitle = symptom?.label || queryParam || 'Results';
+  const matchedSymptom = useMemo(() => {
+    if (symptom) return symptom;
+    if (selectedSymptomIds.length > 0) {
+      const id = selectedSymptomIds[0];
+      return symptoms.find(s => s.id === id) || null;
+    }
+    return null;
+  }, [symptom, selectedSymptomIds, symptoms]);
+
+  const confidence = useMemo(() => {
+    if (symptomParam) return 100;
+    if (isFreeTextSearch && queryParam) {
+      const normalized = queryParam.toLowerCase().trim();
+      const exactLabel = symptoms.some(s => s.label.toLowerCase() === normalized);
+      if (exactLabel) return 100;
+      if (matchedSymptomIds.length > 0) return 95;
+      if (fallbackMatch.category && fallbackMatch.category !== 'none') return 70;
+    }
+    return 0;
+  }, [symptomParam, isFreeTextSearch, queryParam, symptoms, matchedSymptomIds, fallbackMatch]);
+
+  const categoryCounts = useMemo(() => {
+    const counts = {};
+    for (const [cat, items] of Object.entries(grouped)) {
+      if (items?.length) counts[cat] = items.length;
+    }
+    return Object.keys(counts).length > 0 ? counts : null;
+  }, [grouped]);
+
+  const headerTitle = symptom?.label || matchedSymptom?.label || queryParam || 'Results';
 
   const isClosestMatch = isFreeTextSearch && selectedSymptomIds.length > 0 && !symptomParam && matchedSymptomIds.length === 0 && fallbackMatch.category && fallbackMatch.category !== 'none';
 
@@ -229,15 +263,19 @@ export function Results() {
             </div>
           )}
 
-          {featuredRemedy && (
-            <FeaturedRecommendation
-              remedy={featuredRemedy}
-              evidenceScore={featuredRemedy._evidenceScore}
-              isSafe={featuredIsSafe}
-              safetyWarnings={safetyWarnings}
-            />
-          )}
+          <SymptomInterpreter
+            symptom={matchedSymptom}
+            confidence={confidence}
+            topRemedy={featuredRemedy}
+            evidenceScore={featuredRemedy?._evidenceScore}
+            categoryCounts={categoryCounts}
+            safetyNote={safetyWarnings}
+            isSafe={featuredIsSafe}
+            isEmergency={isEmergencyQuery(queryParam)}
+            onViewRemedies={nonConventional.length > 1 ? scrollToRemedies : undefined}
+          />
 
+          <div ref={carouselsRef}>
           {categoryOrder.map((cat) => {
             const items = grouped[cat];
             if (!items?.length) return null;
@@ -249,6 +287,7 @@ export function Results() {
               </RemedyCarousel>
             );
           })}
+          </div>
 
           {!isAuthenticated && nonConventional.length > 0 && (
             <section className="rounded-3xl bg-gradient-card p-6 shadow-card border border-accent/20">
