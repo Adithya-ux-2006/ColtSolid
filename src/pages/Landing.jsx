@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
-import { ShieldCheck, Stethoscope, GraduationCap, Search } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ShieldCheck, Stethoscope, GraduationCap, Search, ArrowRight } from 'lucide-react';
 import { FAQAccordion, Modal } from '../components/ui';
 import { QuestionnaireFlow } from '../components/onboarding/QuestionnaireFlow';
 import { PageWrapper } from '../components/layout';
@@ -11,6 +11,7 @@ import { trackSearchEvent } from '../utils/analytics';
 
 export function Landing() {
   const symptoms = useCatalogStore((state) => state.symptoms);
+  const navigate = useNavigate();
   const [isQuestionnaireOpen, setIsQuestionnaireOpen] = useState(false);
 
   const quickSymptoms = useMemo(
@@ -45,10 +46,10 @@ export function Landing() {
               Get Started
             </button>
             <Link
-              to="/login"
-              className="w-full sm:w-auto px-8 py-4 bg-white text-ink rounded-2xl font-medium text-lg shadow-soft hover:shadow-card transition-all"
+              to="/search"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-ink rounded-2xl font-medium text-lg shadow-soft hover:shadow-card transition-all"
             >
-              Log In
+              Start Your Search <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
 
@@ -163,6 +164,7 @@ export function Landing() {
           }}
           onComplete={() => {
             setIsQuestionnaireOpen(false);
+            navigate('/search');
           }}
         />
       </Modal>

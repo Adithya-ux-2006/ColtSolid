@@ -80,7 +80,7 @@ export function RemedyDetail() {
         </button>
         <button
           onClick={() => {
-            if (!isAuthenticated) { navigate('/login'); return; }
+            if (!isAuthenticated) { navigate('/register'); return; }
             toggleFavorite(remedy);
           }}
           className={cn(
