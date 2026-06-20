@@ -108,8 +108,21 @@ export function Results() {
     return result;
   }, [selectedSymptomIds, symptomRemedies, remedies, safeFilter, isFreeTextSearch, queryParam, sort]);
 
-  const featuredRemedy = rankedRemedies.length > 0 ? rankedRemedies[0] : null;
-  const otherRemedies = rankedRemedies.length > 1 ? rankedRemedies.slice(1) : [];
+  const nonConventional = useMemo(() => rankedRemedies.filter(r => r.category !== 'Conventional'), [rankedRemedies]);
+  const featuredRemedy = useMemo(() => nonConventional.length > 0 ? nonConventional[0] : null, [nonConventional]);
+  const otherRemedies = useMemo(() => nonConventional.length > 1 ? nonConventional.slice(1) : [], [nonConventional]);
+
+  const grouped = useMemo(() => {
+    const groups = { Lifestyle: [], Natural: [], Ayurveda: [], TCM: [] };
+    for (const r of otherRemedies) {
+      if (groups[r.category]) groups[r.category].push(r);
+      else groups[r.category] = [r];
+    }
+    return groups;
+  }, [otherRemedies]);
+
+  const categoryOrder = ['Lifestyle', 'Natural', 'Ayurveda', 'TCM'];
+  const categoryIcons = { Lifestyle: '🧘', Natural: '🌿', Ayurveda: '🪷', TCM: '⚕️' };
 
   const researchSources = useMemo(() => {
     if (!featuredRemedy) return [];
@@ -173,11 +186,11 @@ export function Results() {
             </h1>
             <p className="text-ink-muted">
               {rankedRemedies.length > 0
-                ? `${rankedRemedies.length} evidence-backed ${rankedRemedies.length === 1 ? 'remedy' : 'remedies'} found`
+                ? `${nonConventional.length} evidence-backed ${nonConventional.length === 1 ? 'remedy' : 'remedies'} found`
                 : 'Searching for remedies...'}
             </p>
           </div>
-          {rankedRemedies.length > 1 && (
+          {nonConventional.length > 1 && (
             <div className="flex items-center gap-2 text-sm shrink-0">
               <SlidersHorizontal className="w-4 h-4 text-ink-muted" />
               <select
@@ -194,11 +207,13 @@ export function Results() {
         </div>
       </div>
 
-      {rankedRemedies.length === 0 && !isCatalogLoading ? (
+      {nonConventional.length === 0 && !isCatalogLoading ? (
         <div className="max-w-2xl mx-auto px-6">
           <EmptyState
-            title="No remedies found"
-            description={`We couldn't find evidence-backed remedies for "${queryParam}". Try a different search term.`}
+            title={rankedRemedies.length > 0 ? 'Only conventional remedies found' : 'No remedies found'}
+            description={rankedRemedies.length > 0
+              ? `We found conventional remedies for "${queryParam}", but we only surface Lifestyle, Natural, Ayurveda, and TCM options. Try a different search term.`
+              : `We couldn't find evidence-backed remedies for "${queryParam}". Try a different search term.`}
             ctaLabel="Search Again"
             ctaHref="/search"
           />
@@ -235,18 +250,22 @@ export function Results() {
             </section>
           )}
 
-          {otherRemedies.length > 0 && (
-            <section>
-              <h2 className="section-title">Other Safe Remedies</h2>
-              <div className="space-y-4">
-                {otherRemedies.map((remedy) => (
-                  <RemedyCard key={remedy.id} remedy={remedy} isSafe={isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions })} />
-                ))}
-              </div>
-            </section>
-          )}
+          {otherRemedies.length > 0 && categoryOrder.map((cat) => {
+            const items = grouped[cat];
+            if (!items?.length) return null;
+            return (
+              <section key={cat}>
+                <h2 className="section-title">{categoryIcons[cat]} {cat} Remedies</h2>
+                <div className="space-y-4">
+                  {items.map((remedy) => (
+                    <RemedyCard key={remedy.id} remedy={remedy} isSafe={isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions })} />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
 
-          {!isAuthenticated && rankedRemedies.length > 0 && (
+          {!isAuthenticated && nonConventional.length > 0 && (
             <section className="rounded-3xl bg-gradient-card p-6 shadow-card border border-accent/20">
               <div className="flex items-center gap-2 mb-3">
                 <Sparkles className="w-5 h-5 text-primary" />
