@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, Stethoscope, GraduationCap, Search, ArrowRight } from 'lucide-react';
-import { FAQAccordion, Modal } from '../components/ui';
+import { FAQAccordion, Modal, DisplayCardsRow } from '../components/ui';
 import { QuestionnaireFlow } from '../components/onboarding/QuestionnaireFlow';
 import { PageWrapper } from '../components/layout';
 import { useCatalogStore } from '../store/catalogStore';
@@ -106,6 +106,8 @@ export function Landing() {
           </div>
         </section>
       )}
+
+      <DisplayCardsRow />
 
       <section className="py-20 flex-1">
         <div className="max-w-6xl mx-auto px-6">
