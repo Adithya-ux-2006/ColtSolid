@@ -6,8 +6,47 @@ import { CategoryBadge } from './CategoryBadge';
 import { RatingStars } from './RatingStars';
 import { AllergyBadge } from './AllergyBadge';
 
-export function RemedyCard({ remedy, className, featured, isSafe = true }) {
-  if (featured) {
+export function RemedyCard({ remedy, className, featured, variant, isSafe = true }) {
+  const resolvedVariant = featured ? 'featured' : (variant || 'default');
+
+  if (resolvedVariant === 'carousel') {
+    return (
+      <motion.div
+        whileHover={{ y: -2 }}
+        transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+        className="snap-start shrink-0 w-[260px]"
+      >
+        <Link
+          to={`/remedy/${remedy.id}`}
+          className={cn(
+            'block bg-white rounded-2xl p-4 shadow-soft hover:shadow-card transition-all h-full',
+            className
+          )}
+        >
+          <div className="flex items-center justify-between mb-2">
+            <CategoryBadge category={remedy.category} />
+            <AllergyBadge isSafe={isSafe} compact />
+          </div>
+          <h3 className="font-semibold text-ink text-sm leading-snug mb-1 line-clamp-1">{remedy.name}</h3>
+          <p className="text-xs text-ink-muted mb-3 line-clamp-1">{remedy.shortDescription}</p>
+          <div className="flex items-center gap-2 text-xs text-ink-muted">
+            {remedy._evidenceScore != null && (
+              <span className="bg-primary/10 text-primary font-semibold px-1.5 py-0.5 rounded-md">
+                E{remedy._evidenceScore}/10
+              </span>
+            )}
+            {remedy.timeToEffect && (
+              <span className="flex items-center gap-0.5">
+                <Clock className="w-2.5 h-2.5" />{remedy.timeToEffect}
+              </span>
+            )}
+          </div>
+        </Link>
+      </motion.div>
+    );
+  }
+
+  if (resolvedVariant === 'featured') {
     return (
       <motion.div
         whileHover={{ y: -4 }}

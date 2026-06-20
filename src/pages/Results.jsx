@@ -1,8 +1,8 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, ShieldCheck, SlidersHorizontal, Sparkles } from 'lucide-react';
+import { ArrowLeft, SlidersHorizontal, Sparkles } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
-import { RemedyCard, LoadingSkeleton, EmptyState, SafetyNotice, DoctorGuidance, SymptomDisplayCards } from '../components/ui';
+import { RemedyCard, LoadingSkeleton, EmptyState, DoctorGuidance, RemedyCarousel, FeaturedRecommendation } from '../components/ui';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { getClosestSymptomCategory } from '../hooks/useSearch';
@@ -230,48 +230,23 @@ export function Results() {
           )}
 
           {featuredRemedy && (
-            <section>
-              <RemedyCard remedy={featuredRemedy} featured isSafe={featuredIsSafe} />
-
-              {!featuredIsSafe && (
-                <SafetyNotice
-                  message="This remedy may not be suitable based on your health profile."
-                  className="mt-4"
-                />
-              )}
-
-              {safetyWarnings && featuredIsSafe && (
-                <SafetyNotice message={safetyWarnings} className="mt-4" />
-              )}
-
-              {featuredIsSafe && !safetyWarnings && (
-                <div className="flex items-center gap-2 mt-4 text-sm text-primary">
-                  <ShieldCheck className="w-4 h-4" />
-                  <span>No conflicts with your profile</span>
-                </div>
-              )}
-            </section>
+            <FeaturedRecommendation
+              remedy={featuredRemedy}
+              evidenceScore={featuredRemedy._evidenceScore}
+              isSafe={featuredIsSafe}
+              safetyWarnings={safetyWarnings}
+            />
           )}
 
-          {otherRemedies.length > 0 && (
-            <section>
-              <h2 className="section-title">Top Picks</h2>
-              <SymptomDisplayCards remedies={otherRemedies} />
-            </section>
-          )}
-
-          {otherRemedies.length > 0 && categoryOrder.map((cat) => {
+          {categoryOrder.map((cat) => {
             const items = grouped[cat];
             if (!items?.length) return null;
             return (
-              <section key={cat}>
-                <h2 className="section-title">{categoryIcons[cat]} {cat} Remedies</h2>
-                <div className="space-y-4">
-                  {items.map((remedy) => (
-                    <RemedyCard key={remedy.id} remedy={remedy} isSafe={isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions })} />
-                  ))}
-                </div>
-              </section>
+              <RemedyCarousel key={cat} title={`${categoryIcons[cat]} ${cat} Remedies`}>
+                {items.map((remedy) => (
+                  <RemedyCard key={remedy.id} remedy={remedy} variant="carousel" isSafe={isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions })} />
+                ))}
+              </RemedyCarousel>
             );
           })}
 
