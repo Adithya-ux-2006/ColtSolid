@@ -47,14 +47,15 @@ export function Results() {
   const selectedSymptomIds = useMemo(() => {
     if (symptomParam) return [symptomParam];
     if (matchedSymptomIds.length > 0) return matchedSymptomIds;
-    if (fallbackMatch.category && fallbackMatch.category !== 'none') return [fallbackMatch.category];
+    if (fallbackMatch.category && fallbackMatch.category !== 'none' && fallbackMatch.query === queryParam) return [fallbackMatch.category];
     return [];
-  }, [fallbackMatch.category, matchedSymptomIds, symptomParam]);
+  }, [fallbackMatch.category, fallbackMatch.query, matchedSymptomIds, symptomParam, queryParam]);
 
   const symptom = symptoms.find(s => s.id === symptomParam);
 
   useEffect(() => {
     if (!isFreeTextSearch || isCatalogLoading || matchedSymptomIds.length > 0) return;
+    if (isEmergencyQuery(queryParam)) return;
 
     getClosestSymptomCategory(queryParam)
       .then((category) => { setFallbackMatch({ query: queryParam, category }); })
