@@ -6,7 +6,8 @@ import { RemedyCard, LoadingSkeleton, EmptyState, DoctorGuidance, RemedyCarousel
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { getGuestAllergies, getGuestConditions, isRemedySafeForUser } from '../utils/guestProfile';
-import { matchQueryToSymptoms, getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptomSearch';
+import { getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptomSearch';
+import { resolveQuery } from '../utils/symptomEngine';
 import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
 import { trackSearchEvent } from '../utils/analytics';
 
@@ -42,16 +43,24 @@ export function Results() {
   }, []);
 
   const isFreeTextSearch = Boolean(queryParam.trim());
-  const matchedSymptomIds = useMemo(
-    () => (isFreeTextSearch ? matchQueryToSymptoms(queryParam, symptoms) : []),
+
+  const symptomResolution = useMemo(
+    () => (isFreeTextSearch ? resolveQuery(queryParam, symptoms) : { symptomIds: [], relatedIds: [], confidence: 0, matches: [] }),
     [isFreeTextSearch, queryParam, symptoms]
+  );
+
+  const matchedSymptomIds = symptomResolution.symptomIds;
+  const relatedSymptomIds = symptomResolution.relatedIds;
+  const allMatchedIds = useMemo(
+    () => [...new Set([...matchedSymptomIds, ...relatedSymptomIds])],
+    [matchedSymptomIds, relatedSymptomIds]
   );
 
   const selectedSymptomIds = useMemo(() => {
     if (symptomParam) return [symptomParam];
-    if (matchedSymptomIds.length > 0) return matchedSymptomIds;
+    if (allMatchedIds.length > 0) return allMatchedIds;
     return [];
-  }, [matchedSymptomIds, symptomParam]);
+  }, [allMatchedIds, symptomParam]);
 
   const symptom = symptoms.find(s => s.id === symptomParam);
 
@@ -141,13 +150,14 @@ export function Results() {
   const confidence = useMemo(() => {
     if (symptomParam) return 100;
     if (isFreeTextSearch && queryParam) {
+      if (symptomResolution.confidence > 0) return symptomResolution.confidence;
       const normalized = queryParam.toLowerCase().trim();
       const exactLabel = symptoms.some(s => s.label.toLowerCase() === normalized);
       if (exactLabel) return 100;
       if (matchedSymptomIds.length > 0) return 95;
     }
     return 0;
-  }, [symptomParam, isFreeTextSearch, queryParam, symptoms, matchedSymptomIds]);
+  }, [symptomParam, isFreeTextSearch, queryParam, symptoms, matchedSymptomIds, symptomResolution.confidence]);
 
   const categoryCounts = useMemo(() => {
     const counts = {};
@@ -254,6 +264,7 @@ export function Results() {
             isSafe={featuredIsSafe}
             isEmergency={isEmergencyQuery(queryParam)}
             onViewRemedies={nonConventional.length > 1 ? scrollToRemedies : undefined}
+            relatedSymptoms={relatedSymptomIds.length > 0 ? relatedSymptomIds.map(id => symptoms.find(s => s.id === id)).filter(Boolean) : undefined}
           />
 
           <div ref={carouselsRef}>

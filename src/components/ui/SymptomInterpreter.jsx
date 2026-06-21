@@ -57,6 +57,7 @@ export function SymptomInterpreter({
   isSafe,
   isEmergency,
   onViewRemedies,
+  relatedSymptoms,
   className,
 }) {
   const causes = symptom ? CAUSES[symptom.id] || CAUSES[symptom.label?.toLowerCase()] || null : null;
@@ -129,6 +130,24 @@ export function SymptomInterpreter({
                   className="text-xs px-2.5 py-1 rounded-full bg-surface text-ink-muted font-medium"
                 >
                   {cause}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {relatedSymptoms && relatedSymptoms.length > 0 && (
+          <div className="mt-4">
+            <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">
+              Related Symptoms
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {relatedSymptoms.map((rs) => (
+                <span
+                  key={rs.id}
+                  className="text-xs px-2.5 py-1 rounded-full bg-accent/10 text-accent-dark font-medium"
+                >
+                  {rs.emoji} {rs.label}
                 </span>
               ))}
             </div>

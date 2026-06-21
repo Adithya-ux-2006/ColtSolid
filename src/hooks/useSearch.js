@@ -1,21 +1,9 @@
 import { useState, useEffect } from 'react';
 import { getApiUrl } from '../utils/api';
 
-const SEARCH_ALIASES = {
-  backache: ['back pain', 'lower back', 'muscle pain'],
-  'back ache': ['back pain', 'lower back', 'muscle pain'],
-  'cant sleep': ['insomnia', 'sleep', 'sleepless', 'awake'],
-  "can't sleep": ['insomnia', 'sleep', 'sleepless', 'awake'],
-  cramps: ['period cramps', 'menstrual pain'],
-  'period cramps': ['menstrual pain', 'period pain', 'cramps'],
-  earache: ['ear pain'],
-  tired: ['fatigue', 'low energy'],
-  hangover: ['nausea', 'headache', 'dehydration', 'hangover'],
-};
-
 function getSearchWords(query) {
   const normalized = query.toLowerCase().trim();
-  const expanded = [normalized, ...(SEARCH_ALIASES[normalized] || [])].join(' ');
+  const expanded = [normalized].join(' ');
 
   return expanded
     .split(/\s+/)

@@ -4,7 +4,8 @@ import { ArrowUp, Sparkles, X } from 'lucide-react';
 import { getApiUrl } from '../../utils/api';
 import { cn } from '../../utils/cn';
 import { useCatalogStore } from '../../store/catalogStore';
-import { matchQueryToSymptoms, getRankedRemediesForSymptoms, isEmergencyQuery } from '../../utils/symptomSearch';
+import { getRankedRemediesForSymptoms, isEmergencyQuery } from '../../utils/symptomSearch';
+import { resolveQuery } from '../../utils/symptomEngine';
 
 const HISTORY_KEY = 'cs_ai_chat_history';
 const PULSE_KEY = 'cs_ai_chat_pulse_seen';
@@ -124,10 +125,12 @@ export function AiChatPanel() {
       return;
     }
 
-    const matchedIds = matchQueryToSymptoms(content, symptoms);
+    const resolution = resolveQuery(content, symptoms);
+    const matchedIds = resolution.symptomIds;
+    const allIds = [...new Set([...resolution.symptomIds, ...resolution.relatedIds])];
 
-    if (matchedIds.length > 0) {
-      const ranked = getRankedRemediesForSymptoms(matchedIds, symptomRemedies, remedies);
+    if (allIds.length > 0) {
+      const ranked = getRankedRemediesForSymptoms(allIds, symptomRemedies, remedies);
       const matchedSymptom = symptoms.find(s => matchedIds.includes(s.id));
       const top = ranked.slice(0, 3);
       const lifestyle = ranked.filter(r => r.category === 'Lifestyle').length;
@@ -136,7 +139,17 @@ export function AiChatPanel() {
       const tcm = ranked.filter(r => r.category === 'TCM').length;
       const total = lifestyle + nat + ayur + tcm;
 
-      let reply = `**Detected Symptom**: ${matchedSymptom?.label || content}\n\n**Top Recommendations**:\n`;
+      let reply = `**Detected Symptom**: ${matchedSymptom?.label || content}\n`;
+      reply += `**Confidence**: ${resolution.confidence}%\n\n`;
+      if (resolution.relatedIds.length > 0) {
+        const relatedLabels = resolution.relatedIds
+          .map(id => symptoms.find(s => s.id === id)?.label)
+          .filter(Boolean);
+        if (relatedLabels.length > 0) {
+          reply += `**Related**: ${relatedLabels.join(', ')}\n\n`;
+        }
+      }
+      reply += `**Top Recommendations**:\n`;
       top.forEach((r, i) => {
         reply += `${i + 1}. ${r.name} — E${r._evidenceScore || '?'}/10\n`;
       });

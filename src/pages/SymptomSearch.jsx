@@ -9,7 +9,8 @@ import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { trackSearchEvent } from '../utils/analytics';
 import { getGuestAllergies, getGuestConditions, isRemedySafeForUser } from '../utils/guestProfile';
-import { matchQueryToSymptoms, getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptomSearch';
+import { getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptomSearch';
+import { resolveQuery } from '../utils/symptomEngine';
 import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
 
 const SYMPTOM_CARDS = [
@@ -45,9 +46,17 @@ export function SymptomSearch() {
   const isSearching = searchTerm !== debouncedTerm;
   const trimmedQuery = debouncedTerm.trim();
 
-  const matchedSymptomIds = useMemo(
-    () => (trimmedQuery.length >= 2 ? matchQueryToSymptoms(trimmedQuery, symptoms) : []),
+  const symptomResolution = useMemo(
+    () => (trimmedQuery.length >= 2 ? resolveQuery(trimmedQuery, symptoms) : { symptomIds: [], relatedIds: [], confidence: 0, matches: [] }),
     [symptoms, trimmedQuery]
+  );
+
+  const matchedSymptomIds = symptomResolution.symptomIds;
+  const relatedSymptomIds = symptomResolution.relatedIds;
+  const queryConfidence = symptomResolution.confidence;
+  const allMatchedIds = useMemo(
+    () => [...new Set([...matchedSymptomIds, ...relatedSymptomIds])],
+    [matchedSymptomIds, relatedSymptomIds]
   );
 
   const safeFilter = useMemo(
@@ -56,10 +65,10 @@ export function SymptomSearch() {
   );
 
   const symptomRankedResults = useMemo(() => {
-    if (matchedSymptomIds.length === 0) return [];
-    return getRankedRemediesForSymptoms(matchedSymptomIds, symptomRemedies, remedies)
+    if (allMatchedIds.length === 0) return [];
+    return getRankedRemediesForSymptoms(allMatchedIds, symptomRemedies, remedies)
       .filter(safeFilter);
-  }, [matchedSymptomIds, remedies, safeFilter, symptomRemedies]);
+  }, [allMatchedIds, remedies, safeFilter, symptomRemedies]);
 
   const textFallbackResults = useMemo(() => {
     if (symptomRankedResults.length > 0) return [];
@@ -148,9 +157,16 @@ export function SymptomSearch() {
                   </div>
                 ) : dropdownResults.length > 0 ? (
                   <>
-                    <p className="text-xs font-bold uppercase tracking-wider text-ink-muted mb-2">
-                      Recommended remedies
-                    </p>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs font-bold uppercase tracking-wider text-ink-muted">
+                        Recommended remedies
+                      </p>
+                      {queryConfidence > 0 && (
+                        <span className="text-[10px] font-semibold text-primary bg-primary/10 px-1.5 py-0.5 rounded">
+                          {queryConfidence}% match
+                        </span>
+                      )}
+                    </div>
                     <div className="space-y-1">
                       {dropdownResults.slice(0, 5).map((remedy) => (
                         <Link
@@ -178,6 +194,20 @@ export function SymptomSearch() {
                   <div className="py-3 text-sm">
                     <p className="font-semibold text-red-600">{EMERGENCY_MESSAGE}</p>
                     <p className="text-red-500 mt-1">{EMERGENCY_ACTION}</p>
+                  </div>
+                ) : symptomResolution.matches.length > 0 ? (
+                  <div className="py-3 text-sm text-ink-muted">
+                    <p className="font-semibold text-ink">
+                      No remedies found ({(symptomResolution.confidence)}% confidence)
+                    </p>
+                    <p className="mt-1">We couldn't match remedies to your symptom. Try the AI assistant for help.</p>
+                    <button
+                      type="button"
+                      onClick={openAiAssistant}
+                      className="mt-2 inline-flex items-center gap-2 font-semibold text-primary hover:text-primary-dark transition-colors"
+                    >
+                      Try our AI Assistant for personalised advice <Bot className="h-4 w-4" />
+                    </button>
                   </div>
                 ) : (
                   <div className="py-3 text-sm text-ink-muted">
