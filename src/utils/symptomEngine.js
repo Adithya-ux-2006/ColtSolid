@@ -455,21 +455,30 @@ export function resolveQuery(query, symptoms) {
 
   const symptomIds = Array.from(matchedIds);
 
-  const relatedIds = [];
-  const seenRelated = new Set(symptomIds);
-  for (const id of symptomIds) {
-    const related = RELATED_SYMPTOMS[id] || [];
-    for (const rId of related) {
-      if (!seenRelated.has(rId)) {
-        seenRelated.add(rId);
-        relatedIds.push(rId);
-      }
-    }
-  }
-
   const confidence = matches.length > 0
     ? Math.max(...matches.map(m => m.confidence))
     : 0;
 
-  return { symptomIds, relatedIds, confidence, matches };
+  const matchInfo = matches.length > 0 ? {
+    id: matches[0].id,
+    confidence: matches[0].confidence,
+    type: matches[0].type,
+  } : null;
+
+  return { symptomIds, confidence, matchInfo };
+}
+
+export function getRelatedSymptoms(symptomIds) {
+  const relatedIds = [];
+  const seen = new Set(symptomIds);
+  for (const id of symptomIds) {
+    const related = RELATED_SYMPTOMS[id] || [];
+    for (const rId of related) {
+      if (!seen.has(rId)) {
+        seen.add(rId);
+        relatedIds.push(rId);
+      }
+    }
+  }
+  return relatedIds;
 }

@@ -1,8 +1,8 @@
 import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, SlidersHorizontal, Sparkles } from 'lucide-react';
+import { ArrowLeft, ChevronDown, ChevronRight, Sparkles } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
-import { RemedyCard, LoadingSkeleton, EmptyState, DoctorGuidance, RemedyCarousel, SymptomInterpreter } from '../components/ui';
+import { RemedyCard, LoadingSkeleton, EmptyState, DoctorGuidance } from '../components/ui';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { getGuestAllergies, getGuestConditions, isRemedySafeForUser } from '../utils/guestProfile';
@@ -13,6 +13,31 @@ import { trackSearchEvent } from '../utils/analytics';
 
 const EMPTY_ARRAY = [];
 const SORT_OPTIONS = ['Best Rated', 'Most Researched', 'Easiest'];
+
+function CategorySection({ title, icon, items, defaultOpen, isSafe }) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+  if (!items?.length) return null;
+  return (
+    <div className="bg-white rounded-2xl shadow-soft overflow-hidden">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-surface/30 transition-colors"
+      >
+        <span className="text-base font-bold text-ink">
+          {icon} {title} <span className="text-ink-muted font-medium">({items.length})</span>
+        </span>
+        {isOpen ? <ChevronDown className="w-4 h-4 text-ink-muted" /> : <ChevronRight className="w-4 h-4 text-ink-muted" />}
+      </button>
+      {isOpen && (
+        <div className="px-5 pb-5 space-y-3">
+          {items.map((remedy) => (
+            <RemedyCard key={remedy.id} remedy={remedy} variant="carousel" isSafe={isSafe(remedy)} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function Results() {
   const location = useLocation();
@@ -36,33 +61,29 @@ export function Results() {
   const hasLoaded = useCatalogStore((state) => state.hasLoaded);
 
   const [sort, setSort] = useState('Best Rated');
-  const carouselsRef = useRef(null);
-
-  const scrollToRemedies = useCallback(() => {
-    carouselsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, []);
 
   const isFreeTextSearch = Boolean(queryParam.trim());
 
   const symptomResolution = useMemo(
-    () => (isFreeTextSearch ? resolveQuery(queryParam, symptoms) : { symptomIds: [], relatedIds: [], confidence: 0, matches: [] }),
+    () => (isFreeTextSearch ? resolveQuery(queryParam, symptoms) : { symptomIds: [], confidence: 0, matchInfo: null }),
     [isFreeTextSearch, queryParam, symptoms]
-  );
-
-  const matchedSymptomIds = symptomResolution.symptomIds;
-  const relatedSymptomIds = symptomResolution.relatedIds;
-  const allMatchedIds = useMemo(
-    () => [...new Set([...matchedSymptomIds, ...relatedSymptomIds])],
-    [matchedSymptomIds, relatedSymptomIds]
   );
 
   const selectedSymptomIds = useMemo(() => {
     if (symptomParam) return [symptomParam];
-    if (allMatchedIds.length > 0) return allMatchedIds;
+    if (symptomResolution.symptomIds.length > 0) return symptomResolution.symptomIds;
     return [];
-  }, [allMatchedIds, symptomParam]);
+  }, [symptomResolution.symptomIds, symptomParam]);
 
   const symptom = symptoms.find(s => s.id === symptomParam);
+  const matchedSymptom = useMemo(() => {
+    if (symptom) return symptom;
+    if (symptomResolution.symptomIds.length > 0) {
+      const id = symptomResolution.symptomIds[0];
+      return symptoms.find(s => s.id === id) || null;
+    }
+    return null;
+  }, [symptom, symptomResolution.symptomIds, symptoms]);
 
   useEffect(() => {
     if (isFreeTextSearch && queryParam) {
@@ -85,13 +106,9 @@ export function Results() {
   );
 
   const rankedRemedies = useMemo(() => {
-    let result;
-    if (selectedSymptomIds.length > 0) {
-      result = getRankedRemediesForSymptoms(selectedSymptomIds, symptomRemedies, remedies);
-    } else {
-      return [];
-    }
+    if (selectedSymptomIds.length === 0) return [];
 
+    let result = getRankedRemediesForSymptoms(selectedSymptomIds, symptomRemedies, remedies);
     result = result.filter(safeFilter);
 
     result.sort((a, b) => {
@@ -121,51 +138,12 @@ export function Results() {
   }, [otherRemedies]);
 
   const categoryOrder = ['Lifestyle', 'Natural', 'Ayurveda', 'TCM'];
-  const categoryIcons = { Lifestyle: '🧘', Natural: '🌿', Ayurveda: '🪷', TCM: '⚕️' };
-
-  const researchSources = useMemo(() => {
-    if (!featuredRemedy) return [];
-    return featuredRemedy.researchPapers || featuredRemedy.researchLinks || [];
-  }, [featuredRemedy]);
+  const categoryIcons = { Lifestyle: '\u{1F9D8}', Natural: '\u{1F33F}', Ayurveda: '\u{1FA85}', TCM: '\u{2695}\u{FE0F}' };
 
   const featuredIsSafe = useMemo(() => {
     if (!featuredRemedy) return true;
     return isRemedySafeForUser(featuredRemedy, { allergies: activeAllergies, conditions: activeConditions });
   }, [featuredRemedy, activeAllergies, activeConditions]);
-
-  const safetyWarnings = useMemo(() => {
-    if (!featuredRemedy) return null;
-    return featuredRemedy.warnings || null;
-  }, [featuredRemedy]);
-
-  const matchedSymptom = useMemo(() => {
-    if (symptom) return symptom;
-    if (selectedSymptomIds.length > 0) {
-      const id = selectedSymptomIds[0];
-      return symptoms.find(s => s.id === id) || null;
-    }
-    return null;
-  }, [symptom, selectedSymptomIds, symptoms]);
-
-  const confidence = useMemo(() => {
-    if (symptomParam) return 100;
-    if (isFreeTextSearch && queryParam) {
-      if (symptomResolution.confidence > 0) return symptomResolution.confidence;
-      const normalized = queryParam.toLowerCase().trim();
-      const exactLabel = symptoms.some(s => s.label.toLowerCase() === normalized);
-      if (exactLabel) return 100;
-      if (matchedSymptomIds.length > 0) return 95;
-    }
-    return 0;
-  }, [symptomParam, isFreeTextSearch, queryParam, symptoms, matchedSymptomIds, symptomResolution.confidence]);
-
-  const categoryCounts = useMemo(() => {
-    const counts = {};
-    for (const [cat, items] of Object.entries(grouped)) {
-      if (items?.length) counts[cat] = items.length;
-    }
-    return Object.keys(counts).length > 0 ? counts : null;
-  }, [grouped]);
 
   const headerTitle = symptom?.label || matchedSymptom?.label || queryParam || 'Results';
 
@@ -207,24 +185,24 @@ export function Results() {
       <div className="px-6 py-6 max-w-2xl mx-auto">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-3xl md:text-display font-bold text-ink mb-2">
-              {headerTitle}
-            </h1>
-            <p className="text-ink-muted">
-              {rankedRemedies.length > 0 && matchedSymptom
-                ? `Showing remedies for ${matchedSymptom.label} — ${nonConventional.length} evidence-backed ${nonConventional.length === 1 ? 'remedy' : 'remedies'} found`
-                : rankedRemedies.length > 0
-                  ? `${nonConventional.length} evidence-backed ${nonConventional.length === 1 ? 'remedy' : 'remedies'} found`
-                  : 'Searching for remedies...'}
+            <h1 className="text-3xl md:text-display font-bold text-ink mb-1">{headerTitle}</h1>
+            {matchedSymptom && queryParam && matchedSymptom.label.toLowerCase() !== queryParam.toLowerCase().trim() && (
+              <p className="text-sm text-ink-muted">
+                Showing remedies for: <span className="font-medium text-ink">{matchedSymptom.label}</span>
+              </p>
+            )}
+            <p className="text-ink-muted mt-1">
+              {nonConventional.length > 0
+                ? `${nonConventional.length} evidence-backed ${nonConventional.length === 1 ? 'remedy' : 'remedies'} found`
+                : 'Searching for remedies...'}
             </p>
           </div>
           {nonConventional.length > 1 && (
             <div className="flex items-center gap-2 text-sm shrink-0">
-              <SlidersHorizontal className="w-4 h-4 text-ink-muted" />
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
-                className="bg-transparent text-ink-muted font-medium focus:outline-none focus:text-ink cursor-pointer"
+                className="bg-transparent text-ink-muted font-medium focus:outline-none focus:text-ink cursor-pointer text-xs"
               >
                 {SORT_OPTIONS.map((opt) => (
                   <option key={opt} value={opt}>{opt}</option>
@@ -247,38 +225,33 @@ export function Results() {
         <div className="max-w-2xl mx-auto px-6">
           <EmptyState
             title="No remedies found"
-            description={`No evidence-backed remedies were found for "${queryParam}". Try a different search term.`}
+            description={symptomResolution.symptomIds.length > 0
+              ? `No evidence-backed remedies were found for "${matchedSymptom?.label || queryParam}". Try a different search term.`
+              : `We couldn't confidently identify a matching symptom for "${queryParam}". Try a different search term.`}
             ctaLabel="Search Again"
             ctaHref="/search"
           />
         </div>
       ) : (
-        <div className="max-w-2xl mx-auto space-y-10 px-6">
-          <SymptomInterpreter
-            symptom={matchedSymptom}
-            confidence={confidence}
-            topRemedy={featuredRemedy}
-            evidenceScore={featuredRemedy?._evidenceScore}
-            categoryCounts={categoryCounts}
-            safetyNote={safetyWarnings}
-            isSafe={featuredIsSafe}
-            isEmergency={isEmergencyQuery(queryParam)}
-            onViewRemedies={nonConventional.length > 1 ? scrollToRemedies : undefined}
-            relatedSymptoms={relatedSymptomIds.length > 0 ? relatedSymptomIds.map(id => symptoms.find(s => s.id === id)).filter(Boolean) : undefined}
-          />
+        <div className="max-w-2xl mx-auto space-y-6 px-6">
+          {featuredRemedy && (
+            <div className="bg-white rounded-2xl shadow-soft p-5">
+              <p className="text-xs font-bold uppercase tracking-wider text-ink-muted mb-3">Top Recommendation</p>
+              <RemedyCard remedy={featuredRemedy} variant="carousel" isSafe={featuredIsSafe} />
+            </div>
+          )}
 
-          <div ref={carouselsRef}>
-          {categoryOrder.map((cat) => {
-            const items = grouped[cat];
-            if (!items?.length) return null;
-            return (
-              <RemedyCarousel key={cat} title={`${categoryIcons[cat]} ${cat} Remedies`}>
-                {items.map((remedy) => (
-                  <RemedyCard key={remedy.id} remedy={remedy} variant="carousel" isSafe={isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions })} />
-                ))}
-              </RemedyCarousel>
-            );
-          })}
+          <div className="space-y-3">
+            {categoryOrder.map((cat) => (
+              <CategorySection
+                key={cat}
+                title={cat}
+                icon={categoryIcons[cat]}
+                items={grouped[cat]}
+                defaultOpen={cat === 'Lifestyle' || cat === 'Natural'}
+                isSafe={(remedy) => isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions })}
+              />
+            ))}
           </div>
 
           {!isAuthenticated && nonConventional.length > 0 && (
@@ -303,32 +276,6 @@ export function Results() {
                 >
                   Log In
                 </Link>
-              </div>
-            </section>
-          )}
-
-          {researchSources.length > 0 && (
-            <section className="section-card">
-              <h2 className="section-title">Research Sources</h2>
-              <div className="space-y-3">
-                {researchSources.map((source, idx) => (
-                  <a
-                    key={idx}
-                    href={source.url || '#'}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center gap-3 p-4 -mx-2 rounded-2xl hover:bg-surface/50 transition-colors"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-primary uppercase tracking-wider mb-0.5">
-                        {source.journal || source.label || 'Research'}
-                      </p>
-                      <p className="text-sm text-ink truncate">
-                        {source.keyFinding || source.label}
-                      </p>
-                    </div>
-                  </a>
-                ))}
               </div>
             </section>
           )}

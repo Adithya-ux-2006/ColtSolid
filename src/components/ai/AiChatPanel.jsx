@@ -127,10 +127,9 @@ export function AiChatPanel() {
 
     const resolution = resolveQuery(content, symptoms);
     const matchedIds = resolution.symptomIds;
-    const allIds = [...new Set([...resolution.symptomIds, ...resolution.relatedIds])];
 
-    if (allIds.length > 0) {
-      const ranked = getRankedRemediesForSymptoms(allIds, symptomRemedies, remedies);
+    if (matchedIds.length > 0) {
+      const ranked = getRankedRemediesForSymptoms(matchedIds, symptomRemedies, remedies);
       const matchedSymptom = symptoms.find(s => matchedIds.includes(s.id));
       const top = ranked.slice(0, 3);
       const lifestyle = ranked.filter(r => r.category === 'Lifestyle').length;
@@ -139,16 +138,7 @@ export function AiChatPanel() {
       const tcm = ranked.filter(r => r.category === 'TCM').length;
       const total = lifestyle + nat + ayur + tcm;
 
-      let reply = `**Detected Symptom**: ${matchedSymptom?.label || content}\n`;
-      reply += `**Confidence**: ${resolution.confidence}%\n\n`;
-      if (resolution.relatedIds.length > 0) {
-        const relatedLabels = resolution.relatedIds
-          .map(id => symptoms.find(s => s.id === id)?.label)
-          .filter(Boolean);
-        if (relatedLabels.length > 0) {
-          reply += `**Related**: ${relatedLabels.join(', ')}\n\n`;
-        }
-      }
+      let reply = `**Detected Symptom**: ${matchedSymptom?.label || content}\n\n`;
       reply += `**Top Recommendations**:\n`;
       top.forEach((r, i) => {
         reply += `${i + 1}. ${r.name} — E${r._evidenceScore || '?'}/10\n`;

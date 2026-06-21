@@ -47,17 +47,11 @@ export function SymptomSearch() {
   const trimmedQuery = debouncedTerm.trim();
 
   const symptomResolution = useMemo(
-    () => (trimmedQuery.length >= 2 ? resolveQuery(trimmedQuery, symptoms) : { symptomIds: [], relatedIds: [], confidence: 0, matches: [] }),
+    () => (trimmedQuery.length >= 2 ? resolveQuery(trimmedQuery, symptoms) : { symptomIds: [], confidence: 0, matchInfo: null }),
     [symptoms, trimmedQuery]
   );
 
   const matchedSymptomIds = symptomResolution.symptomIds;
-  const relatedSymptomIds = symptomResolution.relatedIds;
-  const queryConfidence = symptomResolution.confidence;
-  const allMatchedIds = useMemo(
-    () => [...new Set([...matchedSymptomIds, ...relatedSymptomIds])],
-    [matchedSymptomIds, relatedSymptomIds]
-  );
 
   const safeFilter = useMemo(
     () => (remedy) => isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions }),
@@ -65,10 +59,10 @@ export function SymptomSearch() {
   );
 
   const symptomRankedResults = useMemo(() => {
-    if (allMatchedIds.length === 0) return [];
-    return getRankedRemediesForSymptoms(allMatchedIds, symptomRemedies, remedies)
+    if (matchedSymptomIds.length === 0) return [];
+    return getRankedRemediesForSymptoms(matchedSymptomIds, symptomRemedies, remedies)
       .filter(safeFilter);
-  }, [allMatchedIds, remedies, safeFilter, symptomRemedies]);
+  }, [matchedSymptomIds, remedies, safeFilter, symptomRemedies]);
 
   const textFallbackResults = useMemo(() => {
     if (symptomRankedResults.length > 0) return [];
@@ -157,16 +151,9 @@ export function SymptomSearch() {
                   </div>
                 ) : dropdownResults.length > 0 ? (
                   <>
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-xs font-bold uppercase tracking-wider text-ink-muted">
-                        Recommended remedies
-                      </p>
-                      {queryConfidence > 0 && (
-                        <span className="text-[10px] font-semibold text-primary bg-primary/10 px-1.5 py-0.5 rounded">
-                          {queryConfidence}% match
-                        </span>
-                      )}
-                    </div>
+                    <p className="text-xs font-bold uppercase tracking-wider text-ink-muted mb-2">
+                      Recommended remedies
+                    </p>
                     <div className="space-y-1">
                       {dropdownResults.slice(0, 5).map((remedy) => (
                         <Link
@@ -195,18 +182,16 @@ export function SymptomSearch() {
                     <p className="font-semibold text-red-600">{EMERGENCY_MESSAGE}</p>
                     <p className="text-red-500 mt-1">{EMERGENCY_ACTION}</p>
                   </div>
-                ) : symptomResolution.matches.length > 0 ? (
+                ) : symptomResolution.matchInfo ? (
                   <div className="py-3 text-sm text-ink-muted">
-                    <p className="font-semibold text-ink">
-                      No remedies found ({(symptomResolution.confidence)}% confidence)
-                    </p>
-                    <p className="mt-1">We couldn't match remedies to your symptom. Try the AI assistant for help.</p>
+                    <p className="font-semibold text-ink">We couldn't match remedies to your symptom.</p>
+                    <p className="mt-1">Try the AI assistant for personalised advice.</p>
                     <button
                       type="button"
                       onClick={openAiAssistant}
                       className="mt-2 inline-flex items-center gap-2 font-semibold text-primary hover:text-primary-dark transition-colors"
                     >
-                      Try our AI Assistant for personalised advice <Bot className="h-4 w-4" />
+                      Try our AI Assistant <Bot className="h-4 w-4" />
                     </button>
                   </div>
                 ) : (
