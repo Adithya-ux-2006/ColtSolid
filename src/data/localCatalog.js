@@ -1,5 +1,5 @@
 // Auto-generated from SQL migrations
-// Generated: 2026-06-22T14:37:47.335Z
+// Generated: 2026-06-22T14:53:32.534Z
 
 export const LOCAL_SYMPTOMS = [
   {
@@ -241,6 +241,12 @@ export const LOCAL_SYMPTOMS = [
     "label": "Migraine",
     "emoji": "🤕",
     "color": "forest"
+  },
+  {
+    "id": "eye_pain",
+    "label": "Eye Pain",
+    "emoji": "🩺",
+    "color": "sage"
   }
 ];
 
@@ -444,7 +450,8 @@ export const LOCAL_REMEDIES = [
     "contraindications": [],
     "primarySymptoms": [
       "stress",
-      "anxiety"
+      "anxiety",
+      "brain_fog"
     ],
     "secondarySymptoms": []
   },
@@ -466,7 +473,8 @@ export const LOCAL_REMEDIES = [
     "contraindications": [],
     "primarySymptoms": [
       "stress",
-      "anxiety"
+      "anxiety",
+      "brain_fog"
     ],
     "secondarySymptoms": []
   },
@@ -509,7 +517,8 @@ export const LOCAL_REMEDIES = [
     "contraindications": [],
     "primarySymptoms": [
       "stress",
-      "anxiety"
+      "anxiety",
+      "brain_fog"
     ],
     "secondarySymptoms": []
   },
@@ -595,7 +604,8 @@ export const LOCAL_REMEDIES = [
     "contraindications": [],
     "primarySymptoms": [
       "stress",
-      "insomnia"
+      "insomnia",
+      "brain_fog"
     ],
     "secondarySymptoms": []
   },
@@ -747,7 +757,8 @@ export const LOCAL_REMEDIES = [
     "primarySymptoms": [
       "stress",
       "anxiety",
-      "fatigue"
+      "fatigue",
+      "brain_fog"
     ],
     "secondarySymptoms": []
   },
@@ -769,7 +780,8 @@ export const LOCAL_REMEDIES = [
     "contraindications": [],
     "primarySymptoms": [
       "headache",
-      "stress"
+      "stress",
+      "brain_fog"
     ],
     "secondarySymptoms": []
   },
@@ -1202,7 +1214,8 @@ export const LOCAL_REMEDIES = [
     "contraindications": [],
     "primarySymptoms": [
       "stress",
-      "fatigue"
+      "fatigue",
+      "brain_fog"
     ],
     "secondarySymptoms": []
   },
@@ -1223,7 +1236,8 @@ export const LOCAL_REMEDIES = [
     "allergenTags": [],
     "contraindications": [],
     "primarySymptoms": [
-      "fatigue"
+      "fatigue",
+      "brain_fog"
     ],
     "secondarySymptoms": []
   },
@@ -1691,7 +1705,8 @@ export const LOCAL_REMEDIES = [
     "contraindications": [],
     "primarySymptoms": [
       "stress",
-      "anxiety"
+      "anxiety",
+      "brain_fog"
     ],
     "secondarySymptoms": []
   },
@@ -1987,7 +2002,8 @@ export const LOCAL_REMEDIES = [
     "allergenTags": [],
     "contraindications": [],
     "primarySymptoms": [
-      "stress"
+      "stress",
+      "brain_fog"
     ],
     "secondarySymptoms": []
   },
@@ -2791,7 +2807,8 @@ export const LOCAL_REMEDIES = [
     "contraindications": [],
     "primarySymptoms": [
       "fatigue",
-      "hangover"
+      "hangover",
+      "brain_fog"
     ],
     "secondarySymptoms": []
   },
@@ -2876,7 +2893,8 @@ export const LOCAL_REMEDIES = [
     "contraindications": [],
     "primarySymptoms": [
       "stress",
-      "fatigue"
+      "fatigue",
+      "brain_fog"
     ],
     "secondarySymptoms": []
   },
@@ -2898,7 +2916,8 @@ export const LOCAL_REMEDIES = [
     "contraindications": [],
     "primarySymptoms": [
       "stress",
-      "fatigue"
+      "fatigue",
+      "brain_fog"
     ],
     "secondarySymptoms": []
   },
@@ -3404,7 +3423,9 @@ export const LOCAL_REMEDIES = [
     "isFeatured": false,
     "allergenTags": [],
     "contraindications": [],
-    "primarySymptoms": [],
+    "primarySymptoms": [
+      "eye_pain"
+    ],
     "secondarySymptoms": []
   },
   {
@@ -3423,7 +3444,9 @@ export const LOCAL_REMEDIES = [
     "isFeatured": false,
     "allergenTags": [],
     "contraindications": [],
-    "primarySymptoms": [],
+    "primarySymptoms": [
+      "eye_pain"
+    ],
     "secondarySymptoms": []
   },
   {
@@ -3442,7 +3465,9 @@ export const LOCAL_REMEDIES = [
     "isFeatured": false,
     "allergenTags": [],
     "contraindications": [],
-    "primarySymptoms": [],
+    "primarySymptoms": [
+      "eye_pain"
+    ],
     "secondarySymptoms": []
   },
   {
@@ -3462,7 +3487,8 @@ export const LOCAL_REMEDIES = [
     "allergenTags": [],
     "contraindications": [],
     "primarySymptoms": [
-      "headache"
+      "headache",
+      "eye_pain"
     ],
     "secondarySymptoms": []
   },
@@ -3482,7 +3508,9 @@ export const LOCAL_REMEDIES = [
     "isFeatured": false,
     "allergenTags": [],
     "contraindications": [],
-    "primarySymptoms": [],
+    "primarySymptoms": [
+      "eye_pain"
+    ],
     "secondarySymptoms": []
   },
   {
@@ -3502,7 +3530,8 @@ export const LOCAL_REMEDIES = [
     "allergenTags": [],
     "contraindications": [],
     "primarySymptoms": [
-      "eye_strain"
+      "eye_strain",
+      "eye_pain"
     ],
     "secondarySymptoms": []
   }
@@ -4559,6 +4588,105 @@ export const LOCAL_SYMPTOM_REMEDIES = {
     },
     {
       "remedyId": "rem_lp08",
+      "evidenceScore": 3,
+      "priorityRank": 5
+    }
+  ],
+  "eye_pain": [
+    {
+      "remedyId": "rem_ey03",
+      "evidenceScore": 5,
+      "priorityRank": 7
+    },
+    {
+      "remedyId": "rem_ey06",
+      "evidenceScore": 5,
+      "priorityRank": 8
+    },
+    {
+      "remedyId": "rem_ey01",
+      "evidenceScore": 5,
+      "priorityRank": 7
+    },
+    {
+      "remedyId": "rem_ey05",
+      "evidenceScore": 5,
+      "priorityRank": 7
+    },
+    {
+      "remedyId": "rem_ey02",
+      "evidenceScore": 5,
+      "priorityRank": 8
+    },
+    {
+      "remedyId": "rem_ey04",
+      "evidenceScore": 5,
+      "priorityRank": 8
+    }
+  ],
+  "brain_fog": [
+    {
+      "remedyId": "rem_a01",
+      "evidenceScore": 3,
+      "priorityRank": 5
+    },
+    {
+      "remedyId": "rem_a02",
+      "evidenceScore": 3,
+      "priorityRank": 5
+    },
+    {
+      "remedyId": "rem_a05",
+      "evidenceScore": 3,
+      "priorityRank": 5
+    },
+    {
+      "remedyId": "rem_i05",
+      "evidenceScore": 3,
+      "priorityRank": 5
+    },
+    {
+      "remedyId": "rem_s03",
+      "evidenceScore": 3,
+      "priorityRank": 5
+    },
+    {
+      "remedyId": "rem_s05",
+      "evidenceScore": 3,
+      "priorityRank": 5
+    },
+    {
+      "remedyId": "rem_ft01",
+      "evidenceScore": 3,
+      "priorityRank": 5
+    },
+    {
+      "remedyId": "rem_ft02",
+      "evidenceScore": 3,
+      "priorityRank": 5
+    },
+    {
+      "remedyId": "rem_a09",
+      "evidenceScore": 3,
+      "priorityRank": 5
+    },
+    {
+      "remedyId": "rem_s08",
+      "evidenceScore": 3,
+      "priorityRank": 5
+    },
+    {
+      "remedyId": "rem_ho05",
+      "evidenceScore": 3,
+      "priorityRank": 5
+    },
+    {
+      "remedyId": "rem_ft05",
+      "evidenceScore": 3,
+      "priorityRank": 5
+    },
+    {
+      "remedyId": "rem_ft06",
       "evidenceScore": 3,
       "priorityRank": 5
     }

@@ -127,6 +127,37 @@ for (const block of insertBlocks) {
   }
 }
 
+// --- Auto-create missing symptom entries for IDs used in remedy_symptoms ---
+// Only auto-create snake_case IDs that look like valid symptom IDs (no spaces, no uppercase)
+const autoCreatedIds = [];
+for (const block of insertBlocks) {
+  if (!/INSERT\s+INTO\s+public\.remedy_symptoms/i.test(block)) continue;
+  const rows = parseInsertRows(block);
+  for (const row of rows) {
+    const p = parseRowCSV(row);
+    if (p.length >= 2) {
+      const sid = p[1];
+      if (!symptoms.has(sid) && /^[a-z_]+$/.test(sid) && sid.length < 30 && sid.includes('_')) {
+        const label = sid.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        symptoms.set(sid, { id: sid, label, emoji: '🩺', color: 'sage' });
+        autoCreatedIds.push(sid);
+      }
+    }
+  }
+}
+// Also check CASE WHEN entries for missing snake_case IDs
+const caseReAll = /rs\.symptom_id\s*=\s*'([a-z_]+)'/gi;
+let cM;
+while ((cM = caseReAll.exec(allSQL)) !== null) {
+  const sid = cM[1];
+  if (!symptoms.has(sid) && /^[a-z_]+$/.test(sid) && sid.length < 30) {
+    const label = sid.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    symptoms.set(sid, { id: sid, label, emoji: '🩺', color: 'sage' });
+    if (!autoCreatedIds.includes(sid)) autoCreatedIds.push(sid);
+  }
+}
+if (autoCreatedIds.length > 0) console.log('Auto-created symptoms:', autoCreatedIds.join(', '));
+
 // --- EXTRACT remedy_symptoms (filter to valid symptom IDs only) ---
 const remedySymptomsMap = new Map(); // symptom_id -> [[remedy_id, match_strength]]
 const validSymptomIds = new Set(symptoms.keys());
@@ -144,6 +175,24 @@ for (const block of insertBlocks) {
     }
   }
 }
+
+// --- Auto-add remedy_symptoms for brain_fog (missing in SQL) ---
+if (!remedySymptomsMap.has('brain_fog')) {
+  // Link brain_fog to remedies that share fatigue, stress, low_energy, burnout
+  const brainFogRelated = ['rem_s03','rem_ft01','rem_ft02','rem_s05','rem_i05','rem_a01','rem_a02','rem_ft05','rem_ft06','rem_a05','rem_ho05','rem_s08','rem_a09'];
+  const added = [];
+  for (const rid of brainFogRelated) {
+    if (!remedySymptomsMap.has('brain_fog')) remedySymptomsMap.set('brain_fog', []);
+    if (!remedySymptomsMap.get('brain_fog').find(e => e[0] === rid)) {
+      remedySymptomsMap.get('brain_fog').push([rid, 'primary']);
+      added.push(rid);
+    }
+  }
+  console.log('Added remedy_symptoms for brain_fog:', added.length, 'remedies');
+}
+
+// Also ensure eye_pain has remedies linked in remedy_symptoms if any exist
+// (eye_pain already has entries from the SQL, we just needed the symptom to exist)
 
 // --- EXTRACT symptom_remedies (direct VALUES inserts) ---
 const symptomRemediesMap = new Map(); // symptom_id -> [{remedyId, evidenceScore, priorityRank}]
