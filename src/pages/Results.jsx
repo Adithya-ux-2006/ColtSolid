@@ -7,7 +7,7 @@ import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { getGuestAllergies, getGuestConditions, isRemedySafeForUser } from '../utils/guestProfile';
 import { getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptomSearch';
-import { resolveQuery } from '../utils/symptomEngine';
+import { resolveQuery, getRelatedSymptoms } from '../utils/symptomEngine';
 import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
 import { trackSearchEvent } from '../utils/analytics';
 
@@ -62,25 +62,27 @@ export function Results() {
   const isFreeTextSearch = Boolean(queryParam.trim());
 
   const symptomResolution = useMemo(
-    () => (isFreeTextSearch ? resolveQuery(queryParam, symptoms) : { symptomIds: [], confidence: 0, matchInfo: null }),
-    [isFreeTextSearch, queryParam, symptoms]
+    () => (isFreeTextSearch ? resolveQuery(queryParam, symptoms) : {
+      symptomIds: symptomParam ? [symptomParam] : [],
+      allSymptomIds: symptomParam ? [symptomParam] : [],
+      confidence: 0,
+      allMatches: [],
+      primarySymptom: symptomParam ? symptoms.find(s => s.id === symptomParam) || null : null,
+    }),
+    [isFreeTextSearch, queryParam, symptoms, symptomParam]
   );
 
-  const selectedSymptomIds = useMemo(() => {
-    if (symptomParam) return [symptomParam];
-    if (symptomResolution.symptomIds.length > 0) return symptomResolution.symptomIds;
-    return [];
-  }, [symptomResolution.symptomIds, symptomParam]);
+  const matchedSymptom = symptomResolution.primarySymptom;
 
-  const symptom = symptoms.find(s => s.id === symptomParam);
-  const matchedSymptom = useMemo(() => {
-    if (symptom) return symptom;
-    if (symptomResolution.symptomIds.length > 0) {
-      const id = symptomResolution.symptomIds[0];
-      return symptoms.find(s => s.id === id) || null;
-    }
-    return null;
-  }, [symptom, symptomResolution.symptomIds, symptoms]);
+  const relatedSymptomIds = useMemo(() => {
+    if (!matchedSymptom) return [];
+    return getRelatedSymptoms([matchedSymptom.id]);
+  }, [matchedSymptom]);
+
+  const relatedSymptoms = useMemo(() => {
+    if (!relatedSymptomIds.length) return [];
+    return relatedSymptomIds.map(id => symptoms.find(s => s.id === id)).filter(Boolean);
+  }, [relatedSymptomIds, symptoms]);
 
   useEffect(() => {
     if (isFreeTextSearch && queryParam) {
@@ -103,15 +105,19 @@ export function Results() {
   );
 
   const rankedRemedies = useMemo(() => {
-    if (selectedSymptomIds.length === 0) return [];
+    const ids = symptomResolution.symptomIds;
+    if (ids.length === 0) return [];
 
-    let result = getRankedRemediesForSymptoms(selectedSymptomIds, symptomRemedies, remedies);
+    let result = getRankedRemediesForSymptoms(ids, symptomRemedies, remedies, {
+      includeRelated: true,
+      symptoms,
+    });
     result = result.filter(safeFilter);
 
     result.sort((a, b) => (b._priorityRank || 0) - (a._priorityRank || 0) || (b.rating || 0) - (a.rating || 0));
 
     return result;
-  }, [selectedSymptomIds, symptomRemedies, remedies, safeFilter]);
+  }, [symptomResolution.symptomIds, symptomRemedies, remedies, safeFilter, symptoms]);
 
   const nonConventional = useMemo(() => rankedRemedies.filter(r => r.category !== 'Conventional'), [rankedRemedies]);
   const featuredRemedy = useMemo(() => nonConventional.length > 0 ? nonConventional[0] : null, [nonConventional]);
@@ -144,7 +150,7 @@ export function Results() {
     );
   }
 
-  if (!isFreeTextSearch && !symptom && hasLoaded) {
+  if (!isFreeTextSearch && !matchedSymptom && hasLoaded) {
     return (
       <PageWrapper className="min-h-screen bg-bg pt-16 px-6">
         <EmptyState
@@ -171,9 +177,24 @@ export function Results() {
 
       <div className="px-6 py-6 max-w-2xl mx-auto">
         <div className="flex items-start justify-between gap-4">
-          <h1 className="text-3xl md:text-display font-bold text-ink">
-            Showing remedies for: {matchedSymptom?.label || queryParam}
-          </h1>
+          <div>
+            <h1 className="text-3xl md:text-display font-bold text-ink">
+              Showing remedies for: {matchedSymptom?.label || queryParam}
+            </h1>
+            {relatedSymptoms.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mt-3">
+                <span className="text-xs text-ink-muted font-medium mr-1 self-center">Related:</span>
+                {relatedSymptoms.map(rs => (
+                  <span
+                    key={rs.id}
+                    className="text-xs px-2.5 py-1 rounded-full bg-accent/10 text-accent-dark font-medium"
+                  >
+                    {rs.emoji} {rs.label}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
