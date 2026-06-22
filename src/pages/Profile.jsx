@@ -161,13 +161,13 @@ export function Profile() {
             className="w-full p-5 flex justify-between items-center text-left"
             onClick={() => setExpandedSection(expandedSection === 'about' ? null : 'about')}
           >
-            <span className="font-bold text-lg text-ink">About ClotSolid</span>
+            <span className="font-bold text-lg text-ink">About curA</span>
             <ChevronDown className={`w-5 h-5 text-ink-muted transition-transform ${expandedSection === 'about' ? 'rotate-180' : ''}`} />
           </button>
           {expandedSection === 'about' && (
             <div className="p-5 pt-0 text-sm text-ink-muted leading-relaxed border-t border-gray-50">
               <p className="mb-4">
-                ClotSolid is a student-focused health platform designed to provide evidence-backed remedies for common ailments.
+                curA is a student-focused health platform designed to provide evidence-backed remedies for common ailments.
                 Your profile, favorites, and appointments are synced through Supabase. Always consult a certified medical professional for serious health concerns.
               </p>
               <FAQAccordion items={FAQ_ITEMS.slice(0, 3)} />

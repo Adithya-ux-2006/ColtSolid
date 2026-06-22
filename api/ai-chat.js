@@ -1,6 +1,6 @@
 /* global process */
 
-const SYSTEM_PROMPT = `You are a helpful health assistant for college students using ClotSolid, an evidence-based remedy app.
+const SYSTEM_PROMPT = `You are a helpful health assistant for college students using curA, an evidence-based remedy app.
 
 When a student describes symptoms:
 1. Identify the likely symptoms from: headache, cold, anxiety, insomnia, nausea, stress, back pain, sore throat, eye strain, period cramps, fever, skin rash, ear pain, bloating, hangover, fatigue
@@ -187,7 +187,7 @@ function parseBody(req) {
 function fallbackReply(messages) {
   const text = messages.map((message) => message.content).join(' ').toLowerCase();
   return FALLBACK_REPLIES.find((reply) => reply.patterns.some((pattern) => text.includes(pattern)))?.text
-    || '**A few options that may help:**\n- Try searching your main symptom in ClotSolid for evidence-based remedies.\n- If symptoms feel severe, unusual, or keep getting worse, check with a clinician.\n\n[View remedies →](/search)';
+    || '**A few options that may help:**\n- Try searching your main symptom in curA for evidence-based remedies.\n- If symptoms feel severe, unusual, or keep getting worse, check with a clinician.\n\n[View remedies →](/search)';
 }
 
 async function askClaude(messages) {

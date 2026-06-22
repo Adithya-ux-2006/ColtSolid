@@ -77,7 +77,7 @@ export function Register() {
             <span className="text-2xl font-bold text-white">C</span>
           </Link>
           <h1 className="text-3xl font-bold text-ink">Create an account</h1>
-          <p className="text-ink-muted mt-2">Join ClotSolid for targeted relief</p>
+          <p className="text-ink-muted mt-2">Join curA for targeted relief</p>
         </div>
 
         <div className="bg-white rounded-3xl shadow-xl p-8 border border-ink/5">

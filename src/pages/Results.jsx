@@ -207,7 +207,7 @@ export function Results() {
           <div className="rounded-3xl border-2 border-red-300 bg-red-50 p-6">
             <h2 className="text-xl font-bold text-red-700 mb-2">{EMERGENCY_MESSAGE}</h2>
             <p className="text-red-600 font-medium mb-4">{EMERGENCY_ACTION}</p>
-            <p className="text-red-500 text-sm">ClotSolid does not provide self-treatment guidance for potentially serious symptoms.</p>
+            <p className="text-red-500 text-sm">curA does not provide self-treatment guidance for potentially serious symptoms.</p>
           </div>
         </div>
       ) : !hasResults && !isCatalogLoading ? (

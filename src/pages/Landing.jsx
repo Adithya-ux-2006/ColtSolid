@@ -146,9 +146,9 @@ export function Landing() {
       <footer className="px-6 py-8 border-t border-ink/5 text-center">
         <div className="flex items-center justify-center gap-2 mb-2">
           <div className="w-5 h-5 rounded-md bg-primary flex items-center justify-center text-white font-bold text-xs">C</div>
-          <span className="font-bold text-ink">ClotSolid</span>
+          <span className="font-bold text-ink">curA</span>
         </div>
-        <p className="text-xs text-ink-subtle">&copy; 2026 ClotSolid. Not a substitute for professional medical advice.</p>
+        <p className="text-xs text-ink-subtle">&copy; 2026 curA. Not a substitute for professional medical advice.</p>
       </footer>
 
       <Modal isOpen={isQuestionnaireOpen} onClose={() => setIsQuestionnaireOpen(false)} title="Quick Health Profile">

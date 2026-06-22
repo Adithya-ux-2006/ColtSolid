@@ -203,8 +203,8 @@ async function verifyTables(client) {
 
 async function testAuthAndPersistence(url, anonKey) {
   const makeClient = () => createClient(url, anonKey);
-  const email = `clotsolid${Date.now()}@gmail.com`;
-  const password = 'ClotSolid!234';
+  const email = `cura${Date.now()}@gmail.com`;
+  const password = 'curA!234';
   const client = makeClient();
 
   const signUp = await client.auth.signUp({

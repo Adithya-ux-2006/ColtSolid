@@ -1,4 +1,4 @@
--- Supabase Schema for ClotSolid
+-- Supabase Schema for curA
 
 -- 1. Create Tables
 

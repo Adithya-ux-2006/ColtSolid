@@ -15,7 +15,7 @@ export function Navbar() {
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold shadow-glow">
             C
           </div>
-          <span className="font-bold text-xl text-ink">ClotSolid</span>
+          <span className="font-bold text-xl text-ink">curA</span>
         </Link>
 
         {isAuthenticated ? (

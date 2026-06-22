@@ -41,11 +41,11 @@ export const ALLERGIES = [
 export const FAQ_ITEMS = [
   {
     question: 'Are these remedies safe to use?',
-    answer: 'All remedies on ClotSolid are sourced from peer-reviewed research and traditional medical literature. However, they are informational only and not a substitute for professional medical advice. Always consult a doctor before starting any new treatment, especially if you have existing conditions or take medication.',
+    answer: 'All remedies on curA are sourced from peer-reviewed research and traditional medical literature. However, they are informational only and not a substitute for professional medical advice. Always consult a doctor before starting any new treatment, especially if you have existing conditions or take medication.',
   },
   {
-    question: 'Can I use ClotSolid instead of seeing a doctor?',
-    answer: 'No. ClotSolid is designed to help you understand your options before a doctor visit, not replace one. If your symptoms are severe, persistent, or worsening, please seek professional medical care immediately.',
+    question: 'Can I use curA instead of seeing a doctor?',
+    answer: 'No. curA is designed to help you understand your options before a doctor visit, not replace one. If your symptoms are severe, persistent, or worsening, please seek professional medical care immediately.',
   },
   {
     question: 'Where does the research come from?',
@@ -68,8 +68,8 @@ export const FAQ_ITEMS = [
     answer: 'If a remedy contains an ingredient that matches an allergy you reported during onboarding, a yellow warning badge appears on that card. This does not mean you cannot use the remedy - it means you should review the ingredients carefully and consult a doctor if unsure.',
   },
   {
-    question: 'Which countries is ClotSolid available in?',
-    answer: 'ClotSolid is available globally. Remedy content is in English. We include both Western conventional medicine and traditional systems including TCM and Ayurveda to serve users across different cultural health contexts.',
+    question: 'Which countries is curA available in?',
+    answer: 'curA is available globally. Remedy content is in English. We include both Western conventional medicine and traditional systems including TCM and Ayurveda to serve users across different cultural health contexts.',
   },
 ];
 
