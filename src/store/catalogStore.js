@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { mapRemedy } from '../utils/mappers';
+import { LOCAL_SYMPTOMS, LOCAL_REMEDIES, LOCAL_SYMPTOM_REMEDIES } from '../data/localCatalog';
 
 function buildSymptomRemediesMap(rows) {
   const map = {};
@@ -14,6 +15,19 @@ function buildSymptomRemediesMap(rows) {
     });
   }
   return map;
+}
+
+function loadLocalCatalog() {
+  return {
+    symptoms: LOCAL_SYMPTOMS.map((s) => ({
+      id: s.id,
+      label: s.label,
+      emoji: s.emoji,
+      color: s.color,
+    })),
+    remedies: LOCAL_REMEDIES.map(mapRemedy),
+    symptomRemedies: LOCAL_SYMPTOM_REMEDIES,
+  };
 }
 
 export const useCatalogStore = create((set, get) => ({
@@ -54,6 +68,9 @@ export const useCatalogStore = create((set, get) => ({
         console.warn('symptom_remedies table not available, using default ranking:', srError);
       }
 
+      const hasData = (symptoms?.length > 0 || remedies?.length > 0);
+      if (!hasData) throw new Error('No data returned from Supabase');
+
       set({
         symptoms: (symptoms || []).map((s) => ({
           id: s.id,
@@ -67,8 +84,14 @@ export const useCatalogStore = create((set, get) => ({
         hasLoaded: true,
       });
     } catch (error) {
-      console.error('Error fetching catalog:', error);
-      set({ error, isLoading: false, hasLoaded: true });
+      console.warn('Supabase catalog unavailable, falling back to local data:', error.message);
+      const local = loadLocalCatalog();
+      set({
+        ...local,
+        error,
+        isLoading: false,
+        hasLoaded: true,
+      });
     }
   },
 }));

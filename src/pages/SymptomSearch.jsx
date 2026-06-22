@@ -14,11 +14,12 @@ import { resolveQuery } from '../utils/symptomEngine';
 import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
 
 const SYMPTOM_CARDS = [
-  { label: 'Eye Pain', emoji: '👁️', remedy: 'Visine' },
-  { label: 'Headache', emoji: '🤕', remedy: 'Tylenol' },
-  { label: 'Anxiety', emoji: '🧘', remedy: 'Ashwagandha' },
-  { label: 'Insomnia', emoji: '🌙', remedy: 'Melatonin' },
-  { label: 'Cold & Flu', emoji: '🤧', remedy: 'Zinc Lozenges' },
+  { label: 'Headache', emoji: '🤕' },
+  { label: 'Blocked Nose', emoji: '🫁' },
+  { label: 'Back Pain', emoji: '💪' },
+  { label: 'Anxiety', emoji: '🧘' },
+  { label: 'Stress', emoji: '😤' },
+  { label: 'Fatigue', emoji: '🔋' },
 ];
 
 function openAiAssistant() {
@@ -222,7 +223,6 @@ export function SymptomSearch() {
               >
                 <span className="text-2xl">{item.emoji}</span>
                 <span className="text-sm font-semibold text-ink">{item.label}</span>
-                <span className="text-[10px] text-ink-subtle">{item.remedy}</span>
               </button>
             ))}
           </div>

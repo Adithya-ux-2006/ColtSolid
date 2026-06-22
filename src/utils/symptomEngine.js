@@ -428,7 +428,6 @@ export function resolveQuery(query, symptoms) {
     for (const s of symptoms) {
       if (matchedIds.has(s.id)) continue;
       const lowerLabel = s.label.toLowerCase();
-      const labelWords = lowerLabel.split(/\s+/);
       const queryWordsFiltered = words.map(normalizeToken).filter(w => w.length >= 3);
       for (const qw of queryWordsFiltered) {
         if (qw.length >= 4 && lowerLabel.includes(qw)) {

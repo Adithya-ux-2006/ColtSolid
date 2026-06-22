@@ -11,6 +11,5 @@ export { DoctorGuidance } from './DoctorGuidance';
 export { AllergyBadge } from './AllergyBadge';
 export { RemedyCarousel } from './RemedyCarousel';
 export { FeaturedRecommendation } from './FeaturedRecommendation';
-export { SymptomInterpreter } from './SymptomInterpreter';
 export { default as DisplayCards } from './display-cards';
 export { DisplayCardsRow, SymptomDisplayCards } from './DisplayCardsDemo';

@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback, useRef } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, ChevronDown, ChevronRight, Sparkles } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
@@ -12,7 +12,6 @@ import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
 import { trackSearchEvent } from '../utils/analytics';
 
 const EMPTY_ARRAY = [];
-const SORT_OPTIONS = ['Best Rated', 'Most Researched', 'Easiest'];
 
 function CategorySection({ title, icon, items, defaultOpen, isSafe }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
@@ -59,8 +58,6 @@ export function Results() {
   const symptomRemedies = useCatalogStore((state) => state.symptomRemedies);
   const isCatalogLoading = useCatalogStore((state) => state.isLoading);
   const hasLoaded = useCatalogStore((state) => state.hasLoaded);
-
-  const [sort, setSort] = useState('Best Rated');
 
   const isFreeTextSearch = Boolean(queryParam.trim());
 
@@ -111,18 +108,10 @@ export function Results() {
     let result = getRankedRemediesForSymptoms(selectedSymptomIds, symptomRemedies, remedies);
     result = result.filter(safeFilter);
 
-    result.sort((a, b) => {
-      if (sort === 'Best Rated') return (b._priorityRank || 0) - (a._priorityRank || 0) || (b.rating || 0) - (a.rating || 0);
-      if (sort === 'Most Researched') return (b._priorityRank || 0) - (a._priorityRank || 0) || (b.reviewCount || 0) - (a.reviewCount || 0);
-      if (sort === 'Easiest') {
-        const diffMap = { 'Easy': 1, 'Moderate': 2, 'Requires prescription': 3 };
-        return (b._priorityRank || 0) - (a._priorityRank || 0) || (diffMap[a.difficulty] || 0) - (diffMap[b.difficulty] || 0);
-      }
-      return 0;
-    });
+    result.sort((a, b) => (b._priorityRank || 0) - (a._priorityRank || 0) || (b.rating || 0) - (a.rating || 0));
 
     return result;
-  }, [selectedSymptomIds, symptomRemedies, remedies, safeFilter, sort]);
+  }, [selectedSymptomIds, symptomRemedies, remedies, safeFilter]);
 
   const nonConventional = useMemo(() => rankedRemedies.filter(r => r.category !== 'Conventional'), [rankedRemedies]);
   const featuredRemedy = useMemo(() => nonConventional.length > 0 ? nonConventional[0] : null, [nonConventional]);
@@ -144,8 +133,6 @@ export function Results() {
     if (!featuredRemedy) return true;
     return isRemedySafeForUser(featuredRemedy, { allergies: activeAllergies, conditions: activeConditions });
   }, [featuredRemedy, activeAllergies, activeConditions]);
-
-  const headerTitle = symptom?.label || matchedSymptom?.label || queryParam || 'Results';
 
   if (!hasLoaded && isCatalogLoading) {
     return (
@@ -184,32 +171,9 @@ export function Results() {
 
       <div className="px-6 py-6 max-w-2xl mx-auto">
         <div className="flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-3xl md:text-display font-bold text-ink mb-1">{headerTitle}</h1>
-            {matchedSymptom && queryParam && matchedSymptom.label.toLowerCase() !== queryParam.toLowerCase().trim() && (
-              <p className="text-sm text-ink-muted">
-                Showing remedies for: <span className="font-medium text-ink">{matchedSymptom.label}</span>
-              </p>
-            )}
-            <p className="text-ink-muted mt-1">
-              {nonConventional.length > 0
-                ? `${nonConventional.length} evidence-backed ${nonConventional.length === 1 ? 'remedy' : 'remedies'} found`
-                : 'Searching for remedies...'}
-            </p>
-          </div>
-          {nonConventional.length > 1 && (
-            <div className="flex items-center gap-2 text-sm shrink-0">
-              <select
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
-                className="bg-transparent text-ink-muted font-medium focus:outline-none focus:text-ink cursor-pointer text-xs"
-              >
-                {SORT_OPTIONS.map((opt) => (
-                  <option key={opt} value={opt}>{opt}</option>
-                ))}
-              </select>
-            </div>
-          )}
+          <h1 className="text-3xl md:text-display font-bold text-ink">
+            Showing remedies for: {matchedSymptom?.label || queryParam}
+          </h1>
         </div>
       </div>
 
@@ -248,7 +212,7 @@ export function Results() {
                 title={cat}
                 icon={categoryIcons[cat]}
                 items={grouped[cat]}
-                defaultOpen={cat === 'Lifestyle' || cat === 'Natural'}
+                defaultOpen={cat === 'Lifestyle'}
                 isSafe={(remedy) => isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions })}
               />
             ))}
