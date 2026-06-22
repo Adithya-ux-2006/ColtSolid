@@ -129,7 +129,8 @@ export function AiChatPanel() {
     const matchedIds = resolution.symptomIds;
 
     if (matchedIds.length > 0) {
-      const ranked = getRankedRemediesForSymptoms(matchedIds, symptomRemedies, remedies);
+      const rankedResult = getRankedRemediesForSymptoms(matchedIds, symptomRemedies, remedies);
+      const ranked = [...(rankedResult.primary || []), ...(rankedResult.related || [])];
       const matchedSymptom = symptoms.find(s => matchedIds.includes(s.id));
       const top = ranked.slice(0, 3);
       const lifestyle = ranked.filter(r => r.category === 'Lifestyle').length;

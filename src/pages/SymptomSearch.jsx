@@ -61,8 +61,9 @@ export function SymptomSearch() {
 
   const symptomRankedResults = useMemo(() => {
     if (matchedSymptomIds.length === 0) return [];
-    return getRankedRemediesForSymptoms(matchedSymptomIds, symptomRemedies, remedies)
-      .filter(safeFilter);
+    const result = getRankedRemediesForSymptoms(matchedSymptomIds, symptomRemedies, remedies);
+    const combined = [...(result.primary || []), ...(result.related || [])];
+    return combined.filter(safeFilter);
   }, [matchedSymptomIds, remedies, safeFilter, symptomRemedies]);
 
   const textFallbackResults = useMemo(() => {
