@@ -334,6 +334,7 @@ const TOKEN_MAP = {
   fog: [{ id: 'brain_fog', weight: 1 }, { id: 'fatigue', weight: 0.5 }],
   foggy: [{ id: 'brain_fog', weight: 1 }, { id: 'fatigue', weight: 0.5 }],
   focus: [{ id: 'brain_fog', weight: 0.9 }, { id: 'fatigue', weight: 0.5 }],
+  forgetful: [{ id: 'brain_fog', weight: 0.8 }],
   concentrate: [{ id: 'brain_fog', weight: 0.9 }, { id: 'fatigue', weight: 0.4 }],
   concentration: [{ id: 'brain_fog', weight: 0.9 }, { id: 'fatigue', weight: 0.4 }],
   scatterbrained: [{ id: 'brain_fog', weight: 0.9 }, { id: 'stress', weight: 0.4 }],
@@ -438,7 +439,7 @@ const STOP_WORDS = new Set([
   'dont', 'doesnt', 'wont', 'wouldnt', 'couldnt', 'shouldnt',
   'through', 'too', 'much', 'time', 'very', 'really', 'so', 'just',
   'ache', 'aches', 'aching', 'sore', 'soreness', 'hurt', 'hurts',
-  'pain', 'pains', 'painful',
+  'pain', 'pains', 'painful', 'today',
 ]);
 
 function normalize(q) {
@@ -460,6 +461,44 @@ function buildLabelIndex(symptoms) {
     idx[s.id] = s.id;
   }
   return idx;
+}
+
+function levenshtein(a, b) {
+  const alen = a.length;
+  const blen = b.length;
+  if (alen === 0) return blen;
+  if (blen === 0) return alen;
+  const matrix = Array.from({ length: blen + 1 }, (_, i) =>
+    Array.from({ length: alen + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
+  );
+  for (let i = 1; i <= blen; i++) {
+    for (let j = 1; j <= alen; j++) {
+      const cost = b[i - 1] === a[j - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,
+        matrix[i][j - 1] + 1,
+        matrix[i - 1][j - 1] + cost,
+      );
+    }
+  }
+  return matrix[blen][alen];
+}
+
+function maxFuzzDistance(word) {
+  if (word.length <= 4) return 1;
+  if (word.length <= 7) return 1;
+  return 2;
+}
+
+function trySplitCompound(word, knownSet) {
+  for (let i = 2; i < word.length - 1; i++) {
+    const left = word.slice(0, i);
+    const right = word.slice(i);
+    if (knownSet.has(left) && knownSet.has(right)) {
+      return [left, right];
+    }
+  }
+  return null;
 }
 
 function tokenize(query) {
@@ -537,6 +576,79 @@ export function resolveQuery(query, symptoms) {
         if (!scores[id]) { scores[id] = 0; matchedTokens[id] = []; }
         scores[id] += 3;
         matchedTokens[id].push('label:' + word);
+      }
+    }
+  }
+
+  // Phase E: Fuzzy matching for tokens that matched nothing
+  const tokenMapKeys = new Set(Object.keys(TOKEN_MAP));
+  const allLabelWords = Object.keys(symptomLabelWords);
+  const splitKnownSet = new Set([...tokenMapKeys, ...allLabelWords]);
+
+  const exactMatched = new Set();
+  for (const word of words) {
+    if (TOKEN_MAP[word]) exactMatched.add(word);
+    if (symptomLabelWords[word]) exactMatched.add(word);
+  }
+
+  for (const word of words) {
+    if (exactMatched.has(word)) continue;
+    if (word.length < 3) continue;
+
+    // 1. Compound splitting: "eyepain" → "eye" + "pain"
+    const split = trySplitCompound(word, splitKnownSet);
+    if (split) {
+      for (const part of split) {
+        const mappings = TOKEN_MAP[part];
+        if (mappings) {
+          for (const { id, weight } of mappings) {
+            if (id) addScore(id, weight, 'fuzzy_split:' + word);
+          }
+        } else if (symptomLabelWords[part]) {
+          for (const id of symptomLabelWords[part]) {
+            addScore(id, 2, 'fuzzy_split_label:' + word);
+          }
+        }
+      }
+      continue;
+    }
+
+    // 2. Fuzzy match against TOKEN_MAP keys: "noise" → "nose"
+    const fuzzDist = maxFuzzDistance(word);
+    let bestKey = null;
+    let bestDist = Infinity;
+    for (const key of tokenMapKeys) {
+      if (Math.abs(key.length - word.length) > fuzzDist) continue;
+      const dist = levenshtein(word, key);
+      if (dist < bestDist && dist <= fuzzDist) {
+        bestDist = dist;
+        bestKey = key;
+      }
+    }
+    if (bestKey) {
+      const penalty = Math.max(1 - bestDist * 0.15, 0.75);
+      const mappings = TOKEN_MAP[bestKey];
+      for (const { id, weight } of mappings) {
+        if (id) addScore(id, weight * penalty, 'fuzzy_token:' + bestKey);
+      }
+      continue;
+    }
+
+    // 3. Fuzzy match against symptom label words
+    bestKey = null;
+    bestDist = Infinity;
+    for (const lw of allLabelWords) {
+      if (Math.abs(lw.length - word.length) > fuzzDist) continue;
+      const dist = levenshtein(word, lw);
+      if (dist < bestDist && dist <= fuzzDist) {
+        bestDist = dist;
+        bestKey = lw;
+      }
+    }
+    if (bestKey) {
+      const ids = symptomLabelWords[bestKey];
+      for (const id of ids) {
+        addScore(id, 2, 'fuzzy_label:' + bestKey);
       }
     }
   }
