@@ -38,6 +38,16 @@ function CategorySection({ title, icon, items, defaultOpen, isSafe }) {
   );
 }
 
+function groupByCategory(items) {
+  const groups = {};
+  for (const r of items) {
+    const cat = r.category || 'Other';
+    if (!groups[cat]) groups[cat] = [];
+    groups[cat].push(r);
+  }
+  return groups;
+}
+
 export function Results() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -104,33 +114,25 @@ export function Results() {
     [activeAllergies, activeConditions]
   );
 
-  const rankedRemedies = useMemo(() => {
+  const { primary: primaryRemedies, related: relatedRemedies } = useMemo(() => {
     const ids = symptomResolution.symptomIds;
-    if (ids.length === 0) return [];
+    if (ids.length === 0) return { primary: [], related: [] };
 
-    let result = getRankedRemediesForSymptoms(ids, symptomRemedies, remedies, {
+    const result = getRankedRemediesForSymptoms(ids, symptomRemedies, remedies, {
       includeRelated: true,
       symptoms,
+      allergies: activeAllergies,
+      conditions: activeConditions,
     });
-    result = result.filter(safeFilter);
-
-    result.sort((a, b) => (b._priorityRank || 0) - (a._priorityRank || 0) || (b.rating || 0) - (a.rating || 0));
 
     return result;
-  }, [symptomResolution.symptomIds, symptomRemedies, remedies, safeFilter, symptoms]);
+  }, [symptomResolution.symptomIds, symptomRemedies, remedies, symptoms, activeAllergies, activeConditions]);
 
-  const nonConventional = useMemo(() => rankedRemedies.filter(r => r.category !== 'Conventional'), [rankedRemedies]);
-  const featuredRemedy = useMemo(() => nonConventional.length > 0 ? nonConventional[0] : null, [nonConventional]);
-  const otherRemedies = useMemo(() => nonConventional.length > 1 ? nonConventional.slice(1) : [], [nonConventional]);
+  const featuredRemedy = useMemo(() => primaryRemedies.length > 0 ? primaryRemedies[0] : null, [primaryRemedies]);
+  const otherPrimary = useMemo(() => primaryRemedies.length > 1 ? primaryRemedies.slice(1) : [], [primaryRemedies]);
 
-  const grouped = useMemo(() => {
-    const groups = { Lifestyle: [], Natural: [], Ayurveda: [], TCM: [] };
-    for (const r of otherRemedies) {
-      if (groups[r.category]) groups[r.category].push(r);
-      else groups[r.category] = [r];
-    }
-    return groups;
-  }, [otherRemedies]);
+  const primaryGrouped = useMemo(() => groupByCategory(otherPrimary), [otherPrimary]);
+  const relatedGrouped = useMemo(() => groupByCategory(relatedRemedies), [relatedRemedies]);
 
   const categoryOrder = ['Lifestyle', 'Natural', 'Ayurveda', 'TCM'];
   const categoryIcons = { Lifestyle: '\u{1F9D8}', Natural: '\u{1F33F}', Ayurveda: '\u{1FA85}', TCM: '\u{2695}\u{FE0F}' };
@@ -139,6 +141,8 @@ export function Results() {
     if (!featuredRemedy) return true;
     return isRemedySafeForUser(featuredRemedy, { allergies: activeAllergies, conditions: activeConditions });
   }, [featuredRemedy, activeAllergies, activeConditions]);
+
+  const hasResults = primaryRemedies.length > 0 || relatedRemedies.length > 0;
 
   if (!hasLoaded && isCatalogLoading) {
     return (
@@ -206,7 +210,7 @@ export function Results() {
             <p className="text-red-500 text-sm">ClotSolid does not provide self-treatment guidance for potentially serious symptoms.</p>
           </div>
         </div>
-      ) : nonConventional.length === 0 && !isCatalogLoading ? (
+      ) : !hasResults && !isCatalogLoading ? (
         <div className="max-w-2xl mx-auto px-6">
           <EmptyState
             title="No remedies found"
@@ -218,28 +222,57 @@ export function Results() {
           />
         </div>
       ) : (
-        <div className="max-w-2xl mx-auto space-y-6 px-6">
+        <div className="max-w-2xl mx-auto space-y-8 px-6">
+
           {featuredRemedy && (
-            <div className="bg-white rounded-2xl shadow-soft p-5">
-              <p className="text-xs font-bold uppercase tracking-wider text-ink-muted mb-3">Top Recommendation</p>
-              <RemedyCard remedy={featuredRemedy} variant="carousel" isSafe={featuredIsSafe} />
-            </div>
+            <section>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-ink-muted mb-3">Best Match</h2>
+              <div className="bg-white rounded-2xl shadow-soft p-5">
+                <RemedyCard remedy={featuredRemedy} variant="carousel" isSafe={featuredIsSafe} />
+              </div>
+            </section>
           )}
 
-          <div className="space-y-3">
-            {categoryOrder.map((cat) => (
-              <CategorySection
-                key={cat}
-                title={cat}
-                icon={categoryIcons[cat]}
-                items={grouped[cat]}
-                defaultOpen={cat === 'Lifestyle'}
-                isSafe={(remedy) => isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions })}
-              />
-            ))}
-          </div>
+          {otherPrimary.length > 0 && (
+            <section>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-ink-muted mb-3">Best Matches</h2>
+              <div className="space-y-3">
+                {categoryOrder.map((cat) => (
+                  <CategorySection
+                    key={cat}
+                    title={cat}
+                    icon={categoryIcons[cat]}
+                    items={primaryGrouped[cat]}
+                    defaultOpen={cat === 'Lifestyle'}
+                    isSafe={safeFilter}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
 
-          {!isAuthenticated && nonConventional.length > 0 && (
+          {relatedRemedies.length > 0 && (
+            <section>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-ink-muted mb-3">Related Relief Options</h2>
+              <p className="text-xs text-ink-muted mb-4">
+                These remedies target related symptoms and may provide additional support.
+              </p>
+              <div className="space-y-3">
+                {categoryOrder.map((cat) => (
+                  <CategorySection
+                    key={cat}
+                    title={cat}
+                    icon={categoryIcons[cat]}
+                    items={relatedGrouped[cat]}
+                    defaultOpen={false}
+                    isSafe={safeFilter}
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {!isAuthenticated && hasResults && (
             <section className="rounded-3xl bg-gradient-card p-6 shadow-card border border-accent/20">
               <div className="flex items-center gap-2 mb-3">
                 <Sparkles className="w-5 h-5 text-primary" />

@@ -34,7 +34,7 @@ export function mapRemedy(remedy) {
     longDescription: remedy.long_description ?? remedy.longDescription,
     howToUse: remedy.how_to_use ?? remedy.howToUse,
     warnings: remedy.warnings,
-    allergen_tags: remedy.allergen_tags ?? [],
+    allergen_tags: remedy.allergen_tags ?? remedy.allergenTags ?? [],
     contraindications: remedy.contraindications ?? [],
     ingredients: remedy.ingredients ?? [],
     timeToEffect: remedy.time_to_effect ?? remedy.timeToEffect,
