@@ -1,18 +1,5 @@
 import { getSeverityFlags, matchEmergencyFlags } from './knowledgeGraph';
-
-const STOP_WORDS = new Set([
-  'the', 'my', 'a', 'an', 'is', 'after', 'when', 'while', 'from', 'with',
-  'in', 'on', 'at', 'for', 'of', 'to', 'and', 'or', 'but', 'not', 'its',
-  'i', 'me', 'my', 'myself', 'we', 'our', 'yours', 'you', 'your', 'it',
-  'have', 'has', 'had', 'do', 'does', 'did', 'can', 'cant', 'cannot',
-  'will', 'would', 'could', 'should', 'may', 'might', 'all', 'every',
-  'been', 'being', 'am', 'are', 'was', 'were', 'be',
-  'get', 'got', 'feel', 'feels', 'feeling', 'felt', 'having', 'using',
-  'dont', 'doesnt', 'wont', 'wouldnt', 'couldnt', 'shouldnt',
-  'through', 'too', 'much', 'time', 'very', 'really', 'so', 'just',
-  'ache', 'aches', 'aching', 'sore', 'soreness', 'hurt', 'hurts',
-  'pain', 'pains', 'painful', 'today',
-]);
+import { preprocessQuery } from './preprocessor';
 
 const SEVERITY_KEYWORDS = {
   severe: new Set([
@@ -59,24 +46,12 @@ const EMERGENCY_TOKEN_SET = new Set([
   'cant breathe', 'difficulty breathing',
 ]);
 
-const CONTRACTION_MAP = {
-  "can't": 'cannot', "don't": 'dont', "won't": 'wont',
-  "doesn't": 'doesnt', "isn't": 'isnt', "aren't": 'arent',
-  "wasn't": 'wasnt', "weren't": 'werent', "it's": 'its',
-  "i'm": 'im', "i've": 'ive', "i'll": 'ill',
-};
-
 function normalize(str) {
-  let s = str.toLowerCase().trim().replace(/\s+/g, ' ');
-  for (const [pattern, replacement] of Object.entries(CONTRACTION_MAP)) {
-    s = s.replace(new RegExp(pattern.replace("'", "\\'"), 'g'), replacement);
-  }
-  return s;
+  return str.toLowerCase().trim().replace(/\s+/g, ' ');
 }
 
 function tokenize(str) {
-  const tokens = str.split(/\s+/).filter(w => w.length >= 2);
-  return tokens.filter(t => !STOP_WORDS.has(t));
+  return str.split(/\s+/).filter(w => w.length >= 2);
 }
 
 function buildNgramProfile(str, minN, maxN) {
@@ -128,20 +103,19 @@ function computeOverallNgramSimilarity(normalizedQuery, normalizedLabel) {
 }
 
 function inferSeverity(query) {
+  if (!query) return null;
   const normalized = normalize(query);
-
   for (const [severity, keywords] of Object.entries(SEVERITY_KEYWORDS)) {
     for (const keyword of keywords) {
       if (normalized.includes(keyword)) return severity;
     }
   }
-
   return null;
 }
 
 function inferUserIntent(query) {
+  if (!query) return 'relief';
   const normalized = normalize(query);
-
   const score = {};
   for (const [intent, signals] of Object.entries(INTENT_SIGNALS)) {
     score[intent] = 0;
@@ -151,28 +125,23 @@ function inferUserIntent(query) {
       }
     }
   }
-
   const sorted = Object.entries(score).sort((a, b) => b[1] - a[1]);
   if (sorted[0][1] > 0) return sorted[0][0];
-
   return 'relief';
 }
 
 function detectEmergencyIndicators(query, symptomId) {
   const normalized = normalize(query);
   const indicators = [];
-
   for (const token of EMERGENCY_TOKEN_SET) {
     if (normalized.includes(token)) {
       indicators.push({ source: 'query_keyword', match: token });
     }
   }
-
   const flagMatches = matchEmergencyFlags(symptomId, query);
   for (const flag of flagMatches) {
     indicators.push({ source: 'symptom_flag', match: flag });
   }
-
   return indicators;
 }
 
@@ -202,30 +171,49 @@ export function inferConcerns(query, symptoms) {
     return {
       primaryConcerns: [], secondaryConcerns: [], confidence: 0,
       severity: null, emergencyIndicators: [], userIntent: 'relief',
-      queryContext: null,
+      hasNegation: false, matchedPhrases: [], queryContext: null,
     };
   }
 
-  const normalized = normalize(query);
-  const queryTokens = tokenize(normalized);
+  const pp = preprocessQuery(query);
 
-  if (queryTokens.length === 0) {
+  if (pp.queryTokens.length === 0 && pp.expandedTokens.length === 0) {
     return {
       primaryConcerns: [], secondaryConcerns: [], confidence: 0,
       severity: null, emergencyIndicators: [], userIntent: 'relief',
-      queryContext: { raw: query, normalized, tokens: [] },
+      hasNegation: pp.hasNegation, matchedPhrases: pp.matchedPhrases,
+      queryContext: { raw: query, normalized: pp.normalized, tokens: [] },
     };
   }
 
   const index = buildSymptomIndex(symptoms);
+  const combinedTokens = [...new Set([...pp.queryTokens, ...pp.expandedTokens])];
+  const combinedQueryStr = pp.expandedTokens.length > 0
+    ? pp.normalized + ' ' + pp.expandedTokens.join(' ')
+    : pp.normalized;
 
-  const scored = index.map(si => ({
-    symptomId: si.id,
-    label: si.label,
-    emoji: si.emoji,
-    color: si.color,
-    score: scoreSymptom(queryTokens, normalized, si),
-  }));
+  const conceptHintSet = new Set(pp.conceptHints);
+  const negatedSet = new Set(pp.negatedIds);
+
+  const scored = index.map(si => {
+    let score = scoreSymptom(combinedTokens, combinedQueryStr, si);
+
+    if (conceptHintSet.has(si.id)) {
+      score = Math.min(score + 0.2, 1.0);
+    }
+
+    if (negatedSet.has(si.id)) {
+      score = score * 0.3;
+    }
+
+    return {
+      symptomId: si.id,
+      label: si.label,
+      emoji: si.emoji,
+      color: si.color,
+      score,
+    };
+  });
 
   scored.sort((a, b) => b.score - a.score);
 
@@ -268,6 +256,10 @@ export function inferConcerns(query, symptoms) {
     severity,
     emergencyIndicators,
     userIntent,
-    queryContext: { raw: query, normalized, tokens: queryTokens },
+    hasNegation: pp.hasNegation,
+    matchedPhrases: pp.matchedPhrases,
+    queryContext: { raw: query, normalized: pp.normalized, tokens: pp.queryTokens },
   };
 }
+
+export { preprocessQuery };
