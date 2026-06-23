@@ -13,13 +13,13 @@ import { getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptom
 import { resolveQuery } from '../utils/symptomEngine';
 import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
 
-const SYMPTOM_CARDS = [
-  { label: 'Headache', emoji: '🤕' },
-  { label: 'Blocked Nose', emoji: '🫁' },
-  { label: 'Back Pain', emoji: '💪' },
-  { label: 'Anxiety', emoji: '🧘' },
-  { label: 'Stress', emoji: '😤' },
-  { label: 'Fatigue', emoji: '🔋' },
+const DEFAULT_SYMPTOM_CARDS = [
+  { id: 'headache', label: 'Headache', emoji: '🤕' },
+  { id: 'congestion', label: 'Congestion', emoji: '🫁' },
+  { id: 'back_pain', label: 'Back Pain', emoji: '💪' },
+  { id: 'anxiety', label: 'Anxiety', emoji: '🧘' },
+  { id: 'stress', label: 'Stress', emoji: '😤' },
+  { id: 'fatigue', label: 'Fatigue', emoji: '🔋' },
 ];
 
 function openAiAssistant() {
@@ -47,8 +47,19 @@ export function SymptomSearch() {
   const isSearching = searchTerm !== debouncedTerm;
   const trimmedQuery = debouncedTerm.trim();
 
+  const symptomCards = useMemo(() => {
+    if (symptoms?.length >= 6) {
+      return symptoms.slice(0, 6).map(s => ({
+        id: s.id,
+        label: s.label,
+        emoji: s.emoji || '💊',
+      }));
+    }
+    return DEFAULT_SYMPTOM_CARDS;
+  }, [symptoms]);
+
   const symptomResolution = useMemo(
-    () => (trimmedQuery.length >= 2 ? resolveQuery(trimmedQuery, symptoms) : { symptomIds: [], confidence: 0, matchInfo: null }),
+    () => (trimmedQuery.length >= 2 ? resolveQuery(trimmedQuery, symptoms) : { symptomIds: [], confidence: 0, allMatches: [] }),
     [symptoms, trimmedQuery]
   );
 
@@ -82,9 +93,10 @@ export function SymptomSearch() {
     navigate(`/results?q=${encodeURIComponent(query)}`);
   };
 
-  const handleCardClick = (label) => {
-    trackSearchEvent({ source: 'symptom_card', queryText: label }).catch(() => {});
-    navigate(`/results?q=${encodeURIComponent(label)}`);
+  const handleCardClick = (item) => {
+    const query = item.label;
+    trackSearchEvent({ source: 'symptom_card', queryText: query, symptomIds: [item.id] }).catch(() => {});
+    navigate(`/results?q=${encodeURIComponent(query)}`);
   };
 
   const handleKeyDown = (e) => {
@@ -216,10 +228,10 @@ export function SymptomSearch() {
         <div>
           <p className="text-sm font-medium text-ink-muted mb-4">Popular symptoms</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {SYMPTOM_CARDS.map((item) => (
+            {symptomCards.map((item) => (
               <button
-                key={item.label}
-                onClick={() => handleCardClick(item.label)}
+                key={item.id}
+                onClick={() => handleCardClick(item)}
                 className="flex flex-col items-center gap-2 bg-white rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all text-center"
               >
                 <span className="text-2xl">{item.emoji}</span>

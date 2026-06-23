@@ -1,52 +1,17 @@
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useMemo, useCallback } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, ChevronDown, ChevronRight, Sparkles } from 'lucide-react';
+import { ArrowLeft, Sparkles, AlertTriangle } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { RemedyCard, LoadingSkeleton, EmptyState, DoctorGuidance } from '../components/ui';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { getGuestAllergies, getGuestConditions, isRemedySafeForUser } from '../utils/guestProfile';
 import { getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptomSearch';
-import { resolveQuery, getRelatedSymptoms } from '../utils/symptomEngine';
+import { resolveQuery } from '../utils/symptomEngine';
 import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
 import { trackSearchEvent } from '../utils/analytics';
 
 const EMPTY_ARRAY = [];
-
-function CategorySection({ title, icon, items, defaultOpen, isSafe }) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
-  if (!items?.length) return null;
-  return (
-    <div className="bg-white rounded-2xl shadow-soft overflow-hidden">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-surface/30 transition-colors"
-      >
-        <span className="text-base font-bold text-ink">
-          {icon} {title} <span className="text-ink-muted font-medium">({items.length})</span>
-        </span>
-        {isOpen ? <ChevronDown className="w-4 h-4 text-ink-muted" /> : <ChevronRight className="w-4 h-4 text-ink-muted" />}
-      </button>
-      {isOpen && (
-        <div className="px-5 pb-5 space-y-3">
-          {items.map((remedy) => (
-            <RemedyCard key={remedy.id} remedy={remedy} variant="carousel" isSafe={isSafe(remedy)} />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function groupByCategory(items) {
-  const groups = {};
-  for (const r of items) {
-    const cat = r.category || 'Other';
-    if (!groups[cat]) groups[cat] = [];
-    groups[cat].push(r);
-  }
-  return groups;
-}
 
 export function Results() {
   const location = useLocation();
@@ -75,7 +40,7 @@ export function Results() {
     () => (isFreeTextSearch ? resolveQuery(queryParam, symptoms) : {
       symptomIds: symptomParam ? [symptomParam] : [],
       allSymptomIds: symptomParam ? [symptomParam] : [],
-      confidence: 0,
+      confidence: 100,
       allMatches: [],
       primarySymptom: symptomParam ? symptoms.find(s => s.id === symptomParam) || null : null,
     }),
@@ -83,16 +48,8 @@ export function Results() {
   );
 
   const matchedSymptom = symptomResolution.primarySymptom;
-
-  const relatedSymptomIds = useMemo(() => {
-    if (!matchedSymptom) return [];
-    return getRelatedSymptoms([matchedSymptom.id]);
-  }, [matchedSymptom]);
-
-  const relatedSymptoms = useMemo(() => {
-    if (!relatedSymptomIds.length) return [];
-    return relatedSymptomIds.map(id => symptoms.find(s => s.id === id)).filter(Boolean);
-  }, [relatedSymptomIds, symptoms]);
+  const queryConfidence = symptomResolution.confidence;
+  const isLowConfidence = isFreeTextSearch && queryConfidence < 50 && symptomResolution.symptomIds.length > 0;
 
   useEffect(() => {
     if (isFreeTextSearch && queryParam) {
@@ -114,12 +71,11 @@ export function Results() {
     [activeAllergies, activeConditions]
   );
 
-  const { primary: primaryRemedies, related: relatedRemedies } = useMemo(() => {
+  const searchResult = useMemo(() => {
     const ids = symptomResolution.symptomIds;
-    if (ids.length === 0) return { primary: [], related: [] };
+    if (ids.length === 0) return { primary: [], related: [], grouped: null };
 
     const result = getRankedRemediesForSymptoms(ids, symptomRemedies, remedies, {
-      includeRelated: true,
       symptoms,
       allergies: activeAllergies,
       conditions: activeConditions,
@@ -128,21 +84,10 @@ export function Results() {
     return result;
   }, [symptomResolution.symptomIds, symptomRemedies, remedies, symptoms, activeAllergies, activeConditions]);
 
-  const featuredRemedy = useMemo(() => primaryRemedies.length > 0 ? primaryRemedies[0] : null, [primaryRemedies]);
-  const otherPrimary = useMemo(() => primaryRemedies.length > 1 ? primaryRemedies.slice(1) : [], [primaryRemedies]);
+  const grouped = searchResult.grouped;
 
-  const primaryGrouped = useMemo(() => groupByCategory(otherPrimary), [otherPrimary]);
-  const relatedGrouped = useMemo(() => groupByCategory(relatedRemedies), [relatedRemedies]);
-
-  const categoryOrder = ['Lifestyle', 'Natural', 'Ayurveda', 'TCM'];
-  const categoryIcons = { Lifestyle: '\u{1F9D8}', Natural: '\u{1F33F}', Ayurveda: '\u{1FA85}', TCM: '\u{2695}\u{FE0F}' };
-
-  const featuredIsSafe = useMemo(() => {
-    if (!featuredRemedy) return true;
-    return isRemedySafeForUser(featuredRemedy, { allergies: activeAllergies, conditions: activeConditions });
-  }, [featuredRemedy, activeAllergies, activeConditions]);
-
-  const hasResults = primaryRemedies.length > 0 || relatedRemedies.length > 0;
+  const hasResults = (grouped?.bestMatch != null) || (grouped?.bestMatches?.length > 0)
+    || (grouped?.additionalOptions?.length > 0) || (grouped?.supportive?.length > 0);
 
   if (!hasLoaded && isCatalogLoading) {
     return (
@@ -185,22 +130,21 @@ export function Results() {
             <h1 className="text-3xl md:text-display font-bold text-ink">
               Showing remedies for: {matchedSymptom?.label || queryParam}
             </h1>
-            {relatedSymptoms.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mt-3">
-                <span className="text-xs text-ink-muted font-medium mr-1 self-center">Related:</span>
-                {relatedSymptoms.map(rs => (
-                  <span
-                    key={rs.id}
-                    className="text-xs px-2.5 py-1 rounded-full bg-accent/10 text-accent-dark font-medium"
-                  >
-                    {rs.emoji} {rs.label}
-                  </span>
-                ))}
-              </div>
-            )}
           </div>
         </div>
       </div>
+
+      {isLowConfidence && (
+        <div className="max-w-2xl mx-auto px-6 mb-6">
+          <div className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4">
+            <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+            <div className="text-sm text-amber-800">
+              <p className="font-semibold mb-1">Low confidence match</p>
+              <p>Your search didn't strongly match a known symptom. Results may be less specific. Try using a more precise term.</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {isEmergencyQuery(queryParam) ? (
         <div className="max-w-2xl mx-auto px-6">
@@ -224,49 +168,58 @@ export function Results() {
       ) : (
         <div className="max-w-2xl mx-auto space-y-8 px-6">
 
-          {featuredRemedy && (
+          {grouped?.bestMatch && (
             <section>
               <h2 className="text-sm font-bold uppercase tracking-wider text-ink-muted mb-3">Best Match</h2>
               <div className="bg-white rounded-2xl shadow-soft p-5">
-                <RemedyCard remedy={featuredRemedy} variant="carousel" isSafe={featuredIsSafe} />
+                <RemedyCard remedy={grouped.bestMatch} variant="carousel" isSafe={safeFilter(grouped.bestMatch)} />
               </div>
             </section>
           )}
 
-          {otherPrimary.length > 0 && (
+          {grouped?.bestMatches?.length > 0 && (
             <section>
               <h2 className="text-sm font-bold uppercase tracking-wider text-ink-muted mb-3">Best Matches</h2>
+              <p className="text-xs text-ink-muted mb-4">
+                Top remedies that directly address your symptoms.
+              </p>
               <div className="space-y-3">
-                {categoryOrder.map((cat) => (
-                  <CategorySection
-                    key={cat}
-                    title={cat}
-                    icon={categoryIcons[cat]}
-                    items={primaryGrouped[cat]}
-                    defaultOpen={cat === 'Lifestyle'}
-                    isSafe={safeFilter}
-                  />
+                {grouped.bestMatches.map((remedy) => (
+                  <div key={remedy.id} className="bg-white rounded-2xl shadow-soft p-4">
+                    <RemedyCard remedy={remedy} variant="carousel" isSafe={safeFilter(remedy)} />
+                  </div>
                 ))}
               </div>
             </section>
           )}
 
-          {relatedRemedies.length > 0 && (
+          {grouped?.additionalOptions?.length > 0 && (
             <section>
-              <h2 className="text-sm font-bold uppercase tracking-wider text-ink-muted mb-3">Related Relief Options</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-ink-muted mb-3">Additional Options</h2>
               <p className="text-xs text-ink-muted mb-4">
-                These remedies target related symptoms and may provide additional support.
+                Remedies that help manage associated symptoms.
               </p>
               <div className="space-y-3">
-                {categoryOrder.map((cat) => (
-                  <CategorySection
-                    key={cat}
-                    title={cat}
-                    icon={categoryIcons[cat]}
-                    items={relatedGrouped[cat]}
-                    defaultOpen={false}
-                    isSafe={safeFilter}
-                  />
+                {grouped.additionalOptions.map((remedy) => (
+                  <div key={remedy.id} className="bg-white rounded-2xl shadow-soft p-4">
+                    <RemedyCard remedy={remedy} variant="carousel" isSafe={safeFilter(remedy)} />
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {grouped?.supportive?.length > 0 && (
+            <section>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-ink-muted mb-3">Supportive Remedies</h2>
+              <p className="text-xs text-ink-muted mb-4">
+                General wellness remedies that provide supportive care.
+              </p>
+              <div className="space-y-3">
+                {grouped.supportive.map((remedy) => (
+                  <div key={remedy.id} className="bg-white rounded-2xl shadow-soft p-4">
+                    <RemedyCard remedy={remedy} variant="carousel" isSafe={safeFilter(remedy)} />
+                  </div>
                 ))}
               </div>
             </section>

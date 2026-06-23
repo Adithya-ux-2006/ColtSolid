@@ -21,28 +21,8 @@ export function getGuestAllergies() {
   return getGuestProfile().known_allergies ?? [];
 }
 
-const INGREDIENT_ALIASES = {
-  'aloe-vera': ['aloe vera'],
-  'turmeric': ['turmeric', 'curcumin'],
-  'ginger': ['ginger', 'ginger root', 'ginger root extract'],
-  'ashwagandha': ['ashwagandha', 'ashwagandha root extract'],
-  'essential-oils': ['peppermint oil', 'menthol', 'herbal oil', 'essential oil'],
-  'herbal': ['herbal', 'herbal oil', 'herbal supplement', 'cellulose capsule', 'cellulose'],
-  'pollen': ['pollen', 'bee pollen'],
-  'nuts': ['nuts'],
-  'dairy': ['dairy', 'milk'],
-};
-
 function normalizeIngredient(ingredient) {
   return ingredient.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim();
-}
-
-function allergyMatchesIngredient(allergy, ingredient) {
-  const normalized = normalizeIngredient(ingredient);
-  if (normalized.includes(allergy)) return true;
-
-  const aliases = INGREDIENT_ALIASES[allergy] || [];
-  return aliases.some((alias) => normalized.includes(alias));
 }
 
 export function remedyMatchesAllergies(remedy, allergies = []) {
@@ -60,8 +40,13 @@ export function remedyMatchesAllergies(remedy, allergies = []) {
   const ingredients = (remedy.ingredients || []).map(normalizeIngredient).filter(Boolean);
   for (const allergy of normalizedAllergies) {
     for (const ingredient of ingredients) {
-      if (allergyMatchesIngredient(allergy, ingredient)) return true;
+      if (ingredient.includes(allergy) || allergy.includes(ingredient)) return true;
     }
+  }
+
+  const title = (remedy.name || '').toLowerCase();
+  for (const allergy of normalizedAllergies) {
+    if (title.includes(allergy)) return true;
   }
 
   return false;
