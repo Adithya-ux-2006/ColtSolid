@@ -1,3 +1,5 @@
+import { getSeverityFlags, matchEmergencyFlags } from './knowledgeGraph';
+
 const STOP_WORDS = new Set([
   'the', 'my', 'a', 'an', 'is', 'after', 'when', 'while', 'from', 'with',
   'in', 'on', 'at', 'for', 'of', 'to', 'and', 'or', 'but', 'not', 'its',
@@ -10,6 +12,51 @@ const STOP_WORDS = new Set([
   'through', 'too', 'much', 'time', 'very', 'really', 'so', 'just',
   'ache', 'aches', 'aching', 'sore', 'soreness', 'hurt', 'hurts',
   'pain', 'pains', 'painful', 'today',
+]);
+
+const SEVERITY_KEYWORDS = {
+  severe: new Set([
+    'severe', 'excruciating', 'agonizing', 'unbearable', 'intense',
+    'extreme', 'worst', 'crippling', 'debilitating', 'terrible',
+    'horrible', 'awful', 'very bad', 'really bad', 'so much',
+    'screaming', '10 out of 10', '10/10',
+  ]),
+  moderate: new Set([
+    'moderate', 'quite', 'pretty bad', 'fairly', 'uncomfortable',
+    'annoying', 'bothersome', 'noticeable', 'significant',
+  ]),
+  mild: new Set([
+    'mild', 'slight', 'minor', 'little', 'tiny', 'bit of',
+    'hardly', 'barely', 'occasional',
+  ]),
+};
+
+const INTENT_SIGNALS = {
+  relief: new Set([
+    'remedy', 'relief', 'help', 'treat', 'cure', 'fix', 'stop',
+    'medicine', 'medication', 'drug', 'pill', 'supplement',
+    'what can i take', 'how to treat', 'what helps', 'what is good for',
+    'remedies for', 'treatment for', 'best for',
+  ]),
+  cause: new Set([
+    'why', 'cause', 'caused by', 'reason', 'trigger', 'due to',
+    'what causes', 'why do i', 'what is the cause',
+  ]),
+  information: new Set([
+    'what is', 'tell me about', 'explain', 'information', 'info',
+    'define', 'meaning', 'symptoms of', 'signs of',
+  ]),
+  prevention: new Set([
+    'prevent', 'avoid', 'stop from', 'reduce risk', 'how to avoid',
+    'prevention', 'preventative', 'prophylactic',
+  ]),
+};
+
+const EMERGENCY_TOKEN_SET = new Set([
+  'emergency', 'urgent', 'er', 'hospital', 'ambulance',
+  'suicidal', 'overdose', 'poison', 'anaphylaxis', 'seizure',
+  'convulsing', 'unconscious', 'stroke', 'heart attack',
+  'cant breathe', 'difficulty breathing',
 ]);
 
 const CONTRACTION_MAP = {
@@ -80,6 +127,55 @@ function computeOverallNgramSimilarity(normalizedQuery, normalizedLabel) {
   return jaccardSimilarity(qng, lng);
 }
 
+function inferSeverity(query) {
+  const normalized = normalize(query);
+
+  for (const [severity, keywords] of Object.entries(SEVERITY_KEYWORDS)) {
+    for (const keyword of keywords) {
+      if (normalized.includes(keyword)) return severity;
+    }
+  }
+
+  return null;
+}
+
+function inferUserIntent(query) {
+  const normalized = normalize(query);
+
+  const score = {};
+  for (const [intent, signals] of Object.entries(INTENT_SIGNALS)) {
+    score[intent] = 0;
+    for (const signal of signals) {
+      if (normalized.includes(signal)) {
+        score[intent] += signal.split(/\s+/).length;
+      }
+    }
+  }
+
+  const sorted = Object.entries(score).sort((a, b) => b[1] - a[1]);
+  if (sorted[0][1] > 0) return sorted[0][0];
+
+  return 'relief';
+}
+
+function detectEmergencyIndicators(query, symptomId) {
+  const normalized = normalize(query);
+  const indicators = [];
+
+  for (const token of EMERGENCY_TOKEN_SET) {
+    if (normalized.includes(token)) {
+      indicators.push({ source: 'query_keyword', match: token });
+    }
+  }
+
+  const flagMatches = matchEmergencyFlags(symptomId, query);
+  for (const flag of flagMatches) {
+    indicators.push({ source: 'symptom_flag', match: flag });
+  }
+
+  return indicators;
+}
+
 export function buildSymptomIndex(symptoms) {
   if (!symptoms?.length) return [];
   return symptoms.map(s => {
@@ -98,20 +194,27 @@ export function buildSymptomIndex(symptoms) {
 function scoreSymptom(queryTokens, normalizedQuery, symptomIndex) {
   const tokenOverlap = computeTokenOverlap(queryTokens, symptomIndex.labelTokens);
   const ngramSim = computeOverallNgramSimilarity(normalizedQuery, symptomIndex.normalizedLabel);
-  const combined = tokenOverlap * 0.65 + ngramSim * 0.35;
-  return combined;
+  return tokenOverlap * 0.65 + ngramSim * 0.35;
 }
 
 export function inferConcerns(query, symptoms) {
   if (!query || !symptoms?.length) {
-    return { primaryConcerns: [], secondaryConcerns: [], confidence: 0, queryContext: null };
+    return {
+      primaryConcerns: [], secondaryConcerns: [], confidence: 0,
+      severity: null, emergencyIndicators: [], userIntent: 'relief',
+      queryContext: null,
+    };
   }
 
   const normalized = normalize(query);
   const queryTokens = tokenize(normalized);
 
   if (queryTokens.length === 0) {
-    return { primaryConcerns: [], secondaryConcerns: [], confidence: 0, queryContext: { raw: query, normalized, tokens: [] } };
+    return {
+      primaryConcerns: [], secondaryConcerns: [], confidence: 0,
+      severity: null, emergencyIndicators: [], userIntent: 'relief',
+      queryContext: { raw: query, normalized, tokens: [] },
+    };
   }
 
   const index = buildSymptomIndex(symptoms);
@@ -136,11 +239,35 @@ export function inferConcerns(query, symptoms) {
   const validSecondaryConcerns = secondaryConcerns.filter(s => s.score >= threshold);
 
   const confidence = Math.round(Math.min(topScore * 100, 100));
+  const severity = inferSeverity(query) || (
+    validPrimaryConcerns.length > 0
+      ? getSeverityFlags(validPrimaryConcerns[0].symptomId).slice(-1)[0] || 'mild'
+      : 'mild'
+  );
+  const userIntent = inferUserIntent(query);
+
+  const allConcernIds = [
+    ...validPrimaryConcerns.map(c => c.symptomId),
+    ...validSecondaryConcerns.map(c => c.symptomId),
+  ];
+
+  const emergencyIndicators = [];
+  for (const id of allConcernIds) {
+    const indicators = detectEmergencyIndicators(query, id);
+    emergencyIndicators.push(...indicators);
+  }
 
   return {
-    primaryConcerns: validPrimaryConcerns.map(s => ({ id: s.symptomId, label: s.label, emoji: s.emoji, color: s.color, score: s.score })),
-    secondaryConcerns: validSecondaryConcerns.map(s => ({ id: s.symptomId, label: s.label, emoji: s.emoji, color: s.color, score: s.score })),
+    primaryConcerns: validPrimaryConcerns.map(s => ({
+      id: s.symptomId, label: s.label, emoji: s.emoji, color: s.color, score: s.score,
+    })),
+    secondaryConcerns: validSecondaryConcerns.map(s => ({
+      id: s.symptomId, label: s.label, emoji: s.emoji, color: s.color, score: s.score,
+    })),
     confidence,
+    severity,
+    emergencyIndicators,
+    userIntent,
     queryContext: { raw: query, normalized, tokens: queryTokens },
   };
 }

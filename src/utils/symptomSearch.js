@@ -2,6 +2,7 @@ import { inferConcerns } from '../engine/clinicalReasoner';
 import { rankRemedies } from '../engine/relevanceRanker';
 import { filterUnsafeRemedies, adjustConfidence } from '../engine/safetyFilter';
 import { groupResults } from '../engine/resultsGrouper';
+import { buildKnowledgeContext } from '../engine/knowledgeGraph';
 import { isEmergencySymptom } from '../constants/emergency';
 
 export function isEmergencyQuery(query) {
@@ -26,7 +27,7 @@ export function getRankedRemediesForSymptoms(
   options = {},
 ) {
   if (!symptomIds?.length || !remedies?.length) {
-    return { primary: [], related: [], all: [] };
+    return { primary: [], related: [], all: [], grouped: null };
   }
 
   const {
@@ -44,7 +45,13 @@ export function getRankedRemediesForSymptoms(
   if (allergies?.length) userContext.allergies = allergies;
   if (conditions?.length) userContext.conditions = conditions;
 
-  const ranked = rankRemedies(remedies, concerns, symptomRemediesMap, { userContext });
+  const knowledgeCtx = buildKnowledgeContext(symptomIds, symptoms);
+
+  const ranked = rankRemedies(remedies, concerns, symptomRemediesMap, {
+    userContext,
+    symptoms,
+  });
+
   const safe = filterUnsafeRemedies(ranked, userContext);
   const adjusted = adjustConfidence(safe, null);
 
@@ -64,5 +71,6 @@ export function getRankedRemediesForSymptoms(
     related,
     all: [grouped.bestMatch, ...grouped.bestMatches, ...grouped.additionalOptions, ...grouped.supportive].filter(Boolean),
     grouped,
+    knowledgeCtx,
   };
 }

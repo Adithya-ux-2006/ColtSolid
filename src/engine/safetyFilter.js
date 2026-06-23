@@ -1,19 +1,45 @@
 export function filterUnsafeRemedies(remedies, userContext) {
   if (!remedies?.length) return [];
-  if (!userContext) return [...remedies];
+  if (!userContext) {
+    return remedies.map(r => ({
+      ...r,
+      _safetyReason: r._safetyReason || 'Safety check passed',
+      _safe: true,
+    }));
+  }
 
-  const { allergies, conditions } = userContext || {};
+  const { allergies, conditions } = userContext;
 
-  return remedies.filter(remedy => {
-    if (allergies?.length && remedyMatchesAllergies(remedy, allergies)) return false;
-    if (conditions?.length && remedyHasContraindication(remedy, conditions)) return false;
-    return true;
-  });
+  const result = [];
+
+  for (const remedy of remedies) {
+    const allergyConflict = allergies?.length ? findAllergyConflict(remedy, allergies) : null;
+    const contraindicationConflict = conditions?.length ? findContraindicationConflict(remedy, conditions) : null;
+
+    const isUnsafe = allergyConflict || contraindicationConflict;
+
+    const reasons = [];
+    if (allergyConflict) reasons.push(`Hidden due to allergy conflict: ${allergyConflict}`);
+    if (contraindicationConflict) reasons.push(`Hidden due to contraindication: ${contraindicationConflict}`);
+    if (!reasons.length && userContext) {
+      if (allergies?.length) reasons.push('No allergy conflicts detected');
+      if (conditions?.length) reasons.push('No contraindications detected');
+      if (!reasons.length) reasons.push('Safety check passed');
+    }
+
+    if (!isUnsafe) {
+      result.push({
+        ...remedy,
+        _safe: true,
+        _safetyReason: reasons.join('. '),
+      });
+    }
+  }
+
+  return result;
 }
 
-function remedyMatchesAllergies(remedy, allergies) {
-  if (!allergies?.length) return false;
-
+function findAllergyConflict(remedy, allergies) {
   const normalizedAllergies = allergies.map(a =>
     a.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim()
   ).filter(Boolean);
@@ -21,7 +47,7 @@ function remedyMatchesAllergies(remedy, allergies) {
   const tags = (remedy.allergen_tags || []).map(t => t.toLowerCase());
   for (const allergy of normalizedAllergies) {
     if (tags.some(tag => tag === allergy || tag.includes(allergy) || allergy.includes(tag))) {
-      return true;
+      return allergy;
     }
   }
 
@@ -32,38 +58,59 @@ function remedyMatchesAllergies(remedy, allergies) {
   for (const allergy of normalizedAllergies) {
     for (const ingredient of ingredients) {
       if (ingredient.includes(allergy) || allergy.includes(ingredient)) {
-        return true;
+        return allergy + ' (ingredient match)';
       }
     }
   }
 
-  return false;
+  const title = (remedy.name || '').toLowerCase();
+  for (const allergy of normalizedAllergies) {
+    if (title.includes(allergy)) {
+      return allergy + ' (name match)';
+    }
+  }
+
+  return null;
 }
 
-function remedyHasContraindication(remedy, conditions) {
-  if (!conditions?.length) return false;
-
+function findContraindicationConflict(remedy, conditions) {
   const normalizedConditions = conditions.map(c =>
     c.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim()
   ).filter(Boolean);
 
   const contraindications = (remedy.contraindications || []).map(c => c.toLowerCase());
 
-  return normalizedConditions.some(condition =>
-    contraindications.some(ci => ci.includes(condition) || condition.includes(ci))
-  );
+  for (const condition of normalizedConditions) {
+    for (const ci of contraindications) {
+      if (ci.includes(condition) || condition.includes(ci)) {
+        return condition;
+      }
+    }
+  }
+
+  return null;
 }
 
 export function adjustConfidence(remedies, queryConfidence) {
   if (!remedies?.length) return [];
-  if (queryConfidence == null || queryConfidence >= 60) return remedies;
+  if (queryConfidence == null || queryConfidence >= 60) {
+    return remedies.map(r => ({
+      ...r,
+      _confidenceReason: r._confidenceReason || 'Strong match to known symptom',
+    }));
+  }
 
-  const confidenceRatio = queryConfidence / 60;
+  const confidenceRatio = Math.max(queryConfidence / 60, 0.15);
 
   return remedies.map(remedy => ({
     ...remedy,
     _relevanceScore: Math.round(remedy._relevanceScore * confidenceRatio),
     _partialMatch: true,
     _originalQueryConfidence: queryConfidence,
+    _confidenceReason: queryConfidence >= 30
+      ? 'Partial match — results may be less specific'
+      : 'Weak match — consider rephrasing your search',
   }));
 }
+
+export { findAllergyConflict, findContraindicationConflict };
