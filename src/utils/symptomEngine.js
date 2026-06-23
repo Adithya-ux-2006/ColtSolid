@@ -29,5 +29,6 @@ export function resolveQuery(query, symptoms) {
     userIntent: result.userIntent,
     severity: result.severity,
     emergencyIndicators: result.emergencyIndicators,
+
   };
 }

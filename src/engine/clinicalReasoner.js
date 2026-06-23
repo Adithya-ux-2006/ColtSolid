@@ -1,6 +1,7 @@
 import { getSeverityFlags, matchEmergencyFlags } from './knowledgeGraph';
 import { preprocessQuery } from './preprocessor';
 import { getPhraseMap } from '../data/conceptPhrases';
+import { composeSymptomScores } from './composer';
 
 const SEVERITY_KEYWORDS = {
   severe: new Set([
@@ -225,6 +226,21 @@ export function inferConcerns(query, symptoms) {
       score,
     };
   });
+
+  const composition = composeSymptomScores(combinedTokens, pp.normalized);
+  if (composition.hasComposition) {
+    const compMap = new Map(composition.scores.map(s => [s.symptomId, s.score]));
+    const hasAnatomy = composition.metadata.matchedBodyParts.length > 0;
+    const hasSensation = composition.metadata.matchedSensations.length > 0;
+    const compWeight = hasAnatomy && hasSensation ? 0.65 : hasSensation ? 0.4 : 0.25;
+
+    for (const si of scored) {
+      const compScore = compMap.get(si.symptomId) || 0;
+      if (compScore > 0) {
+        si.score = si.score * (1 - compWeight) + compScore * compWeight;
+      }
+    }
+  }
 
   scored.sort((a, b) => b.score - a.score);
 
