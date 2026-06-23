@@ -1,5 +1,6 @@
 import { getSeverityFlags, matchEmergencyFlags } from './knowledgeGraph';
 import { preprocessQuery } from './preprocessor';
+import { getPhraseMap } from '../data/conceptPhrases';
 
 const SEVERITY_KEYWORDS = {
   severe: new Set([
@@ -195,14 +196,24 @@ export function inferConcerns(query, symptoms) {
   const conceptHintSet = new Set(pp.conceptHints);
   const negatedSet = new Set(pp.negatedIds);
 
+  const negatedPhraseTokens = new Set(
+    pp.matchedPhrases
+      .filter(m => {
+        const entry = Object.entries(getPhraseMap()).find(([k]) => k === m.phrase);
+        return entry && entry[1].negated === true;
+      })
+      .flatMap(m => m.phrase.split(/\s+/))
+      .filter(t => t.length >= 2)
+  );
+
   const scored = index.map(si => {
     let score = scoreSymptom(combinedTokens, combinedQueryStr, si);
 
     if (conceptHintSet.has(si.id)) {
-      score = Math.min(score + 0.2, 1.0);
+      score = Math.min(score + 0.25, 1.0);
     }
 
-    if (negatedSet.has(si.id)) {
+    if (negatedSet.has(si.id) || si.normalizedLabel.split(/\s+/).some(lw => negatedPhraseTokens.has(lw))) {
       score = score * 0.3;
     }
 
@@ -218,7 +229,7 @@ export function inferConcerns(query, symptoms) {
   scored.sort((a, b) => b.score - a.score);
 
   const topScore = scored.length > 0 ? scored[0].score : 0;
-  const threshold = 0.08;
+  const threshold = 0.06;
 
   const primaryConcerns = scored.filter(s => s.score >= topScore * 0.75);
   const secondaryConcerns = scored.filter(s => s.score >= topScore * 0.35 && s.score < topScore * 0.75);

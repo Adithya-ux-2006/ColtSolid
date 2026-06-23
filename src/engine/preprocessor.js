@@ -73,13 +73,41 @@ function extractNegation(tokens) {
   return { cleanTokens, negatedTokens, hasNegation: negatedTokens.length > 0 };
 }
 
+function isSubsequence(phraseWords, queryWords) {
+  let pi = 0;
+  for (const qw of queryWords) {
+    if (pi < phraseWords.length && qw === phraseWords[pi]) {
+      pi++;
+    }
+  }
+  return pi === phraseWords.length;
+}
+
 function findMatchingPhrases(normalized, phraseMap) {
   const matches = [];
+  const queryWords = normalized.split(/\s+/);
   const entries = Object.entries(phraseMap).sort((a, b) => b[0].length - a[0].length);
+
+  const usedWords = new Set();
 
   for (const [phrase, data] of entries) {
     if (normalized.includes(phrase)) {
       matches.push({ phrase, ...data });
+      const pWords = phrase.split(/\s+/);
+      for (const w of pWords) usedWords.add(w);
+    }
+  }
+
+  for (const [phrase, data] of entries) {
+    if (matches.some(m => m.phrase === phrase)) continue;
+    const pWords2 = phrase.split(/\s+/);
+    const pLen2 = pWords2.length;
+    if (pLen2 < 2) continue;
+    const novelWords = pWords2.some(w => !usedWords.has(w));
+    if (!novelWords) continue;
+    if (isSubsequence(pWords2, queryWords)) {
+      matches.push({ phrase, ...data });
+      for (const w of pWords2) usedWords.add(w);
     }
   }
 
