@@ -14,6 +14,17 @@ const TEMPORAL_MODIFIERS = [
   { phrase: "when stressed", boosts: { stress: 0.5, anxiety: 0.4, headache: 0.2, insomnia: 0.2 } },
   { phrase: "at work", boosts: { stress: 0.4, anxiety: 0.3, eye_strain: 0.3, headache: 0.2, fatigue: 0.2 } },
   { phrase: "after eating spicy", boosts: { heartburn: 0.5, indigestion: 0.3, stomach_ache: 0.2 } },
+  { phrase: "during sleep", boosts: { sleep_apnea: 0.4, night_sweats: 0.3, teeth_grinding: 0.3, restless_leg: 0.2 } },
+  { phrase: "when sleeping", boosts: { sleep_apnea: 0.3, night_sweats: 0.3, teeth_grinding: 0.3 } },
+  { phrase: "after sex", boosts: { uti: 0.3, yeast_infection: 0.2, vaginal_dryness: 0.2 } },
+  { phrase: "after intercourse", boosts: { uti: 0.3, yeast_infection: 0.2, vaginal_dryness: 0.2 } },
+  { phrase: "during exercise", boosts: { asthma: 0.4, palpitations: 0.2, dehydration: 0.2 } },
+  { phrase: "when running", boosts: { asthma: 0.3, ankle_pain: 0.2, foot_pain: 0.2, knee_pain: 0.2 } },
+  { phrase: "during allergy season", boosts: { allergies: 0.5, congestion: 0.3, hives: 0.2 } },
+  { phrase: "in spring", boosts: { allergies: 0.4, congestion: 0.2, sneezing: 0.2 } },
+  { phrase: "in the cold", boosts: { asthma: 0.2, poor_circulation: 0.3, chills: 0.3 } },
+  { phrase: "after standing", boosts: { poor_circulation: 0.3, edema: 0.3, leg_pain: 0.2, back_pain: 0.2 } },
+  { phrase: "after sitting", boosts: { back_pain: 0.3, sciatica: 0.3, hemorrhoids: 0.2 } },
 ];
 
 const POSITIONAL_MODIFIERS = [
@@ -29,6 +40,20 @@ const POSITIONAL_MODIFIERS = [
   { phrase: "front of head", boosts: { headache: 0.3, sinus_pressure: 0.3, eye_strain: 0.2 } },
   { phrase: "bottom of foot", boosts: { leg_pain: 0.2 } },
   { phrase: "top of head", boosts: { headache: 0.2, migraine: 0.1 } },
+  { phrase: "roof of mouth", boosts: { canker_sore: 0.3, cold_sore: 0.2 } },
+  { phrase: "on gums", boosts: { gum_pain: 0.4, canker_sore: 0.2, toothache: 0.2 } },
+  { phrase: "inside cheek", boosts: { canker_sore: 0.3, toothache: 0.1 } },
+  { phrase: "under tongue", boosts: { canker_sore: 0.2 } },
+  { phrase: "heel of foot", boosts: { foot_pain: 0.4 } },
+  { phrase: "arch of foot", boosts: { foot_pain: 0.4 } },
+  { phrase: "ball of foot", boosts: { foot_pain: 0.3 } },
+  { phrase: "base of skull", boosts: { headache: 0.2, neck_pain: 0.3 } },
+  { phrase: "between toes", boosts: { fungal_infection: 0.4 } },
+  { phrase: "under nail", boosts: { fungal_infection: 0.4 } },
+  { phrase: "in ear", boosts: { tinnitus: 0.3, ear_pain: 0.2 } },
+  { phrase: "around anus", boosts: { hemorrhoids: 0.4 } },
+  { phrase: "on scalp", boosts: { psoriasis: 0.3, hair_loss: 0.2 } },
+  { phrase: "in groin", boosts: { uti: 0.2, yeast_infection: 0.2, insect_bite: 0.2 } },
 ];
 
 export function getTemporalModifiers() {

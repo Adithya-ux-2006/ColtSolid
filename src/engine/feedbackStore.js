@@ -41,7 +41,7 @@ async function flush() {
   try {
     localStorage.setItem('cura_feedback_log', JSON.stringify(stored));
   } catch {
-    // silently fail
+    void 0;
   }
 }
 
@@ -145,7 +145,7 @@ export function clearFeedbackLog() {
   try {
     localStorage.removeItem('cura_feedback_log');
   } catch {
-    // silently fail
+    void 0;
   }
 }
 

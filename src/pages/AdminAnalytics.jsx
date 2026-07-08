@@ -95,7 +95,7 @@ export function AdminAnalytics() {
         </div>
 
         {isLoading ? <p className="text-ink-muted">Loading analytics...</p> : null}
-        {errorMessage ? <p className="rounded-2xl bg-yellow/10 px-4 py-3 text-sm text-yellow-dark">{errorMessage}</p> : null}
+        {errorMessage ? <p className="rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-800">{errorMessage}</p> : null}
 
         {!isLoading && !errorMessage ? (
           <>

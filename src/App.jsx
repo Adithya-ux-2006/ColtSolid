@@ -1,25 +1,39 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { Navbar, BottomNav, AdminGuard } from './components/layout';
 import { useAuthStore } from './store/authStore';
 import { useFavoritesStore } from './store/favoritesStore';
 import { useAppointmentStore } from './store/appointmentStore';
 import { useCatalogStore } from './store/catalogStore';
-import { AiChatPanel } from './components/ai/AiChatPanel';
+import { LoadingSkeleton } from './components/ui/LoadingSkeleton';
 
-// Pages
-import { Landing } from './pages/Landing';
-import { Login } from './pages/Login';
-import { Register } from './pages/Register';
-import { Dashboard } from './pages/Dashboard';
-import { SymptomSearch } from './pages/SymptomSearch';
-import { Results } from './pages/Results';
-import { RemedyDetail } from './pages/RemedyDetail';
-import { Favorites } from './pages/Favorites';
-import { Appointments } from './pages/Appointments';
-import { Profile } from './pages/Profile';
-import { Onboarding } from './pages/Onboarding';
-import { AdminAnalytics } from './pages/AdminAnalytics';
+// AiChatPanel is lazy-loaded to keep the layout chunk small.
+// It pulls in symptomEngine + symptomSearch (~heavy) and is only
+// needed when the user opens the chat panel.
+const AiChatPanel = lazy(() => import('./components/ai/AiChatPanel').then(m => ({ default: m.AiChatPanel })));
+
+// Pages — lazy-loaded for code splitting
+const Landing = lazy(() => import('./pages/Landing').then(m => ({ default: m.Landing })));
+const Login = lazy(() => import('./pages/Login').then(m => ({ default: m.Login })));
+const Register = lazy(() => import('./pages/Register').then(m => ({ default: m.Register })));
+const Dashboard = lazy(() => import('./pages/Dashboard').then(m => ({ default: m.Dashboard })));
+const SymptomSearch = lazy(() => import('./pages/SymptomSearch').then(m => ({ default: m.SymptomSearch })));
+const Results = lazy(() => import('./pages/Results').then(m => ({ default: m.Results })));
+const RemedyDetail = lazy(() => import('./pages/RemedyDetail').then(m => ({ default: m.RemedyDetail })));
+const Favorites = lazy(() => import('./pages/Favorites').then(m => ({ default: m.Favorites })));
+const Appointments = lazy(() => import('./pages/Appointments').then(m => ({ default: m.Appointments })));
+const Profile = lazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })));
+const Onboarding = lazy(() => import('./pages/Onboarding').then(m => ({ default: m.Onboarding })));
+const AdminAnalytics = lazy(() => import('./pages/AdminAnalytics').then(m => ({ default: m.AdminAnalytics })));
+
+/** Wraps a lazy page in its own Suspense so the navbar stays visible during transitions. */
+function Page({ children }) {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-[40vh]"><LoadingSkeleton count={2} /></div>}>
+      {children}
+    </Suspense>
+  );
+}
 
 function ProtectedRoute({ children }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -52,20 +66,20 @@ function AppRoutes() {
   return (
     <Routes>
       {/* Public Routes */}
-      <Route path="/" element={<Landing />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/search" element={<SymptomSearch />} />
-      <Route path="/results" element={<Results />} />
-      <Route path="/remedy/:id" element={<RemedyDetail />} />
+      <Route path="/" element={<Page><Landing /></Page>} />
+      <Route path="/login" element={<Page><Login /></Page>} />
+      <Route path="/register" element={<Page><Register /></Page>} />
+      <Route path="/search" element={<Page><SymptomSearch /></Page>} />
+      <Route path="/results" element={<Page><Results /></Page>} />
+      <Route path="/remedy/:id" element={<Page><RemedyDetail /></Page>} />
 
       {/* Protected Routes */}
-      <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-      <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
-      <Route path="/appointments" element={<ProtectedRoute><Appointments /></ProtectedRoute>} />
-      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-      <Route path="/admin" element={<ProtectedRoute><AdminGuard><AdminAnalytics /></AdminGuard></ProtectedRoute>} />
-      <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+      <Route path="/dashboard" element={<ProtectedRoute><Page><Dashboard /></Page></ProtectedRoute>} />
+      <Route path="/favorites" element={<ProtectedRoute><Page><Favorites /></Page></ProtectedRoute>} />
+      <Route path="/appointments" element={<ProtectedRoute><Page><Appointments /></Page></ProtectedRoute>} />
+      <Route path="/profile" element={<ProtectedRoute><Page><Profile /></Page></ProtectedRoute>} />
+      <Route path="/admin" element={<ProtectedRoute><AdminGuard><Page><AdminAnalytics /></Page></AdminGuard></ProtectedRoute>} />
+      <Route path="/onboarding" element={<ProtectedRoute><Page><Onboarding /></Page></ProtectedRoute>} />
       
       {/* Catch-all redirect */}
       <Route path="*" element={<Navigate to="/" replace />} />
@@ -119,7 +133,9 @@ function App() {
         <main className="flex-1 relative">
           <AppRoutes />
         </main>
-        <AiChatPanel />
+        <Suspense fallback={null}>
+          <AiChatPanel />
+        </Suspense>
         <BottomNav />
       </div>
     </BrowserRouter>

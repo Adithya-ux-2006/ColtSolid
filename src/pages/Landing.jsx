@@ -1,7 +1,9 @@
 import { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, Stethoscope, GraduationCap, Search, ArrowRight } from 'lucide-react';
-import { FAQAccordion, Modal, DisplayCardsRow } from '../components/ui';
+import { FAQAccordion } from '../components/ui/FAQAccordion';
+import { Modal } from '../components/ui/Modal';
+import { DisplayCardsRow } from '../components/ui/DisplayCardsDemo';
 import { QuestionnaireFlow } from '../components/onboarding/QuestionnaireFlow';
 import { PageWrapper } from '../components/layout';
 import { useCatalogStore } from '../store/catalogStore';

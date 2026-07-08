@@ -86,6 +86,8 @@ export function AiChatPanel() {
     window.sessionStorage.setItem(HISTORY_KEY, JSON.stringify(messages));
   }, [messages]);
 
+
+
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
   }, [messages, isLoading, isOpen]);

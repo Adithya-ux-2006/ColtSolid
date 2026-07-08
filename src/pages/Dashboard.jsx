@@ -2,7 +2,8 @@ import { useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Calendar, Heart, Activity, ArrowRight, Sparkles } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
-import { RemedyCard, EmptyState } from '../components/ui';
+import { RemedyCard } from '../components/ui/RemedyCard';
+import { EmptyState } from '../components/ui/EmptyState';
 import { useAuthStore } from '../store/authStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useAppointmentStore } from '../store/appointmentStore';
@@ -30,7 +31,7 @@ export function Dashboard() {
   );
 
   const favoriteRemedies = useMemo(
-    () => remedies.filter(r => favorites.some(f => f.remedy_id === r.id)).slice(0, 5),
+    () => remedies.filter(r => favorites.some(f => f.id === r.id)).slice(0, 5),
     [remedies, favorites]
   );
 
@@ -58,7 +59,7 @@ export function Dashboard() {
         <div className="grid grid-cols-3 gap-4">
           <StatCard icon={Heart} value={favorites.length} label="Saved" />
           <StatCard icon={Calendar} value={appointments.length} label="Appts" />
-          <StatCard icon={Activity} value={12} label="Searches" />
+          <StatCard icon={Activity} value={"—"} label="Searches" />
         </div>
 
         <section>

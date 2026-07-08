@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Search, ArrowRight, Bot } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { SearchBar } from '../components/forms/SearchBar';
-import { LoadingSkeleton } from '../components/ui';
+import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
 import { useSearch } from '../hooks/useSearch';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
@@ -72,10 +72,14 @@ export function SymptomSearch() {
 
   const symptomRankedResults = useMemo(() => {
     if (matchedSymptomIds.length === 0) return [];
-    const result = getRankedRemediesForSymptoms(matchedSymptomIds, symptomRemedies, remedies);
+    const result = getRankedRemediesForSymptoms(matchedSymptomIds, symptomRemedies, remedies, {
+      symptoms,
+      allergies: activeAllergies,
+      conditions: activeConditions,
+    });
     const combined = [...(result.primary || []), ...(result.related || [])];
     return combined.filter(safeFilter);
-  }, [matchedSymptomIds, remedies, safeFilter, symptomRemedies]);
+  }, [matchedSymptomIds, remedies, safeFilter, symptomRemedies, symptoms, activeAllergies, activeConditions]);
 
   const textFallbackResults = useMemo(() => {
     if (symptomRankedResults.length > 0) return [];

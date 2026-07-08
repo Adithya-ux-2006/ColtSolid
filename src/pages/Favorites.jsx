@@ -1,6 +1,7 @@
 import { Heart } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
-import { RemedyCard, EmptyState } from '../components/ui';
+import { RemedyCard } from '../components/ui/RemedyCard';
+import { EmptyState } from '../components/ui/EmptyState';
 import { useFavoritesStore } from '../store/favoritesStore';
 
 export function Favorites() {

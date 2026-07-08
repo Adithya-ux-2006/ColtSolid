@@ -1,11 +1,13 @@
 /* global process */
+import { parseBody } from './parseBody.js';
+import { applySecurity, json, sanitizeInput, isValidQuery } from './middleware.js';
 
 const FALLBACK_SYMPTOM_PATTERNS = {
   headache: ['headache', 'migraine', 'temple pain', 'head pain', 'pressure in my head', 'head hurting', 'pounding head'],
   cold: ['cold', 'fever', 'sore throat', 'throat hurts', 'cough', 'runny nose', 'congestion', 'chills', 'common cold', 'getting sick'],
   congestion: ['congestion', 'stuffed nose', 'stuffy nose', 'blocked nose', 'nasal congestion', 'nose blocked', 'clogged nose', 'chest congestion'],
   sinus_pressure: ['sinus pressure', 'sinus pain', 'sinus headache', 'facial pain', 'sinusitis', 'pressure behind eyes'],
-  brain_fog: ['brain fog', 'brainfog', 'mental fog', 'cant focus', 'can\'t focus', 'foggy head', 'cloudy head', 'hard to concentrate', 'can\'t think', 'lack of focus'],
+  brain_fog: ['brain fog', 'brainfog', 'mental fog', 'cant focus', "can't focus", 'foggy head', 'cloudy head', 'hard to concentrate', "can't think", 'lack of focus'],
   low_energy: ['low energy', 'low stamina', 'no energy'],
   burnout: ['burnout', 'burned out', 'depleted', 'burnt out'],
   anxiety: ['anxious', 'anxiety', 'panic', 'overthinking', 'restless', 'worried', 'racing thoughts', 'feeling anxious'],
@@ -41,34 +43,6 @@ const FALLBACK_SYMPTOM_PATTERNS = {
   pms: ['pms', 'premenstrual', 'pms symptoms', 'pre menstrual'],
   menopause: ['menopause', 'perimenopause', 'hot flashes', 'night sweats', 'hot flushes'],
 };
-
-function json(res, statusCode, payload) {
-  res.statusCode = statusCode;
-  res.setHeader('Content-Type', 'application/json');
-  res.end(JSON.stringify(payload));
-}
-
-function parseBody(req) {
-  if (typeof req.body === 'object' && req.body !== null) return req.body;
-  if (typeof req.body === 'string' && req.body) return JSON.parse(req.body);
-  return new Promise((resolve, reject) => {
-    let raw = '';
-
-    req.on('data', (chunk) => {
-      raw += chunk;
-    });
-
-    req.on('end', () => {
-      try {
-        resolve(raw ? JSON.parse(raw) : {});
-      } catch (error) {
-        reject(error);
-      }
-    });
-
-    req.on('error', reject);
-  });
-}
 
 function fallbackDetectSymptoms(query) {
   const normalized = query.toLowerCase();
@@ -128,18 +102,22 @@ async function detectWithOpenAI(query, symptoms) {
 }
 
 export default async function handler(req, res) {
+  const sec = applySecurity(req, res, { ai: true });
+  if (sec.handled) return;
   if (req.method !== 'POST') {
     return json(res, 405, { error: 'Method not allowed.' });
   }
 
   try {
     const body = await parseBody(req);
-    const query = body.query?.trim();
+    const rawQuery = body.query?.trim();
     const symptoms = Array.isArray(body.symptoms) ? body.symptoms : [];
 
-    if (!query) {
-      return json(res, 400, { error: 'Query is required.' });
+    if (!rawQuery || !isValidQuery(rawQuery)) {
+      return json(res, 400, { error: 'Valid query is required.' });
     }
+
+    const query = sanitizeInput(rawQuery, { maxLength: 200 });
 
     if (symptoms.length === 0) {
       return json(res, 400, { error: 'Symptom catalog is required.' });
@@ -167,6 +145,6 @@ export default async function handler(req, res) {
       source: process.env.OPENAI_API_KEY ? 'ai' : 'fallback',
     });
   } catch (error) {
-    return json(res, 500, { error: error.message || 'Unable to analyze symptoms.' });
+    return json(res, 500, { error: 'Unable to analyze symptoms.' });
   }
 }

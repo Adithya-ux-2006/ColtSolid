@@ -40,4 +40,76 @@ export const SYMPTOMS = [
   { id: 'fatigue', label: 'Fatigue', emoji: '🔋', color: 'forest' },
   { id: 'low_energy', label: 'Low Energy', emoji: '🔋', color: 'forest' },
   { id: 'dehydration', label: 'Dehydration', emoji: '💧', color: 'amber' },
+
+  { id: 'allergies', label: 'Allergies', emoji: '🤧', color: 'sage' },
+  { id: 'asthma', label: 'Asthma', emoji: '🫁', color: 'amber' },
+  { id: 'hives', label: 'Hives', emoji: '🩹', color: 'sage' },
+  { id: 'allergic_reaction', label: 'Allergic Reaction', emoji: '⚠️', color: 'amber' },
+
+  { id: 'uti', label: 'Urinary Tract Infection', emoji: '🫧', color: 'sage' },
+  { id: 'kidney_stone', label: 'Kidney Stone', emoji: '💎', color: 'amber' },
+  { id: 'frequent_urination', label: 'Frequent Urination', emoji: '🚻', color: 'sage' },
+  { id: 'urinary_incontinence', label: 'Urinary Incontinence', emoji: '🫧', color: 'sage' },
+
+  { id: 'yeast_infection', label: 'Yeast Infection', emoji: '🫧', color: 'sage' },
+  { id: 'low_libido', label: 'Low Libido', emoji: '💕', color: 'forest' },
+  { id: 'erectile_dysfunction', label: 'Erectile Dysfunction', emoji: '💪', color: 'forest' },
+  { id: 'vaginal_dryness', label: 'Vaginal Dryness', emoji: '💧', color: 'sage' },
+  { id: 'prostate_issues', label: 'Prostate Issues', emoji: '🫧', color: 'forest' },
+  { id: 'testicular_pain', label: 'Testicular Pain', emoji: '😣', color: 'forest' },
+  { id: 'pelvic_pain', label: 'Pelvic Pain', emoji: '🤕', color: 'forest' },
+  { id: 'breast_pain', label: 'Breast Pain', emoji: '🤕', color: 'sage' },
+  { id: 'endometriosis', label: 'Endometriosis', emoji: '🌸', color: 'forest' },
+
+  { id: 'toothache', label: 'Toothache', emoji: '🦷', color: 'amber' },
+  { id: 'canker_sore', label: 'Canker Sore', emoji: '👄', color: 'sage' },
+  { id: 'gum_pain', label: 'Gum Pain', emoji: '🦷', color: 'amber' },
+  { id: 'bad_breath', label: 'Bad Breath', emoji: '👄', color: 'sage' },
+  { id: 'tmj_pain', label: 'Jaw Pain', emoji: '😬', color: 'forest' },
+  { id: 'dry_mouth', label: 'Dry Mouth', emoji: '💧', color: 'sage' },
+  { id: 'cold_sore', label: 'Cold Sore', emoji: '👄', color: 'sage' },
+
+  { id: 'ankle_pain', label: 'Ankle Pain', emoji: '🦶', color: 'forest' },
+  { id: 'wrist_pain', label: 'Wrist Pain', emoji: '🤚', color: 'forest' },
+  { id: 'hip_pain', label: 'Hip Pain', emoji: '🦵', color: 'forest' },
+  { id: 'elbow_pain', label: 'Elbow Pain', emoji: '💪', color: 'forest' },
+  { id: 'foot_pain', label: 'Foot Pain', emoji: '🦶', color: 'forest' },
+  { id: 'hand_pain', label: 'Hand Pain', emoji: '🤚', color: 'forest' },
+
+  { id: 'eczema', label: 'Eczema', emoji: '🩹', color: 'sage' },
+  { id: 'psoriasis', label: 'Psoriasis', emoji: '🩹', color: 'sage' },
+  { id: 'sunburn', label: 'Sunburn', emoji: '☀️', color: 'amber' },
+  { id: 'fungal_infection', label: 'Fungal Infection', emoji: '🩹', color: 'sage' },
+  { id: 'rosacea', label: 'Rosacea', emoji: '🧏', color: 'sage' },
+
+  { id: 'sleep_apnea', label: 'Sleep Apnea', emoji: '😴', color: 'forest' },
+  { id: 'restless_leg', label: 'Restless Legs', emoji: '🦵', color: 'forest' },
+  { id: 'night_sweats', label: 'Night Sweats', emoji: '🌙', color: 'amber' },
+  { id: 'teeth_grinding', label: 'Teeth Grinding', emoji: '🦷', color: 'amber' },
+
+  { id: 'tinnitus', label: 'Tinnitus', emoji: '👂', color: 'amber' },
+  { id: 'vertigo', label: 'Vertigo', emoji: '😵', color: 'amber' },
+  { id: 'neuropathy', label: 'Neuropathy', emoji: '🦶', color: 'forest' },
+  { id: 'sciatica', label: 'Sciatica', emoji: '💪', color: 'forest' },
+
+  { id: 'palpitations', label: 'Heart Palpitations', emoji: '💓', color: 'amber' },
+  { id: 'poor_circulation', label: 'Poor Circulation', emoji: '🥶', color: 'sage' },
+  { id: 'edema', label: 'Edema', emoji: '🦶', color: 'sage' },
+
+  { id: 'anemia', label: 'Anemia', emoji: '🩸', color: 'amber' },
+  { id: 'arthritis', label: 'Arthritis', emoji: '🦴', color: 'forest' },
+  { id: 'ibs', label: 'IBS', emoji: '🫧', color: 'sage' },
+  { id: 'hemorrhoids', label: 'Hemorrhoids', emoji: '😣', color: 'sage' },
+  { id: 'gerd', label: 'Acid Reflux', emoji: '🔥', color: 'amber' },
+
+  { id: 'hair_loss', label: 'Hair Loss', emoji: '🧑‍🦲', color: 'sage' },
+
+  { id: 'sprain', label: 'Sprain', emoji: '🤕', color: 'forest' },
+  { id: 'insect_bite', label: 'Insect Bite', emoji: '🦟', color: 'sage' },
+  { id: 'minor_burn', label: 'Minor Burn', emoji: '🔥', color: 'amber' },
+  { id: 'bruising', label: 'Bruising', emoji: '🩹', color: 'sage' },
+
+  { id: 'loss_of_appetite', label: 'Loss of Appetite', emoji: '🍽️', color: 'sage' },
+  { id: 'chills', label: 'Chills', emoji: '🥶', color: 'amber' },
+  { id: 'swollen_lymph_nodes', label: 'Swollen Lymph Nodes', emoji: '🫧', color: 'sage' },
 ];

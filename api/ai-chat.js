@@ -1,4 +1,6 @@
 /* global process */
+import { parseBody } from './parseBody.js';
+import { applySecurity, json, sanitizeInput } from './middleware.js';
 
 const SYSTEM_PROMPT = `You are a helpful health assistant for college students using curA, an evidence-based remedy app.
 
@@ -161,29 +163,6 @@ const FALLBACK_REPLIES = [
   },
 ];
 
-function json(res, statusCode, payload) {
-  res.statusCode = statusCode;
-  res.setHeader('Content-Type', 'application/json');
-  res.end(JSON.stringify(payload));
-}
-
-function parseBody(req) {
-  if (typeof req.body === 'object' && req.body !== null) return req.body;
-  if (typeof req.body === 'string' && req.body) return JSON.parse(req.body);
-  return new Promise((resolve, reject) => {
-    let raw = '';
-    req.on('data', (chunk) => { raw += chunk; });
-    req.on('end', () => {
-      try {
-        resolve(raw ? JSON.parse(raw) : {});
-      } catch (error) {
-        reject(error);
-      }
-    });
-    req.on('error', reject);
-  });
-}
-
 function fallbackReply(messages) {
   const text = messages.map((message) => message.content).join(' ').toLowerCase();
   return FALLBACK_REPLIES.find((reply) => reply.patterns.some((pattern) => text.includes(pattern)))?.text
@@ -219,22 +198,35 @@ async function askClaude(messages) {
 }
 
 export default async function handler(req, res) {
+  const sec = applySecurity(req, res, { ai: true });
+  if (sec.handled) return;
   if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed.' });
 
   try {
     const body = await parseBody(req);
     const messages = Array.isArray(body.messages) ? body.messages : [];
     if (messages.length === 0) return json(res, 400, { error: 'Messages are required.' });
+    if (messages.length > 20) return json(res, 400, { error: 'Too many messages.' });
+
+    // Sanitize all message content to prevent prompt injection
+    const sanitizedMessages = messages
+      .filter((m) => m && typeof m.content === 'string' && m.content.trim().length > 0)
+      .map((m) => ({
+        role: m.role === 'assistant' ? 'assistant' : 'user',
+        content: sanitizeInput(m.content, { maxLength: 1000 }),
+      }));
+
+    if (sanitizedMessages.length === 0) return json(res, 400, { error: 'Messages are required.' });
 
     let reply = null;
     try {
-      reply = await askClaude(messages);
+      reply = await askClaude(sanitizedMessages);
     } catch {
       reply = null;
     }
 
-    return json(res, 200, { reply: reply || fallbackReply(messages) });
+    return json(res, 200, { reply: reply || fallbackReply(sanitizedMessages) });
   } catch (error) {
-    return json(res, 500, { error: error.message || 'Unable to answer right now.' });
+    return json(res, 500, { error: 'Unable to answer right now.' });
   }
 }

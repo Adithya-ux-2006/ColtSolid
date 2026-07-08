@@ -46,5 +46,5 @@ DROP POLICY IF EXISTS "Anyone can insert remedy feedback" ON public.remedy_feedb
 DROP POLICY IF EXISTS "Anyone can update remedy feedback" ON public.remedy_feedback;
 DROP POLICY IF EXISTS "Authenticated users can read remedy feedback" ON public.remedy_feedback;
 CREATE POLICY "Anyone can insert remedy feedback" ON public.remedy_feedback FOR INSERT WITH CHECK (true);
-CREATE POLICY "Anyone can update remedy feedback" ON public.remedy_feedback FOR UPDATE USING (true) WITH CHECK (true);
+CREATE POLICY "Users can update their own remedy feedback" ON public.remedy_feedback FOR UPDATE USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Authenticated users can read remedy feedback" ON public.remedy_feedback FOR SELECT USING (auth.role() = 'authenticated');

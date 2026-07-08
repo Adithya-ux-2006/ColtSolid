@@ -1,4 +1,6 @@
 /* global process */
+import { parseBody } from './parseBody.js';
+import { applySecurity, json, sanitizeInput, isValidQuery } from './middleware.js';
 
 const CATEGORIES = ['headache', 'cold', 'congestion', 'cough', 'anxiety', 'insomnia', 'nausea', 'stress',
   'back_pain', 'sore_throat', 'eye_strain', 'eye_pain', 'period_cramps', 'fever', 'skin_rash', 'ear_pain',
@@ -47,29 +49,6 @@ const FALLBACK_PATTERNS = {
   acne: ['acne', 'breakout', 'pimples', 'spots', 'zits', 'break outs'],
 };
 
-function json(res, statusCode, payload) {
-  res.statusCode = statusCode;
-  res.setHeader('Content-Type', 'application/json');
-  res.end(JSON.stringify(payload));
-}
-
-function parseBody(req) {
-  if (typeof req.body === 'object' && req.body !== null) return req.body;
-  if (typeof req.body === 'string' && req.body) return JSON.parse(req.body);
-  return new Promise((resolve, reject) => {
-    let raw = '';
-    req.on('data', (chunk) => { raw += chunk; });
-    req.on('end', () => {
-      try {
-        resolve(raw ? JSON.parse(raw) : {});
-      } catch (error) {
-        reject(error);
-      }
-    });
-    req.on('error', reject);
-  });
-}
-
 function fallbackCategory(query) {
   const normalized = query.toLowerCase();
   return Object.entries(FALLBACK_PATTERNS).find(([, patterns]) => patterns.some((pattern) => normalized.includes(pattern)))?.[0] || 'none';
@@ -108,12 +87,16 @@ No explanation.`;
 }
 
 export default async function handler(req, res) {
+  const sec = applySecurity(req, res, { ai: true });
+  if (sec.handled) return;
   if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed.' });
 
   try {
     const body = await parseBody(req);
-    const query = body.query?.trim();
-    if (!query) return json(res, 400, { error: 'Query is required.' });
+    const rawQuery = body.query?.trim();
+    if (!rawQuery || !isValidQuery(rawQuery)) return json(res, 400, { error: 'Valid query is required.' });
+
+    const query = sanitizeInput(rawQuery, { maxLength: 200 });
 
     let category = null;
     try {
@@ -124,6 +107,6 @@ export default async function handler(req, res) {
 
     return json(res, 200, { category: category || fallbackCategory(query) });
   } catch (error) {
-    return json(res, 500, { error: error.message || 'Unable to match symptom.' });
+    return json(res, 500, { error: 'Unable to match symptom.' });
   }
 }

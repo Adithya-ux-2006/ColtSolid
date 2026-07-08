@@ -34,7 +34,7 @@ test.describe('Live Production Audit - Symptom to Remedy Pipeline', () => {
     { q: 'leg pain',      expectedSymptom: 'Leg Pain' },
   ];
 
-  for (const { q, expectedSymptom } of QUERIES) {
+  for (const { q } of QUERIES) {
     test(`"${q}" shows remedies`, async ({ page }) => {
       const preState = await page.evaluate(() => {
         const store = window.__ZUSTAND_STORE__;

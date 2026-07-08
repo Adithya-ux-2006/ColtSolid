@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 const QUERIES = ['blocked nose', 'my nose is blocked', 'eye pain', 'brain fog', 'leg pain'];
 
@@ -38,7 +38,6 @@ test.describe('Live engine trace in browser', () => {
         try {
           // Vite exposes modules via import()
           const engine = await import('/src/utils/symptomEngine.js');
-          const searchUtils = await import('/src/utils/symptomSearch.js');
           
           const resolution = engine.resolveQuery(q, []);
           return { query: q, resolution, error: null };

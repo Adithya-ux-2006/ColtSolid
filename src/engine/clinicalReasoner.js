@@ -253,7 +253,8 @@ export function inferConcerns(query, symptoms) {
   const validPrimaryConcerns = primaryConcerns.filter(s => s.score >= threshold);
   const validSecondaryConcerns = secondaryConcerns.filter(s => s.score >= threshold);
 
-  const confidence = Math.round(Math.min(topScore * 100, 100));
+  const hasValidConcerns = validPrimaryConcerns.length > 0 || validSecondaryConcerns.length > 0;
+  const confidence = hasValidConcerns ? Math.round(Math.min(topScore * 100, 100)) : 0;
   const severity = inferSeverity(query) || (
     validPrimaryConcerns.length > 0
       ? getSeverityFlags(validPrimaryConcerns[0].symptomId).slice(-1)[0] || 'mild'

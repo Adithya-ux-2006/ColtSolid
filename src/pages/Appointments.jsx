@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Calendar as CalendarIcon, Plus, Trash2, Edit3, MapPin, User as UserIcon } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
-import { Modal, EmptyState } from '../components/ui';
+import { Modal } from '../components/ui/Modal';
+import { EmptyState } from '../components/ui/EmptyState';
 import { AppointmentForm } from '../components/forms';
 import { useAppointmentStore } from '../store/appointmentStore';
 import { cn } from '../utils/cn';

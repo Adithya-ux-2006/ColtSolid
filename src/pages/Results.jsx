@@ -1,8 +1,11 @@
 import { useEffect, useMemo } from 'react';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { ArrowLeft, Sparkles, AlertTriangle, ShieldCheck, Info } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
-import { RemedyCard, LoadingSkeleton, EmptyState, DoctorGuidance } from '../components/ui';
+import { RemedyCard } from '../components/ui/RemedyCard';
+import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
+import { EmptyState } from '../components/ui/EmptyState';
+import { DoctorGuidance } from '../components/ui/DoctorGuidance';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { getGuestAllergies, getGuestConditions, isRemedySafeForUser } from '../utils/guestProfile';
@@ -66,9 +69,9 @@ function RemedyCardWrapper({ remedy, isSafe }) {
 export function Results() {
   const location = useLocation();
   const navigate = useNavigate();
-  const queryParams = new URLSearchParams(location.search);
-  const symptomParam = queryParams.get('symptom');
-  const queryParam = queryParams.get('q') || '';
+  const [searchParams] = useSearchParams();
+  const symptomParam = searchParams.get('symptom');
+  const queryParam = searchParams.get('q') || '';
 
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies ?? EMPTY_ARRAY);
   const userConditions = useAuthStore((state) => state.user?.common_conditions);

@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { mapRemedy } from '../utils/mappers';
-import { LOCAL_SYMPTOMS, LOCAL_REMEDIES, LOCAL_SYMPTOM_REMEDIES } from '../data/localCatalog';
 
 function buildSymptomRemediesMap(rows) {
   const map = {};
@@ -17,7 +16,8 @@ function buildSymptomRemediesMap(rows) {
   return map;
 }
 
-function loadLocalCatalog() {
+async function loadLocalCatalog() {
+  const { LOCAL_SYMPTOMS, LOCAL_REMEDIES, LOCAL_SYMPTOM_REMEDIES } = await import('../data/localCatalog');
   return {
     symptoms: LOCAL_SYMPTOMS.map((s) => ({
       id: s.id,
@@ -85,7 +85,7 @@ export const useCatalogStore = create((set, get) => ({
       });
     } catch (error) {
       console.warn('Supabase catalog unavailable, falling back to local data:', error.message);
-      const local = loadLocalCatalog();
+      const local = await loadLocalCatalog();
       set({
         ...local,
         error,
