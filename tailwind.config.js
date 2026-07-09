@@ -7,14 +7,48 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary:   { DEFAULT: '#1F5E4A', dark: '#164535', light: '#2F7D61' },
-        accent:    { DEFAULT: '#8FD9B6', light: '#B0E5CC', dark: '#6EC8A0' },
-        warm:      { DEFAULT: '#F4A261', light: '#FBD3A8', dark: '#E08838' },
-        surface:   { DEFAULT: '#DCEFE4', light: '#E8F5EE', dark: '#C5E5D6' },
-        bg:        { DEFAULT: '#F8FBF9', dark: '#F0F6F2' },
-        ink:       { DEFAULT: '#16352B', muted: '#4A7263', subtle: '#8AA89B' },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        ink: { DEFAULT: '#16352B', muted: '#4A7263', subtle: '#8AA89B' },
+        bg: { DEFAULT: '#F8FBF9', dark: '#F0F6F2' },
+        surface: { DEFAULT: '#DCEFE4', light: '#E8F5EE', dark: '#C5E5D6' },
+        warm: { DEFAULT: '#F4A261', light: '#FBD3A8', dark: '#E08838' },
       },
       borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
         'xl': '1rem',
         '2xl': '1.25rem',
         '3xl': '1.5rem',
@@ -39,7 +73,21 @@ export default {
         'gradient-featured': 'linear-gradient(135deg, #8FD9B6 0%, #B0E5CC 100%)',
         'gradient-hero': 'linear-gradient(180deg, #F8FBF9 0%, #DCEFE4 100%)',
       },
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 }
