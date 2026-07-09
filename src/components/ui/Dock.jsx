@@ -6,8 +6,6 @@ import {
   AnimatePresence,
 } from 'framer-motion';
 import {
-  Children,
-  cloneElement,
   createContext,
   useContext,
   useEffect,
@@ -23,6 +21,7 @@ const DEFAULT_DISTANCE = 140;
 const DEFAULT_PANEL_HEIGHT = 56;
 
 const DockContext = createContext(undefined);
+const DockItemContext = createContext({ width: null, isHovered: null });
 
 function DockProvider({ children, value }) {
   return <DockContext.Provider value={value}>{children}</DockContext.Provider>;
@@ -36,11 +35,6 @@ function useDock() {
   return context;
 }
 
-/**
- * macOS-style magnifying dock. Desktop/mouse only — magnification is driven
- * by cursor proximity, so this is mounted with `hidden md:flex` and the
- * existing mobile BottomNav stays as-is for touch devices.
- */
 export function Dock({
   children,
   className,
@@ -108,34 +102,35 @@ export function DockItem({ children, className, isActive }) {
   const width = useSpring(widthTransform, spring);
 
   return (
-    <motion.div
-      ref={ref}
-      style={{ width }}
-      onHoverStart={() => isHovered.set(1)}
-      onHoverEnd={() => isHovered.set(0)}
-      onFocus={() => isHovered.set(1)}
-      onBlur={() => isHovered.set(0)}
-      className={cn(
-        'relative inline-flex items-center justify-center rounded-full transition-colors',
-        isActive ? 'bg-accent/40' : 'bg-surface hover:bg-accent/20',
-        className
-      )}
-      tabIndex={0}
-      role="button"
-      aria-haspopup="true"
-    >
-      {Children.map(children, (child) =>
-        cloneElement(child, { width, isHovered })
-      )}
-    </motion.div>
+    <DockItemContext.Provider value={{ width, isHovered }}>
+      <motion.div
+        ref={ref}
+        style={{ width }}
+        onHoverStart={() => isHovered.set(1)}
+        onHoverEnd={() => isHovered.set(0)}
+        onFocus={() => isHovered.set(1)}
+        onBlur={() => isHovered.set(0)}
+        className={cn(
+          'relative inline-flex items-center justify-center rounded-full transition-colors',
+          isActive ? 'bg-accent/40' : 'bg-surface hover:bg-accent/20',
+          className
+        )}
+        tabIndex={0}
+        role="button"
+        aria-haspopup="true"
+      >
+        {children}
+      </motion.div>
+    </DockItemContext.Provider>
   );
 }
 
-export function DockLabel({ children, className, ...rest }) {
-  const isHovered = rest.isHovered;
+export function DockLabel({ children, className }) {
+  const { isHovered } = useContext(DockItemContext);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    if (!isHovered) return;
     const unsubscribe = isHovered.on('change', (latest) => {
       setIsVisible(latest === 1);
     });
@@ -164,8 +159,8 @@ export function DockLabel({ children, className, ...rest }) {
   );
 }
 
-export function DockIcon({ children, className, ...rest }) {
-  const width = rest.width;
+export function DockIcon({ children, className }) {
+  const { width } = useContext(DockItemContext);
   const widthTransform = useTransform(width, (val) => val / 2);
 
   return (
