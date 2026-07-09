@@ -1,12 +1,13 @@
 import { useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Heart, ExternalLink, Clock, Star, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Heart, Clock, Star, ShieldCheck } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { CategoryTag } from '../components/ui/CategoryTag';
 import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
 import { SafetyNotice } from '../components/ui/SafetyNotice';
 import { DoctorGuidance } from '../components/ui/DoctorGuidance';
 import { AllergyBadge } from '../components/ui/AllergyBadge';
+import { EvidenceCard } from '../components/ui/EvidenceCard';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
@@ -76,7 +77,13 @@ export function RemedyDetail() {
       {/* Header */}
       <div className="px-6 pt-6 pb-2 max-w-2xl mx-auto flex items-center justify-between">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => {
+            if (window.history.state?.idx > 0) {
+              navigate(-1);
+            } else {
+              navigate('/search');
+            }
+          }}
           className="flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -175,27 +182,11 @@ export function RemedyDetail() {
             <h2 className="section-title">Evidence</h2>
             <div className="space-y-3">
               {researchLinks.map((source, idx) => (
-                <a
+                <EvidenceCard
                   key={idx}
-                  href={source.url || '#'}
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={() => trackRemedyEvent({ remedyId: remedy.id, eventType: 'research_clicked', metadata: { url: source.url, label: source.journal || source.label } }).catch(() => {})}
-                  className="flex items-center gap-3 p-4 -mx-2 rounded-2xl hover:bg-surface/50 transition-colors"
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-primary uppercase tracking-wider mb-0.5">
-                      {source.journal || source.label || 'Clinical Research'}
-                    </p>
-                    {source.keyFinding && (
-                      <p className="text-sm text-ink leading-relaxed">&ldquo;{source.keyFinding}&rdquo;</p>
-                    )}
-                    {source.label && !source.keyFinding && (
-                      <p className="text-sm text-ink">{source.label}</p>
-                    )}
-                  </div>
-                  <ExternalLink className="w-4 h-4 text-ink-subtle shrink-0" />
-                </a>
+                  source={source}
+                  onTrackClick={() => trackRemedyEvent({ remedyId: remedy.id, eventType: 'research_clicked', metadata: { url: source.url, label: source.journal || source.label } }).catch(() => {})}
+                />
               ))}
             </div>
           </section>

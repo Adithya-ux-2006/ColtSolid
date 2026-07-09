@@ -32,7 +32,7 @@ export function Landing() {
           <h1 className="text-4xl md:text-6xl font-bold text-ink tracking-tight">
             Research-backed relief
             <br />
-            <span className="text-primary">for students.</span>
+            <span className="text-primary">for you.</span>
           </h1>
 
           <p className="text-lg text-ink-muted max-w-2xl mx-auto leading-relaxed">
@@ -63,7 +63,7 @@ export function Landing() {
               <ShieldCheck className="w-4 h-4 text-primary" /> Research-backed
             </span>
             <span className="flex items-center gap-1">
-              <ShieldCheck className="w-4 h-4 text-primary" /> Built for students
+              <ShieldCheck className="w-4 h-4 text-primary" /> Trusted by everyone
             </span>
           </p>
         </div>
@@ -83,7 +83,7 @@ export function Landing() {
             <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-4">
               Common Symptoms
             </p>
-            <div className="flex overflow-x-auto gap-3 pb-2 no-scrollbar -mx-6 px-6 snap-x">
+            <div className="flex overflow-x-auto justify-center gap-3 pb-2 no-scrollbar -mx-6 px-6 snap-x">
               {quickSymptoms.map((symptom) => (
                 <Link
                   key={symptom.id}
@@ -126,8 +126,8 @@ export function Landing() {
             />
             <Feature
               icon={GraduationCap}
-              title="Built for Students"
-              description="Cost-effective, accessible, and fast-acting solutions designed for busy academic schedules."
+              title="Fast & Accessible"
+              description="Cost-effective, accessible, and fast-acting solutions for anyone, anywhere."
             />
           </div>
         </div>

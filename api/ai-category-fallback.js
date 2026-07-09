@@ -59,7 +59,7 @@ async function askClaude(query) {
   if (!apiKey) return null;
 
   const allCategories = CATEGORIES.join(', ');
-  const prompt = `A student searched for: '${query}'
+  const prompt = `A user searched for: '${query}'
 Our remedy database covers these symptom categories: ${allCategories}.
 Which ONE category best matches what they're looking for?
 Reply with ONLY the category id or 'none' if nothing matches.

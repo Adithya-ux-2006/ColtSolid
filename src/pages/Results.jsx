@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useSearchParams, Link } from 'react-router-do
 import { ArrowLeft, Sparkles, AlertTriangle, ShieldCheck, Info } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { RemedyCard } from '../components/ui/RemedyCard';
+import { RemedyCarousel } from '../components/ui/RemedyCarousel';
 import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
 import { EmptyState } from '../components/ui/EmptyState';
 import { DoctorGuidance } from '../components/ui/DoctorGuidance';
@@ -165,8 +166,8 @@ export function Results() {
 
   return (
     <PageWrapper className="min-h-screen bg-bg pb-24 md:pb-16">
-      <div className="max-w-2xl mx-auto">
-        <div className="px-6 pt-6 pb-2">
+      <div className="max-w-4xl mx-auto">
+        <div className="max-w-2xl mx-auto px-6 pt-6 pb-2">
           <button
             onClick={() => navigate('/search')}
             className="flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink transition-colors"
@@ -176,7 +177,7 @@ export function Results() {
           </button>
         </div>
 
-        <div className="px-6 py-4">
+        <div className="max-w-2xl mx-auto px-6 py-4">
           <h1 className="text-2xl md:text-3xl font-bold text-ink leading-tight">
             {matchedSymptom?.label || queryParam}
           </h1>
@@ -203,7 +204,7 @@ export function Results() {
         </div>
 
         {isLowConfidence && (
-          <div className="px-6 mb-4">
+          <div className="max-w-2xl mx-auto px-6 mb-4">
             <div className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4">
               <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
               <div className="text-sm text-amber-800">
@@ -215,7 +216,7 @@ export function Results() {
         )}
 
         {isEmergencyQuery(queryParam) ? (
-          <div className="px-6">
+          <div className="max-w-2xl mx-auto px-6">
             <div className="rounded-3xl border-2 border-red-300 bg-red-50 p-6">
               <h2 className="text-xl font-bold text-red-700 mb-2">{EMERGENCY_MESSAGE}</h2>
               <p className="text-red-600 font-medium mb-4">{EMERGENCY_ACTION}</p>
@@ -223,7 +224,7 @@ export function Results() {
             </div>
           </div>
         ) : !hasResults && !isCatalogLoading ? (
-          <div className="px-6">
+          <div className="max-w-2xl mx-auto px-6">
             <EmptyState
               title="No remedies found"
               description={symptomResolution.symptomIds.length > 0
@@ -238,7 +239,10 @@ export function Results() {
 
             {grouped?.bestMatch && (
               <section>
-                <SectionHeader title="Best Match" description="What a knowledgeable practitioner would recommend first." count={1} />
+                <div className="mb-3">
+                  <h2 className="text-sm font-bold uppercase tracking-wider text-warm">Best Match</h2>
+                  <p className="text-xs text-ink-muted mt-1">What a knowledgeable practitioner would recommend first.</p>
+                </div>
                 <RemedyCardWrapper remedy={grouped.bestMatch} isSafe={safeFilter(grouped.bestMatch)} />
               </section>
             )}
@@ -246,37 +250,44 @@ export function Results() {
             {grouped?.bestMatches?.length > 0 && (
               <section>
                 <SectionHeader title="Best Matches" description="Top remedies that directly address your concern." count={grouped.bestMatches.length} />
-                <div className="space-y-3">
+                <RemedyCarousel>
                   {grouped.bestMatches.map((remedy) => (
-                    <RemedyCardWrapper key={remedy.id} remedy={remedy} isSafe={safeFilter(remedy)} />
+                    <div key={remedy.id} className="w-72 shrink-0 snap-start">
+                      <RemedyCardWrapper remedy={remedy} isSafe={safeFilter(remedy)} />
+                    </div>
                   ))}
-                </div>
+                </RemedyCarousel>
               </section>
             )}
 
             {grouped?.additionalOptions?.length > 0 && (
               <section>
                 <SectionHeader title="Additional Options" description="Alternative remedies that help manage associated symptoms." count={grouped.additionalOptions.length} />
-                <div className="space-y-3">
+                <RemedyCarousel>
                   {grouped.additionalOptions.map((remedy) => (
-                    <RemedyCardWrapper key={remedy.id} remedy={remedy} isSafe={safeFilter(remedy)} />
+                    <div key={remedy.id} className="w-72 shrink-0 snap-start">
+                      <RemedyCardWrapper remedy={remedy} isSafe={safeFilter(remedy)} />
+                    </div>
                   ))}
-                </div>
+                </RemedyCarousel>
               </section>
             )}
 
             {grouped?.supportive?.length > 0 && (
               <section>
                 <SectionHeader title="Supportive Remedies" description="General wellness support alongside your primary care." count={grouped.supportive.length} />
-                <div className="space-y-3">
+                <RemedyCarousel>
                   {grouped.supportive.map((remedy) => (
-                    <RemedyCardWrapper key={remedy.id} remedy={remedy} isSafe={safeFilter(remedy)} />
+                    <div key={remedy.id} className="w-72 shrink-0 snap-start">
+                      <RemedyCardWrapper remedy={remedy} isSafe={safeFilter(remedy)} />
+                    </div>
                   ))}
-                </div>
+                </RemedyCarousel>
               </section>
             )}
 
             {!isAuthenticated && hasResults && (
+              <div className="max-w-2xl mx-auto">
               <section className="rounded-3xl bg-gradient-card p-6 shadow-card border border-accent/20">
                 <div className="flex items-center gap-2 mb-3">
                   <Sparkles className="w-5 h-5 text-primary" />
@@ -300,6 +311,7 @@ export function Results() {
                   </Link>
                 </div>
               </section>
+              </div>
             )}
 
             <section>

@@ -2,9 +2,9 @@
 import { parseBody } from './parseBody.js';
 import { applySecurity, json, sanitizeInput } from './middleware.js';
 
-const SYSTEM_PROMPT = `You are a helpful health assistant for college students using curA, an evidence-based remedy app.
+const SYSTEM_PROMPT = `You are a helpful health assistant using curA, an evidence-based remedy app.
 
-When a student describes symptoms:
+When a user describes symptoms:
 1. Identify the likely symptoms from: headache, cold, anxiety, insomnia, nausea, stress, back pain, sore throat, eye strain, period cramps, fever, skin rash, ear pain, bloating, hangover, fatigue
 2. Suggest 2-3 relevant remedies from our Natural, TCM, and Lifestyle categories
 3. Always end with a disclaimer if symptoms sound serious

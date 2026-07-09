@@ -167,7 +167,7 @@ export function Profile() {
           {expandedSection === 'about' && (
             <div className="p-5 pt-0 text-sm text-ink-muted leading-relaxed border-t border-gray-50">
               <p className="mb-4">
-                curA is a student-focused health platform designed to provide evidence-backed remedies for common ailments.
+                curA is a health platform designed to provide evidence-backed remedies for common ailments.
                 Your profile, favorites, and appointments are synced through Supabase. Always consult a certified medical professional for serious health concerns.
               </p>
               <FAQAccordion items={FAQ_ITEMS.slice(0, 3)} />

@@ -9,6 +9,7 @@ export default {
       colors: {
         primary:   { DEFAULT: '#1F5E4A', dark: '#164535', light: '#2F7D61' },
         accent:    { DEFAULT: '#8FD9B6', light: '#B0E5CC', dark: '#6EC8A0' },
+        warm:      { DEFAULT: '#F4A261', light: '#FBD3A8', dark: '#E08838' },
         surface:   { DEFAULT: '#DCEFE4', light: '#E8F5EE', dark: '#C5E5D6' },
         bg:        { DEFAULT: '#F8FBF9', dark: '#F0F6F2' },
         ink:       { DEFAULT: '#16352B', muted: '#4A7263', subtle: '#8AA89B' },
