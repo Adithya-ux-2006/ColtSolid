@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Suspense, lazy, useEffect, useState } from 'react';
-import { Navbar, BottomNav, AdminGuard } from './components/layout';
+import { Navbar, BottomNav, AppDock, AdminGuard } from './components/layout';
 import { useAuthStore } from './store/authStore';
 import { useFavoritesStore } from './store/favoritesStore';
 import { useAppointmentStore } from './store/appointmentStore';
@@ -25,6 +25,7 @@ const Appointments = lazy(() => import('./pages/Appointments').then(m => ({ defa
 const Profile = lazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })));
 const Onboarding = lazy(() => import('./pages/Onboarding').then(m => ({ default: m.Onboarding })));
 const AdminAnalytics = lazy(() => import('./pages/AdminAnalytics').then(m => ({ default: m.AdminAnalytics })));
+const Demo = lazy(() => import('./pages/demo').then(m => ({ default: m.default })));
 
 /** Wraps a lazy page in its own Suspense so the navbar stays visible during transitions. */
 function Page({ children }) {
@@ -80,6 +81,9 @@ function AppRoutes() {
       <Route path="/profile" element={<ProtectedRoute><Page><Profile /></Page></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute><AdminGuard><Page><AdminAnalytics /></Page></AdminGuard></ProtectedRoute>} />
       <Route path="/onboarding" element={<ProtectedRoute><Page><Onboarding /></Page></ProtectedRoute>} />
+      
+      {/* Demo route */}
+      <Route path="/demo" element={<Page><Demo /></Page>} />
       
       {/* Catch-all redirect */}
       <Route path="*" element={<Navigate to="/" replace />} />
@@ -137,6 +141,7 @@ function App() {
           <AiChatPanel />
         </Suspense>
         <BottomNav />
+        <AppDock />
       </div>
     </BrowserRouter>
   );
