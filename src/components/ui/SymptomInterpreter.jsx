@@ -145,7 +145,7 @@ export function SymptomInterpreter({
               {relatedSymptoms.map((rs) => (
                 <span
                   key={rs.id}
-                  className="text-xs px-2.5 py-1 rounded-full bg-accent/10 text-accent-dark font-medium"
+                  className="text-xs px-2.5 py-1 rounded-full bg-accent/10 text-primary-dark font-medium"
                 >
                   {rs.emoji} {rs.label}
                 </span>

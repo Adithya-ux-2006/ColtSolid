@@ -79,7 +79,7 @@ export function RemedyDetail() {
       <div className="px-6 pt-6 pb-2 max-w-2xl mx-auto flex items-center justify-between">
         <button
           onClick={() => {
-            if (window.history.state?.idx > 0) {
+            if (window.history.length > 1) {
               navigate(-1);
             } else {
               navigate('/search');

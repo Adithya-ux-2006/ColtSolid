@@ -102,6 +102,7 @@ export function Profile() {
                       <button
                         key={option.value}
                         type="button"
+                        aria-pressed={isSelected}
                         onClick={() => {
                           const next = option.value === 'none'
                             ? (isSelected ? [] : ['none'])
@@ -128,6 +129,7 @@ export function Profile() {
                       <button
                         key={option.value}
                         type="button"
+                        aria-pressed={isSelected}
                         onClick={() => {
                           const next = option.value === 'none'
                             ? (isSelected ? [] : ['none'])
@@ -161,6 +163,7 @@ export function Profile() {
           {/* About Accordion */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-50 overflow-hidden">
             <button
+              aria-expanded={expandedSection === 'about'}
               className="w-full p-5 flex justify-between items-center text-left"
               onClick={() => setExpandedSection(expandedSection === 'about' ? null : 'about')}
             >
@@ -259,6 +262,7 @@ export function Profile() {
                       <button
                         key={option}
                         type="button"
+                        aria-pressed={isSelected}
                         onClick={() => setEditForm({ ...editForm, gender: option })}
                         className={isSelected ? 'rounded-full border border-forest bg-primary px-4 py-2 text-sm font-medium text-white' : 'rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-ink'}
                       >
@@ -276,6 +280,7 @@ export function Profile() {
                         <button
                           key={option.value}
                           type="button"
+                          aria-pressed={isSelected}
                           onClick={() => {
                             const next = option.value === 'none'
                               ? (isSelected ? [] : ['none'])
@@ -301,6 +306,7 @@ export function Profile() {
                         <button
                           key={option.value}
                           type="button"
+                          aria-pressed={isSelected}
                           onClick={() => {
                             const next = option.value === 'none'
                               ? (isSelected ? [] : ['none'])
@@ -365,7 +371,8 @@ export function Profile() {
 
         {/* About Accordion */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-50 overflow-hidden">
-          <button 
+          <button
+            aria-expanded={expandedSection === 'about'}
             className="w-full p-5 flex justify-between items-center text-left"
             onClick={() => setExpandedSection(expandedSection === 'about' ? null : 'about')}
           >

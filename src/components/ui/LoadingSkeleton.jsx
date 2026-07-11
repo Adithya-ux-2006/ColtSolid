@@ -2,7 +2,7 @@ import { cn } from '../../utils/cn';
 
 export function LoadingSkeleton({ count = 1, className }) {
   return (
-    <>
+    <div role="status" aria-label="Loading content">
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
@@ -16,6 +16,6 @@ export function LoadingSkeleton({ count = 1, className }) {
           <div className="h-4 w-full bg-surface rounded-lg" />
         </div>
       ))}
-    </>
+    </div>
   );
 }
