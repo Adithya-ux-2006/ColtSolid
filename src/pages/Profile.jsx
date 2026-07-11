@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { LogOut, ChevronDown } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { LogOut, ChevronDown, User } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { FAQAccordion } from '../components/ui/FAQAccordion';
 import { useAuthStore } from '../store/authStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useRemedyScheduleStore } from '../store/remedyScheduleStore';
+import { useGuestProfileStore } from '../store/guestProfileStore';
 import { getInitials } from '../utils/mappers';
 import { ALLERGIES, CONDITIONS, FAQ_ITEMS, GENDER_OPTIONS } from '../constants/onboarding';
 
@@ -15,13 +16,24 @@ const ONBOARDING_LABELS = new Map(
 
 export function Profile() {
   const user = useAuthStore((state) => state.user);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const logout = useAuthStore((state) => state.logout);
   const updateUser = useAuthStore((state) => state.updateUser);
   const favorites = useFavoritesStore((state) => state.favorites);
   const schedules = useRemedyScheduleStore((state) => state.schedules);
+  const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
+  const guestConditions = useGuestProfileStore((state) => state.common_conditions);
+  const updateGuestProfile = useGuestProfileStore((state) => state.updateProfile);
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
+  const [expandedSection, setExpandedSection] = useState(null);
+
+  // Guest profile editing state
+  const [guestEditForm, setGuestEditForm] = useState({
+    selectedConditions: guestConditions,
+    selectedAllergies: guestAllergies,
+  });
   const [editForm, setEditForm] = useState({
     name: user?.name || '',
     gender: user?.gender || '',
@@ -29,9 +41,148 @@ export function Profile() {
     selectedAllergies: user?.known_allergies ?? [],
   });
 
-  const [expandedSection, setExpandedSection] = useState(null);
+  // Guest profile view: not authenticated
+  if (!isAuthenticated) {
+    const handleGuestSave = () => {
+      updateGuestProfile({
+        known_allergies: guestEditForm.selectedAllergies.filter(v => v !== 'none'),
+        common_conditions: guestEditForm.selectedConditions.filter(v => v !== 'none'),
+      });
+    };
 
-  if (!user) return null;
+    const formatValue = (value) => {
+      if (!value) return value;
+      if (value.startsWith('other:')) return value.slice(6).trim();
+      if (ONBOARDING_LABELS.has(value)) return ONBOARDING_LABELS.get(value);
+      return value.split('-').map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
+    };
+
+    return (
+      <PageWrapper className="min-h-screen bg-bg pb-24 md:pb-8 pt-6">
+        <div className="max-w-2xl mx-auto px-6 space-y-8">
+          {/* Guest Profile Card */}
+          <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 flex flex-col items-center gap-4 text-center">
+            <div className="w-20 h-20 rounded-2xl bg-accent/20 flex items-center justify-center text-primary">
+              <User className="w-10 h-10" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-ink mb-1">Guest Profile</h1>
+              <p className="text-ink-muted text-sm">Sign in to save favorites and get a personalized dashboard.</p>
+            </div>
+            <div className="flex gap-3 mt-2">
+              <Link
+                to="/register"
+                className="px-6 py-2.5 bg-primary text-white rounded-xl font-semibold text-sm shadow-glow hover:bg-primary-dark transition-colors"
+              >
+                Sign Up Free
+              </Link>
+              <Link
+                to="/login"
+                className="px-6 py-2.5 border border-ink/10 text-ink rounded-xl font-medium text-sm hover:bg-surface transition-colors"
+              >
+                Log In
+              </Link>
+            </div>
+          </div>
+
+          {/* Guest Health Profile */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-50 overflow-hidden">
+            <div className="p-5 border-b border-gray-50">
+              <h2 className="font-bold text-lg text-ink">Health Profile</h2>
+              <p className="text-xs text-ink-muted mt-1">Edit your allergies and conditions to get safer remedy recommendations.</p>
+            </div>
+            <div className="space-y-5 p-5">
+              {/* Allergies */}
+              <div className="space-y-2">
+                <p className="text-sm font-semibold text-ink">Allergies & Sensitivities</p>
+                <div className="flex flex-wrap gap-2">
+                  {ALLERGIES.map((option) => {
+                    const isSelected = guestEditForm.selectedAllergies.includes(option.value);
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => {
+                          const next = option.value === 'none'
+                            ? (isSelected ? [] : ['none'])
+                            : isSelected
+                              ? guestEditForm.selectedAllergies.filter(v => v !== option.value && v !== 'none')
+                              : [...guestEditForm.selectedAllergies.filter(v => v !== 'none'), option.value];
+                          setGuestEditForm({ ...guestEditForm, selectedAllergies: next });
+                        }}
+                        className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-gray-200 px-3 py-1.5 text-sm font-medium text-ink'}
+                      >
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              {/* Conditions */}
+              <div className="space-y-2">
+                <p className="text-sm font-semibold text-ink">Health Conditions</p>
+                <div className="flex flex-wrap gap-2">
+                  {CONDITIONS.map((option) => {
+                    const isSelected = guestEditForm.selectedConditions.includes(option.value);
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => {
+                          const next = option.value === 'none'
+                            ? (isSelected ? [] : ['none'])
+                            : isSelected
+                              ? guestEditForm.selectedConditions.filter(v => v !== option.value && v !== 'none')
+                              : [...guestEditForm.selectedConditions.filter(v => v !== 'none'), option.value];
+                          setGuestEditForm({ ...guestEditForm, selectedConditions: next });
+                        }}
+                        className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-gray-200 px-3 py-1.5 text-sm font-medium text-ink'}
+                      >
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              <button onClick={handleGuestSave} className="px-6 py-2.5 bg-primary text-white rounded-xl font-semibold text-sm w-full">
+                Save
+              </button>
+
+              {/* Summary */}
+              {(guestEditForm.selectedAllergies.length > 0 || guestEditForm.selectedConditions.length > 0) && (
+                <div className="pt-3 border-t border-gray-50 space-y-3">
+                  <ProfileGroup title="Allergies" values={guestEditForm.selectedAllergies.map(formatValue)} emptyLabel="None selected" />
+                  <ProfileGroup title="Conditions" values={guestEditForm.selectedConditions.map(formatValue)} emptyLabel="None selected" />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* About Accordion */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-50 overflow-hidden">
+            <button
+              className="w-full p-5 flex justify-between items-center text-left"
+              onClick={() => setExpandedSection(expandedSection === 'about' ? null : 'about')}
+            >
+              <span className="font-bold text-lg text-ink">About curA</span>
+              <ChevronDown className={`w-5 h-5 text-ink-muted transition-transform ${expandedSection === 'about' ? 'rotate-180' : ''}`} />
+            </button>
+            {expandedSection === 'about' && (
+              <div className="p-5 pt-0 text-sm text-ink-muted leading-relaxed border-t border-gray-50">
+                <p className="mb-4">
+                  curA is a health platform designed to provide evidence-backed remedies for common ailments.
+                  Always consult a certified medical professional for serious health concerns.
+                </p>
+                <FAQAccordion items={FAQ_ITEMS.slice(0, 3)} />
+              </div>
+            )}
+          </div>
+        </div>
+      </PageWrapper>
+    );
+  }
+
+  // Authenticated user profile
 
   const selectedConditions = user.common_conditions ?? [];
   const selectedAllergies = user.known_allergies ?? [];

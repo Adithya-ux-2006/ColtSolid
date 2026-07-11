@@ -11,7 +11,8 @@ import { EvidenceCard } from '../components/ui/EvidenceCard';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
-import { getGuestAllergies, getGuestConditions, isRemedySafeForUser } from '../utils/guestProfile';
+import { useGuestProfileStore } from '../store/guestProfileStore';
+import { isRemedySafeForUser } from '../utils/guestProfile';
 import { cn } from '../utils/cn';
 import { trackRemedyEvent } from '../utils/analytics';
 
@@ -26,8 +27,8 @@ export function RemedyDetail() {
 
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies) ?? [];
   const userConditions = useAuthStore((state) => state.user?.common_conditions);
-  const guestAllergies = useMemo(() => (!isAuthenticated ? getGuestAllergies() : []), [isAuthenticated]);
-  const guestConditions = useMemo(() => (!isAuthenticated ? getGuestConditions() : []), [isAuthenticated]);
+  const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
+  const guestConditions = useGuestProfileStore((state) => state.common_conditions);
   const activeAllergies = isAuthenticated ? userKnownAllergies : guestAllergies;
   const activeConditions = isAuthenticated ? userConditions : guestConditions;
 

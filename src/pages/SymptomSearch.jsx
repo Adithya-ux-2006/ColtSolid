@@ -7,8 +7,9 @@ import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
 import { useSearch } from '../hooks/useSearch';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
+import { useGuestProfileStore } from '../store/guestProfileStore';
 import { trackSearchEvent } from '../utils/analytics';
-import { getGuestAllergies, getGuestConditions, isRemedySafeForUser } from '../utils/guestProfile';
+import { isRemedySafeForUser } from '../utils/guestProfile';
 import { getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptomSearch';
 import { resolveQuery } from '../utils/symptomEngine';
 import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
@@ -34,9 +35,8 @@ export function SymptomSearch() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies);
   const userConditions = useAuthStore((state) => state.user?.common_conditions);
-
-  const guestAllergies = useMemo(() => (!isAuthenticated ? getGuestAllergies() : []), [isAuthenticated]);
-  const guestConditions = useMemo(() => (!isAuthenticated ? getGuestConditions() : []), [isAuthenticated]);
+  const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
+  const guestConditions = useGuestProfileStore((state) => state.common_conditions);
   const activeAllergies = isAuthenticated ? userKnownAllergies : guestAllergies;
   const activeConditions = isAuthenticated ? userConditions : guestConditions;
 

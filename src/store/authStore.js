@@ -221,6 +221,8 @@ export const useAuthStore = create((set, get) => ({
         university: updates.universityName,
         year: updates.currentYear,
         gender: updates.gender,
+        known_allergies: updates.known_allergies,
+        common_conditions: updates.common_conditions,
       };
 
       Object.keys(dbUpdates).forEach((key) => dbUpdates[key] === undefined && delete dbUpdates[key]);

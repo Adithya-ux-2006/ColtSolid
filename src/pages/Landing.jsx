@@ -7,13 +7,14 @@ import { QuestionnaireFlow } from '../components/onboarding/QuestionnaireFlow';
 import { PageWrapper } from '../components/layout';
 import { useCatalogStore } from '../store/catalogStore';
 import { FAQ_ITEMS } from '../constants/onboarding';
-import { saveGuestProfile } from '../utils/guestProfile';
+import { useGuestProfileStore } from '../store/guestProfileStore';
 import { trackSearchEvent } from '../utils/analytics';
 
 export function Landing() {
   const symptoms = useCatalogStore((state) => state.symptoms);
   const navigate = useNavigate();
   const [isQuestionnaireOpen, setIsQuestionnaireOpen] = useState(false);
+  const updateGuestProfile = useGuestProfileStore((state) => state.updateProfile);
 
   const quickSymptoms = useMemo(
     () => symptoms.filter((s) => ['headache', 'cold', 'anxiety', 'insomnia', 'nausea', 'stress'].includes(s.id)).slice(0, 6),
@@ -156,7 +157,7 @@ export function Landing() {
           completeMessage="Your search is ready."
           initialValues={{}}
           onSubmit={async ({ gender, commonConditions, knownAllergies }) => {
-            saveGuestProfile({
+            updateGuestProfile({
               gender,
               common_conditions: commonConditions,
               known_allergies: knownAllergies,
