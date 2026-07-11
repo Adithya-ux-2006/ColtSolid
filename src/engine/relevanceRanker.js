@@ -223,11 +223,11 @@ export function rankRemedies(remedies, concerns, symptomRemediesMap, options = {
 
       let baseScore;
       if (tier === REMEDY_TIER.DIRECT) {
-        const paperCount = remedy.researchPapers?.length || 0;
+        const paperCount = (remedy.researchPapers?.length || 0) + (remedy.researchLinks?.length || 0);
         const evidenceScore = Math.min(paperCount * 3, 10);
         baseScore = computeDirectScore(evidenceScore, 5);
       } else {
-        const paperCount = remedy.researchPapers?.length || 0;
+        const paperCount = (remedy.researchPapers?.length || 0) + (remedy.researchLinks?.length || 0);
         const evidenceScore = Math.min(paperCount * 3, 10);
         baseScore = computeAssociatedScore(evidenceScore, 3);
       }

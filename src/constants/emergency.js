@@ -29,7 +29,7 @@ export function isEmergencySymptom(query) {
   }
 
   const emergencyTokens = new Set([
-    'emergency', 'urgent', 'severe', 'suicidal', 'overdose', 'poison',
+    'emergency', 'urgent', 'suicidal', 'overdose', 'poison',
     'anaphylaxis', 'seizure', 'convulsing', 'unconscious',
     'stroke', 'heart attack',
   ]);

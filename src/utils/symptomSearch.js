@@ -1,4 +1,3 @@
-import { inferConcerns } from '../engine/clinicalReasoner';
 import { rankRemedies } from '../engine/relevanceRanker';
 import { filterUnsafeRemedies, adjustConfidence } from '../engine/safetyFilter';
 import { groupResults } from '../engine/resultsGrouper';
@@ -7,17 +6,6 @@ import { isEmergencySymptom } from '../constants/emergency';
 
 export function isEmergencyQuery(query) {
   return isEmergencySymptom(query);
-}
-
-export function matchQueryToSymptoms(query, symptoms) {
-  if (!query || !symptoms?.length) return [];
-
-  const normalized = query.toLowerCase().trim();
-  if (isEmergencyQuery(normalized)) return [];
-
-  const result = inferConcerns(query, symptoms);
-  const allConcerns = [...result.primaryConcerns, ...result.secondaryConcerns];
-  return allConcerns.map(c => c.id);
 }
 
 export function getRankedRemediesForSymptoms(
@@ -34,6 +22,7 @@ export function getRankedRemediesForSymptoms(
     symptoms = [],
     allergies = [],
     conditions = [],
+    queryConfidence = null,
   } = options;
 
   const concerns = symptomIds.map(id => {
@@ -53,7 +42,7 @@ export function getRankedRemediesForSymptoms(
   });
 
   const safe = filterUnsafeRemedies(ranked, userContext);
-  const adjusted = adjustConfidence(safe, null);
+  const adjusted = adjustConfidence(safe, queryConfidence);
 
   const grouped = groupResults(adjusted);
 

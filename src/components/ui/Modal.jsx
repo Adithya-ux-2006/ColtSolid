@@ -1,11 +1,51 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
 export function Modal({ isOpen, onClose, title, children, className }) {
+  const modalRef = useRef(null);
+  const previousFocusRef = useRef(null);
+
   useEffect(() => {
     if (!isOpen) return;
-    const handleKey = (e) => { if (e.key === 'Escape') onClose(); };
+    previousFocusRef.current = document.activeElement;
+
+    const modal = modalRef.current;
+    if (modal) {
+      const focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if (focusable) focusable.focus();
+    }
+
+    return () => {
+      if (previousFocusRef.current && previousFocusRef.current.focus) {
+        previousFocusRef.current.focus();
+      }
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKey = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key === 'Tab' && modalRef.current) {
+        const focusable = modalRef.current.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
     document.addEventListener('keydown', handleKey);
     return () => document.removeEventListener('keydown', handleKey);
   }, [isOpen, onClose]);
@@ -21,16 +61,28 @@ export function Modal({ isOpen, onClose, title, children, className }) {
 
   if (!isOpen) return null;
 
+  const titleId = title ? 'modal-title' : undefined;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="fixed inset-0 bg-ink/20" onClick={onClose} />
-      <div className={cn(
-        "relative bg-white rounded-4xl w-full max-w-lg max-h-[85vh] overflow-y-auto shadow-2xl",
-        className
-      )}>
+      <div className="fixed inset-0 bg-ink/20" onClick={onClose} aria-hidden="true" />
+      <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        className={cn(
+          "relative bg-white rounded-4xl w-full max-w-lg max-h-[85vh] overflow-y-auto shadow-2xl",
+          className
+        )}
+      >
         <div className="flex items-center justify-between p-6 pb-0">
-          <h2 className="text-xl font-semibold text-ink">{title}</h2>
-          <button onClick={onClose} className="p-1 text-ink-muted hover:text-ink rounded-full hover:bg-surface transition-colors">
+          {title && <h2 id={titleId} className="text-xl font-semibold text-ink">{title}</h2>}
+          <button
+            onClick={onClose}
+            aria-label="Close dialog"
+            className="p-1 text-ink-muted hover:text-ink rounded-full hover:bg-surface transition-colors ml-auto"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>

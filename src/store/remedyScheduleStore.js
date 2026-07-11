@@ -56,6 +56,9 @@ export const useRemedyScheduleStore = create((set, get) => ({
   },
 
   update: async (id, updates) => {
+    const user = useAuthStore.getState().user;
+    if (!user) return;
+
     try {
       const { data, error } = await supabase
         .from('remedy_schedules')
@@ -66,6 +69,7 @@ export const useRemedyScheduleStore = create((set, get) => ({
           active: updates.active,
         })
         .eq('id', id)
+        .eq('user_id', user.id)
         .select()
         .single();
 
@@ -85,11 +89,15 @@ export const useRemedyScheduleStore = create((set, get) => ({
   },
 
   remove: async (id) => {
+    const user = useAuthStore.getState().user;
+    if (!user) return;
+
     try {
       const { error } = await supabase
         .from('remedy_schedules')
         .delete()
-        .eq('id', id);
+        .eq('id', id)
+        .eq('user_id', user.id);
 
       if (error) throw error;
       set((state) => ({

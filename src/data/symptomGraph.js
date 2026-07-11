@@ -30,7 +30,7 @@ const SYMPTOM_GRAPH = {
     emergencyFlags: [],
   },
   sinus_pressure: {
-    relatedSymptoms: ['congestion', 'headache', 'cold', 'ear_pain', 'tooth pain'],
+    relatedSymptoms: ['congestion', 'headache', 'cold', 'ear_pain', 'toothache'],
     possibleCauses: ['sinus infection', 'allergies', 'congestion', 'weather changes', 'facial structure'],
     severityFlags: ['moderate', 'severe'],
     emergencyFlags: ['high fever with facial swelling', 'vision changes'],
@@ -48,7 +48,7 @@ const SYMPTOM_GRAPH = {
     emergencyFlags: ['fever over 103', 'fever with rash', 'fever with stiff neck', 'fever in infant'],
   },
   anxiety: {
-    relatedSymptoms: ['stress', 'insomnia', 'panic', 'heart palpitations', 'fatigue', 'brain_fog'],
+    relatedSymptoms: ['stress', 'insomnia', 'palpitations', 'fatigue', 'brain_fog'],
     possibleCauses: ['stress', 'hormonal imbalance', 'life changes', 'genetic predisposition', 'trauma'],
     severityFlags: ['mild', 'moderate', 'severe'],
     emergencyFlags: ['suicidal thoughts', 'panic attack with chest pain', 'self-harm thoughts'],
@@ -72,7 +72,7 @@ const SYMPTOM_GRAPH = {
     emergencyFlags: [],
   },
   fatigue: {
-    relatedSymptoms: ['low_energy', 'brain_fog', 'stress', 'burnout', 'insomnia', 'dehydration', 'anemia concern'],
+    relatedSymptoms: ['low_energy', 'brain_fog', 'stress', 'burnout', 'insomnia', 'dehydration', 'anemia'],
     possibleCauses: ['poor sleep', 'stress', 'dehydration', 'nutritional deficiency', 'overexertion', 'illness recovery'],
     severityFlags: ['mild', 'moderate'],
     emergencyFlags: ['extreme fatigue with chest pain', 'sudden severe fatigue'],
@@ -108,7 +108,7 @@ const SYMPTOM_GRAPH = {
     emergencyFlags: [],
   },
   heartburn: {
-    relatedSymptoms: ['indigestion', 'nausea', 'chest discomfort'],
+    relatedSymptoms: ['indigestion', 'nausea'],
     possibleCauses: ['acid reflux', 'spicy food', 'large meals', 'lying down after eating', 'obesity', 'pregnancy'],
     severityFlags: ['mild', 'moderate'],
     emergencyFlags: ['chest pain with shortness of breath', 'pain radiating to arm or jaw'],
@@ -126,7 +126,7 @@ const SYMPTOM_GRAPH = {
     emergencyFlags: [],
   },
   constipation: {
-    relatedSymptoms: ['bloating', 'gas', 'stomach_ache', 'irregular bowels'],
+    relatedSymptoms: ['bloating', 'gas', 'stomach_ache'],
     possibleCauses: ['low fiber diet', 'dehydration', 'sedentary lifestyle', 'stress', 'medication side effects', 'travel'],
     severityFlags: ['mild', 'moderate'],
     emergencyFlags: ['severe pain', 'blood in stool', 'complete blockage'],
@@ -138,7 +138,7 @@ const SYMPTOM_GRAPH = {
     emergencyFlags: ['bloody diarrhea', 'severe dehydration', 'persistent diarrhea over 3 days'],
   },
   dehydration: {
-    relatedSymptoms: ['headache', 'fatigue', 'dry_skin', 'low_energy', 'dizziness concern'],
+    relatedSymptoms: ['headache', 'fatigue', 'dry_skin', 'low_energy'],
     possibleCauses: ['insufficient water intake', 'excessive sweating', 'diarrhea', 'vomiting', 'fever', 'alcohol'],
     severityFlags: ['mild', 'moderate', 'severe'],
     emergencyFlags: ['severe dehydration with confusion', 'no urination for 8 hours', 'rapid heart rate'],
@@ -150,7 +150,7 @@ const SYMPTOM_GRAPH = {
     emergencyFlags: [],
   },
   back_pain: {
-    relatedSymptoms: ['muscle_pain', 'neck_pain', 'shoulder_pain', 'sciatica concern', 'joint_pain'],
+    relatedSymptoms: ['muscle_pain', 'neck_pain', 'shoulder_pain', 'sciatica', 'joint_pain'],
     possibleCauses: ['muscle strain', 'poor posture', 'sedentary lifestyle', 'heavy lifting', 'injury', 'prolonged sitting'],
     severityFlags: ['mild', 'moderate', 'severe'],
     emergencyFlags: ['loss of bladder control', 'sudden severe back pain', 'back pain with fever', 'numbness in legs'],
@@ -174,13 +174,13 @@ const SYMPTOM_GRAPH = {
     emergencyFlags: ['severe muscle pain with dark urine', 'muscle pain with fever'],
   },
   joint_pain: {
-    relatedSymptoms: ['muscle_pain', 'fatigue', 'knee_pain', 'back_pain', 'inflammation concern'],
+    relatedSymptoms: ['muscle_pain', 'fatigue', 'knee_pain', 'back_pain'],
     possibleCauses: ['arthritis', 'overuse', 'injury', 'inflammation', 'age-related wear', 'weather changes'],
     severityFlags: ['mild', 'moderate', 'severe'],
     emergencyFlags: ['hot swollen joint', 'joint pain with fever'],
   },
   leg_pain: {
-    relatedSymptoms: ['muscle_pain', 'fatigue', 'dehydration', 'knee_pain', 'cramp concern'],
+    relatedSymptoms: ['muscle_pain', 'fatigue', 'dehydration', 'knee_pain'],
     possibleCauses: ['muscle strain', 'overuse', 'dehydration', 'cramping', 'prolonged standing', 'exercise'],
     severityFlags: ['mild', 'moderate'],
     emergencyFlags: ['leg pain with swelling and redness', 'sudden severe calf pain'],
@@ -210,7 +210,7 @@ const SYMPTOM_GRAPH = {
     emergencyFlags: ['severe ear pain with fever', 'fluid drainage', 'hearing loss'],
   },
   skin_rash: {
-    relatedSymptoms: ['dry_skin', 'acne', 'allergy concern'],
+    relatedSymptoms: ['dry_skin', 'acne', 'allergies'],
     possibleCauses: ['allergies', 'irritants', 'infection', 'dry skin', 'heat', 'autoimmune response'],
     severityFlags: ['mild', 'moderate'],
     emergencyFlags: ['rash with fever', 'sudden widespread rash', 'rash with difficulty breathing'],
@@ -222,7 +222,7 @@ const SYMPTOM_GRAPH = {
     emergencyFlags: [],
   },
   acne: {
-    relatedSymptoms: ['skin_rash', 'stress', 'pms', 'hormonal imbalance'],
+    relatedSymptoms: ['skin_rash', 'stress', 'pms'],
     possibleCauses: ['hormonal changes', 'stress', 'diet', 'skincare products', 'genetics', 'bacteria'],
     severityFlags: ['mild', 'moderate', 'severe'],
     emergencyFlags: ['severe cystic acne', 'acne with fever'],
@@ -234,13 +234,13 @@ const SYMPTOM_GRAPH = {
     emergencyFlags: ['severe pelvic pain', 'heavy bleeding', 'missed period with severe pain'],
   },
   pms: {
-    relatedSymptoms: ['period_cramps', 'bloating', 'fatigue', 'acne', 'headache', 'mood changes', 'insomnia'],
+    relatedSymptoms: ['period_cramps', 'bloating', 'fatigue', 'acne', 'headache', 'insomnia'],
     possibleCauses: ['hormonal changes', 'menstrual cycle', 'progesterone changes', 'serotonin fluctuations'],
     severityFlags: ['mild', 'moderate'],
     emergencyFlags: [],
   },
   menopause: {
-    relatedSymptoms: ['insomnia', 'fatigue', 'anxiety', 'mood changes', 'hot flashes', 'dry_skin'],
+    relatedSymptoms: ['insomnia', 'fatigue', 'anxiety', 'dry_skin'],
     possibleCauses: ['hormonal changes', 'aging', 'estrogen decline', 'life transition'],
     severityFlags: ['mild', 'moderate'],
     emergencyFlags: [],

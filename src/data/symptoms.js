@@ -52,9 +52,6 @@ export const SYMPTOMS = [
   { id: 'urinary_incontinence', label: 'Urinary Incontinence', emoji: '🫧', color: 'sage' },
 
   { id: 'yeast_infection', label: 'Yeast Infection', emoji: '🫧', color: 'sage' },
-  { id: 'low_libido', label: 'Low Libido', emoji: '💕', color: 'forest' },
-  { id: 'erectile_dysfunction', label: 'Erectile Dysfunction', emoji: '💪', color: 'forest' },
-  { id: 'vaginal_dryness', label: 'Vaginal Dryness', emoji: '💧', color: 'sage' },
   { id: 'prostate_issues', label: 'Prostate Issues', emoji: '🫧', color: 'forest' },
   { id: 'testicular_pain', label: 'Testicular Pain', emoji: '😣', color: 'forest' },
   { id: 'pelvic_pain', label: 'Pelvic Pain', emoji: '🤕', color: 'forest' },

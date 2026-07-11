@@ -133,8 +133,9 @@ export function Results() {
       symptoms,
       allergies: activeAllergies,
       conditions: activeConditions,
+      queryConfidence: symptomResolution.confidence,
     });
-  }, [symptomResolution.symptomIds, symptomRemedies, remedies, symptoms, activeAllergies, activeConditions]);
+  }, [symptomResolution.symptomIds, symptomResolution.confidence, symptomRemedies, remedies, symptoms, activeAllergies, activeConditions]);
 
   const grouped = searchResult.grouped;
 

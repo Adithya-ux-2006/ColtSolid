@@ -15,6 +15,8 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          dark: "hsl(142 72% 22%)",
+          light: "hsl(142 50% 85%)",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -44,6 +46,7 @@ export default {
         bg: { DEFAULT: '#F8FBF9', dark: '#F0F6F2' },
         surface: { DEFAULT: '#DCEFE4', light: '#E8F5EE', dark: '#C5E5D6' },
         warm: { DEFAULT: '#F4A261', light: '#FBD3A8', dark: '#E08838' },
+        forest: { DEFAULT: '#2F6E52', light: '#4A7263' },
       },
       borderRadius: {
         lg: "var(--radius)",

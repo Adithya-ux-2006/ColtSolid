@@ -6,6 +6,7 @@ import { useFavoritesStore } from './store/favoritesStore';
 import { useRemedyScheduleStore } from './store/remedyScheduleStore';
 import { useCatalogStore } from './store/catalogStore';
 import { LoadingSkeleton } from './components/ui/LoadingSkeleton';
+import { ErrorBoundary } from './components/ui/ErrorBoundary';
 
 // Pages — lazy-loaded for code splitting
 const Landing = lazy(() => import('./pages/Landing').then(m => ({ default: m.Landing })));
@@ -20,7 +21,6 @@ const RemedySchedules = lazy(() => import('./pages/RemedySchedules').then(m => (
 const Profile = lazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })));
 const Onboarding = lazy(() => import('./pages/Onboarding').then(m => ({ default: m.Onboarding })));
 const AdminAnalytics = lazy(() => import('./pages/AdminAnalytics').then(m => ({ default: m.AdminAnalytics })));
-const Demo = lazy(() => import('./pages/demo').then(m => ({ default: m.default })));
 
 /** Wraps a lazy page in its own Suspense so the navbar stays visible during transitions. */
 function Page({ children }) {
@@ -77,9 +77,6 @@ function AppRoutes() {
       <Route path="/admin" element={<ProtectedRoute><AdminGuard><Page><AdminAnalytics /></Page></AdminGuard></ProtectedRoute>} />
       <Route path="/onboarding" element={<ProtectedRoute><Page><Onboarding /></Page></ProtectedRoute>} />
       
-      {/* Demo route */}
-      <Route path="/demo" element={<Page><Demo /></Page>} />
-      
       {/* Catch-all redirect */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
@@ -122,19 +119,28 @@ function App() {
   }, [clearFavorites, clearSchedules, fetchFavorites, fetchSchedules, isAuthenticated]);
 
   if (!bootstrapped && !isInitialized) {
-    return null;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-ink-muted font-medium">Loading curA...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
     <BrowserRouter>
-      <div className="flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-1 relative">
-          <AppRoutes />
-        </main>
-        <BottomNav />
-        <AppDock />
-      </div>
+      <ErrorBoundary>
+        <div className="flex flex-col min-h-screen">
+          <Navbar />
+          <main className="flex-1 relative">
+            <AppRoutes />
+          </main>
+          <BottomNav />
+          <AppDock />
+        </div>
+      </ErrorBoundary>
     </BrowserRouter>
   );
 }

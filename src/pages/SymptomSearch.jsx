@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Search, ArrowRight } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
@@ -26,7 +26,6 @@ const DEFAULT_SYMPTOM_CARDS = [
 export function SymptomSearch() {
   const { searchTerm, setSearchTerm, debouncedTerm } = useSearch('', 300);
   const navigate = useNavigate();
-  const dropdownRef = useRef(null);
 
   const symptoms = useCatalogStore((state) => state.symptoms);
   const remedies = useCatalogStore((state) => state.remedies);
@@ -72,18 +71,13 @@ export function SymptomSearch() {
       symptoms,
       allergies: activeAllergies,
       conditions: activeConditions,
+      queryConfidence: symptomResolution.confidence,
     });
     const combined = [...(result.primary || []), ...(result.related || [])];
     return combined.filter(safeFilter);
-  }, [matchedSymptomIds, remedies, safeFilter, symptomRemedies, symptoms, activeAllergies, activeConditions]);
+  }, [matchedSymptomIds, remedies, safeFilter, symptomRemedies, symptoms, activeAllergies, activeConditions, symptomResolution.confidence]);
 
-  const textFallbackResults = useMemo(() => {
-    if (symptomRankedResults.length > 0) return [];
-    if (isEmergencyQuery(trimmedQuery)) return [];
-    return [];
-  }, [symptomRankedResults.length, trimmedQuery]);
-
-  const dropdownResults = symptomRankedResults.length > 0 ? symptomRankedResults : textFallbackResults;
+  const dropdownResults = symptomRankedResults;
   const shouldShowDropdown = trimmedQuery.length >= 2;
 
   const goToResults = () => {
@@ -143,7 +137,6 @@ export function SymptomSearch() {
 
           {shouldShowDropdown && (
             <div
-              ref={dropdownRef}
               className="absolute left-0 right-0 top-full z-40 mt-2 overflow-hidden rounded-2xl border border-ink/5 bg-white shadow-xl"
             >
               <button
