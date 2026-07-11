@@ -97,11 +97,11 @@ export function RemedyDetail() {
           }}
           className={cn(
             "p-2 rounded-full transition-colors",
-            favorite ? "text-accent-dark" : "text-ink-muted hover:text-accent-dark"
+            favorite ? "text-primary" : "text-ink-muted hover:text-primary"
           )}
           aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
         >
-          <Heart className={cn("w-5 h-5", favorite && "fill-accent-dark")} />
+          <Heart className={cn("w-5 h-5", favorite && "fill-primary")} />
         </button>
       </div>
 

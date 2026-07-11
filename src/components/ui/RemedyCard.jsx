@@ -45,11 +45,11 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
                 onClick={handleFavorite}
                 className={cn(
                   "p-1 rounded-full transition-colors",
-                  favorited ? "text-accent-dark" : "text-ink-muted hover:text-accent-dark"
+                  favorited ? "text-primary" : "text-ink-muted hover:text-primary"
                 )}
                 aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
               >
-                <Heart className={cn("w-4 h-4", favorited && "fill-accent-dark")} />
+                <Heart className={cn("w-4 h-4", favorited && "fill-primary")} />
               </button>
             </div>
           </div>
@@ -94,11 +94,11 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
               onClick={handleFavorite}
               className={cn(
                 "ml-auto p-1.5 rounded-full transition-colors",
-                favorited ? "text-accent-dark" : "text-ink-muted hover:text-accent-dark"
+                favorited ? "text-primary" : "text-ink-muted hover:text-primary"
               )}
               aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
             >
-              <Heart className={cn("w-4 h-4", favorited && "fill-accent-dark")} />
+              <Heart className={cn("w-4 h-4", favorited && "fill-primary")} />
             </button>
           </div>
           <h3 className="text-xl font-semibold text-ink mb-2">{remedy.name}</h3>
@@ -151,11 +151,11 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
               onClick={handleFavorite}
               className={cn(
                 "p-1.5 rounded-full transition-colors",
-                favorited ? "text-accent-dark" : "text-ink-muted hover:text-accent-dark"
+                favorited ? "text-primary" : "text-ink-muted hover:text-primary"
               )}
               aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
             >
-              <Heart className={cn("w-4 h-4", favorited && "fill-accent-dark")} />
+              <Heart className={cn("w-4 h-4", favorited && "fill-primary")} />
             </button>
           </div>
         </div>
