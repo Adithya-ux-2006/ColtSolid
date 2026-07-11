@@ -4,13 +4,9 @@ import { Navbar, BottomNav, AppDock, AdminGuard } from './components/layout';
 import { useAuthStore } from './store/authStore';
 import { useFavoritesStore } from './store/favoritesStore';
 import { useAppointmentStore } from './store/appointmentStore';
+import { useRemedyScheduleStore } from './store/remedyScheduleStore';
 import { useCatalogStore } from './store/catalogStore';
 import { LoadingSkeleton } from './components/ui/LoadingSkeleton';
-
-// AiChatPanel is lazy-loaded to keep the layout chunk small.
-// It pulls in symptomEngine + symptomSearch (~heavy) and is only
-// needed when the user opens the chat panel.
-const AiChatPanel = lazy(() => import('./components/ai/AiChatPanel').then(m => ({ default: m.AiChatPanel })));
 
 // Pages — lazy-loaded for code splitting
 const Landing = lazy(() => import('./pages/Landing').then(m => ({ default: m.Landing })));
@@ -22,6 +18,7 @@ const Results = lazy(() => import('./pages/Results').then(m => ({ default: m.Res
 const RemedyDetail = lazy(() => import('./pages/RemedyDetail').then(m => ({ default: m.RemedyDetail })));
 const Favorites = lazy(() => import('./pages/Favorites').then(m => ({ default: m.Favorites })));
 const Appointments = lazy(() => import('./pages/Appointments').then(m => ({ default: m.Appointments })));
+const RemedySchedules = lazy(() => import('./pages/RemedySchedules').then(m => ({ default: m.RemedySchedules })));
 const Profile = lazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })));
 const Onboarding = lazy(() => import('./pages/Onboarding').then(m => ({ default: m.Onboarding })));
 const AdminAnalytics = lazy(() => import('./pages/AdminAnalytics').then(m => ({ default: m.AdminAnalytics })));
@@ -78,6 +75,7 @@ function AppRoutes() {
       <Route path="/dashboard" element={<ProtectedRoute><Page><Dashboard /></Page></ProtectedRoute>} />
       <Route path="/favorites" element={<ProtectedRoute><Page><Favorites /></Page></ProtectedRoute>} />
       <Route path="/appointments" element={<ProtectedRoute><Page><Appointments /></Page></ProtectedRoute>} />
+      <Route path="/schedules" element={<ProtectedRoute><Page><RemedySchedules /></Page></ProtectedRoute>} />
       <Route path="/profile" element={<ProtectedRoute><Page><Profile /></Page></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute><AdminGuard><Page><AdminAnalytics /></Page></AdminGuard></ProtectedRoute>} />
       <Route path="/onboarding" element={<ProtectedRoute><Page><Onboarding /></Page></ProtectedRoute>} />
@@ -98,6 +96,8 @@ function App() {
   const fetchFavorites = useFavoritesStore((state) => state.fetchFavorites);
   const fetchAppointments = useAppointmentStore((state) => state.fetchAppointments);
   const clearAppointments = useAppointmentStore((state) => state.clear);
+  const fetchSchedules = useRemedyScheduleStore((state) => state.fetchSchedules);
+  const clearSchedules = useRemedyScheduleStore((state) => state.clear);
   const fetchCatalog = useCatalogStore((state) => state.fetchCatalog);
   const clearFavorites = useFavoritesStore((state) => state.clear);
   const [bootstrapped, setBootstrapped] = useState(false);
@@ -119,12 +119,14 @@ function App() {
     if (!isAuthenticated) {
       clearFavorites();
       clearAppointments();
+      clearSchedules();
       return;
     }
 
     fetchFavorites();
     fetchAppointments();
-  }, [clearAppointments, clearFavorites, fetchAppointments, fetchFavorites, isAuthenticated]);
+    fetchSchedules();
+  }, [clearAppointments, clearFavorites, clearSchedules, fetchAppointments, fetchFavorites, fetchSchedules, isAuthenticated]);
 
   if (!bootstrapped && !isInitialized) {
     return null;
@@ -137,9 +139,6 @@ function App() {
         <main className="flex-1 relative">
           <AppRoutes />
         </main>
-        <Suspense fallback={null}>
-          <AiChatPanel />
-        </Suspense>
         <BottomNav />
         <AppDock />
       </div>

@@ -58,7 +58,7 @@ export function Appointments() {
       <div className="max-w-3xl mx-auto px-6">
         <div className="flex justify-between items-end mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-ink mb-2">Appointments</h1>
+            <h1 className="text-2xl font-bold text-ink mb-2">Doctor Appointments</h1>
             <p className="text-sm text-ink-muted">Manage your doctor visits and telehealth calls.</p>
           </div>
           <button 

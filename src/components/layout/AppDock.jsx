@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Search, Heart, CalendarDays, User, ShieldCheck } from 'lucide-react';
+import { LayoutDashboard, Search, Heart, CalendarDays, Clock, User, ShieldCheck } from 'lucide-react';
 import { Dock, DockItem, DockLabel, DockIcon } from '../ui/Dock';
 import { useAuthStore } from '../../store/authStore';
 
@@ -23,7 +23,8 @@ export function AppDock() {
     isAuthenticated && { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { to: '/search', icon: Search, label: 'Search' },
     { to: '/favorites', icon: Heart, label: 'Saved', locked: !isAuthenticated },
-    { to: '/appointments', icon: CalendarDays, label: 'Appointments', locked: !isAuthenticated },
+    { to: '/appointments', icon: CalendarDays, label: 'Doctor Appts', locked: !isAuthenticated },
+    { to: '/schedules', icon: Clock, label: 'Schedules', locked: !isAuthenticated },
     { to: '/profile', icon: User, label: 'Profile', locked: !isAuthenticated },
     user?.is_admin && { to: '/admin', icon: ShieldCheck, label: 'Admin' },
   ].filter(Boolean);

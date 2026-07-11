@@ -112,4 +112,10 @@ export const SYMPTOMS = [
   { id: 'loss_of_appetite', label: 'Loss of Appetite', emoji: '🍽️', color: 'sage' },
   { id: 'chills', label: 'Chills', emoji: '🥶', color: 'amber' },
   { id: 'swollen_lymph_nodes', label: 'Swollen Lymph Nodes', emoji: '🫧', color: 'sage' },
+
+  // Sexual Wellness
+  { id: 'low_libido', label: 'Low Libido', emoji: '💭', color: 'amber' },
+  { id: 'erectile_difficulty', label: 'Erectile Difficulty', emoji: '💙', color: 'sage' },
+  { id: 'vaginal_dryness', label: 'Vaginal Dryness', emoji: '🌸', color: 'forest' },
+  { id: 'painful_intercourse', label: 'Painful Intercourse', emoji: '⚠️', color: 'amber' },
 ];

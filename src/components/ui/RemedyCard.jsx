@@ -1,13 +1,27 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clock, Star } from 'lucide-react';
+import { Clock, Star, Heart } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { CategoryBadge } from './CategoryBadge';
 import { RatingStars } from './RatingStars';
 import { AllergyBadge } from './AllergyBadge';
+import { useFavoritesStore } from '../../store/favoritesStore';
+import { useAuthStore } from '../../store/authStore';
 
 export function RemedyCard({ remedy, className, featured, variant, isSafe = true }) {
   const resolvedVariant = featured ? 'featured' : (variant || 'default');
+  const navigate = useNavigate();
+  const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);
+  const isFavorite = useFavoritesStore((s) => s.isFavorite);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const favorited = isFavorite(remedy.id);
+
+  const handleFavorite = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isAuthenticated) { navigate('/register'); return; }
+    toggleFavorite(remedy);
+  };
 
   if (resolvedVariant === 'carousel') {
     return (
@@ -25,7 +39,19 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
         >
           <div className="flex items-center justify-between mb-2">
             <CategoryBadge category={remedy.category} />
-            <AllergyBadge isSafe={isSafe} compact />
+            <div className="flex items-center gap-1">
+              <AllergyBadge isSafe={isSafe} compact />
+              <button
+                onClick={handleFavorite}
+                className={cn(
+                  "p-1 rounded-full transition-colors",
+                  favorited ? "text-accent-dark" : "text-ink-muted hover:text-accent-dark"
+                )}
+                aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
+              >
+                <Heart className={cn("w-4 h-4", favorited && "fill-accent-dark")} />
+              </button>
+            </div>
           </div>
           <h3 className="font-semibold text-ink text-sm leading-snug mb-1 line-clamp-1">{remedy.name}</h3>
           <p className="text-xs text-ink-muted mb-3 line-clamp-1">{remedy.shortDescription}</p>
@@ -64,6 +90,16 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
             <span className="text-xs font-medium text-primary-light bg-white/60 px-2.5 py-0.5 rounded-full">
               Featured
             </span>
+            <button
+              onClick={handleFavorite}
+              className={cn(
+                "ml-auto p-1.5 rounded-full transition-colors",
+                favorited ? "text-accent-dark" : "text-ink-muted hover:text-accent-dark"
+              )}
+              aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
+            >
+              <Heart className={cn("w-4 h-4", favorited && "fill-accent-dark")} />
+            </button>
           </div>
           <h3 className="text-xl font-semibold text-ink mb-2">{remedy.name}</h3>
           <p className="text-ink-muted text-sm mb-4 line-clamp-2">{remedy.shortDescription}</p>
@@ -109,7 +145,19 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
               <CategoryBadge category={remedy.category} />
             </div>
           </div>
-          <AllergyBadge isSafe={isSafe} compact />
+          <div className="flex items-center gap-1">
+            <AllergyBadge isSafe={isSafe} compact />
+            <button
+              onClick={handleFavorite}
+              className={cn(
+                "p-1.5 rounded-full transition-colors",
+                favorited ? "text-accent-dark" : "text-ink-muted hover:text-accent-dark"
+              )}
+              aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
+            >
+              <Heart className={cn("w-4 h-4", favorited && "fill-accent-dark")} />
+            </button>
+          </div>
         </div>
 
         <p className="text-sm text-ink-muted mb-3 line-clamp-2">{remedy.shortDescription}</p>

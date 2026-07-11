@@ -6,6 +6,7 @@ import { FAQAccordion } from '../components/ui/FAQAccordion';
 import { useAuthStore } from '../store/authStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useAppointmentStore } from '../store/appointmentStore';
+import { useRemedyScheduleStore } from '../store/remedyScheduleStore';
 import { getInitials } from '../utils/mappers';
 import { ALLERGIES, CONDITIONS, FAQ_ITEMS, GENDER_OPTIONS } from '../constants/onboarding';
 
@@ -19,12 +20,15 @@ export function Profile() {
   const updateUser = useAuthStore((state) => state.updateUser);
   const favorites = useFavoritesStore((state) => state.favorites);
   const appointments = useAppointmentStore((state) => state.appointments);
+  const schedules = useRemedyScheduleStore((state) => state.schedules);
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
     name: user?.name || '',
-    gender: user?.gender || ''
+    gender: user?.gender || '',
+    selectedConditions: user?.common_conditions ?? [],
+    selectedAllergies: user?.known_allergies ?? [],
   });
 
   const [expandedSection, setExpandedSection] = useState(null);
@@ -41,8 +45,11 @@ export function Profile() {
 
   const handleSaveProfile = () => {
     updateUser({
-      ...editForm,
-      avatar: getInitials(editForm.name)
+      name: editForm.name,
+      gender: editForm.gender,
+      avatar: getInitials(editForm.name),
+      known_allergies: editForm.selectedAllergies.filter(v => v !== 'none'),
+      common_conditions: editForm.selectedConditions.filter(v => v !== 'none'),
     });
     setIsEditing(false);
   };
@@ -51,6 +58,8 @@ export function Profile() {
     setEditForm({
       name: user?.name || '',
       gender: user?.gender || '',
+      selectedConditions: user?.common_conditions ?? [],
+      selectedAllergies: user?.known_allergies ?? [],
     });
     setIsEditing(true);
   };
@@ -109,6 +118,56 @@ export function Profile() {
                     );
                   })}
                 </div>
+                <div className="space-y-2 pt-2">
+                  <p className="text-sm font-semibold text-ink">Health Conditions</p>
+                  <div className="flex flex-wrap gap-2">
+                    {CONDITIONS.map((option) => {
+                      const isSelected = editForm.selectedConditions.includes(option.value);
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => {
+                            const next = option.value === 'none'
+                              ? (isSelected ? [] : ['none'])
+                              : isSelected
+                                ? editForm.selectedConditions.filter(v => v !== option.value && v !== 'none')
+                                : [...editForm.selectedConditions.filter(v => v !== 'none'), option.value];
+                            setEditForm({ ...editForm, selectedConditions: next });
+                          }}
+                          className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-gray-200 px-3 py-1.5 text-sm font-medium text-ink'}
+                        >
+                          {option.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm font-semibold text-ink">Allergies & Sensitivities</p>
+                  <div className="flex flex-wrap gap-2">
+                    {ALLERGIES.map((option) => {
+                      const isSelected = editForm.selectedAllergies.includes(option.value);
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => {
+                            const next = option.value === 'none'
+                              ? (isSelected ? [] : ['none'])
+                              : isSelected
+                                ? editForm.selectedAllergies.filter(v => v !== option.value && v !== 'none')
+                                : [...editForm.selectedAllergies.filter(v => v !== 'none'), option.value];
+                            setEditForm({ ...editForm, selectedAllergies: next });
+                          }}
+                          className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-gray-200 px-3 py-1.5 text-sm font-medium text-ink'}
+                        >
+                          {option.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
                 <div className="flex gap-2 justify-center md:justify-start pt-2">
                   <button onClick={() => setIsEditing(false)} className="px-4 py-1.5 rounded-full text-sm font-medium border text-ink">Cancel</button>
                   <button onClick={handleSaveProfile} className="px-4 py-1.5 rounded-full text-sm font-medium bg-primary text-white">Save</button>
@@ -133,13 +192,17 @@ export function Profile() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-50 flex items-center justify-between">
-            <span className="text-ink-muted font-medium">Saved Remedies</span>
+        <div className="grid grid-cols-3 gap-4">
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-50 flex flex-col items-center justify-between">
+            <span className="text-ink-muted font-medium text-sm">Saved</span>
             <span className="text-2xl font-bold text-primary">{favorites.length}</span>
           </div>
-          <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-50 flex items-center justify-between">
-            <span className="text-ink-muted font-medium">Appointments</span>
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-50 flex flex-col items-center justify-between">
+            <span className="text-ink-muted font-medium text-sm">Schedules</span>
+            <span className="text-2xl font-bold text-primary-dark">{schedules.length}</span>
+          </div>
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-50 flex flex-col items-center justify-between">
+            <span className="text-ink-muted font-medium text-sm">Appts</span>
             <span className="text-2xl font-bold text-primary-dark">{appointments.length}</span>
           </div>
         </div>

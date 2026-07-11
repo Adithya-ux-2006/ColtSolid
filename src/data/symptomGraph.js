@@ -245,6 +245,32 @@ const SYMPTOM_GRAPH = {
     severityFlags: ['mild', 'moderate'],
     emergencyFlags: [],
   },
+
+  // Sexual Wellness
+  low_libido: {
+    relatedSymptoms: ['fatigue', 'stress', 'anxiety', 'burnout', 'menopause'],
+    possibleCauses: ['chronic stress', 'poor sleep', 'hormonal changes', 'relationship strain', 'medication side effects', 'low mood'],
+    severityFlags: ['mild', 'moderate'],
+    emergencyFlags: [],
+  },
+  erectile_difficulty: {
+    relatedSymptoms: ['stress', 'anxiety', 'fatigue', 'low_libido'],
+    possibleCauses: ['stress or performance anxiety', 'poor sleep', 'cardiovascular health', 'smoking or alcohol use', 'certain medications', 'low testosterone'],
+    severityFlags: ['mild', 'moderate'],
+    emergencyFlags: ['sudden onset with chest pain', 'occurs alongside numbness or vision changes'],
+  },
+  vaginal_dryness: {
+    relatedSymptoms: ['menopause', 'pms', 'painful_intercourse'],
+    possibleCauses: ['hormonal changes', 'menopause or perimenopause', 'certain medications', 'insufficient arousal time', 'dehydration'],
+    severityFlags: ['mild', 'moderate'],
+    emergencyFlags: [],
+  },
+  painful_intercourse: {
+    relatedSymptoms: ['vaginal_dryness', 'period_cramps', 'stress'],
+    possibleCauses: ['insufficient lubrication', 'muscle tension', 'infection', 'hormonal changes', 'underlying gynecological condition'],
+    severityFlags: ['mild', 'moderate', 'severe'],
+    emergencyFlags: ['severe pelvic pain with fever', 'unusual bleeding or discharge'],
+  },
 };
 
 export function getSymptomGraph() {

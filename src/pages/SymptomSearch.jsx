@@ -1,6 +1,6 @@
 import { useMemo, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Search, ArrowRight, Bot } from 'lucide-react';
+import { Search, ArrowRight } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { SearchBar } from '../components/forms/SearchBar';
 import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
@@ -21,10 +21,6 @@ const DEFAULT_SYMPTOM_CARDS = [
   { id: 'stress', label: 'Stress', emoji: '😤' },
   { id: 'fatigue', label: 'Fatigue', emoji: '🔋' },
 ];
-
-function openAiAssistant() {
-  window.dispatchEvent(new CustomEvent('cs-open-ai-chat'));
-}
 
 export function SymptomSearch() {
   const { searchTerm, setSearchTerm, debouncedTerm } = useSearch('', 300);
@@ -203,25 +199,12 @@ export function SymptomSearch() {
                 ) : symptomResolution.matchInfo ? (
                   <div className="py-3 text-sm text-ink-muted">
                     <p className="font-semibold text-ink">We couldn't match remedies to your symptom.</p>
-                    <p className="mt-1">Try the AI assistant for personalised advice.</p>
-                    <button
-                      type="button"
-                      onClick={openAiAssistant}
-                      className="mt-2 inline-flex items-center gap-2 font-semibold text-primary hover:text-primary-dark transition-colors"
-                    >
-                      Try our AI Assistant <Bot className="h-4 w-4" />
-                    </button>
+                    <p className="mt-1">Try a different search term or browse popular symptoms below.</p>
                   </div>
                 ) : (
                   <div className="py-3 text-sm text-ink-muted">
                     <p className="font-semibold text-ink">No remedies found for this symptom.</p>
-                    <button
-                      type="button"
-                      onClick={openAiAssistant}
-                      className="mt-2 inline-flex items-center gap-2 font-semibold text-primary hover:text-primary-dark transition-colors"
-                    >
-                      Try our AI Assistant for personalised advice <Bot className="h-4 w-4" />
-                    </button>
+                    <p className="mt-1">Try a different search term or browse popular symptoms below.</p>
                   </div>
                 )}
               </div>
