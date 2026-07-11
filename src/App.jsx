@@ -3,7 +3,6 @@ import { Suspense, lazy, useEffect, useState } from 'react';
 import { Navbar, BottomNav, AppDock, AdminGuard } from './components/layout';
 import { useAuthStore } from './store/authStore';
 import { useFavoritesStore } from './store/favoritesStore';
-import { useAppointmentStore } from './store/appointmentStore';
 import { useRemedyScheduleStore } from './store/remedyScheduleStore';
 import { useCatalogStore } from './store/catalogStore';
 import { LoadingSkeleton } from './components/ui/LoadingSkeleton';
@@ -17,7 +16,6 @@ const SymptomSearch = lazy(() => import('./pages/SymptomSearch').then(m => ({ de
 const Results = lazy(() => import('./pages/Results').then(m => ({ default: m.Results })));
 const RemedyDetail = lazy(() => import('./pages/RemedyDetail').then(m => ({ default: m.RemedyDetail })));
 const Favorites = lazy(() => import('./pages/Favorites').then(m => ({ default: m.Favorites })));
-const Appointments = lazy(() => import('./pages/Appointments').then(m => ({ default: m.Appointments })));
 const RemedySchedules = lazy(() => import('./pages/RemedySchedules').then(m => ({ default: m.RemedySchedules })));
 const Profile = lazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })));
 const Onboarding = lazy(() => import('./pages/Onboarding').then(m => ({ default: m.Onboarding })));
@@ -74,7 +72,6 @@ function AppRoutes() {
       {/* Protected Routes */}
       <Route path="/dashboard" element={<ProtectedRoute><Page><Dashboard /></Page></ProtectedRoute>} />
       <Route path="/favorites" element={<ProtectedRoute><Page><Favorites /></Page></ProtectedRoute>} />
-      <Route path="/appointments" element={<ProtectedRoute><Page><Appointments /></Page></ProtectedRoute>} />
       <Route path="/schedules" element={<ProtectedRoute><Page><RemedySchedules /></Page></ProtectedRoute>} />
       <Route path="/profile" element={<ProtectedRoute><Page><Profile /></Page></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute><AdminGuard><Page><AdminAnalytics /></Page></AdminGuard></ProtectedRoute>} />
@@ -94,8 +91,6 @@ function App() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isInitialized = useAuthStore((state) => state.isInitialized);
   const fetchFavorites = useFavoritesStore((state) => state.fetchFavorites);
-  const fetchAppointments = useAppointmentStore((state) => state.fetchAppointments);
-  const clearAppointments = useAppointmentStore((state) => state.clear);
   const fetchSchedules = useRemedyScheduleStore((state) => state.fetchSchedules);
   const clearSchedules = useRemedyScheduleStore((state) => state.clear);
   const fetchCatalog = useCatalogStore((state) => state.fetchCatalog);
@@ -118,15 +113,13 @@ function App() {
   useEffect(() => {
     if (!isAuthenticated) {
       clearFavorites();
-      clearAppointments();
       clearSchedules();
       return;
     }
 
     fetchFavorites();
-    fetchAppointments();
     fetchSchedules();
-  }, [clearAppointments, clearFavorites, clearSchedules, fetchAppointments, fetchFavorites, fetchSchedules, isAuthenticated]);
+  }, [clearFavorites, clearSchedules, fetchFavorites, fetchSchedules, isAuthenticated]);
 
   if (!bootstrapped && !isInitialized) {
     return null;

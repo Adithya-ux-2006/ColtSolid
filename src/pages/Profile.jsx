@@ -5,7 +5,6 @@ import { PageWrapper } from '../components/layout';
 import { FAQAccordion } from '../components/ui/FAQAccordion';
 import { useAuthStore } from '../store/authStore';
 import { useFavoritesStore } from '../store/favoritesStore';
-import { useAppointmentStore } from '../store/appointmentStore';
 import { useRemedyScheduleStore } from '../store/remedyScheduleStore';
 import { getInitials } from '../utils/mappers';
 import { ALLERGIES, CONDITIONS, FAQ_ITEMS, GENDER_OPTIONS } from '../constants/onboarding';
@@ -19,7 +18,6 @@ export function Profile() {
   const logout = useAuthStore((state) => state.logout);
   const updateUser = useAuthStore((state) => state.updateUser);
   const favorites = useFavoritesStore((state) => state.favorites);
-  const appointments = useAppointmentStore((state) => state.appointments);
   const schedules = useRemedyScheduleStore((state) => state.schedules);
   const navigate = useNavigate();
 
@@ -192,7 +190,7 @@ export function Profile() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-50 flex flex-col items-center justify-between">
             <span className="text-ink-muted font-medium text-sm">Saved</span>
             <span className="text-2xl font-bold text-primary">{favorites.length}</span>
@@ -200,10 +198,6 @@ export function Profile() {
           <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-50 flex flex-col items-center justify-between">
             <span className="text-ink-muted font-medium text-sm">Schedules</span>
             <span className="text-2xl font-bold text-primary-dark">{schedules.length}</span>
-          </div>
-          <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-50 flex flex-col items-center justify-between">
-            <span className="text-ink-muted font-medium text-sm">Appts</span>
-            <span className="text-2xl font-bold text-primary-dark">{appointments.length}</span>
           </div>
         </div>
 
@@ -231,7 +225,7 @@ export function Profile() {
             <div className="p-5 pt-0 text-sm text-ink-muted leading-relaxed border-t border-gray-50">
               <p className="mb-4">
                 curA is a health platform designed to provide evidence-backed remedies for common ailments.
-                Your profile, favorites, and appointments are synced through Supabase. Always consult a certified medical professional for serious health concerns.
+                Your profile, favorites, and remedy schedules are synced through Supabase. Always consult a certified medical professional for serious health concerns.
               </p>
               <FAQAccordion items={FAQ_ITEMS.slice(0, 3)} />
             </div>

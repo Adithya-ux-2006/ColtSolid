@@ -294,7 +294,7 @@ export function Results() {
                   <p className="text-lg font-semibold text-ink">Finding what you need?</p>
                 </div>
                 <p className="text-sm text-ink-muted leading-relaxed mb-4">
-                  Sign up free to save remedies, track appointments, and get a personalized dashboard built around your symptoms.
+                  Sign up free to save remedies and get a personalized dashboard built around your symptoms.
                 </p>
                 <div className="space-y-2">
                   <Link

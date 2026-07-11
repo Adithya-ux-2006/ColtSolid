@@ -1,19 +1,17 @@
 import { useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Calendar, Heart, Activity, ArrowRight, Sparkles } from 'lucide-react';
+import { Heart, Activity, ArrowRight, Sparkles } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { RemedyCard } from '../components/ui/RemedyCard';
 import { EmptyState } from '../components/ui/EmptyState';
 import { useAuthStore } from '../store/authStore';
 import { useFavoritesStore } from '../store/favoritesStore';
-import { useAppointmentStore } from '../store/appointmentStore';
 import { useCatalogStore } from '../store/catalogStore';
 import { CONDITIONS } from '../constants/onboarding';
 
 export function Dashboard() {
   const user = useAuthStore((state) => state.user);
   const favorites = useFavoritesStore((state) => state.favorites);
-  const appointments = useAppointmentStore((state) => state.appointments);
   const symptoms = useCatalogStore((state) => state.symptoms);
   const remedies = useCatalogStore((state) => state.remedies);
   const navigate = useNavigate();
@@ -35,8 +33,6 @@ export function Dashboard() {
     [remedies, favorites]
   );
 
-  const upcomingAppointment = appointments.find(a => a.status === 'Upcoming');
-
   const selectedConditionChips = useMemo(
     () => CONDITIONS.filter((condition) => user?.common_conditions?.includes(condition.value)),
     [user?.common_conditions]
@@ -56,9 +52,8 @@ export function Dashboard() {
           <p className="text-ink-muted">Ready to feel better today?</p>
         </header>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <StatCard icon={Heart} value={favorites.length} label="Saved" />
-          <StatCard icon={Calendar} value={appointments.length} label="Appts" />
           <StatCard icon={Activity} value={"—"} label="Searches" />
         </div>
 
@@ -151,31 +146,6 @@ export function Dashboard() {
               description="Save remedies while searching to find them here."
               ctaLabel="Search Remedies"
               ctaHref="/search"
-              className="bg-white rounded-3xl shadow-soft"
-            />
-          )}
-        </section>
-
-        <section>
-          <h2 className="section-title">Next Appointment</h2>
-          {upcomingAppointment ? (
-            <div className="bg-white rounded-3xl p-6 shadow-card border-l-4 border-primary">
-              <h3 className="font-semibold text-ink mb-1">{upcomingAppointment.title}</h3>
-              <p className="text-sm text-ink-muted mb-3">{upcomingAppointment.doctor}</p>
-              <div className="flex items-center gap-4 text-sm text-ink-muted">
-                <span className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" /> {upcomingAppointment.date}
-                </span>
-                <span>{upcomingAppointment.time}</span>
-              </div>
-            </div>
-          ) : (
-            <EmptyState
-              icon={Calendar}
-              title="No upcoming appointments"
-              description="Schedule a checkup if symptoms persist."
-              ctaLabel="Book Appointment"
-              ctaHref="/appointments"
               className="bg-white rounded-3xl shadow-soft"
             />
           )}
