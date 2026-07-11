@@ -241,7 +241,7 @@ export function Results() {
             {grouped?.bestMatch && (
               <section>
                 <div className="mb-3">
-                  <h2 className="text-sm font-bold uppercase tracking-wider text-warm">Best Match</h2>
+                  <h2 className="text-sm font-bold uppercase tracking-wider text-primary">Best Match</h2>
                   <p className="text-xs text-ink-muted mt-1">What a knowledgeable practitioner would recommend first.</p>
                 </div>
                 <RemedyCardWrapper remedy={grouped.bestMatch} isSafe={safeFilter(grouped.bestMatch)} />

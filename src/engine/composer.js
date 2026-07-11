@@ -23,7 +23,7 @@ export function composeSymptomScores(queryTokens, normalizedQuery) {
   }
 
   const bodyPartKeys = new Set(bodyParts.map(bp => bp.key));
-  const { boosts: contextBoosts } = findContextModifiers(normalizedQuery);
+  const { boosts: contextBoosts, tags: contextTags } = findContextModifiers(normalizedQuery);
 
   const symptomScores = {};
 
@@ -67,7 +67,7 @@ export function composeSymptomScores(queryTokens, normalizedQuery) {
     metadata: {
       matchedBodyParts: [...seenBodyTerms],
       matchedSensations: [...seenSensationTerms],
-      contextTags: findContextModifiers(normalizedQuery).tags,
+      contextTags,
       hasAnyMatch: bodyParts.length > 0 || sensations.length > 0,
     },
     hasComposition: bodyParts.length > 0 || sensations.length > 0,
