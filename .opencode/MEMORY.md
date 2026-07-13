@@ -140,6 +140,10 @@
 
 ## Open Items
 
+### Database Constraint Fix Applied
+- `remedies_category_check` was missing 'Conventional' — fixed by adding it to the CHECK constraint
+- Valid categories: `Lifestyle`, `Natural`, `TCM`, `Ayurveda`, `Conventional`
+
 ### Email Provider Selection
 - Phase 3 Edge Function has placeholder for email sending
 - Options: Resend, SendGrid, Postmark
