@@ -6,6 +6,7 @@ import { EmptyState } from '../components/ui/EmptyState';
 import { RemedyScheduleForm } from '../components/forms';
 import { useRemedyScheduleStore } from '../store/remedyScheduleStore';
 import { useCatalogStore } from '../store/catalogStore';
+import { useFavoritesStore } from '../store/favoritesStore';
 import { cn } from '../utils/cn';
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -34,12 +35,23 @@ export function RemedySchedules() {
   const remove = useRemedyScheduleStore((s) => s.remove);
   const toggleActive = useRemedyScheduleStore((s) => s.toggleActive);
   const remedies = useCatalogStore((s) => s.remedies);
+  const favorites = useFavoritesStore((s) => s.favorites);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formError, setFormError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleAdd = (data) => {
-    add(data);
-    setIsModalOpen(false);
+  const handleAdd = async (data) => {
+    setFormError(null);
+    setIsSubmitting(true);
+    const result = await add(data);
+    setIsSubmitting(false);
+    if (result.success) {
+      setIsModalOpen(false);
+      setFormError(null);
+    } else {
+      setFormError(result.error?.message || 'Could not add schedule — please try again.');
+    }
   };
 
   const handleDelete = (id) => {
@@ -126,13 +138,16 @@ export function RemedySchedules() {
 
       <Modal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => { setIsModalOpen(false); setFormError(null); }}
         title="New Remedy Schedule"
       >
         <RemedyScheduleForm
           remedies={remedies}
+          favorites={favorites}
           onSubmit={handleAdd}
-          onCancel={() => setIsModalOpen(false)}
+          onCancel={() => { setIsModalOpen(false); setFormError(null); }}
+          error={formError}
+          isSubmitting={isSubmitting}
         />
       </Modal>
     </PageWrapper>

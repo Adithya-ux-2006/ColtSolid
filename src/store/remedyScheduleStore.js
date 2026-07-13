@@ -31,7 +31,7 @@ export const useRemedyScheduleStore = create((set, get) => ({
 
   add: async (schedule) => {
     const user = useAuthStore.getState().user;
-    if (!user) return;
+    if (!user) return { success: false, error: new Error('Not authenticated') };
 
     try {
       const { data, error } = await supabase
@@ -50,8 +50,10 @@ export const useRemedyScheduleStore = create((set, get) => ({
 
       if (error) throw error;
       set((state) => ({ schedules: [...state.schedules, data] }));
+      return { success: true, data };
     } catch (error) {
       console.error('Error adding remedy schedule:', error);
+      return { success: false, error };
     }
   },
 
