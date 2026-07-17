@@ -90,7 +90,7 @@ export function Dashboard() {
                 key={symptom.id}
                 type="button"
                 onClick={() => navigate(`/results?symptom=${symptom.id}`)}
-                className="snap-start shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-soft hover:shadow-card transition-shadow text-sm font-medium text-ink border border-ink/5"
+                className="snap-start shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card shadow-soft hover:shadow-card transition-shadow text-sm font-medium text-ink border border-ink/5"
               >
                 <span>{symptom.emoji}</span>
                 <span>{symptom.label}</span>
@@ -127,7 +127,7 @@ export function Dashboard() {
                 <Link
                   key={remedy.id}
                   to={`/remedy/${remedy.id}`}
-                  className="flex items-center gap-4 bg-white rounded-2xl p-4 shadow-soft hover:shadow-card transition-shadow"
+                  className="flex items-center gap-4 bg-card rounded-2xl p-4 shadow-soft hover:shadow-card transition-shadow"
                 >
                   <div className="w-10 h-10 rounded-xl bg-surface flex items-center justify-center shrink-0 text-primary font-semibold text-sm">
                     {remedy.name.charAt(0)}
@@ -146,7 +146,7 @@ export function Dashboard() {
               description="Save remedies while searching to find them here."
               ctaLabel="Search Remedies"
               ctaHref="/search"
-              className="bg-white rounded-3xl shadow-soft"
+              className="bg-card rounded-3xl shadow-soft"
             />
           )}
         </section>
@@ -157,7 +157,7 @@ export function Dashboard() {
 
 function StatCard({ icon: Icon, value, label }) {
   return (
-    <div className="bg-white p-4 rounded-2xl shadow-card flex flex-col items-center justify-center text-center">
+    <div className="bg-card p-4 rounded-2xl shadow-card flex flex-col items-center justify-center text-center">
       <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center mb-2 text-primary">
         <Icon className="w-5 h-5" />
       </div>

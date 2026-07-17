@@ -28,7 +28,7 @@ export function Favorites() {
             description="Start searching to find relief. Remedies you favorite will appear here."
             ctaLabel="Search Symptoms"
             ctaHref="/search"
-            className="mt-12 bg-white rounded-3xl border border-gray-100 shadow-sm"
+            className="mt-12 bg-card rounded-3xl border border-border shadow-sm"
           />
         )}
       </div>

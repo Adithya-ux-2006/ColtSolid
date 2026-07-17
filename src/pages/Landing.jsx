@@ -49,7 +49,7 @@ export function Landing() {
             </button>
             <Link
               to="/search"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-ink rounded-2xl font-medium text-lg shadow-soft hover:shadow-card transition-all"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-card text-ink rounded-2xl font-medium text-lg shadow-soft hover:shadow-card transition-all"
             >
               Start Your Search <ArrowRight className="w-5 h-5" />
             </Link>
@@ -78,7 +78,7 @@ export function Landing() {
       </section>
 
       {quickSymptoms.length > 0 && (
-        <section className="py-6 border-y border-ink/5 bg-white/50">
+        <section className="py-6 border-y border-ink/5 bg-card/50">
           <div className="max-w-6xl mx-auto px-6">
             <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-4">
               Common Symptoms
@@ -91,7 +91,7 @@ export function Landing() {
                   className="snap-start shrink-0"
                   onClick={() => trackSearchEvent({ source: 'landing_chip', symptomIds: [symptom.id] }).catch(() => {})}
                 >
-                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-soft hover:shadow-card transition-shadow text-sm font-medium text-ink border border-ink/5 whitespace-nowrap">
+                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card shadow-soft hover:shadow-card transition-shadow text-sm font-medium text-ink border border-ink/5 whitespace-nowrap">
                     <span className="text-lg">{symptom.emoji}</span>
                     {symptom.label}
                   </span>
@@ -131,7 +131,7 @@ export function Landing() {
         </div>
       </section>
 
-      <section className="bg-white px-6 py-16">
+      <section className="bg-card px-6 py-16">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-heading font-semibold text-ink">Frequently Asked Questions</h2>
           <p className="mt-2 text-ink-muted">
@@ -176,7 +176,7 @@ export function Landing() {
 
 function StatCard({ value, label }) {
   return (
-    <div className="rounded-2xl bg-white p-4 text-center shadow-card">
+    <div className="rounded-2xl bg-card p-4 text-center shadow-card">
       <p className="text-2xl font-bold text-primary">{value}</p>
       <p className="mt-1 text-sm text-ink-muted">{label}</p>
     </div>

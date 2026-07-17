@@ -12,7 +12,7 @@ export function FAQAccordion({ items }) {
         const isOpen = openIndex === index;
 
         return (
-          <div key={item.question} className="overflow-hidden rounded-2xl bg-white shadow-soft">
+          <div key={item.question} className="overflow-hidden rounded-2xl bg-card shadow-soft">
             <button
               type="button"
               onClick={() => setOpenIndex(isOpen ? -1 : index)}
@@ -33,7 +33,7 @@ export function FAQAccordion({ items }) {
                   transition={{ duration: 0.22, ease: 'easeOut' }}
                   className="overflow-hidden"
                 >
-                  <div className="border-t border-surface px-5 py-4 text-sm leading-relaxed text-ink-muted">
+                  <div className="border-t border-border px-5 py-4 text-sm leading-relaxed text-ink-muted">
                     {item.answer}
                   </div>
                 </motion.div>

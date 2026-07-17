@@ -72,7 +72,7 @@ export function Modal({ isOpen, onClose, title, children, className }) {
         aria-modal="true"
         aria-labelledby={titleId}
         className={cn(
-          "relative bg-white rounded-4xl w-full max-w-lg max-h-[85vh] overflow-y-auto shadow-2xl",
+          "relative bg-card rounded-4xl w-full max-w-lg max-h-[85vh] overflow-y-auto shadow-2xl",
           className
         )}
       >

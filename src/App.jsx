@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { Navbar, BottomNav, AppDock, AdminGuard } from './components/layout';
+import { ThemeProvider } from './context/ThemeContext';
 import { useAuthStore } from './store/authStore';
 import { useFavoritesStore } from './store/favoritesStore';
 import { useRemedyScheduleStore } from './store/remedyScheduleStore';
@@ -130,18 +131,20 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <ErrorBoundary>
-        <div className="flex flex-col min-h-screen">
-          <Navbar />
-          <main className="flex-1 relative">
-            <AppRoutes />
-          </main>
-          <BottomNav />
-          <AppDock />
-        </div>
-      </ErrorBoundary>
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <ErrorBoundary>
+          <div className="flex flex-col min-h-screen transition-colors duration-250">
+            <Navbar />
+            <main className="flex-1 relative">
+              <AppRoutes />
+            </main>
+            <BottomNav />
+            <AppDock />
+          </div>
+        </ErrorBoundary>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

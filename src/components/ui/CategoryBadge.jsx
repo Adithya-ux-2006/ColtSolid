@@ -1,10 +1,10 @@
 import { cn } from '../../utils/cn';
 
 const STYLES = {
-  Natural: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  TCM: 'bg-amber-50 text-amber-700 border-amber-200',
-  Conventional: 'bg-blue-50 text-blue-700 border-blue-200',
-  Lifestyle: 'bg-violet-50 text-violet-700 border-violet-200',
+  Natural: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+  TCM: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+  Conventional: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+  Lifestyle: 'bg-violet-500/10 text-violet-400 border-violet-500/20',
 };
 
 export function CategoryBadge({ category, firstOccurrence, className }) {
@@ -20,7 +20,7 @@ export function CategoryBadge({ category, firstOccurrence, className }) {
     <span
       className={cn(
         'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border',
-        STYLES[category] || 'bg-surface text-primary border-primary/20',
+        STYLES[category] || 'bg-primary/10 text-primary border-primary/20',
         className
       )}
       title={category === 'TCM' ? 'Traditional Chinese Medicine' : undefined}

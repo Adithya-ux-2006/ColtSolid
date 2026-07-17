@@ -133,7 +133,7 @@ export function QuestionnaireFlow({
       <div className="mb-8 space-y-4">
         <div className="flex gap-2">
           {STEPS.map((step, index) => (
-            <div key={step.key} className="h-2 flex-1 overflow-hidden rounded-full bg-white/70">
+            <div key={step.key} className="h-2 flex-1 overflow-hidden rounded-full bg-card/70">
               <div
                 className={cn(
                   'h-full rounded-full transition-all duration-300',
@@ -146,7 +146,7 @@ export function QuestionnaireFlow({
         <p className="text-sm font-medium text-ink-muted">Step {progress} of 3</p>
       </div>
 
-      <div className={cn('relative flex-1 overflow-hidden rounded-[2rem] border border-white/70 bg-white/60 shadow-sm backdrop-blur', compact ? 'p-5 md:p-6' : 'p-6 md:p-10')}>
+      <div className={cn('relative flex-1 overflow-hidden rounded-[2rem] border border-white/70 bg-card/60 shadow-sm backdrop-blur', compact ? 'p-5 md:p-6' : 'p-6 md:p-10')}>
         <AnimatePresence custom={direction} mode="wait">
           <motion.div
             key={currentStep.key}
@@ -195,7 +195,7 @@ export function QuestionnaireFlow({
                       'min-h-[88px] rounded-2xl border px-4 py-4 text-left transition-all',
                       isSelected
                         ? 'border-primary bg-primary text-white'
-                        : 'border-primary bg-white text-ink hover:bg-primary/5'
+                        : 'border-primary bg-card text-ink hover:bg-primary/5'
                     )}
                   >
                     {'emoji' in option && option.emoji ? <div className="mb-2 text-2xl">{option.emoji}</div> : null}
@@ -213,7 +213,7 @@ export function QuestionnaireFlow({
                   type="text"
                   value={otherAllergy}
                   onChange={(event) => setOtherAllergy(event.target.value)}
-                  className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-ink focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-ink focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                   placeholder="Add another allergy"
                 />
               </div>
@@ -229,7 +229,7 @@ export function QuestionnaireFlow({
           type="button"
           onClick={handleBack}
           disabled={stepIndex === 0 || isSaving}
-          className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-white/60 disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-card/60 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <ChevronLeft className="h-4 w-4" />
           Back

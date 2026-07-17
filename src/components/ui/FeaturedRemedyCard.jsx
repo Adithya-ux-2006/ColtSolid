@@ -72,13 +72,13 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
     >
       <div
         className={cn(
-          'bg-white rounded-[28px] shadow-soft-lg overflow-hidden',
+          'bg-card rounded-[28px] shadow-soft-lg overflow-hidden',
           className
         )}
       >
         <div className="grid grid-cols-1 md:grid-cols-[25%_45%_30%] min-h-[360px] md:h-[400px]">
           <div className="flex items-center justify-center p-6 bg-mint/40">
-            <div className="w-[180px] h-[180px] rounded-full bg-white/80 flex items-center justify-center">
+            <div className="w-[180px] h-[180px] rounded-full bg-card/80 flex items-center justify-center">
               <RemedyImage
                 category={remedy.category}
                 size="hero"

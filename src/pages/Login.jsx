@@ -40,7 +40,7 @@ export function Login() {
           <p className="text-ink-muted mt-2">Log in to your curA account</p>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-xl p-8 border border-ink/5">
+        <div className="bg-card rounded-3xl shadow-xl p-8 border border-ink/5">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-ink mb-1" htmlFor="email">Email address</label>

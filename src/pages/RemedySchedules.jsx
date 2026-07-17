@@ -82,7 +82,7 @@ export function RemedySchedules() {
               <div
                 key={schedule.id}
                 className={cn(
-                  'bg-white rounded-2xl p-5 shadow-sm border border-gray-50 relative',
+                  'bg-card rounded-2xl p-5 shadow-sm border border-border relative',
                   !schedule.active && 'opacity-60'
                 )}
               >
@@ -109,7 +109,7 @@ export function RemedySchedules() {
                   <span>{formatTime(schedule.scheduled_time)}</span>
                 </div>
 
-                <div className="flex justify-end border-t border-gray-100 pt-3 mt-2">
+                <div className="flex justify-end border-t border-border pt-3 mt-2">
                   <button
                     onClick={() => handleDelete(schedule.id)}
                     className="p-2 text-ink-muted hover:text-primary-dark hover:bg-primary/5 rounded-lg transition-colors flex items-center gap-1 text-sm font-medium"

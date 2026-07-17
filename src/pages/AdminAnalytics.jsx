@@ -86,7 +86,7 @@ export function AdminAnalytics() {
     <PageWrapper className="min-h-screen bg-bg pb-24 md:pb-8 pt-6">
       <div className="mx-auto max-w-5xl px-6 space-y-8">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-sm font-semibold text-primary shadow-sm">
+          <div className="inline-flex items-center gap-2 rounded-full bg-card px-3 py-1 text-sm font-semibold text-primary shadow-sm">
             <BarChart3 className="h-4 w-4" />
             Validation Dashboard
           </div>
@@ -120,7 +120,7 @@ export function AdminAnalytics() {
 
 function StatCard({ icon: Icon, label, value }) {
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
       <div className="flex items-center gap-2 text-sm font-medium text-ink-muted">
         <Icon className="h-4 w-4 text-primary" />
         {label}
@@ -132,7 +132,7 @@ function StatCard({ icon: Icon, label, value }) {
 
 function RankedList({ title, items, emptyLabel }) {
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
       <h2 className="text-lg font-bold text-ink">{title}</h2>
       <div className="mt-4 space-y-3">
         {items.length > 0 ? items.map((item, index) => (

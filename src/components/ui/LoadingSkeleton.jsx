@@ -18,7 +18,7 @@ export function LoadingSkeleton({ count = 1, className }) {
         <div
           key={i}
           className={cn(
-            'bg-white rounded-[28px] shadow-soft-lg animate-pulse overflow-hidden',
+            'bg-card rounded-[28px] shadow-soft-lg animate-pulse overflow-hidden',
             className
           )}
         >

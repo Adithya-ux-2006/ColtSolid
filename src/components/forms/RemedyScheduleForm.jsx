@@ -89,7 +89,7 @@ export function RemedyScheduleForm({ remedies, favorites, initialData, onSubmit,
                 placeholder="Search remedies..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm"
+                className="w-full pl-9 pr-3 py-2 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm"
               />
             </div>
 
@@ -101,7 +101,7 @@ export function RemedyScheduleForm({ remedies, favorites, initialData, onSubmit,
                   onClick={() => setShowFavoritesOnly(false)}
                   className={cn(
                     "px-3 py-1.5 rounded-full text-xs font-medium transition-colors",
-                    !showFavoritesOnly ? "bg-primary text-white" : "border border-gray-200 text-ink"
+                    !showFavoritesOnly ? "bg-primary text-white" : "border border-border text-ink"
                   )}
                 >
                   All Remedies
@@ -111,7 +111,7 @@ export function RemedyScheduleForm({ remedies, favorites, initialData, onSubmit,
                   onClick={() => setShowFavoritesOnly(true)}
                   className={cn(
                     "px-3 py-1.5 rounded-full text-xs font-medium transition-colors flex items-center gap-1",
-                    showFavoritesOnly ? "bg-primary text-white" : "border border-gray-200 text-ink"
+                    showFavoritesOnly ? "bg-primary text-white" : "border border-border text-ink"
                   )}
                 >
                   <Heart className={cn("w-3 h-3", showFavoritesOnly ? "fill-white" : "fill-primary text-primary")} />
@@ -121,7 +121,7 @@ export function RemedyScheduleForm({ remedies, favorites, initialData, onSubmit,
             )}
 
             {/* Remedy list */}
-            <div className="max-h-48 overflow-y-auto border border-gray-200 rounded-xl divide-y divide-gray-100">
+            <div className="max-h-48 overflow-y-auto border border-border rounded-xl divide-y divide-border">
               {filteredRemedies.length > 0 ? (
                 filteredRemedies.map((r) => (
                   <button
@@ -158,7 +158,7 @@ export function RemedyScheduleForm({ remedies, favorites, initialData, onSubmit,
           required
           value={formData.scheduledTime}
           onChange={(e) => setFormData((prev) => ({ ...prev, scheduledTime: e.target.value }))}
-          className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+          className="w-full px-3 py-2 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
         />
       </div>
 
@@ -174,7 +174,7 @@ export function RemedyScheduleForm({ remedies, favorites, initialData, onSubmit,
               className={
                 formData.recurrence === opt
                   ? 'rounded-full border border-forest bg-primary px-4 py-2 text-sm font-medium text-white'
-                  : 'rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-ink'
+                  : 'rounded-full border border-border px-4 py-2 text-sm font-medium text-ink'
               }
             >
               {opt.charAt(0).toUpperCase() + opt.slice(1)}
@@ -196,7 +196,7 @@ export function RemedyScheduleForm({ remedies, favorites, initialData, onSubmit,
                 className={
                   formData.daysOfWeek.includes(i)
                     ? 'w-10 h-10 rounded-full bg-primary text-white text-sm font-medium flex items-center justify-center'
-                    : 'w-10 h-10 rounded-full border border-gray-200 text-ink text-sm font-medium flex items-center justify-center hover:bg-gray-50'
+                    : 'w-10 h-10 rounded-full border border-border text-ink text-sm font-medium flex items-center justify-center hover:bg-accent'
                 }
               >
                 {day}
@@ -219,7 +219,7 @@ export function RemedyScheduleForm({ remedies, favorites, initialData, onSubmit,
           type="button"
           onClick={onCancel}
           disabled={isSubmitting}
-          className="flex-1 py-2.5 rounded-xl font-medium border border-gray-200 text-ink hover:bg-gray-50 transition-colors disabled:opacity-50"
+          className="flex-1 py-2.5 rounded-xl font-medium border border-border text-ink hover:bg-accent transition-colors disabled:opacity-50"
         >
           Cancel
         </button>

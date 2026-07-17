@@ -147,7 +147,7 @@ export function SymptomSearch() {
 
           {shouldShowDropdown && (
             <div
-              className="absolute left-0 right-0 top-full z-40 mt-2 overflow-hidden rounded-2xl border border-ink/5 bg-white shadow-xl"
+              className="absolute left-0 right-0 top-full z-40 mt-2 overflow-hidden rounded-2xl border border-ink/5 bg-card shadow-xl"
             >
               <button
                 type="button"
@@ -222,7 +222,7 @@ export function SymptomSearch() {
               <button
                 key={item.id}
                 onClick={() => handleCardClick(item)}
-                className="flex flex-col items-center gap-2 bg-white rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all text-center"
+                className="flex flex-col items-center gap-2 bg-card rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all text-center"
               >
                 <span className="text-2xl">{item.emoji}</span>
                 <span className="text-sm font-semibold text-ink">{item.label}</span>

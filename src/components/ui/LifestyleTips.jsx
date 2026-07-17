@@ -24,7 +24,7 @@ export function LifestyleTips({ symptomId, className }) {
             key={`${symptomId}-${i}`}
             className="flex flex-col items-center text-center gap-3"
           >
-            <div className="w-12 h-12 rounded-full bg-white/80 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-card/80 flex items-center justify-center">
               <TipIcon name={tip.icon} />
             </div>
             <div>

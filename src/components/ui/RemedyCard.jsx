@@ -33,7 +33,7 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
         <Link
           to={`/remedy/${remedy.id}`}
           className={cn(
-            'block bg-white rounded-2xl p-4 shadow-soft hover:shadow-card transition-all h-full',
+            'block bg-card rounded-2xl p-4 shadow-soft hover:shadow-card transition-all h-full',
             className
           )}
         >
@@ -87,7 +87,7 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
         >
           <div className="flex items-center gap-2 mb-3">
             <CategoryBadge category={remedy.category} />
-            <span className="text-xs font-medium text-primary-light bg-white/60 px-2.5 py-0.5 rounded-full">
+            <span className="text-xs font-medium text-primary-light bg-card/60 px-2.5 py-0.5 rounded-full">
               Featured
             </span>
             <button
@@ -131,7 +131,7 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
       <Link
         to={`/remedy/${remedy.id}`}
         className={cn(
-          'block bg-white rounded-3xl p-5 shadow-soft hover:shadow-card transition-all',
+          'block bg-card rounded-3xl p-5 shadow-soft hover:shadow-card transition-all',
           className
         )}
       >

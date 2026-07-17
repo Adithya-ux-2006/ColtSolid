@@ -44,7 +44,7 @@ export function RemedyCarousel({ title, icon, children, className }) {
         {canScrollLeft && (
           <button
             onClick={() => scroll('left')}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center text-ink-muted hover:text-ink hover:shadow-lg transition-all -ml-3"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-card shadow-md flex items-center justify-center text-ink-muted hover:text-ink hover:shadow-lg transition-all -ml-3"
             aria-label="Scroll left"
           >
             <ChevronLeft className="w-4 h-4" />
@@ -53,7 +53,7 @@ export function RemedyCarousel({ title, icon, children, className }) {
         {canScrollRight && (
           <button
             onClick={() => scroll('right')}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center text-ink-muted hover:text-ink hover:shadow-lg transition-all -mr-3"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-card shadow-md flex items-center justify-center text-ink-muted hover:text-ink hover:shadow-lg transition-all -mr-3"
             aria-label="Scroll right"
           >
             <ChevronRight className="w-4 h-4" />

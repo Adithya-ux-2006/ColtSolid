@@ -2,12 +2,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Search, Heart, Clock, User, ShieldCheck } from 'lucide-react';
 import { Dock, DockItem, DockLabel, DockIcon } from '../ui/Dock';
 import { useAuthStore } from '../../store/authStore';
+import { cn } from '../../utils/cn';
 
-/**
- * Desktop-only dock nav (mouse-hover magnification doesn't translate to touch,
- * so mobile keeps the existing BottomNav). Fills the gap where desktop
- * previously had only the top Navbar and no persistent bottom nav.
- */
 export function AppDock() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const user = useAuthStore((state) => state.user);
@@ -50,9 +46,11 @@ export function AppDock() {
               <DockLabel>{item.label}</DockLabel>
               <DockIcon>
                 <item.icon
-                  className="h-full w-full"
+                  className={cn(
+                    'h-full w-full',
+                    location.pathname === item.to ? 'text-primary' : 'text-ink-muted'
+                  )}
                   strokeWidth={1.75}
-                  color={location.pathname === item.to ? '#2F6E52' : '#4A7263'}
                 />
               </DockIcon>
             </button>

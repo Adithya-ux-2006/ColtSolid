@@ -308,7 +308,7 @@ export function Results() {
                 )}
               </div>
 
-              <div className="bg-white rounded-2xl overflow-hidden">
+              <div className="bg-card rounded-2xl overflow-hidden">
                 <div className="hidden md:block">
                   {visibleAlternatives.map((remedy, i) => (
                     <AltRemedyRow

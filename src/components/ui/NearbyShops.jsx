@@ -80,7 +80,7 @@ export function NearbyShops({ remedyName, className }) {
           <select
             value={radius}
             onChange={(e) => setRadius(Number(e.target.value))}
-            className="bg-transparent text-xs text-ink-muted border border-surface rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-primary/30"
+            className="bg-transparent text-xs text-ink-muted border border-border rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-primary/30"
           >
             <option value={1000}>1km</option>
             <option value={3000}>3km</option>

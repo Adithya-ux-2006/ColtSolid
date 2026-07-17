@@ -61,7 +61,7 @@ export function Profile() {
       <PageWrapper className="min-h-screen bg-bg pb-24 md:pb-8 pt-6">
         <div className="max-w-2xl mx-auto px-6 space-y-8">
           {/* Guest Profile Card */}
-          <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 flex flex-col items-center gap-4 text-center">
+          <div className="bg-card rounded-3xl p-6 md:p-8 shadow-sm border border-border flex flex-col items-center gap-4 text-center">
             <div className="w-20 h-20 rounded-2xl bg-accent/20 flex items-center justify-center text-primary">
               <User className="w-10 h-10" />
             </div>
@@ -86,8 +86,8 @@ export function Profile() {
           </div>
 
           {/* Guest Health Profile */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-50 overflow-hidden">
-            <div className="p-5 border-b border-gray-50">
+          <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
+            <div className="p-5 border-b border-border">
               <h2 className="font-bold text-lg text-ink">Health Profile</h2>
               <p className="text-xs text-ink-muted mt-1">Edit your allergies and conditions to get safer remedy recommendations.</p>
             </div>
@@ -111,7 +111,7 @@ export function Profile() {
                               : [...guestEditForm.selectedAllergies.filter(v => v !== 'none'), option.value];
                           setGuestEditForm({ ...guestEditForm, selectedAllergies: next });
                         }}
-                        className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-gray-200 px-3 py-1.5 text-sm font-medium text-ink'}
+                        className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-border px-3 py-1.5 text-sm font-medium text-ink'}
                       >
                         {option.label}
                       </button>
@@ -138,7 +138,7 @@ export function Profile() {
                               : [...guestEditForm.selectedConditions.filter(v => v !== 'none'), option.value];
                           setGuestEditForm({ ...guestEditForm, selectedConditions: next });
                         }}
-                        className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-gray-200 px-3 py-1.5 text-sm font-medium text-ink'}
+                        className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-border px-3 py-1.5 text-sm font-medium text-ink'}
                       >
                         {option.label}
                       </button>
@@ -152,7 +152,7 @@ export function Profile() {
 
               {/* Summary */}
               {(guestEditForm.selectedAllergies.length > 0 || guestEditForm.selectedConditions.length > 0) && (
-                <div className="pt-3 border-t border-gray-50 space-y-3">
+                <div className="pt-3 border-t border-border space-y-3">
                   <ProfileGroup title="Allergies" values={guestEditForm.selectedAllergies.map(formatValue)} emptyLabel="None selected" />
                   <ProfileGroup title="Conditions" values={guestEditForm.selectedConditions.map(formatValue)} emptyLabel="None selected" />
                 </div>
@@ -161,7 +161,7 @@ export function Profile() {
           </div>
 
           {/* About Accordion */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-50 overflow-hidden">
+          <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
             <button
               aria-expanded={expandedSection === 'about'}
               className="w-full p-5 flex justify-between items-center text-left"
@@ -171,7 +171,7 @@ export function Profile() {
               <ChevronDown className={`w-5 h-5 text-ink-muted transition-transform ${expandedSection === 'about' ? 'rotate-180' : ''}`} />
             </button>
             {expandedSection === 'about' && (
-              <div className="p-5 pt-0 text-sm text-ink-muted leading-relaxed border-t border-gray-50">
+              <div className="p-5 pt-0 text-sm text-ink-muted leading-relaxed border-t border-border">
                 <p className="mb-4">
                   curA is a health platform designed to provide evidence-backed remedies for common ailments.
                   Always consult a certified medical professional for serious health concerns.
@@ -232,7 +232,7 @@ export function Profile() {
       <div className="max-w-2xl mx-auto px-6 space-y-8">
         
         {/* Profile Card */}
-        <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 flex flex-col md:flex-row items-center md:items-start gap-6 text-center md:text-left">
+        <div className="bg-card rounded-3xl p-6 md:p-8 shadow-sm border border-border flex flex-col md:flex-row items-center md:items-start gap-6 text-center md:text-left">
           <div className="w-24 h-24 rounded-2xl bg-primary flex items-center justify-center text-3xl font-bold text-white shadow-glow shrink-0">
             {user.avatar}
           </div>
@@ -264,7 +264,7 @@ export function Profile() {
                         type="button"
                         aria-pressed={isSelected}
                         onClick={() => setEditForm({ ...editForm, gender: option })}
-                        className={isSelected ? 'rounded-full border border-forest bg-primary px-4 py-2 text-sm font-medium text-white' : 'rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-ink'}
+                        className={isSelected ? 'rounded-full border border-forest bg-primary px-4 py-2 text-sm font-medium text-white' : 'rounded-full border border-border px-4 py-2 text-sm font-medium text-ink'}
                       >
                         {labels[option]}
                       </button>
@@ -289,7 +289,7 @@ export function Profile() {
                                 : [...editForm.selectedConditions.filter(v => v !== 'none'), option.value];
                             setEditForm({ ...editForm, selectedConditions: next });
                           }}
-                          className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-gray-200 px-3 py-1.5 text-sm font-medium text-ink'}
+                          className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-border px-3 py-1.5 text-sm font-medium text-ink'}
                         >
                           {option.label}
                         </button>
@@ -315,7 +315,7 @@ export function Profile() {
                                 : [...editForm.selectedAllergies.filter(v => v !== 'none'), option.value];
                             setEditForm({ ...editForm, selectedAllergies: next });
                           }}
-                          className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-gray-200 px-3 py-1.5 text-sm font-medium text-ink'}
+                          className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-border px-3 py-1.5 text-sm font-medium text-ink'}
                         >
                           {option.label}
                         </button>
@@ -348,19 +348,19 @@ export function Profile() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-50 flex flex-col items-center justify-between">
+          <div className="bg-card p-5 rounded-2xl shadow-sm border border-border flex flex-col items-center justify-between">
             <span className="text-ink-muted font-medium text-sm">Saved</span>
             <span className="text-2xl font-bold text-primary">{favorites.length}</span>
           </div>
-          <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-50 flex flex-col items-center justify-between">
+          <div className="bg-card p-5 rounded-2xl shadow-sm border border-border flex flex-col items-center justify-between">
             <span className="text-ink-muted font-medium text-sm">Schedules</span>
             <span className="text-2xl font-bold text-primary-dark">{schedules.length}</span>
           </div>
         </div>
 
         {/* Health Profile */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-50 overflow-hidden">
-          <div className="p-5 border-b border-gray-50">
+        <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
+          <div className="p-5 border-b border-border">
             <h2 className="font-bold text-lg text-ink">Health Profile</h2>
           </div>
           <div className="space-y-5 p-5">
@@ -370,7 +370,7 @@ export function Profile() {
         </div>
 
         {/* About Accordion */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-50 overflow-hidden">
+        <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
           <button
             aria-expanded={expandedSection === 'about'}
             className="w-full p-5 flex justify-between items-center text-left"
@@ -380,7 +380,7 @@ export function Profile() {
             <ChevronDown className={`w-5 h-5 text-ink-muted transition-transform ${expandedSection === 'about' ? 'rotate-180' : ''}`} />
           </button>
           {expandedSection === 'about' && (
-            <div className="p-5 pt-0 text-sm text-ink-muted leading-relaxed border-t border-gray-50">
+            <div className="p-5 pt-0 text-sm text-ink-muted leading-relaxed border-t border-border">
               <p className="mb-4">
                 curA is a health platform designed to provide evidence-backed remedies for common ailments.
                 Your profile, favorites, and remedy schedules are synced through Supabase. Always consult a certified medical professional for serious health concerns.

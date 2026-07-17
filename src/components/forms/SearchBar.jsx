@@ -4,7 +4,7 @@ import { cn } from '../../utils/cn';
 export function SearchBar({ value, onChange, onSearch, placeholder = "Search symptoms...", className }) {
   return (
     <div className={cn("w-full", className)}>
-      <div className="relative flex items-center bg-white rounded-full shadow-soft border border-surface/50">
+      <div className="relative flex items-center bg-card rounded-full shadow-soft border border-border/50">
         <Search className="absolute left-5 h-5 w-5 text-ink-muted pointer-events-none" />
         <input
           type="text"

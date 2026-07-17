@@ -79,7 +79,7 @@ export function SymptomInterpreter({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className={cn('bg-white rounded-3xl shadow-card overflow-hidden', className)}
+      className={cn('bg-card rounded-3xl shadow-card overflow-hidden', className)}
     >
       <div className="h-2 bg-gradient-to-r from-accent via-accent-light to-accent" />
 
@@ -154,7 +154,7 @@ export function SymptomInterpreter({
           </div>
         )}
 
-        <div className="my-5 border-t border-surface" />
+        <div className="my-5 border-t border-border" />
 
         {isEmergency ? (
           <div className="rounded-2xl border-2 border-red-300 bg-red-50 p-4">

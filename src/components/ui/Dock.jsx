@@ -68,7 +68,7 @@ export function Dock({
           mouseX.set(Infinity);
         }}
         className={cn(
-          'mx-auto flex w-fit gap-3 rounded-2xl bg-white/90 backdrop-blur-md border border-ink/5 px-4 shadow-[0_4px_20px_rgba(28,53,43,0.08)]',
+          'mx-auto flex w-fit gap-3 rounded-2xl bg-card/90 backdrop-blur-md border border-border px-4 shadow-soft-lg',
           className
         )}
         style={{ height: panelHeight }}
@@ -146,7 +146,7 @@ export function DockLabel({ children, className }) {
           exit={{ opacity: 0, y: 0 }}
           transition={{ duration: 0.2 }}
           className={cn(
-            'absolute -top-7 left-1/2 w-fit whitespace-pre rounded-md border border-ink/10 bg-white px-2 py-1 text-xs font-medium text-ink shadow-sm',
+            'absolute -top-7 left-1/2 w-fit whitespace-pre rounded-md border border-ink/10 bg-card px-2 py-1 text-xs font-medium text-ink shadow-sm',
             className
           )}
           role="tooltip"
