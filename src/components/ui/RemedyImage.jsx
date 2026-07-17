@@ -11,7 +11,7 @@ const CATEGORY_ICONS = {
 const SIZE_CLASSES = {
   sm: 'w-10 h-10 rounded-xl',
   md: 'w-16 h-16 rounded-2xl',
-  lg: 'w-full aspect-[4/3] rounded-3xl',
+  lg: 'w-full aspect-square rounded-3xl',
 };
 
 const ICON_SIZE_CLASSES = {

@@ -207,16 +207,22 @@ export function Results() {
           Back to search
         </button>
 
-        <h1 className="text-display md:text-display-lg font-extrabold text-ink mt-6 mb-3">
+        <h1 className="text-display md:text-hero font-extrabold text-ink mt-6 mb-3">
           {matchedSymptom?.label || queryParam}
         </h1>
 
         {matchedSymptom && (
-          <div className="flex flex-wrap items-center gap-2 mb-4">
+          <div className="flex flex-wrap items-center gap-2 mb-3">
             <SeverityBadge severity={symptomResolution.severity} />
             <IntentBadge intent={symptomResolution.userIntent} />
             {symptomResolution.emergencyIndicators?.length > 0 && <MonitorBadge />}
           </div>
+        )}
+
+        {matchedSymptom && (
+          <p className="text-ink-muted text-sm mb-2">
+            Based on your symptoms, here&apos;s the best next step.
+          </p>
         )}
 
         {matchedSymptom && (
@@ -256,7 +262,7 @@ export function Results() {
           {/* Featured Remedy + Why Recommended */}
           {grouped?.bestMatch && (
             <div className="max-w-4xl mx-auto px-6 mt-8">
-              <p className="section-label">Recommended for You</p>
+              <h2 className="text-section-heading font-bold text-ink mb-4">Recommended for You</h2>
               <div className="md:flex md:gap-6 md:items-start">
                 <div className="md:flex-1">
                   <FeaturedRemedyCard
@@ -280,7 +286,8 @@ export function Results() {
           {/* Alternative Remedies */}
           {allAlternatives.length > 0 && (
             <div className="max-w-2xl mx-auto px-6 mt-10">
-              <p className="section-label">Other Options</p>
+              <h2 className="text-section-heading font-bold text-ink mb-1">Other Remedies</h2>
+              <p className="text-sm text-ink-muted mb-5">Excellent alternatives if you need another option.</p>
 
               {/* Desktop: stacked rows */}
               <div className="hidden md:block space-y-3">

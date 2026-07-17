@@ -74,7 +74,9 @@ export default {
       fontSize: {
         'display': ['3rem', { lineHeight: '1.1', letterSpacing: '-0.025em' }],
         'display-lg': ['3.5rem', { lineHeight: '1.08', letterSpacing: '-0.03em' }],
+        'hero': ['4rem', { lineHeight: '1.05', letterSpacing: '-0.03em', fontWeight: '800' }],
         'heading': ['1.625rem', { lineHeight: '1.25' }],
+        'section-heading': ['1.625rem', { lineHeight: '1.35', fontWeight: '700' }],
         'body': ['1.0625rem', { lineHeight: '1.65' }],
       },
       backgroundImage: {

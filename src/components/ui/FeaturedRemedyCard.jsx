@@ -34,17 +34,17 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
       <Link
         to={`/remedy/${remedy.id}`}
         className={cn(
-          'block bg-white rounded-3xl shadow-card hover:shadow-card-hover transition-shadow overflow-hidden',
+          'block bg-white rounded-[2rem] shadow-card hover:shadow-card-hover transition-all overflow-hidden',
           className
         )}
       >
         <div className="md:flex">
-          <div className="md:w-2/5 p-4 md:p-5">
+          <div className="md:w-[45%] p-5 md:p-6">
             <RemedyImage
               category={remedy.category}
               size="lg"
               alt={remedy.name}
-              className="md:h-full md:aspect-auto"
+              className="w-full aspect-square md:aspect-[4/3] md:h-full"
             />
           </div>
 
@@ -78,7 +78,7 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
             </div>
 
             <div className="mt-auto">
-              <span className="inline-flex items-center justify-center w-full rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white shadow-glow hover:bg-primary-dark transition-colors">
+              <span className="inline-flex items-center justify-center w-full rounded-xl bg-primary px-5 py-3.5 text-base font-semibold text-white shadow-glow hover:bg-primary-dark transition-all hover:-translate-y-0.5">
                 View Remedy
               </span>
             </div>

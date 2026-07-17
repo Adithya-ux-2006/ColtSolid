@@ -83,7 +83,7 @@
 
 @layer components {
   .section-title {
-    @apply text-heading font-semibold text-ink mb-5;
+    @apply text-section-heading font-bold text-ink mb-5;
   }
 
   .section-label {
