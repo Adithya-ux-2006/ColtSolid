@@ -7,16 +7,25 @@ const STYLES = {
   Lifestyle: 'bg-violet-50 text-violet-700 border-violet-200',
 };
 
-export function CategoryBadge({ category, className }) {
+export function CategoryBadge({ category, firstOccurrence, className }) {
   if (!category) return null;
 
+  const displayText = category === 'TCM' && !firstOccurrence
+    ? 'TCM'
+    : category === 'TCM'
+      ? 'Traditional Chinese Medicine (TCM)'
+      : category;
+
   return (
-    <span className={cn(
-      'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border',
-      STYLES[category] || 'bg-surface text-primary border-primary/20',
-      className
-    )}>
-      {category}
+    <span
+      className={cn(
+        'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border',
+        STYLES[category] || 'bg-surface text-primary border-primary/20',
+        className
+      )}
+      title={category === 'TCM' ? 'Traditional Chinese Medicine' : undefined}
+    >
+      {displayText}
     </span>
   );
 }

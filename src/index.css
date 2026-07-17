@@ -86,6 +86,10 @@
     @apply text-heading font-semibold text-ink mb-5;
   }
 
+  .section-label {
+    @apply text-sm font-bold uppercase tracking-wider text-ink-muted mb-4;
+  }
+
   .card-wellness {
     @apply bg-white rounded-3xl p-6 shadow-card;
   }
@@ -96,6 +100,10 @@
 
   .safety-box {
     @apply rounded-3xl p-6 text-sm text-ink leading-relaxed;
+  }
+
+  .guidance-panel {
+    @apply bg-mint rounded-3xl p-5 border border-primary/10;
   }
 }
 

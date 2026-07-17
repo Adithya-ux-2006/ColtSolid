@@ -42,11 +42,15 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        ink: { DEFAULT: '#16352B', muted: '#4A7263', subtle: '#8AA89B' },
-        bg: { DEFAULT: '#F8FBF9', dark: '#F0F6F2' },
-        surface: { DEFAULT: '#DCEFE4', light: '#E8F5EE', dark: '#C5E5D6' },
+        ink: { DEFAULT: '#1E2D28', muted: '#6E7A74', subtle: '#9AA8A2' },
+        bg: { DEFAULT: '#F8FCF9', dark: '#F0F6F2' },
+        surface: { DEFAULT: '#FFFFFF', light: '#F8FCF9', dark: '#EEF8F3' },
+        mint: { DEFAULT: '#EEF8F3' },
         warm: { DEFAULT: '#F4A261', light: '#FBD3A8', dark: '#E08838' },
         forest: { DEFAULT: '#2F6E52', light: '#4A7263' },
+        danger: { DEFAULT: '#E85C5C', light: '#FEF2F2' },
+        warning: { DEFAULT: '#F2A93B', light: '#FFFBEB' },
+        success: { DEFAULT: '#4CAF50', light: '#F0FDF4' },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -59,6 +63,7 @@ export default {
       },
       boxShadow: {
         'soft': '0 2px 12px rgba(22,53,43,0.04)',
+        'soft-lg': '0 4px 24px rgba(22,53,43,0.06)',
         'card': '0 4px 20px rgba(22,53,43,0.06)',
         'card-hover': '0 8px 30px rgba(22,53,43,0.1)',
         'glow': '0 4px 24px rgba(143,217,182,0.3)',
@@ -68,6 +73,7 @@ export default {
       },
       fontSize: {
         'display': ['3rem', { lineHeight: '1.1', letterSpacing: '-0.025em' }],
+        'display-lg': ['3.5rem', { lineHeight: '1.08', letterSpacing: '-0.03em' }],
         'heading': ['1.625rem', { lineHeight: '1.25' }],
         'body': ['1.0625rem', { lineHeight: '1.65' }],
       },
@@ -75,6 +81,7 @@ export default {
         'gradient-card': 'linear-gradient(135deg, #DCEFE4 0%, #E8F5EE 100%)',
         'gradient-featured': 'linear-gradient(135deg, #8FD9B6 0%, #B0E5CC 100%)',
         'gradient-hero': 'linear-gradient(180deg, #F8FBF9 0%, #DCEFE4 100%)',
+        'gradient-mint': 'linear-gradient(135deg, #EEF8F3 0%, #F8FCF9 100%)',
       },
       keyframes: {
         "accordion-down": {

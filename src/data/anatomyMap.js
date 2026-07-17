@@ -195,7 +195,7 @@ const ANATOMY_MAP = {
     { symptomId: "skin_rash", weight: 1.0 },
     { symptomId: "dry_skin", weight: 0.8 },
     { symptomId: "acne", weight: 0.5 },
-    { symptomId: "allergy", weight: 0.4 },
+    { symptomId: "allergies", weight: 0.4 },
     { symptomId: "eczema", weight: 0.9 },
     { symptomId: "psoriasis", weight: 0.9 },
     { symptomId: "sunburn", weight: 0.7 },

@@ -11,9 +11,9 @@ export function LoadingSkeleton({ count = 1, className }) {
             className
           )}
         >
-          <div className="h-5 w-20 bg-surface rounded-full mb-4" />
-          <div className="h-6 w-3/4 bg-surface rounded-lg mb-3" />
-          <div className="h-4 w-full bg-surface rounded-lg" />
+          <div className="h-5 w-20 bg-mint rounded-full mb-4" />
+          <div className="h-6 w-3/4 bg-mint rounded-lg mb-3" />
+          <div className="h-4 w-full bg-mint rounded-lg" />
         </div>
       ))}
     </div>

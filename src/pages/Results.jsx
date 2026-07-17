@@ -1,70 +1,85 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { ArrowLeft, Sparkles, AlertTriangle, ShieldCheck, Info } from 'lucide-react';
+import { ArrowLeft, AlertTriangle, Heart, ChevronDown } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
-import { RemedyCard } from '../components/ui/RemedyCard';
 import { RemedyCarousel } from '../components/ui/RemedyCarousel';
 import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
 import { EmptyState } from '../components/ui/EmptyState';
-import { DoctorGuidance } from '../components/ui/DoctorGuidance';
+import { SeverityBadge } from '../components/ui/SeverityBadge';
+import { GuidancePanel } from '../components/ui/GuidancePanel';
+import { FeaturedRemedyCard } from '../components/ui/FeaturedRemedyCard';
+import { WhyRecommended } from '../components/ui/WhyRecommended';
+import { AltRemedyRow } from '../components/ui/AltRemedyRow';
+import { LifestyleTips } from '../components/ui/LifestyleTips';
+import { MedicalGuidancePanel } from '../components/ui/MedicalGuidancePanel';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { useGuestProfileStore } from '../store/guestProfileStore';
 import { isRemedySafeForUser } from '../utils/guestProfile';
 import { getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptomSearch';
 import { resolveQuery } from '../utils/symptomEngine';
+import { getSymptomGraphEntry } from '../data/symptomGraph';
 import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
 import { trackSearchEvent } from '../utils/analytics';
 
 const EMPTY_ARRAY = [];
-const SEVERITY_COLORS = { mild: 'text-green-600 bg-green-50', moderate: 'text-amber-600 bg-amber-50', severe: 'text-red-600 bg-red-50' };
-const INTENT_LABELS = { relief: 'Looking for relief', cause: 'Understanding causes', information: 'Seeking information', prevention: 'Prevention' };
 
-function SafeBadge({ remedy }) {
-  if (remedy._safe === false) return null;
+const INTENT_LABELS = {
+  relief: 'Looking for Relief',
+  cause: 'Understanding Causes',
+  information: 'Seeking Information',
+  prevention: 'Prevention',
+};
+
+function IntentBadge({ intent }) {
+  const label = INTENT_LABELS[intent];
+  if (!label) return null;
+
   return (
-    <div className="flex items-center gap-1.5 text-xs text-green-700 bg-green-50 rounded-lg px-2.5 py-1">
-      <ShieldCheck className="w-3.5 h-3.5" />
-      <span>{remedy._safetyReason?.replace(/^No /, '') || 'Safety verified'}</span>
-    </div>
+    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-mint text-primary">
+      {label}
+    </span>
   );
 }
 
-function ReasonBadge({ reason }) {
-  if (!reason) return null;
+function MonitorBadge() {
   return (
-    <div className="flex items-start gap-2 text-xs text-ink-muted mt-2">
-      <Info className="w-3.5 h-3.5 mt-0.5 shrink-0 text-primary" />
-      <span>{reason}</span>
-    </div>
+    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-warning/10 text-warning">
+      <AlertTriangle className="w-3 h-3" />
+      Monitor Closely
+    </span>
   );
 }
 
-function SectionHeader({ title, description, count }) {
-  if (!count) return null;
+function LowConfidenceWarning() {
   return (
-    <div className="mb-3">
-      <h2 className="text-sm font-bold uppercase tracking-wider text-ink-muted">{title}</h2>
-      {description && <p className="text-xs text-ink-muted mt-1">{description}</p>}
-    </div>
-  );
-}
-
-function RemedyCardWrapper({ remedy, isSafe }) {
-  return (
-    <div className="bg-white rounded-2xl shadow-soft overflow-hidden border border-ink/5">
-      <RemedyCard remedy={remedy} variant="carousel" isSafe={isSafe} />
-      <div className="px-5 pb-4 space-y-1.5 border-t border-ink/5 pt-3 mt-0">
-        <ReasonBadge label="Why" reason={remedy._relevanceReason} />
-        <SafeBadge remedy={remedy} />
-        {remedy._partialMatch && (
-          <div className="flex items-center gap-1.5 text-xs text-amber-600 bg-amber-50 rounded-lg px-2.5 py-1">
-            <AlertTriangle className="w-3.5 h-3.5" />
-            <span>{remedy._confidenceReason}</span>
-          </div>
-        )}
+    <div className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4">
+      <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+      <div className="text-sm text-amber-800">
+        <p className="font-semibold mb-1">Low confidence match</p>
+        <p>Your search didn't strongly match a known symptom. Results may be less specific. Try using a more precise term.</p>
       </div>
     </div>
+  );
+}
+
+function EmergencyBanner() {
+  return (
+    <div className="rounded-3xl border-2 border-red-300 bg-red-50 p-6">
+      <h2 className="text-xl font-bold text-red-700 mb-2">{EMERGENCY_MESSAGE}</h2>
+      <p className="text-red-600 font-medium mb-4">{EMERGENCY_ACTION}</p>
+      <p className="text-red-500 text-sm">curA does not provide self-treatment guidance for potentially serious symptoms.</p>
+    </div>
+  );
+}
+
+function MedicalDisclaimer() {
+  return (
+    <p className="text-xs text-ink-muted leading-relaxed text-center">
+      curA provides evidence-backed information for educational purposes only.
+      It is not a substitute for professional medical advice, diagnosis, or treatment.
+      Always consult a qualified healthcare provider for any medical concerns.
+    </p>
   );
 }
 
@@ -73,6 +88,8 @@ export function Results() {
   const [searchParams] = useSearchParams();
   const symptomParam = searchParams.get('symptom');
   const queryParam = searchParams.get('q') || '';
+
+  const [showAllAlternatives, setShowAllAlternatives] = useState(false);
 
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies ?? EMPTY_ARRAY);
   const userConditions = useAuthStore((state) => state.user?.common_conditions);
@@ -104,6 +121,8 @@ export function Results() {
   const matchedSymptom = symptomResolution.primarySymptom;
   const queryConfidence = symptomResolution.confidence;
   const isLowConfidence = isFreeTextSearch && queryConfidence < 50 && symptomResolution.symptomIds.length > 0;
+  const primarySymptomId = symptomResolution.symptomIds[0];
+  const symptomGraph = primarySymptomId ? getSymptomGraphEntry(primarySymptomId) : null;
 
   useEffect(() => {
     if (isFreeTextSearch && queryParam) {
@@ -142,6 +161,17 @@ export function Results() {
   const hasResults = (grouped?.bestMatch != null) || (grouped?.bestMatches?.length > 0)
     || (grouped?.additionalOptions?.length > 0) || (grouped?.supportive?.length > 0);
 
+  const allAlternatives = useMemo(() => {
+    if (!grouped) return [];
+    return [
+      ...(grouped.bestMatches || []),
+      ...(grouped.additionalOptions || []),
+      ...(grouped.supportive || []),
+    ];
+  }, [grouped]);
+
+  const visibleAlternatives = showAllAlternatives ? allAlternatives : allAlternatives.slice(0, 3);
+
   if (!hasLoaded && isCatalogLoading) {
     return (
       <PageWrapper className="min-h-screen bg-bg pb-16">
@@ -167,142 +197,172 @@ export function Results() {
 
   return (
     <PageWrapper className="min-h-screen bg-bg pb-24 md:pb-16">
-      <div className="max-w-4xl mx-auto">
-        <div className="max-w-2xl mx-auto px-6 pt-6 pb-2">
-          <button
-            onClick={() => navigate('/search')}
-            className="flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to search
-          </button>
-        </div>
+      {/* Header Section */}
+      <div className="max-w-2xl mx-auto px-6 pt-6">
+        <button
+          onClick={() => navigate('/search')}
+          className="flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to search
+        </button>
 
-        <div className="max-w-2xl mx-auto px-6 py-4">
-          <h1 className="text-2xl md:text-3xl font-bold text-ink leading-tight">
-            {matchedSymptom?.label || queryParam}
-          </h1>
+        <h1 className="text-display md:text-display-lg font-extrabold text-ink mt-6 mb-3">
+          {matchedSymptom?.label || queryParam}
+        </h1>
 
-          {matchedSymptom && (
-            <div className="flex flex-wrap items-center gap-2 mt-2">
-              {symptomResolution.severity && (
-                <span className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${SEVERITY_COLORS[symptomResolution.severity] || 'text-ink-muted bg-surface'}`}>
-                  {symptomResolution.severity}
-                </span>
-              )}
-              {symptomResolution.userIntent && (
-                <span className="text-xs text-ink-muted bg-surface px-2.5 py-0.5 rounded-full">
-                  {INTENT_LABELS[symptomResolution.userIntent] || 'Health concern'}
-                </span>
-              )}
-              {symptomResolution.emergencyIndicators?.length > 0 && (
-                <span className="text-xs font-medium text-red-600 bg-red-50 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                  <AlertTriangle className="w-3 h-3" /> Monitor closely
-                </span>
-              )}
-            </div>
-          )}
-        </div>
-
-        {isLowConfidence && (
-          <div className="max-w-2xl mx-auto px-6 mb-4">
-            <div className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4">
-              <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
-              <div className="text-sm text-amber-800">
-                <p className="font-semibold mb-1">Low confidence match</p>
-                <p>Your search didn't strongly match a known symptom. Results may be less specific. Try using a more precise term.</p>
-              </div>
-            </div>
+        {matchedSymptom && (
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <SeverityBadge severity={symptomResolution.severity} />
+            <IntentBadge intent={symptomResolution.userIntent} />
+            {symptomResolution.emergencyIndicators?.length > 0 && <MonitorBadge />}
           </div>
         )}
 
-        {isEmergencyQuery(queryParam) ? (
-          <div className="max-w-2xl mx-auto px-6">
-            <div className="rounded-3xl border-2 border-red-300 bg-red-50 p-6">
-              <h2 className="text-xl font-bold text-red-700 mb-2">{EMERGENCY_MESSAGE}</h2>
-              <p className="text-red-600 font-medium mb-4">{EMERGENCY_ACTION}</p>
-              <p className="text-red-500 text-sm">curA does not provide self-treatment guidance for potentially serious symptoms.</p>
-            </div>
-          </div>
-        ) : !hasResults && !isCatalogLoading ? (
-          <div className="max-w-2xl mx-auto px-6">
-            <EmptyState
-              title="No remedies found"
-              description={symptomResolution.symptomIds.length > 0
-                ? `No evidence-backed remedies were found for "${matchedSymptom?.label || queryParam}". Try a different search term.`
-                : `We couldn't confidently identify a matching symptom for "${queryParam}". Try a different search term.`}
-              ctaLabel="Search Again"
-              ctaHref="/search"
-            />
-          </div>
-        ) : (
-          <div className="space-y-8 px-6 pb-8">
+        {matchedSymptom && (
+          <GuidancePanel
+            severity={symptomResolution.severity}
+            symptom={matchedSymptom}
+            emergencyFlags={symptomGraph?.emergencyFlags}
+          />
+        )}
+      </div>
 
-            {grouped?.bestMatch && (
-              <section>
-                <div className="mb-3">
-                  <h2 className="text-sm font-bold uppercase tracking-wider text-primary">Best Match</h2>
-                  <p className="text-xs text-ink-muted mt-1">What a knowledgeable practitioner would recommend first.</p>
+      {/* Low Confidence Warning */}
+      {isLowConfidence && (
+        <div className="max-w-2xl mx-auto px-6 mt-4">
+          <LowConfidenceWarning />
+        </div>
+      )}
+
+      {/* Emergency Banner */}
+      {isEmergencyQuery(queryParam) ? (
+        <div className="max-w-2xl mx-auto px-6 mt-6">
+          <EmergencyBanner />
+        </div>
+      ) : !hasResults && !isCatalogLoading ? (
+        <div className="max-w-2xl mx-auto px-6 mt-6">
+          <EmptyState
+            title="No remedies found"
+            description={symptomResolution.symptomIds.length > 0
+              ? `No evidence-backed remedies were found for "${matchedSymptom?.label || queryParam}". Try a different search term.`
+              : `We couldn't confidently identify a matching symptom for "${queryParam}". Try a different search term.`}
+            ctaLabel="Search Again"
+            ctaHref="/search"
+          />
+        </div>
+      ) : (
+        <>
+          {/* Featured Remedy + Why Recommended */}
+          {grouped?.bestMatch && (
+            <div className="max-w-4xl mx-auto px-6 mt-8">
+              <p className="section-label">Recommended for You</p>
+              <div className="md:flex md:gap-6 md:items-start">
+                <div className="md:flex-1">
+                  <FeaturedRemedyCard
+                    remedy={grouped.bestMatch}
+                    isSafe={safeFilter(grouped.bestMatch)}
+                    evidenceScore={grouped.bestMatch._evidenceScore}
+                    safetyScore={grouped.bestMatch._safetyScore}
+                  />
                 </div>
-                <RemedyCardWrapper remedy={grouped.bestMatch} isSafe={safeFilter(grouped.bestMatch)} />
-              </section>
-            )}
+                <div className="md:w-72 mt-6 md:mt-0 shrink-0">
+                  <WhyRecommended
+                    remedy={grouped.bestMatch}
+                    evidenceScore={grouped.bestMatch._evidenceScore}
+                    safetyScore={grouped.bestMatch._safetyScore}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
 
-            {grouped?.bestMatches?.length > 0 && (
-              <section>
-                <SectionHeader title="Best Matches" description="Top remedies that directly address your concern." count={grouped.bestMatches.length} />
+          {/* Alternative Remedies */}
+          {allAlternatives.length > 0 && (
+            <div className="max-w-2xl mx-auto px-6 mt-10">
+              <p className="section-label">Other Options</p>
+
+              {/* Desktop: stacked rows */}
+              <div className="hidden md:block space-y-3">
+                {visibleAlternatives.map((remedy) => (
+                  <AltRemedyRow
+                    key={remedy.id}
+                    remedy={remedy}
+                    isSafe={safeFilter(remedy)}
+                    evidenceScore={remedy._evidenceScore}
+                    safetyScore={remedy._safetyScore}
+                  />
+                ))}
+              </div>
+
+              {/* Mobile: carousel */}
+              <div className="md:hidden">
                 <RemedyCarousel>
-                  {grouped.bestMatches.map((remedy) => (
+                  {allAlternatives.map((remedy) => (
                     <div key={remedy.id} className="w-72 shrink-0 snap-start">
-                      <RemedyCardWrapper remedy={remedy} isSafe={safeFilter(remedy)} />
+                      <AltRemedyRow
+                        remedy={remedy}
+                        isSafe={safeFilter(remedy)}
+                        evidenceScore={remedy._evidenceScore}
+                        safetyScore={remedy._safetyScore}
+                      />
                     </div>
                   ))}
                 </RemedyCarousel>
-              </section>
-            )}
+              </div>
 
-            {grouped?.additionalOptions?.length > 0 && (
-              <section>
-                <SectionHeader title="Additional Options" description="Alternative remedies that help manage associated symptoms." count={grouped.additionalOptions.length} />
-                <RemedyCarousel>
-                  {grouped.additionalOptions.map((remedy) => (
-                    <div key={remedy.id} className="w-72 shrink-0 snap-start">
-                      <RemedyCardWrapper remedy={remedy} isSafe={safeFilter(remedy)} />
-                    </div>
-                  ))}
-                </RemedyCarousel>
-              </section>
-            )}
+              {/* Show all button */}
+              {!showAllAlternatives && allAlternatives.length > 3 && (
+                <button
+                  onClick={() => setShowAllAlternatives(true)}
+                  className="mt-4 flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark transition-colors mx-auto"
+                >
+                  Show all {allAlternatives.length} alternatives
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          )}
 
-            {grouped?.supportive?.length > 0 && (
-              <section>
-                <SectionHeader title="Supportive Remedies" description="General wellness support alongside your primary care." count={grouped.supportive.length} />
-                <RemedyCarousel>
-                  {grouped.supportive.map((remedy) => (
-                    <div key={remedy.id} className="w-72 shrink-0 snap-start">
-                      <RemedyCardWrapper remedy={remedy} isSafe={safeFilter(remedy)} />
-                    </div>
-                  ))}
-                </RemedyCarousel>
-              </section>
-            )}
+          {/* Lifestyle Tips */}
+          {primarySymptomId && (
+            <div className="max-w-2xl mx-auto px-6 mt-10">
+              <LifestyleTips symptomId={primarySymptomId} />
+            </div>
+          )}
 
-            {!isAuthenticated && hasResults && (
-              <div className="max-w-2xl mx-auto">
+          {/* Medical Guidance */}
+          {primarySymptomId && (
+            <div className="max-w-2xl mx-auto px-6 mt-10">
+              <MedicalGuidancePanel
+                symptomId={primarySymptomId}
+                severity={symptomResolution.severity}
+              />
+            </div>
+          )}
+
+          {/* Medical Disclaimer */}
+          <div className="max-w-2xl mx-auto px-6 mt-10">
+            <MedicalDisclaimer />
+          </div>
+
+          {/* Sign-Up CTA (after all guidance) */}
+          {!isAuthenticated && hasResults && (
+            <div className="max-w-2xl mx-auto px-6 mt-10">
               <section className="rounded-3xl bg-gradient-card p-6 shadow-card border border-accent/20">
                 <div className="flex items-center gap-2 mb-3">
-                  <Sparkles className="w-5 h-5 text-primary" />
-                  <p className="text-lg font-semibold text-ink">Finding what you need?</p>
+                  <Heart className="w-5 h-5 text-primary" />
+                  <p className="text-lg font-semibold text-ink">Save this remedy</p>
                 </div>
                 <p className="text-sm text-ink-muted leading-relaxed mb-4">
-                  Sign up free to save remedies and get a personalized dashboard built around your symptoms.
+                  Create a free account to track your recovery and build your personal remedy library.
                 </p>
                 <div className="space-y-2">
                   <Link
                     to="/register"
                     className="block w-full rounded-xl bg-primary px-4 py-3 text-center text-sm font-semibold text-white shadow-glow hover:bg-primary-dark transition-colors"
                   >
-                    Sign Up Free &mdash; Always Free
+                    Create Free Account
                   </Link>
                   <Link
                     to="/login"
@@ -312,15 +372,10 @@ export function Results() {
                   </Link>
                 </div>
               </section>
-              </div>
-            )}
-
-            <section>
-              <DoctorGuidance />
-            </section>
-          </div>
-        )}
-      </div>
+            </div>
+          )}
+        </>
+      )}
     </PageWrapper>
   );
 }
