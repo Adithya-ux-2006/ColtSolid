@@ -96,10 +96,15 @@ async function callGemini(prompt, apiKey) {
     }
 
     const data = await response.json();
+    console.log('[GEMINI-NLU] Raw response keys:', Object.keys(data).join(', '), 'candidates:', data.candidates?.length || 0);
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!text) throw new Error('Empty Gemini response');
+    if (!text) {
+      console.log('[GEMINI-NLU] No text in response. Full:', JSON.stringify(data).slice(0, 500));
+      throw new Error('Empty Gemini response');
+    }
 
     const parsed = JSON.parse(text);
+    console.log('[GEMINI-NLU] Parsed JSON keys:', Object.keys(parsed).join(', '));
     return parsed;
   } finally {
     clearTimeout(timeoutId);
@@ -134,7 +139,9 @@ async function interpretWithGemini(query, symptomCatalog, apiKey) {
     try {
       const result = await callGemini(prompt, apiKey);
       if (validateInterpretation(result)) return result;
-    } catch {
+      console.log('[GEMINI-NLU] Validation failed for attempt', attempt);
+    } catch (err) {
+      console.log('[GEMINI-NLU] Attempt', attempt, 'failed:', err.message);
       if (attempt < MAX_RETRIES) {
         await new Promise(r => setTimeout(r, 300));
       }
@@ -169,9 +176,10 @@ export async function handler(event) {
       return buildResponse(400, { error: 'Symptom catalog is required.' });
     }
 
-    const apiKey = process.env.GOOGLE_AI_STUDIO_API_KEY;
-    console.log('[GEMINI-NLU] API key found:', Boolean(apiKey));
+    const apiKey = (process.env.GOOGLE_AI_STUDIO_API_KEY || '').trim();
+    console.log('[GEMINI-NLU] API key found:', Boolean(apiKey), 'length:', apiKey.length);
     if (!apiKey) {
+      console.log('[GEMINI-NLU] No API key configured. Available env keys:', Object.keys(process.env).filter(k => k.includes('GEMINI') || k.includes('GOOGLE') || k.includes('AI')).join(', '));
       return buildResponse(200, {
         interpretation: null,
         source: 'unavailable',
@@ -188,7 +196,7 @@ export async function handler(event) {
 
     console.log('[GEMINI-NLU] Calling Gemini for query:', query);
     const interpretation = await interpretWithGemini(query, symptomCatalog, apiKey);
-    console.log('[GEMINI-NLU] Interpretation result:', interpretation ? 'SUCCESS' : 'NULL', interpretation ? JSON.stringify(interpretation).slice(0, 300) : '');
+    console.log('[GEMINI-NLU] Interpretation result:', interpretation ? 'SUCCESS' : 'NULL', interpretation ? JSON.stringify(interpretation).slice(0, 500) : '');
 
     if (!interpretation) {
       return buildResponse(200, {
@@ -201,7 +209,8 @@ export async function handler(event) {
     setCacheResult(cacheKey, interpretation);
 
     return buildResponse(200, { interpretation, source: 'gemini' });
-  } catch {
+  } catch (err) {
+    console.log('[GEMINI-NLU] Unexpected error:', err.message);
     return buildResponse(200, {
       interpretation: null,
       source: 'fallback',
