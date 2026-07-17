@@ -12,12 +12,14 @@ const SIZE_CLASSES = {
   sm: 'w-10 h-10 rounded-xl',
   md: 'w-16 h-16 rounded-2xl',
   lg: 'w-full aspect-square rounded-3xl',
+  hero: 'w-[140px] h-[140px] rounded-full object-cover',
 };
 
 const ICON_SIZE_CLASSES = {
   sm: 'w-5 h-5',
   md: 'w-7 h-7',
   lg: 'w-12 h-12',
+  hero: 'w-16 h-16',
 };
 
 export function RemedyImage({ category, size = 'md', src, alt, className }) {

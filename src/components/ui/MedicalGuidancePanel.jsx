@@ -14,7 +14,7 @@ export function MedicalGuidancePanel({ symptomId, severity, className }) {
   return (
     <div
       className={cn(
-        'rounded-3xl border border-danger/15 bg-danger-light',
+        'rounded-2xl border border-danger/15 bg-danger-light overflow-hidden',
         className
       )}
       role="region"
@@ -23,11 +23,11 @@ export function MedicalGuidancePanel({ symptomId, severity, className }) {
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex w-full items-center justify-between gap-3 px-6 py-5 text-left"
+        className="flex w-full items-center justify-between gap-3 px-5 py-4 min-h-[56px] text-left"
       >
-        <div className="flex items-center gap-3">
-          <AlertTriangle className="w-5 h-5 text-danger shrink-0" />
-          <span className="font-semibold text-ink">When to seek medical care</span>
+        <div className="flex items-center gap-3 min-w-0">
+          <AlertTriangle className="w-4 h-4 text-danger shrink-0" />
+          <span className="text-sm font-semibold text-ink truncate">When to seek medical care</span>
         </div>
         <ChevronDown
           className={cn(
@@ -46,14 +46,11 @@ export function MedicalGuidancePanel({ symptomId, severity, className }) {
             transition={{ duration: 0.22, ease: 'easeOut' }}
             className="overflow-hidden"
           >
-            <div className="px-6 pb-5">
-              <p className="text-sm text-ink-muted leading-relaxed mb-3">
-                Seek immediate medical attention if you experience:
-              </p>
-              <ul className="space-y-1.5">
+            <div className="px-5 pb-4">
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5">
                 {flags.map((flag, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-ink-muted">
-                    <span className="text-danger mt-1.5 text-xs" aria-hidden="true">&#9679;</span>
+                    <span className="text-danger mt-1.5 text-[8px]" aria-hidden="true">&#9679;</span>
                     {flag}
                   </li>
                 ))}

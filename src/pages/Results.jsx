@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams, Link, useLocation } from 'react-router-dom';
-import { ArrowLeft, AlertTriangle, Heart, ChevronDown } from 'lucide-react';
+import { ArrowLeft, AlertTriangle, Heart, ChevronDown, ShieldCheck } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { RemedyCarousel } from '../components/ui/RemedyCarousel';
 import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
@@ -8,7 +8,6 @@ import { EmptyState } from '../components/ui/EmptyState';
 import { SeverityBadge } from '../components/ui/SeverityBadge';
 import { GuidancePanel } from '../components/ui/GuidancePanel';
 import { FeaturedRemedyCard } from '../components/ui/FeaturedRemedyCard';
-import { WhyRecommended } from '../components/ui/WhyRecommended';
 import { AltRemedyRow } from '../components/ui/AltRemedyRow';
 import { LifestyleTips } from '../components/ui/LifestyleTips';
 import { MedicalGuidancePanel } from '../components/ui/MedicalGuidancePanel';
@@ -74,12 +73,20 @@ function EmergencyBanner() {
   );
 }
 
+function EvidenceBanner() {
+  return (
+    <div className="flex items-center justify-center gap-2 py-3">
+      <ShieldCheck className="w-4 h-4 text-success" />
+      <p className="text-sm text-ink-muted">All remedies are evidence-backed and safety-checked</p>
+    </div>
+  );
+}
+
 function MedicalDisclaimer() {
   return (
     <p className="text-xs text-ink-muted leading-relaxed text-center">
-      curA provides evidence-backed information for educational purposes only.
-      It is not a substitute for professional medical advice, diagnosis, or treatment.
-      Always consult a qualified healthcare provider for any medical concerns.
+      curA provides general information and is not a substitute for professional medical advice.
+      Always consult a healthcare professional for personalised care.
     </p>
   );
 }
@@ -191,13 +198,13 @@ export function Results() {
     ];
   }, [grouped]);
 
-  const visibleAlternatives = showAllAlternatives ? allAlternatives : allAlternatives.slice(0, 3);
+  const visibleAlternatives = showAllAlternatives ? allAlternatives : allAlternatives.slice(0, 5);
 
   if (!hasLoaded && isCatalogLoading) {
     return (
       <PageWrapper className="min-h-screen bg-bg pb-16">
-        <div className="max-w-2xl mx-auto px-6 pt-8">
-          <LoadingSkeleton count={4} />
+        <div className="max-w-4xl mx-auto px-6 pt-8">
+          <LoadingSkeleton count={2} />
         </div>
       </PageWrapper>
     );
@@ -218,17 +225,16 @@ export function Results() {
 
   return (
     <PageWrapper className="min-h-screen bg-bg pb-24 md:pb-16">
-      {/* Header Section */}
-      <div className="max-w-2xl mx-auto px-6 pt-6">
+      <div className="max-w-4xl mx-auto px-6 pt-6">
         <button
           onClick={() => navigate('/search')}
-          className="flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink transition-colors"
+          className="flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-dark transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to search
+          Back to Search
         </button>
 
-        <h1 className="text-display md:text-hero font-extrabold text-ink mt-6 mb-3">
+        <h1 className="text-hero font-extrabold text-ink mt-8 mb-4">
           {matchedSymptom?.label || queryParam}
         </h1>
 
@@ -241,34 +247,24 @@ export function Results() {
         )}
 
         {matchedSymptom && (
-          <p className="text-ink-muted text-sm mb-2">
-            Based on your symptoms, here&apos;s the best next step.
+          <p className="text-ink-muted text-sm mb-6">
+            Based on your input, here&apos;s the best next step.
           </p>
-        )}
-
-        {matchedSymptom && (
-          <GuidancePanel
-            severity={symptomResolution.severity}
-            symptom={matchedSymptom}
-            emergencyFlags={symptomGraph?.emergencyFlags}
-          />
         )}
       </div>
 
-      {/* Low Confidence Warning */}
       {isLowConfidence && (
-        <div className="max-w-2xl mx-auto px-6 mt-4">
+        <div className="max-w-4xl mx-auto px-6 mb-4">
           <LowConfidenceWarning />
         </div>
       )}
 
-      {/* Emergency Banner */}
       {isEmergencyQuery(queryParam) ? (
-        <div className="max-w-2xl mx-auto px-6 mt-6">
+        <div className="max-w-4xl mx-auto px-6 mb-6">
           <EmergencyBanner />
         </div>
       ) : !hasResults && !isCatalogLoading ? (
-        <div className="max-w-2xl mx-auto px-6 mt-6">
+        <div className="max-w-4xl mx-auto px-6 mb-6">
           <EmptyState
             title="No remedies found"
             description={symptomResolution.symptomIds.length > 0
@@ -280,70 +276,71 @@ export function Results() {
         </div>
       ) : (
         <>
-          {/* Featured Remedy + Why Recommended */}
           {grouped?.bestMatch && (
-            <div className="max-w-4xl mx-auto px-6 mt-8">
-              <h2 className="text-section-heading font-bold text-ink mb-4">Recommended for You</h2>
-              <div className="md:flex md:gap-6 md:items-start">
-                <div className="md:flex-1">
-                  <FeaturedRemedyCard
-                    remedy={grouped.bestMatch}
-                    isSafe={safeFilter(grouped.bestMatch)}
-                    evidenceScore={grouped.bestMatch._evidenceScore}
-                    safetyScore={grouped.bestMatch._safetyScore}
-                  />
-                </div>
-                <div className="md:w-72 mt-6 md:mt-0 shrink-0">
-                  <WhyRecommended
-                    remedy={grouped.bestMatch}
-                    evidenceScore={grouped.bestMatch._evidenceScore}
-                    safetyScore={grouped.bestMatch._safetyScore}
-                  />
-                </div>
-              </div>
+            <div className="max-w-4xl mx-auto px-6 mb-2">
+              <FeaturedRemedyCard
+                remedy={grouped.bestMatch}
+                isSafe={safeFilter(grouped.bestMatch)}
+                evidenceScore={grouped.bestMatch._evidenceScore}
+                safetyScore={grouped.bestMatch._safetyScore}
+              />
             </div>
           )}
 
-          {/* Alternative Remedies */}
+          {grouped?.bestMatch && <EvidenceBanner />}
+
           {allAlternatives.length > 0 && (
-            <div className="max-w-2xl mx-auto px-6 mt-10">
-              <h2 className="text-section-heading font-bold text-ink mb-1">Other Remedies</h2>
-              <p className="text-sm text-ink-muted mb-5">Excellent alternatives if you need another option.</p>
-
-              {/* Desktop: stacked rows */}
-              <div className="hidden md:block space-y-3">
-                {visibleAlternatives.map((remedy) => (
-                  <AltRemedyRow
-                    key={remedy.id}
-                    remedy={remedy}
-                    isSafe={safeFilter(remedy)}
-                    evidenceScore={remedy._evidenceScore}
-                    safetyScore={remedy._safetyScore}
-                  />
-                ))}
+            <div className="max-w-4xl mx-auto px-6 mt-6">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-section-heading font-bold text-ink mb-0.5">Other Remedies</h2>
+                  <p className="text-sm text-ink-muted">Excellent alternatives if you need another option.</p>
+                </div>
+                {allAlternatives.length > 5 && !showAllAlternatives && (
+                  <button
+                    onClick={() => setShowAllAlternatives(true)}
+                    className="text-sm font-semibold text-primary hover:text-primary-dark transition-colors shrink-0"
+                  >
+                    Show all
+                  </button>
+                )}
               </div>
 
-              {/* Mobile: carousel */}
-              <div className="md:hidden">
-                <RemedyCarousel>
-                  {allAlternatives.map((remedy) => (
-                    <div key={remedy.id} className="w-72 shrink-0 snap-start">
-                      <AltRemedyRow
-                        remedy={remedy}
-                        isSafe={safeFilter(remedy)}
-                        evidenceScore={remedy._evidenceScore}
-                        safetyScore={remedy._safetyScore}
-                      />
-                    </div>
+              <div className="bg-white rounded-2xl overflow-hidden">
+                <div className="hidden md:block">
+                  {visibleAlternatives.map((remedy, i) => (
+                    <AltRemedyRow
+                      key={remedy.id}
+                      remedy={remedy}
+                      isSafe={safeFilter(remedy)}
+                      evidenceScore={remedy._evidenceScore}
+                      safetyScore={remedy._safetyScore}
+                      showDivider={i < visibleAlternatives.length - 1}
+                    />
                   ))}
-                </RemedyCarousel>
+                </div>
+
+                <div className="md:hidden">
+                  <RemedyCarousel>
+                    {allAlternatives.map((remedy) => (
+                      <div key={remedy.id} className="w-72 shrink-0 snap-start">
+                        <AltRemedyRow
+                          remedy={remedy}
+                          isSafe={safeFilter(remedy)}
+                          evidenceScore={remedy._evidenceScore}
+                          safetyScore={remedy._safetyScore}
+                          showDivider={false}
+                        />
+                      </div>
+                    ))}
+                  </RemedyCarousel>
+                </div>
               </div>
 
-              {/* Show all button */}
-              {!showAllAlternatives && allAlternatives.length > 3 && (
+              {!showAllAlternatives && allAlternatives.length > 5 && (
                 <button
                   onClick={() => setShowAllAlternatives(true)}
-                  className="mt-4 flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark transition-colors mx-auto"
+                  className="mt-4 flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark transition-colors mx-auto md:hidden"
                 >
                   Show all {allAlternatives.length} alternatives
                   <ChevronDown className="w-4 h-4" />
@@ -352,16 +349,14 @@ export function Results() {
             </div>
           )}
 
-          {/* Lifestyle Tips */}
           {primarySymptomId && (
-            <div className="max-w-2xl mx-auto px-6 mt-10">
+            <div className="max-w-4xl mx-auto px-6 mt-10">
               <LifestyleTips symptomId={primarySymptomId} />
             </div>
           )}
 
-          {/* Medical Guidance */}
           {primarySymptomId && (
-            <div className="max-w-2xl mx-auto px-6 mt-10">
+            <div className="max-w-4xl mx-auto px-6 mt-6">
               <MedicalGuidancePanel
                 symptomId={primarySymptomId}
                 severity={symptomResolution.severity}
@@ -369,15 +364,13 @@ export function Results() {
             </div>
           )}
 
-          {/* Medical Disclaimer */}
-          <div className="max-w-2xl mx-auto px-6 mt-10">
+          <div className="max-w-4xl mx-auto px-6 mt-8">
             <MedicalDisclaimer />
           </div>
 
-          {/* Sign-Up CTA (after all guidance) */}
           {!isAuthenticated && hasResults && (
-            <div className="max-w-2xl mx-auto px-6 mt-10">
-              <section className="rounded-3xl bg-gradient-card p-6 shadow-card border border-accent/20">
+            <div className="max-w-4xl mx-auto px-6 mt-8">
+              <section className="rounded-3xl bg-gradient-card p-6 shadow-soft border border-primary/10">
                 <div className="flex items-center gap-2 mb-3">
                   <Heart className="w-5 h-5 text-primary" />
                   <p className="text-lg font-semibold text-ink">Save this remedy</p>
