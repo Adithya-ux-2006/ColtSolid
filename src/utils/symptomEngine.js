@@ -31,13 +31,21 @@ export function resolveQuery(query, symptoms, geminiInterpretation) {
     emergencyIndicators: result.emergencyIndicators,
   };
 
-  if (!geminiInterpretation) return base;
+  if (!geminiInterpretation) {
+    console.log('[RESOLVE] No Gemini interpretation — using deterministic engine only');
+    return base;
+  }
+
+  console.log('[RESOLVE] Gemini interpretation received:', JSON.stringify(geminiInterpretation).slice(0, 300));
 
   const validGeminiIds = new Set(symptoms.map(s => s.id));
   const geminiPrimary = (geminiInterpretation.primarySymptoms || []).filter(id => validGeminiIds.has(id));
   const geminiSecondary = (geminiInterpretation.secondarySymptoms || []).filter(id => validGeminiIds.has(id));
 
-  if (geminiPrimary.length === 0 && geminiSecondary.length === 0) return base;
+  if (geminiPrimary.length === 0 && geminiSecondary.length === 0) {
+    console.log('[RESOLVE] Gemini returned no valid symptom IDs — falling back to base');
+    return base;
+  }
 
   const engineIdSet = new Set(base.symptomIds);
   const geminiOnlySecondary = geminiSecondary.filter(id => !engineIdSet.has(id));
@@ -62,6 +70,8 @@ export function resolveQuery(query, symptoms, geminiInterpretation) {
   const matchedGeminiSymptom = geminiPrimary.length > 0
     ? symptoms.find(s => s.id === geminiPrimary[0]) || base.primarySymptom
     : base.primarySymptom;
+
+  console.log('[RESOLVE] Merged IDs:', uniqueMergedIds, 'gemini primary:', geminiPrimary, 'confidence:', mergedConfidence);
 
   return {
     ...base,

@@ -39,6 +39,7 @@ export async function fetchGeminiInterpretation(query, symptoms) {
     try {
       const symptomCatalog = symptoms.map(s => ({ id: s.id, label: s.label }));
 
+      console.log('[GEMINI-CLIENT] Fetching interpretation for:', normalizedQuery);
       const response = await fetch(getApiUrl('/api/gemini-nlu'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -49,8 +50,10 @@ export async function fetchGeminiInterpretation(query, symptoms) {
       });
 
       const payload = await response.json();
+      console.log('[GEMINI-CLIENT] Response status:', response.status, 'source:', payload.source, 'has interpretation:', Boolean(payload.interpretation));
 
       if (!response.ok || !payload.interpretation) {
+        console.log('[GEMINI-CLIENT] No interpretation. reason:', payload.reason || 'response not ok');
         return null;
       }
 

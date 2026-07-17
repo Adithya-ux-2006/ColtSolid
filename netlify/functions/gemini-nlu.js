@@ -170,6 +170,7 @@ export async function handler(event) {
     }
 
     const apiKey = process.env.GOOGLE_AI_STUDIO_API_KEY;
+    console.log('[GEMINI-NLU] API key found:', Boolean(apiKey));
     if (!apiKey) {
       return buildResponse(200, {
         interpretation: null,
@@ -181,10 +182,13 @@ export async function handler(event) {
     const cacheKey = `${query}::${symptomCatalog.length}`;
     const cached = getCachedResult(cacheKey);
     if (cached) {
+      console.log('[GEMINI-NLU] Cache hit');
       return buildResponse(200, { interpretation: cached, source: 'cache' });
     }
 
+    console.log('[GEMINI-NLU] Calling Gemini for query:', query);
     const interpretation = await interpretWithGemini(query, symptomCatalog, apiKey);
+    console.log('[GEMINI-NLU] Interpretation result:', interpretation ? 'SUCCESS' : 'NULL', interpretation ? JSON.stringify(interpretation).slice(0, 300) : '');
 
     if (!interpretation) {
       return buildResponse(200, {
