@@ -8,6 +8,7 @@ import { SafetyNotice } from '../components/ui/SafetyNotice';
 import { DoctorGuidance } from '../components/ui/DoctorGuidance';
 import { AllergyBadge } from '../components/ui/AllergyBadge';
 import { EvidenceCard } from '../components/ui/EvidenceCard';
+import { NearbyShops } from '../components/ui/NearbyShops';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
@@ -192,6 +193,9 @@ export function RemedyDetail() {
             </div>
           </section>
         )}
+
+        {/* Nearby Shops */}
+        <NearbyShops remedyName={remedy.name} />
 
         {/* Safety Notes */}
         {remedy.warnings && (

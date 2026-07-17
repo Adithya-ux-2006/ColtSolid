@@ -60,7 +60,7 @@ test.describe('Structured Data — JSON-LD Validation', () => {
   });
 
   test('url points to production domain', async () => {
-    expect(jsonLd.url).toBe('https://cura-health.vercel.app');
+    expect(jsonLd.url).toBe('https://cura-health.netlify.app');
   });
 
   test('no student-specific language in structured data', async () => {

@@ -1,9 +1,10 @@
 // supabase/functions/send-remedy-reminders/index.ts
-// Scheduled via Vercel Cron (every 5 minutes).
+// Triggered by cron (every 5 minutes) — via Netlify Scheduled Function or external cron.
 // Queries remedy_schedules for due reminders and sends emails.
 //
 // Required env vars (set in Supabase Dashboard > Edge Functions > Secrets):
 //   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+//   APP_URL (your deployed app URL, e.g. https://cura-health.netlify.app)
 //   EMAIL_API_KEY (Resend/SendGrid/Postmark — pick one)
 //   EMAIL_FROM (verified sender address)
 
@@ -82,7 +83,7 @@ serve(async (req: Request) => {
     const userMap = new Map((users || []).map((u: any) => [u.id, u]));
 
     // Send emails (placeholder — replace with your email provider)
-    const appUrl = Deno.env.get("APP_URL") || "https://cura-health.vercel.app";
+    const appUrl = Deno.env.get("APP_URL") || "https://cura-health.netlify.app";
     let sent = 0;
     for (const schedule of dueSchedules) {
       const user = userMap.get(schedule.user_id);
