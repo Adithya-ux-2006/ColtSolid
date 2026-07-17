@@ -39,7 +39,7 @@ export async function handler(event) {
     const searchLimit = Math.min(Math.max(Number(limit) || 10, 1), MAX_LIMIT);
 
     const params = new URLSearchParams({
-      categories: 'healthcare.pharmacy,healthcare.drugstore',
+      categories: 'healthcare.pharmacy',
       filter: `circle:${lon},${lat},${searchRadius}`,
       limit: String(searchLimit),
       apiKey,
