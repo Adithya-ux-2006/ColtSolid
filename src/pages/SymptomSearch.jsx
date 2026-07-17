@@ -91,7 +91,8 @@ export function SymptomSearch() {
       navigate(`/results?q=${encodeURIComponent(query)}`, {
         state: { geminiInterpretation: geminiInterp || null },
       });
-    } catch {
+    } catch (err) {
+      console.error('[GEMINI-SEARCH] goToResults fetch failed:', err?.message || err);
       navigate(`/results?q=${encodeURIComponent(query)}`);
     }
   }, [searchTerm, symptoms, navigate]);

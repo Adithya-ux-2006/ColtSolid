@@ -59,7 +59,8 @@ export async function fetchGeminiInterpretation(query, symptoms) {
 
       setCacheResult(cacheKey, payload.interpretation);
       return payload.interpretation;
-    } catch {
+    } catch (err) {
+      console.error('[GEMINI-CLIENT] Fetch failed:', err?.message || err);
       return null;
     } finally {
       inflightRequests.delete(cacheKey);

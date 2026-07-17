@@ -130,7 +130,9 @@ export function Results() {
           setGeminiInterpretation(interp);
         }
       })
-      .catch(() => {});
+      .catch((err) => {
+        console.error('[GEMINI-RESULTS] Fallback fetch failed:', err?.message || err);
+      });
 
     return () => { cancelled = true; };
   }, [isFreeTextSearch, queryParam, symptoms, geminiInterpretation]);
