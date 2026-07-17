@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Search, ArrowRight } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
@@ -12,6 +12,7 @@ import { trackSearchEvent } from '../utils/analytics';
 import { isRemedySafeForUser } from '../utils/guestProfile';
 import { getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptomSearch';
 import { resolveQuery } from '../utils/symptomEngine';
+import { fetchGeminiInterpretation } from '../utils/geminiInterpreter';
 import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
 
 const DEFAULT_SYMPTOM_CARDS = [
@@ -80,12 +81,20 @@ export function SymptomSearch() {
   const dropdownResults = symptomRankedResults;
   const shouldShowDropdown = trimmedQuery.length >= 2;
 
-  const goToResults = () => {
+  const goToResults = useCallback(async () => {
     const query = searchTerm.trim();
     if (!query) return;
     trackSearchEvent({ source: 'text', queryText: query }).catch(() => {});
-    navigate(`/results?q=${encodeURIComponent(query)}`);
-  };
+
+    try {
+      const geminiInterp = await fetchGeminiInterpretation(query, symptoms);
+      navigate(`/results?q=${encodeURIComponent(query)}`, {
+        state: { geminiInterpretation: geminiInterp || null },
+      });
+    } catch {
+      navigate(`/results?q=${encodeURIComponent(query)}`);
+    }
+  }, [searchTerm, symptoms, navigate]);
 
   const handleCardClick = (item) => {
     const query = item.label;

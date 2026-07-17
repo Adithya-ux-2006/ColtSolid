@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, AlertTriangle, Heart, ChevronDown } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { RemedyCarousel } from '../components/ui/RemedyCarousel';
@@ -19,6 +19,7 @@ import { isRemedySafeForUser } from '../utils/guestProfile';
 import { getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptomSearch';
 import { resolveQuery } from '../utils/symptomEngine';
 import { getSymptomGraphEntry } from '../data/symptomGraph';
+import { fetchGeminiInterpretation } from '../utils/geminiInterpreter';
 import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
 import { trackSearchEvent } from '../utils/analytics';
 
@@ -85,11 +86,15 @@ function MedicalDisclaimer() {
 
 export function Results() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const symptomParam = searchParams.get('symptom');
   const queryParam = searchParams.get('q') || '';
 
   const [showAllAlternatives, setShowAllAlternatives] = useState(false);
+  const [geminiInterpretation, setGeminiInterpretation] = useState(
+    location.state?.geminiInterpretation || null
+  );
 
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies ?? EMPTY_ARRAY);
   const userConditions = useAuthStore((state) => state.user?.common_conditions);
@@ -107,15 +112,31 @@ export function Results() {
 
   const isFreeTextSearch = Boolean(queryParam.trim());
 
+  useEffect(() => {
+    if (!isFreeTextSearch || !queryParam || geminiInterpretation) return;
+
+    let cancelled = false;
+
+    fetchGeminiInterpretation(queryParam, symptoms)
+      .then((interp) => {
+        if (!cancelled && interp) {
+          setGeminiInterpretation(interp);
+        }
+      })
+      .catch(() => {});
+
+    return () => { cancelled = true; };
+  }, [isFreeTextSearch, queryParam, symptoms, geminiInterpretation]);
+
   const symptomResolution = useMemo(
-    () => (isFreeTextSearch ? resolveQuery(queryParam, symptoms) : {
+    () => (isFreeTextSearch ? resolveQuery(queryParam, symptoms, geminiInterpretation) : {
       symptomIds: symptomParam ? [symptomParam] : [],
       allSymptomIds: symptomParam ? [symptomParam] : [],
       confidence: 100,
       allMatches: [],
       primarySymptom: symptomParam ? symptoms.find(s => s.id === symptomParam) || null : null,
     }),
-    [isFreeTextSearch, queryParam, symptoms, symptomParam]
+    [isFreeTextSearch, queryParam, symptoms, symptomParam, geminiInterpretation]
   );
 
   const matchedSymptom = symptomResolution.primarySymptom;
