@@ -16,10 +16,10 @@ export function SafetyLabel({ safetyScore, hasConflicts, compact, className }) {
   if (compact) {
     return (
       <span
-        className={cn('inline-flex items-center gap-1 text-[10px] font-medium', color, className)}
+        className={cn('inline-flex items-center gap-1 text-[10px] font-medium whitespace-nowrap', color, className)}
         aria-label={`Safety: ${text}`}
       >
-        <Icon className="w-3 h-3" />
+        <Icon className="w-3 h-3 shrink-0" />
         {text}
       </span>
     );
@@ -27,10 +27,10 @@ export function SafetyLabel({ safetyScore, hasConflicts, compact, className }) {
 
   return (
     <span
-      className={cn('inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold', color, className)}
+      className={cn('inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap min-w-[110px] justify-center', color, className)}
       aria-label={`Safety: ${text}`}
     >
-      <Icon className="w-3.5 h-3.5" />
+      <Icon className="w-3.5 h-3.5 shrink-0" />
       {text}
     </span>
   );

@@ -234,7 +234,7 @@ export function Results() {
           Back to Search
         </button>
 
-        <h1 className="text-hero font-extrabold text-ink mt-8 mb-4">
+        <h1 className="text-hero font-extrabold text-ink mt-8 mb-3">
           {matchedSymptom?.label || queryParam}
         </h1>
 
@@ -247,7 +247,7 @@ export function Results() {
         )}
 
         {matchedSymptom && (
-          <p className="text-ink-muted text-sm mb-6">
+          <p className="text-ink-muted text-sm mb-8">
             Based on your input, here&apos;s the best next step.
           </p>
         )}
@@ -277,7 +277,7 @@ export function Results() {
       ) : (
         <>
           {grouped?.bestMatch && (
-            <div className="max-w-4xl mx-auto px-6 mb-2">
+            <div className="max-w-4xl mx-auto px-6 mb-6">
               <FeaturedRemedyCard
                 remedy={grouped.bestMatch}
                 isSafe={safeFilter(grouped.bestMatch)}
@@ -290,7 +290,7 @@ export function Results() {
           {grouped?.bestMatch && <EvidenceBanner />}
 
           {allAlternatives.length > 0 && (
-            <div className="max-w-4xl mx-auto px-6 mt-6">
+            <div className="max-w-4xl mx-auto px-6 mt-12">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h2 className="text-section-heading font-bold text-ink mb-0.5">Other Remedies</h2>
@@ -350,13 +350,13 @@ export function Results() {
           )}
 
           {primarySymptomId && (
-            <div className="max-w-4xl mx-auto px-6 mt-10">
+            <div className="max-w-4xl mx-auto px-6 mt-14">
               <LifestyleTips symptomId={primarySymptomId} />
             </div>
           )}
 
           {primarySymptomId && (
-            <div className="max-w-4xl mx-auto px-6 mt-6">
+            <div className="max-w-4xl mx-auto px-6 mt-14">
               <MedicalGuidancePanel
                 symptomId={primarySymptomId}
                 severity={symptomResolution.severity}
@@ -364,12 +364,12 @@ export function Results() {
             </div>
           )}
 
-          <div className="max-w-4xl mx-auto px-6 mt-8">
+          <div className="max-w-4xl mx-auto px-6 mt-10">
             <MedicalDisclaimer />
           </div>
 
           {!isAuthenticated && hasResults && (
-            <div className="max-w-4xl mx-auto px-6 mt-8">
+            <div className="max-w-4xl mx-auto px-6 mt-10">
               <section className="rounded-3xl bg-gradient-card p-6 shadow-soft border border-primary/10">
                 <div className="flex items-center gap-2 mb-3">
                   <Heart className="w-5 h-5 text-primary" />

@@ -38,6 +38,16 @@ function generateReasons(remedy, evidenceScore, safetyScore) {
   return reasons.slice(0, 5);
 }
 
+function MetadataCell({ icon, children, label }) {
+  return (
+    <div className="flex flex-col items-start gap-1.5">
+      <span className="text-ink-muted">{icon}</span>
+      <span className="font-semibold text-ink text-sm leading-tight">{children}</span>
+      <span className="text-[11px] text-ink-muted leading-tight">{label}</span>
+    </div>
+  );
+}
+
 export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore, className }) {
   const navigate = useNavigate();
   const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);
@@ -66,8 +76,8 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
           className
         )}
       >
-        <div className="flex flex-col md:flex-row min-h-[360px] md:h-[400px]">
-          <div className="md:w-[25%] flex items-center justify-center p-6 bg-mint/40">
+        <div className="grid grid-cols-1 md:grid-cols-[25%_45%_30%] min-h-[360px] md:h-[400px]">
+          <div className="flex items-center justify-center p-6 bg-mint/40">
             <div className="w-[180px] h-[180px] rounded-full bg-white/80 flex items-center justify-center">
               <RemedyImage
                 category={remedy.category}
@@ -77,8 +87,8 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
             </div>
           </div>
 
-          <div className="md:w-[45%] p-6 md:px-8 md:py-6 flex flex-col">
-            <div className="flex items-center justify-between mb-3">
+          <div className="p-6 md:px-8 md:py-6 flex flex-col items-start text-left">
+            <div className="flex items-center justify-between w-full mb-3">
               <CategoryBadge category={remedy.category} firstOccurrence />
               <button
                 onClick={handleFavorite}
@@ -93,30 +103,29 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
             </div>
 
             <h3 className="text-[36px] leading-tight font-bold text-ink mb-2">{remedy.name}</h3>
-            <p className="text-ink-muted text-sm leading-relaxed line-clamp-2 mb-4">{remedy.shortDescription}</p>
+            <p className="text-ink-muted text-sm leading-relaxed line-clamp-2 mb-5">{remedy.shortDescription}</p>
 
-            <div className="flex items-center gap-4 text-sm text-ink-muted mb-auto">
-              {remedy.timeToEffect && (
-                <span className="flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-primary" />
-                  <span className="font-semibold text-ink">{remedy.timeToEffect}</span>
-                </span>
-              )}
-              <span className="w-px h-4 bg-border" />
-              <SafetyLabel safetyScore={safetyScore} hasConflicts={!isSafe} compact />
-              <span className="w-px h-4 bg-border" />
-              <EvidenceLabel score={evidenceScore} size="sm" />
+            <div className="grid grid-cols-3 gap-4 w-full mb-auto">
+              <MetadataCell icon={<Clock className="w-4 h-4 text-primary" />} label="Time to relief">
+                {remedy.timeToEffect || 'Varies'}
+              </MetadataCell>
+              <MetadataCell icon={<span className="text-sm">🛡</span>} label="Safety">
+                <SafetyLabel safetyScore={safetyScore} hasConflicts={!isSafe} />
+              </MetadataCell>
+              <MetadataCell icon={<span className="text-sm">📈</span>} label="Evidence">
+                <EvidenceLabel score={evidenceScore} />
+              </MetadataCell>
             </div>
 
             <Link
               to={`/remedy/${remedy.id}`}
-              className="mt-5 flex items-center justify-center w-full h-14 rounded-2xl bg-primary text-white text-base font-semibold shadow-glow hover:bg-primary-dark transition-all hover:-translate-y-0.5"
+              className="mt-5 flex items-center justify-center w-[90%] h-14 rounded-2xl bg-primary text-white text-base font-semibold shadow-glow hover:bg-primary-dark transition-all hover:-translate-y-0.5"
             >
               View Remedy
             </Link>
           </div>
 
-          <div className="md:w-[30%] bg-mint/60 p-6 flex flex-col">
+          <div className="bg-mint/60 p-6 flex flex-col items-start">
             <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-4">
               Why We Recommend This
             </p>
