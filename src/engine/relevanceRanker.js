@@ -149,7 +149,6 @@ export function rankRemedies(remedies, concerns, symptomRemediesMap, options = {
 
   const { userContext, symptoms, queryConfidence } = options;
 
-  const primaryIds = new Set(concerns.map(c => c.id));
   const remedyMap = {};
   for (const r of remedies) remedyMap[r.id] = r;
 
@@ -162,7 +161,7 @@ export function rankRemedies(remedies, concerns, symptomRemediesMap, options = {
 
   for (const concern of concerns) {
     const symptomId = concern.id;
-    const isPrimaryConcern = primaryIds.has(symptomId);
+    const isPrimaryConcern = concern.isPrimary !== false;
     const knowledge = knowledgeCtx.find(k => k.id === symptomId);
 
     const curatedEntries = symptomRemediesMap?.[symptomId] || [];
@@ -294,10 +293,10 @@ export function rankRemedies(remedies, concerns, symptomRemediesMap, options = {
   const deduped = dedupeRemedies(scored);
 
   deduped.sort((a, b) => {
-    if (a._tier !== b._tier) return a._tier - b._tier;
     if (a._isPrimaryConcern !== b._isPrimaryConcern) {
       return a._isPrimaryConcern ? -1 : 1;
     }
+    if (a._tier !== b._tier) return a._tier - b._tier;
     return b._relevanceScore - a._relevanceScore;
   });
 

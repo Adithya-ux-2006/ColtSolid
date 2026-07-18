@@ -17,6 +17,7 @@ export function resolveQuery(query, symptoms, geminiInterpretation) {
     primarySymptom: result.primaryConcerns.length > 0
       ? symptoms.find(s => s.id === result.primaryConcerns[0].id) || null
       : null,
+    primarySymptomId: result.primaryConcerns[0]?.id || null,
     topSymptoms: allConcerns.map(c => ({
       id: c.id,
       label: c.label,
@@ -79,6 +80,7 @@ export function resolveQuery(query, symptoms, geminiInterpretation) {
     allSymptomIds: uniqueMergedIds,
     confidence: mergedConfidence,
     primarySymptom: matchedGeminiSymptom,
+    primarySymptomId: geminiPrimary[0] || base.primarySymptomId,
     severity: mergedSeverity,
     queryContext: geminiContext,
     geminiEnhanced: true,

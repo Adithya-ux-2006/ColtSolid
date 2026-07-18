@@ -73,10 +73,11 @@ export function SymptomSearch() {
       allergies: activeAllergies,
       conditions: activeConditions,
       queryConfidence: symptomResolution.confidence,
+      primarySymptomId: symptomResolution.primarySymptomId,
     });
     const combined = [...(result.primary || []), ...(result.related || [])];
     return combined.filter(safeFilter);
-  }, [matchedSymptomIds, remedies, safeFilter, symptomRemedies, symptoms, activeAllergies, activeConditions, symptomResolution.confidence]);
+  }, [matchedSymptomIds, remedies, safeFilter, symptomRemedies, symptoms, activeAllergies, activeConditions, symptomResolution.confidence, symptomResolution.primarySymptomId]);
 
   const dropdownResults = symptomRankedResults;
   const shouldShowDropdown = trimmedQuery.length >= 2;

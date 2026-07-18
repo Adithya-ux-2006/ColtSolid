@@ -23,11 +23,12 @@ export function getRankedRemediesForSymptoms(
     allergies = [],
     conditions = [],
     queryConfidence = null,
+    primarySymptomId = null,
   } = options;
 
   const concerns = symptomIds.map(id => {
     const s = symptoms?.find(sym => sym.id === id);
-    return { id, label: s?.label || id, emoji: s?.emoji, color: s?.color };
+    return { id, label: s?.label || id, emoji: s?.emoji, color: s?.color, isPrimary: primarySymptomId ? id === primarySymptomId : true };
   });
 
   const userContext = {};
