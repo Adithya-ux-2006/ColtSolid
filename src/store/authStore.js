@@ -17,6 +17,44 @@ async function importQuickSavedFavorites(userId) {
   clearQuickSaves();
 }
 
+async function migrateGuestProfileIfNeeded(user) {
+  if (!user?.id) return;
+
+  const userConditions = user.common_conditions ?? [];
+  const userAllergies = user.known_allergies ?? [];
+  const hasExistingProfile = userConditions.length > 0 || userAllergies.length > 0;
+
+  if (hasExistingProfile) return;
+
+  const GUEST_ALLERGIES_KEY = 'clotsolid_guest_allergies';
+  const GUEST_CONDITIONS_KEY = 'clotsolid_guest_conditions';
+
+  function readArr(key) {
+    if (typeof window === 'undefined') return [];
+    try {
+      const raw = window.localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
+  }
+
+  const guestAllergies = readArr(GUEST_ALLERGIES_KEY);
+  const guestConditions = readArr(GUEST_CONDITIONS_KEY);
+
+  if (guestAllergies.length === 0 && guestConditions.length === 0) return;
+
+  const updates = {};
+  if (guestConditions.length > 0) updates.common_conditions = guestConditions;
+  if (guestAllergies.length > 0) updates.known_allergies = guestAllergies;
+
+  await updateUserProfileRow(user.id, updates);
+
+  window.localStorage.removeItem(GUEST_ALLERGIES_KEY);
+  window.localStorage.removeItem(GUEST_CONDITIONS_KEY);
+  window.localStorage.removeItem('clotsolid_guest_profile');
+
+  return updates;
+}
+
 async function updateUserProfileRow(userId, updates) {
   const { error } = await supabase
     .from('users')
@@ -139,7 +177,15 @@ export const useAuthStore = create((set, get) => ({
 
       const user = await buildUser({ user: data.user });
       set({ user, isAuthenticated: true });
-      return { success: true };
+
+      const migratedUpdates = await migrateGuestProfileIfNeeded(user);
+      if (migratedUpdates) {
+        set((state) => ({
+          user: { ...state.user, ...migratedUpdates },
+        }));
+      }
+
+      return { success: true, hasCompletedOnboarding: user.has_completed_onboarding };
     } catch (error) {
       console.error('Login error:', error);
       return { success: false, error };
@@ -178,6 +224,13 @@ export const useAuthStore = create((set, get) => ({
           isLoading: false,
           isInitialized: true,
         });
+
+        const migratedUpdates = await migrateGuestProfileIfNeeded(user);
+        if (migratedUpdates) {
+          set((state) => ({
+            user: { ...state.user, ...migratedUpdates },
+          }));
+        }
 
         const { useFavoritesStore } = await import('./favoritesStore');
         await useFavoritesStore.getState().fetchFavorites();

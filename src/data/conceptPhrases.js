@@ -162,12 +162,10 @@ const PHRASE_MAP = {
   // Broader coverage
   "congested chest": { concepts: ["chest congestion"], hintSymptoms: ["congestion", "cough"], negated: false },
   "chest congestion": { concepts: ["chest congestion"], hintSymptoms: ["congestion", "cough"], negated: false },
-  "upset stomach": { concepts: ["digestive upset"], hintSymptoms: ["stomach_ache", "nausea", "indigestion"], negated: false },
   "cant poop": { concepts: ["constipation"], hintSymptoms: ["constipation"], negated: false },
   "constipated": { concepts: ["constipation"], hintSymptoms: ["constipation"], negated: false },
   "loose stools": { concepts: ["diarrhea"], hintSymptoms: ["diarrhea"], negated: false },
   "watery stool": { concepts: ["diarrhea"], hintSymptoms: ["diarrhea"], negated: false },
-  "burning eyes": { concepts: ["eye irritation"], hintSymptoms: ["eye_strain", "eye_pain"], negated: false },
   "migraine": { concepts: ["migraine"], hintSymptoms: ["migraine", "headache"], negated: false },
   "throbbing headache": { concepts: ["migraine"], hintSymptoms: ["migraine", "headache"], negated: false },
   "pain behind eye": { concepts: ["eye pain"], hintSymptoms: ["migraine", "eye_pain", "headache"], negated: false },
