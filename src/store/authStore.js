@@ -115,6 +115,7 @@ const buildUser = async (session) => {
     has_completed_onboarding: profile?.has_completed_onboarding ?? false,
     is_admin: profile?.is_admin ?? false,
     notify_nearby_launch: profile?.notify_nearby_launch ?? false,
+    search_count: profile?.search_count ?? 0,
     avatar: metadata.avatar || getInitials(profile?.name || metadata.name || ''),
   };
 };
@@ -365,6 +366,29 @@ export const useAuthStore = create((set, get) => ({
     } catch (error) {
       console.error('Enable nearby launch notification error:', error);
       return { success: false, error };
+    }
+  },
+
+  incrementSearchCount: async () => {
+    const { user } = get();
+    if (!user) return;
+
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({ search_count: (user.search_count ?? 0) + 1 })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      set((state) => ({
+        user: {
+          ...state.user,
+          search_count: (state.user.search_count ?? 0) + 1,
+        },
+      }));
+    } catch (error) {
+      console.error('Increment search count error:', error);
     }
   }
 }));

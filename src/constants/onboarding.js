@@ -16,6 +16,7 @@ export const CONDITIONS = [
   { value: 'ibs-digestive-issues', label: 'IBS / Digestive Issues', emoji: '🤢' },
   { value: 'pcos', label: 'PCOS', emoji: '🌙' },
   { value: 'thyroid-disorders', label: 'Thyroid Disorders', emoji: '🦋' },
+  { value: 'other', label: 'Other', emoji: '✏️' },
   { value: 'none', label: 'None', emoji: '○' },
 ];
 
@@ -35,6 +36,7 @@ export const ALLERGIES = [
   { value: 'aloe-vera', label: 'Aloe Vera', emoji: '🪴' },
   { value: 'essential-oils', label: 'Essential Oils', emoji: '🧴' },
   { value: 'medication-allergies', label: 'Medication Allergies', emoji: '💊' },
+  { value: 'other', label: 'Other', emoji: '✏️' },
   { value: 'none', label: 'None', emoji: '○' },
 ];
 

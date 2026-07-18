@@ -40,6 +40,9 @@ export function QuestionnaireFlow({
   const [otherAllergy, setOtherAllergy] = useState(
     () => (initialValues?.known_allergies ?? []).find((value) => value.startsWith('other:'))?.slice(6).trim() || ''
   );
+  const [otherCondition, setOtherCondition] = useState(
+    () => (initialValues?.common_conditions ?? []).find((value) => value.startsWith('other:'))?.slice(6).trim() || ''
+  );
 
   const currentStep = STEPS[stepIndex];
   const progress = useMemo(() => stepIndex + 1, [stepIndex]);
@@ -86,9 +89,16 @@ export function QuestionnaireFlow({
       normalizedAllergies.push(`other:${trimmedOtherAllergy}`);
     }
 
+    const trimmedOtherCondition = otherCondition.trim();
+    const normalizedConditions = conditions.filter((value) => value !== 'none' && !value.startsWith('other:'));
+
+    if (trimmedOtherCondition) {
+      normalizedConditions.push(`other:${trimmedOtherCondition}`);
+    }
+
     const result = await onSubmit({
       gender,
-      commonConditions: conditions.filter((value) => value !== 'none'),
+      commonConditions: normalizedConditions,
       knownAllergies: normalizedAllergies,
     });
 
@@ -204,6 +214,20 @@ export function QuestionnaireFlow({
                 );
               })}
             </div>
+
+            {currentStep.key === 'conditions' ? (
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-ink" htmlFor="otherCondition">Other Conditions (Optional)</label>
+                <input
+                  id="otherCondition"
+                  type="text"
+                  value={otherCondition}
+                  onChange={(event) => setOtherCondition(event.target.value)}
+                  className="w-full rounded-2xl border border-border bg-card px-4 py-3 text-ink focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  placeholder="Add another condition"
+                />
+              </div>
+            ) : null}
 
             {currentStep.key === 'allergies' ? (
               <div className="space-y-2">

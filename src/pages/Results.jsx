@@ -106,6 +106,7 @@ export function Results() {
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies ?? EMPTY_ARRAY);
   const userConditions = useAuthStore((state) => state.user?.common_conditions);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const incrementSearchCount = useAuthStore((state) => state.incrementSearchCount);
   const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
   const guestConditions = useGuestProfileStore((state) => state.common_conditions);
   const activeAllergies = isAuthenticated ? userKnownAllergies : guestAllergies;
@@ -167,7 +168,11 @@ export function Results() {
         symptomIds: [symptomParam],
       }).catch(() => {});
     }
-  }, [isFreeTextSearch, queryParam, symptomParam]);
+
+    if (isAuthenticated) {
+      incrementSearchCount();
+    }
+  }, [isFreeTextSearch, queryParam, symptomParam, isAuthenticated, incrementSearchCount]);
 
   const safeFilter = useMemo(
     () => (remedy) => isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions }),

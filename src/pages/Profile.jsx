@@ -39,12 +39,16 @@ export function Profile() {
   const [healthForm, setHealthForm] = useState({
     selectedConditions: [],
     selectedAllergies: [],
+    otherConditionText: '',
+    otherAllergyText: '',
   });
 
   // Guest profile editing state
   const [guestEditForm, setGuestEditForm] = useState({
     selectedConditions: guestConditions,
     selectedAllergies: guestAllergies,
+    otherConditionText: '',
+    otherAllergyText: '',
   });
   const [editForm, setEditForm] = useState({
     name: user?.name || '',
@@ -56,9 +60,17 @@ export function Profile() {
   // Guest profile view: not authenticated
   if (!isAuthenticated) {
     const handleGuestSave = () => {
+      const conditions = guestEditForm.selectedConditions.filter(v => v !== 'none');
+      const allergies = guestEditForm.selectedAllergies.filter(v => v !== 'none');
+      if (guestEditForm.otherConditionText.trim() && !conditions.includes(guestEditForm.otherConditionText.trim())) {
+        conditions.push(guestEditForm.otherConditionText.trim());
+      }
+      if (guestEditForm.otherAllergyText.trim() && !allergies.includes(guestEditForm.otherAllergyText.trim())) {
+        allergies.push(guestEditForm.otherAllergyText.trim());
+      }
       updateGuestProfile({
-        known_allergies: guestEditForm.selectedAllergies.filter(v => v !== 'none'),
-        common_conditions: guestEditForm.selectedConditions.filter(v => v !== 'none'),
+        known_allergies: allergies,
+        common_conditions: conditions,
       });
     };
 
@@ -130,6 +142,15 @@ export function Profile() {
                     );
                   })}
                 </div>
+                {guestEditForm.selectedAllergies.includes('other') && (
+                  <input
+                    type="text"
+                    value={guestEditForm.otherAllergyText}
+                    onChange={(e) => setGuestEditForm({ ...guestEditForm, otherAllergyText: e.target.value })}
+                    placeholder="Please specify your allergy..."
+                    className="w-full rounded-xl border border-border px-3 py-2 text-sm mt-2"
+                  />
+                )}
               </div>
               {/* Conditions */}
               <div className="space-y-2">
@@ -157,6 +178,15 @@ export function Profile() {
                     );
                   })}
                 </div>
+                {guestEditForm.selectedConditions.includes('other') && (
+                  <input
+                    type="text"
+                    value={guestEditForm.otherConditionText}
+                    onChange={(e) => setGuestEditForm({ ...guestEditForm, otherConditionText: e.target.value })}
+                    placeholder="Please specify your condition..."
+                    className="w-full rounded-xl border border-border px-3 py-2 text-sm mt-2"
+                  />
+                )}
               </div>
               <button onClick={handleGuestSave} className="px-6 py-2.5 bg-primary text-white rounded-xl font-semibold text-sm w-full">
                 Save
@@ -208,17 +238,31 @@ export function Profile() {
   };
 
   const handleSaveHealth = () => {
+    const conditions = healthForm.selectedConditions.filter(v => v !== 'none');
+    const allergies = healthForm.selectedAllergies.filter(v => v !== 'none');
+    if (healthForm.otherConditionText.trim() && !conditions.includes(healthForm.otherConditionText.trim())) {
+      conditions.push(healthForm.otherConditionText.trim());
+    }
+    if (healthForm.otherAllergyText.trim() && !allergies.includes(healthForm.otherAllergyText.trim())) {
+      allergies.push(healthForm.otherAllergyText.trim());
+    }
     updateUser({
-      known_allergies: healthForm.selectedAllergies.filter(v => v !== 'none'),
-      common_conditions: healthForm.selectedConditions.filter(v => v !== 'none'),
+      known_allergies: allergies,
+      common_conditions: conditions,
     });
     setIsEditingHealth(false);
   };
 
   const startEditingHealth = () => {
+    const existingConditions = user?.common_conditions ?? [];
+    const existingAllergies = user?.known_allergies ?? [];
+    const otherConditionEntry = existingConditions.find(v => !CONDITIONS.some(c => c.value === v));
+    const otherAllergyEntry = existingAllergies.find(v => !ALLERGIES.some(a => a.value === v));
     setHealthForm({
-      selectedConditions: user?.common_conditions ?? [],
-      selectedAllergies: user?.known_allergies ?? [],
+      selectedConditions: existingConditions.filter(v => CONDITIONS.some(c => c.value === v)),
+      selectedAllergies: existingAllergies.filter(v => ALLERGIES.some(a => a.value === v)),
+      otherConditionText: otherConditionEntry || '',
+      otherAllergyText: otherAllergyEntry || '',
     });
     setIsEditingHealth(true);
   };
@@ -351,6 +395,7 @@ export function Profile() {
             <div className="space-y-2">
               <p className="text-sm font-semibold text-ink">Health Conditions</p>
               {isEditingHealth ? (
+                <>
                 <div className="flex flex-wrap gap-2">
                   {CONDITIONS.map((option) => {
                     const isSelected = healthForm.selectedConditions.includes(option.value);
@@ -367,6 +412,16 @@ export function Profile() {
                     );
                   })}
                 </div>
+                {healthForm.selectedConditions.includes('other') && (
+                  <input
+                    type="text"
+                    value={healthForm.otherConditionText}
+                    onChange={(e) => setHealthForm({ ...healthForm, otherConditionText: e.target.value })}
+                    placeholder="Please specify your condition..."
+                    className="w-full rounded-xl border border-border px-3 py-2 text-sm mt-2"
+                  />
+                )}
+                </>
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {selectedConditions.length > 0 ? selectedConditions.map((value) => (
@@ -383,6 +438,7 @@ export function Profile() {
             <div className="space-y-2">
               <p className="text-sm font-semibold text-ink">Allergies & Sensitivities</p>
               {isEditingHealth ? (
+                <>
                 <div className="flex flex-wrap gap-2">
                   {ALLERGIES.map((option) => {
                     const isSelected = healthForm.selectedAllergies.includes(option.value);
@@ -399,6 +455,16 @@ export function Profile() {
                     );
                   })}
                 </div>
+                {healthForm.selectedAllergies.includes('other') && (
+                  <input
+                    type="text"
+                    value={healthForm.otherAllergyText}
+                    onChange={(e) => setHealthForm({ ...healthForm, otherAllergyText: e.target.value })}
+                    placeholder="Please specify your allergy..."
+                    className="w-full rounded-xl border border-border px-3 py-2 text-sm mt-2"
+                  />
+                )}
+                </>
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {selectedAllergies.length > 0 ? selectedAllergies.map((value) => (

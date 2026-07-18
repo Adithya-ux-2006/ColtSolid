@@ -92,7 +92,7 @@ export function Dashboard() {
 
         <div className="grid grid-cols-2 gap-4">
           <StatCard icon={Heart} value={favorites.length} label="Saved" />
-          <StatCard icon={Activity} value={"—"} label="Searches" />
+          <StatCard icon={Activity} value={user?.search_count ?? 0} label="Searches" />
         </div>
 
         {/* Health Profile Card */}
