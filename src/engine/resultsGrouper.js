@@ -19,11 +19,16 @@ export function groupResults(remedies) {
   const supportive = [];
 
   for (const remedy of remaining) {
-    if (remedy._tier === 0) {
+    const isPrimary = remedy._isPrimaryConcern !== false;
+
+    if (isPrimary && remedy._tier === 0) {
+      // Primary concern + DIRECT tier → best matches
       bestMatches.push(remedy);
-    } else if (remedy._tier === 1) {
+    } else if (isPrimary || remedy._tier === 0) {
+      // Primary ASSOCIATED/SUPPORTIVE, or secondary DIRECT → additional options
       additionalOptions.push(remedy);
     } else {
+      // Secondary ASSOCIATED/SUPPORTIVE → supportive
       supportive.push(remedy);
     }
   }

@@ -163,8 +163,28 @@ export function buildSymptomIndex(symptoms) {
 }
 
 function scoreSymptom(queryTokens, normalizedQuery, symptomIndex) {
+  const label = symptomIndex.normalizedLabel;
+
+  // Tier 1a: Exact match
+  if (normalizedQuery === label) return 1000;
+
+  // Tier 1b: Query contains the full symptom label
+  if (normalizedQuery.includes(label)) return 1000;
+
+  // Tier 1c: Symptom label contains the full query
+  if (label.includes(normalizedQuery)) return 800;
+
+  // Tier 1d: Word-level overlap >= 50% of label words
+  const queryWords = normalizedQuery.split(/\s+/);
+  const labelWords = label.split(/\s+/);
+  const overlapCount = queryWords.filter(w => labelWords.includes(w)).length;
+  if (overlapCount > 0 && overlapCount >= Math.ceil(labelWords.length * 0.5)) {
+    return 500 + overlapCount * 100;
+  }
+
+  // Tier 2-3: Fuzzy matching (token overlap + n-gram similarity)
   const tokenOverlap = computeTokenOverlap(queryTokens, symptomIndex.labelTokens);
-  const ngramSim = computeOverallNgramSimilarity(normalizedQuery, symptomIndex.normalizedLabel);
+  const ngramSim = computeOverallNgramSimilarity(normalizedQuery, label);
   return tokenOverlap * 0.65 + ngramSim * 0.35;
 }
 
