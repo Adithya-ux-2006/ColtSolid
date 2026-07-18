@@ -1,20 +1,34 @@
 import { useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Heart, Activity, ArrowRight, Sparkles } from 'lucide-react';
+import { Heart, Activity, ArrowRight, Sparkles, Shield, AlertTriangle } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { RemedyCard } from '../components/ui/RemedyCard';
 import { EmptyState } from '../components/ui/EmptyState';
 import { useAuthStore } from '../store/authStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useCatalogStore } from '../store/catalogStore';
-import { CONDITIONS } from '../constants/onboarding';
+import { useGuestProfileStore } from '../store/guestProfileStore';
+import { ALLERGIES, CONDITIONS } from '../constants/onboarding';
 
 export function Dashboard() {
   const user = useAuthStore((state) => state.user);
   const favorites = useFavoritesStore((state) => state.favorites);
   const symptoms = useCatalogStore((state) => state.symptoms);
   const remedies = useCatalogStore((state) => state.remedies);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
+  const guestConditions = useGuestProfileStore((state) => state.common_conditions);
   const navigate = useNavigate();
+
+  const activeAllergies = useMemo(
+    () => isAuthenticated ? (user?.known_allergies ?? []) : guestAllergies,
+    [isAuthenticated, user?.known_allergies, guestAllergies]
+  );
+  const activeConditions = useMemo(
+    () => isAuthenticated ? (user?.common_conditions ?? []) : guestConditions,
+    [isAuthenticated, user?.common_conditions, guestConditions]
+  );
+  const hasOnboarding = user?.has_completed_onboarding ?? false;
 
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
@@ -34,8 +48,13 @@ export function Dashboard() {
   );
 
   const selectedConditionChips = useMemo(
-    () => CONDITIONS.filter((condition) => user?.common_conditions?.includes(condition.value)),
-    [user?.common_conditions]
+    () => CONDITIONS.filter((condition) => activeConditions.includes(condition.value)),
+    [activeConditions]
+  );
+
+  const selectedAllergyChips = useMemo(
+    () => ALLERGIES.filter((allergy) => activeAllergies.includes(allergy.value)),
+    [activeAllergies]
   );
 
   return (
@@ -52,10 +71,75 @@ export function Dashboard() {
           <p className="text-ink-muted">Ready to feel better today?</p>
         </header>
 
+        {/* Onboarding Incomplete Banner */}
+        {isAuthenticated && !hasOnboarding && (
+          <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5 flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
+              <AlertTriangle className="w-5 h-5 text-amber-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-amber-900">Complete your health profile</p>
+              <p className="text-sm text-amber-700 mt-0.5">Tell us about your allergies and conditions for safer, personalized remedy recommendations.</p>
+            </div>
+            <Link
+              to="/onboarding"
+              className="shrink-0 px-4 py-2 bg-amber-600 text-white rounded-xl text-sm font-semibold hover:bg-amber-700 transition-colors"
+            >
+              Complete
+            </Link>
+          </div>
+        )}
+
         <div className="grid grid-cols-2 gap-4">
           <StatCard icon={Heart} value={favorites.length} label="Saved" />
           <StatCard icon={Activity} value={"—"} label="Searches" />
         </div>
+
+        {/* Health Profile Card */}
+        {(activeConditions.length > 0 || activeAllergies.length > 0) && (
+          <section className="bg-card rounded-2xl shadow-soft border border-ink/5 p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Shield className="w-5 h-5 text-primary" />
+                <h2 className="font-bold text-ink">Health Profile</h2>
+              </div>
+              <Link
+                to="/profile"
+                className="text-sm font-semibold text-primary hover:text-primary-dark transition-colors"
+              >
+                Edit
+              </Link>
+            </div>
+            <div className="space-y-3">
+              {activeConditions.length > 0 && (
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-ink-muted mb-2">Conditions</p>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedConditionChips.map((c) => (
+                      <span key={c.value} className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
+                        <span>{c.emoji}</span>
+                        <span>{c.label}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {activeAllergies.length > 0 && (
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-ink-muted mb-2">Allergies</p>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedAllergyChips.map((a) => (
+                      <span key={a.value} className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200 px-3 py-1.5 text-sm font-medium text-amber-800">
+                        <span>{a.emoji}</span>
+                        <span>{a.label}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
 
         <section>
           <div className="flex items-center justify-between mb-4">

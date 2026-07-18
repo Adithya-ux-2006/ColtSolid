@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { LogOut, ChevronDown, User } from 'lucide-react';
+import { LogOut, ChevronDown, User, Shield, Pencil, X, Check } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { FAQAccordion } from '../components/ui/FAQAccordion';
 import { useAuthStore } from '../store/authStore';
@@ -13,6 +13,13 @@ import { ALLERGIES, CONDITIONS, FAQ_ITEMS, GENDER_OPTIONS } from '../constants/o
 const ONBOARDING_LABELS = new Map(
   [...CONDITIONS, ...ALLERGIES].map((option) => [option.value, option.label])
 );
+
+function formatChip(value) {
+  if (!value) return value;
+  if (value.startsWith('other:')) return value.slice(6).trim();
+  if (ONBOARDING_LABELS.has(value)) return ONBOARDING_LABELS.get(value);
+  return value.split('-').map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+}
 
 export function Profile() {
   const user = useAuthStore((state) => state.user);
@@ -28,6 +35,11 @@ export function Profile() {
 
   const [isEditing, setIsEditing] = useState(false);
   const [expandedSection, setExpandedSection] = useState(null);
+  const [isEditingHealth, setIsEditingHealth] = useState(false);
+  const [healthForm, setHealthForm] = useState({
+    selectedConditions: [],
+    selectedAllergies: [],
+  });
 
   // Guest profile editing state
   const [guestEditForm, setGuestEditForm] = useState({
@@ -195,6 +207,22 @@ export function Profile() {
     navigate('/');
   };
 
+  const handleSaveHealth = () => {
+    updateUser({
+      known_allergies: healthForm.selectedAllergies.filter(v => v !== 'none'),
+      common_conditions: healthForm.selectedConditions.filter(v => v !== 'none'),
+    });
+    setIsEditingHealth(false);
+  };
+
+  const startEditingHealth = () => {
+    setHealthForm({
+      selectedConditions: user?.common_conditions ?? [],
+      selectedAllergies: user?.known_allergies ?? [],
+    });
+    setIsEditingHealth(true);
+  };
+
   const handleSaveProfile = () => {
     updateUser({
       name: editForm.name,
@@ -216,15 +244,15 @@ export function Profile() {
     setIsEditing(true);
   };
 
-  const formatValue = (value) => {
-    if (!value) return value;
-    if (value.startsWith('other:')) return value.slice(6).trim();
-    if (ONBOARDING_LABELS.has(value)) return ONBOARDING_LABELS.get(value);
-
-    return value
-      .split('-')
-      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-      .join(' ');
+  const toggleHealthChip = (value, type) => {
+    const field = type === 'conditions' ? 'selectedConditions' : 'selectedAllergies';
+    const current = healthForm[field];
+    const next = value === 'none'
+      ? (current.includes('none') ? [] : ['none'])
+      : current.includes(value)
+        ? current.filter(v => v !== value && v !== 'none')
+        : [...current.filter(v => v !== 'none'), value];
+    setHealthForm({ ...healthForm, [field]: next });
   };
 
   return (
@@ -271,58 +299,6 @@ export function Profile() {
                     );
                   })}
                 </div>
-                <div className="space-y-2 pt-2">
-                  <p className="text-sm font-semibold text-ink">Health Conditions</p>
-                  <div className="flex flex-wrap gap-2">
-                    {CONDITIONS.map((option) => {
-                      const isSelected = editForm.selectedConditions.includes(option.value);
-                      return (
-                        <button
-                          key={option.value}
-                          type="button"
-                          aria-pressed={isSelected}
-                          onClick={() => {
-                            const next = option.value === 'none'
-                              ? (isSelected ? [] : ['none'])
-                              : isSelected
-                                ? editForm.selectedConditions.filter(v => v !== option.value && v !== 'none')
-                                : [...editForm.selectedConditions.filter(v => v !== 'none'), option.value];
-                            setEditForm({ ...editForm, selectedConditions: next });
-                          }}
-                          className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-border px-3 py-1.5 text-sm font-medium text-ink'}
-                        >
-                          {option.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm font-semibold text-ink">Allergies & Sensitivities</p>
-                  <div className="flex flex-wrap gap-2">
-                    {ALLERGIES.map((option) => {
-                      const isSelected = editForm.selectedAllergies.includes(option.value);
-                      return (
-                        <button
-                          key={option.value}
-                          type="button"
-                          aria-pressed={isSelected}
-                          onClick={() => {
-                            const next = option.value === 'none'
-                              ? (isSelected ? [] : ['none'])
-                              : isSelected
-                                ? editForm.selectedAllergies.filter(v => v !== option.value && v !== 'none')
-                                : [...editForm.selectedAllergies.filter(v => v !== 'none'), option.value];
-                            setEditForm({ ...editForm, selectedAllergies: next });
-                          }}
-                          className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-border px-3 py-1.5 text-sm font-medium text-ink'}
-                        >
-                          {option.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
                 <div className="flex gap-2 justify-center md:justify-start pt-2">
                   <button onClick={() => setIsEditing(false)} className="px-4 py-1.5 rounded-full text-sm font-medium border text-ink">Cancel</button>
                   <button onClick={handleSaveProfile} className="px-4 py-1.5 rounded-full text-sm font-medium bg-primary text-white">Save</button>
@@ -346,6 +322,98 @@ export function Profile() {
           </div>
         </div>
 
+        {/* Health Profile — Prominent Editable Section */}
+        <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
+          <div className="p-5 border-b border-border flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Shield className="w-5 h-5 text-primary" />
+              <h2 className="font-bold text-lg text-ink">Health Profile</h2>
+            </div>
+            {isEditingHealth ? (
+              <div className="flex items-center gap-2">
+                <button onClick={() => setIsEditingHealth(false)} className="p-2 rounded-lg hover:bg-surface transition-colors text-ink-muted">
+                  <X className="w-4 h-4" />
+                </button>
+                <button onClick={handleSaveHealth} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-dark transition-colors">
+                  <Check className="w-4 h-4" />
+                  Save
+                </button>
+              </div>
+            ) : (
+              <button onClick={startEditingHealth} className="flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark transition-colors">
+                <Pencil className="w-3.5 h-3.5" />
+                Edit
+              </button>
+            )}
+          </div>
+          <div className="p-5 space-y-5">
+            {/* Conditions */}
+            <div className="space-y-2">
+              <p className="text-sm font-semibold text-ink">Health Conditions</p>
+              {isEditingHealth ? (
+                <div className="flex flex-wrap gap-2">
+                  {CONDITIONS.map((option) => {
+                    const isSelected = healthForm.selectedConditions.includes(option.value);
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        aria-pressed={isSelected}
+                        onClick={() => toggleHealthChip(option.value, 'conditions')}
+                        className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-border px-3 py-1.5 text-sm font-medium text-ink'}
+                      >
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {selectedConditions.length > 0 ? selectedConditions.map((value) => (
+                    <span key={value} className="rounded-full bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
+                      {formatChip(value)}
+                    </span>
+                  )) : (
+                    <p className="text-sm text-ink-muted">No conditions selected</p>
+                  )}
+                </div>
+              )}
+            </div>
+            {/* Allergies */}
+            <div className="space-y-2">
+              <p className="text-sm font-semibold text-ink">Allergies & Sensitivities</p>
+              {isEditingHealth ? (
+                <div className="flex flex-wrap gap-2">
+                  {ALLERGIES.map((option) => {
+                    const isSelected = healthForm.selectedAllergies.includes(option.value);
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        aria-pressed={isSelected}
+                        onClick={() => toggleHealthChip(option.value, 'allergies')}
+                        className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-border px-3 py-1.5 text-sm font-medium text-ink'}
+                      >
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {selectedAllergies.length > 0 ? selectedAllergies.map((value) => (
+                    <span key={value} className="rounded-full bg-amber-50 border border-amber-200 px-3 py-1.5 text-sm font-medium text-amber-800">
+                      {formatChip(value)}
+                    </span>
+                  )) : (
+                    <p className="text-sm text-ink-muted">No allergies selected</p>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
         {/* Stats */}
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-card p-5 rounded-2xl shadow-sm border border-border flex flex-col items-center justify-between">
@@ -355,17 +423,6 @@ export function Profile() {
           <div className="bg-card p-5 rounded-2xl shadow-sm border border-border flex flex-col items-center justify-between">
             <span className="text-ink-muted font-medium text-sm">Schedules</span>
             <span className="text-2xl font-bold text-primary-dark">{schedules.length}</span>
-          </div>
-        </div>
-
-        {/* Health Profile */}
-        <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
-          <div className="p-5 border-b border-border">
-            <h2 className="font-bold text-lg text-ink">Health Profile</h2>
-          </div>
-          <div className="space-y-5 p-5">
-            <ProfileGroup title="Health Conditions" values={selectedConditions.map(formatValue)} emptyLabel="None selected" />
-            <ProfileGroup title="Allergies & Sensitivities" values={selectedAllergies.map(formatValue)} emptyLabel="None selected" />
           </div>
         </div>
 
