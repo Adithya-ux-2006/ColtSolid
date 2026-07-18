@@ -40,10 +40,10 @@ function generateReasons(remedy, evidenceScore, safetyScore) {
 
 function MetadataCell({ icon, children, label }) {
   return (
-    <div className="flex flex-col items-start gap-1.5">
+    <div className="flex flex-col items-start gap-1.5 min-w-0">
       <span className="text-ink-muted">{icon}</span>
-      <span className="font-semibold text-ink text-sm leading-tight">{children}</span>
-      <span className="text-[11px] text-ink-muted leading-tight">{label}</span>
+      <span className="font-semibold text-ink text-sm leading-tight truncate w-full">{children}</span>
+      <span className="text-[11px] text-ink-muted leading-tight truncate w-full">{label}</span>
     </div>
   );
 }
@@ -76,9 +76,9 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
           className
         )}
       >
-        <div className="grid grid-cols-1 md:grid-cols-[25%_45%_30%] min-h-[360px] md:h-[400px]">
+        <div className="grid grid-cols-1 md:grid-cols-[25%_45%_30%] md:min-h-[400px]">
           <div className="flex items-center justify-center py-8 px-4 bg-mint/40">
-            <div className="w-[180px] h-[180px] rounded-full bg-card/80 flex items-center justify-center">
+            <div className="w-[180px] h-[180px] rounded-full bg-card/80 flex items-center justify-center shrink-0">
               <RemedyImage
                 category={remedy.category}
                 size="hero"
@@ -87,13 +87,13 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
             </div>
           </div>
 
-          <div className="p-8 flex flex-col items-start text-left">
-            <div className="flex items-center justify-between w-full mb-4">
+          <div className="p-8 flex flex-col items-start text-left min-w-0">
+            <div className="flex items-center justify-between w-full mb-4 gap-2">
               <CategoryBadge category={remedy.category} firstOccurrence />
               <button
                 onClick={handleFavorite}
                 className={cn(
-                  'p-1.5 rounded-full transition-colors',
+                  'p-1.5 rounded-full transition-colors shrink-0',
                   favorited ? 'text-primary' : 'text-ink-muted hover:text-primary'
                 )}
                 aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
@@ -102,10 +102,10 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
               </button>
             </div>
 
-            <h3 className="text-[36px] leading-tight font-bold text-ink mb-3">{remedy.name}</h3>
-            <p className="text-ink-muted text-sm leading-relaxed line-clamp-2 mb-6">{remedy.shortDescription}</p>
+            <h3 className="text-[36px] leading-tight font-bold text-ink mb-3 line-clamp-2">{remedy.name}</h3>
+            <p className="text-ink-muted text-sm leading-relaxed line-clamp-3 mb-6">{remedy.shortDescription}</p>
 
-            <div className="grid grid-cols-3 gap-6 w-full mb-auto">
+            <div className="grid grid-cols-3 gap-6 w-full mb-6">
               <MetadataCell icon={<Clock className="w-4 h-4 text-primary" />} label="Time to relief">
                 {remedy.timeToEffect || 'Varies'}
               </MetadataCell>
@@ -117,16 +117,18 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
               </MetadataCell>
             </div>
 
+            <div className="flex-1" />
+
             <Link
               to={`/remedy/${remedy.id}`}
-              className="mt-8 flex items-center justify-center w-[90%] h-14 rounded-2xl bg-primary text-white text-base font-semibold shadow-glow hover:bg-primary-dark transition-all hover:-translate-y-0.5"
+              className="flex items-center justify-center w-[90%] h-14 rounded-2xl bg-primary text-white text-base font-semibold shadow-glow hover:bg-primary-dark transition-all hover:-translate-y-0.5 shrink-0"
             >
               View Remedy
             </Link>
           </div>
 
           <div className="bg-mint/60 px-8 py-8 flex flex-col items-start">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-4">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-4 shrink-0">
               Why We Recommend This
             </p>
             {reasons.length > 0 ? (

@@ -26,7 +26,7 @@ export function EvidenceLabel({ score, size = 'md', className }) {
 
   return (
     <span
-      className={cn('inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap min-w-[110px] justify-center', level.color, className)}
+      className={cn('inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap justify-center', level.color, className)}
       aria-label={`Evidence level: ${level.text}`}
     >
       <BookOpen className="w-3.5 h-3.5 shrink-0" />
