@@ -128,9 +128,6 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
   body {
     @apply bg-background text-foreground;
     transition: background-color 250ms ease, color 250ms ease;

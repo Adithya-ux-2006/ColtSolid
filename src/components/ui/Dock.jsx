@@ -172,3 +172,5 @@ export function DockIcon({ children, className }) {
     </motion.div>
   );
 }
+
+export default { Dock, DockItem, DockLabel, DockIcon };

@@ -14,6 +14,7 @@ export default defineConfig({
     },
   },
   build: {
+    target: 'es2020',
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -25,6 +26,12 @@ export default defineConfig({
           }
           if (id.includes('node_modules/zustand')) {
             return 'zustand';
+          }
+          if (id.includes('node_modules/framer-motion')) {
+            return 'framer-motion';
+          }
+          if (id.includes('node_modules/@radix-ui') || id.includes('node_modules/@base-ui')) {
+            return 'ui-vendor';
           }
         },
       },
