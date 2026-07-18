@@ -238,6 +238,10 @@ export function inferConcerns(query, symptoms) {
       score = score * 0.3;
     }
 
+    if (score > 10) {
+      console.log(`[SCORE] ${si.id} (${si.label}): ${score.toFixed(1)} | query="${combinedQueryStr}" label="${si.normalizedLabel}"`);
+    }
+
     return {
       symptomId: si.id,
       label: si.label,
