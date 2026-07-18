@@ -195,7 +195,7 @@ export function RemedyDetail() {
         )}
 
         {/* Nearby Shops */}
-        <NearbyShops remedyName={remedy.name} />
+        {remedy.isPurchasable !== false && <NearbyShops remedyName={remedy.name} />}
 
         {/* Safety Notes */}
         {remedy.warnings && (

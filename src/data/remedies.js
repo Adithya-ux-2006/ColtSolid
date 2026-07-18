@@ -23,6 +23,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: true,
+    isPurchasable: true,
   },
   {
     id: 'rem_002',
@@ -47,6 +48,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_003',
@@ -71,6 +73,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$$',
     isFeatured: true,
+    isPurchasable: true,
   },
   {
     id: 'rem_004',
@@ -95,6 +98,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_005',
@@ -119,6 +123,7 @@ export const REMEDIES = [
     difficulty: 'Moderate',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_006',
@@ -141,6 +146,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_007',
@@ -163,6 +169,7 @@ export const REMEDIES = [
     difficulty: 'Moderate',
     cost: '$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_008',
@@ -185,6 +192,7 @@ export const REMEDIES = [
     difficulty: 'Moderate',
     cost: '$$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_009',
@@ -207,6 +215,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_010',
@@ -229,6 +238,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_011',
@@ -251,6 +261,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_012',
@@ -273,6 +284,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_013',
@@ -295,6 +307,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_014',
@@ -317,6 +330,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_015',
@@ -339,6 +353,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_016',
@@ -361,6 +376,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: false,
   },
   {
     id: 'rem_017',
@@ -383,6 +399,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_018',
@@ -405,6 +422,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_019',
@@ -427,6 +445,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_020',
@@ -449,6 +468,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_021',
@@ -471,6 +491,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: false,
   },
   {
     id: 'rem_022',
@@ -493,6 +514,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_023',
@@ -515,6 +537,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_024',
@@ -537,6 +560,7 @@ export const REMEDIES = [
     difficulty: 'Moderate',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_025',
@@ -559,6 +583,7 @@ export const REMEDIES = [
     difficulty: 'Moderate',
     cost: '$$$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_026',
@@ -581,6 +606,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_027',
@@ -603,6 +629,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_028',
@@ -625,6 +652,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_029',
@@ -647,6 +675,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_030',
@@ -669,6 +698,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_031',
@@ -691,6 +721,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_032',
@@ -713,6 +744,7 @@ export const REMEDIES = [
     difficulty: 'Moderate',
     cost: '$',
     isFeatured: false,
+    isPurchasable: false,
   },
   {
     id: 'rem_033',
@@ -735,6 +767,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_034',
@@ -757,6 +790,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: false,
   },
   {
     id: 'rem_035',
@@ -779,6 +813,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_036',
@@ -801,6 +836,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_037',
@@ -823,6 +859,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_038',
@@ -845,6 +882,7 @@ export const REMEDIES = [
     difficulty: 'Moderate',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: false,
   },
   {
     id: 'rem_039',
@@ -867,6 +905,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_040',
@@ -889,6 +928,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: false,
   },
   {
     id: 'rem_041',
@@ -911,6 +951,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: false,
   },
   {
     id: 'rem_042',
@@ -933,6 +974,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_043',
@@ -955,6 +997,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: false,
   },
   {
     id: 'rem_044',
@@ -977,6 +1020,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_045',
@@ -999,6 +1043,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: false,
   },
 
   // SEXUAL WELLNESS
@@ -1025,6 +1070,7 @@ export const REMEDIES = [
     difficulty: 'Moderate',
     cost: '$',
     isFeatured: false,
+    isPurchasable: false,
   },
   {
     id: 'rem_102',
@@ -1049,6 +1095,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$$',
     isFeatured: false,
+    isPurchasable: true,
   },
   {
     id: 'rem_103',
@@ -1073,6 +1120,7 @@ export const REMEDIES = [
     difficulty: 'Moderate',
     cost: '$',
     isFeatured: false,
+    isPurchasable: false,
   },
   {
     id: 'rem_104',
@@ -1097,6 +1145,7 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: true,
+    isPurchasable: true,
   },
   {
     id: 'rem_105',
@@ -1121,5 +1170,6 @@ export const REMEDIES = [
     difficulty: 'Easy',
     cost: '$',
     isFeatured: false,
+    isPurchasable: true,
   },
 ];

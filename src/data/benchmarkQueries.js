@@ -33,6 +33,37 @@ const BENCHMARK_QUERIES = [
   { query: "stomach pain after eating", expectedLabels: ["Indigestion", "Heartburn", "Bloating"] },
   { query: "my legs feel heavy", expectedLabels: ["Leg Pain", "Fatigue", "Low Energy"] },
   { query: "sharp headache", expectedLabels: ["Headache", "Migraine"] },
+
+  // Cough
+  { query: "dry cough", expectedTopLabel: "Cough" },
+  { query: "wet cough", expectedTopLabel: "Cough" },
+  { query: "persistent cough", expectedTopLabel: "Cough" },
+  { query: "hacking cough", expectedTopLabel: "Cough" },
+  { query: "coughing a lot", expectedTopLabel: "Cough" },
+  { query: "cant stop coughing", expectedTopLabel: "Cough" },
+  { query: "cough that wont go away", expectedTopLabel: "Cough" },
+
+  // Broader coverage
+  { query: "congested chest", expectedLabels: ["Congestion", "Cough"] },
+  { query: "cant poop", expectedTopLabel: "Constipation" },
+  { query: "constipated", expectedTopLabel: "Constipation" },
+  { query: "loose stools", expectedTopLabel: "Diarrhea" },
+  { query: "migraine", expectedTopLabel: "Migraine" },
+  { query: "throbbing headache", expectedLabels: ["Migraine", "Headache"] },
+  { query: "knee hurts", expectedTopLabel: "Knee Pain" },
+  { query: "shoulder hurts", expectedTopLabel: "Shoulder Pain" },
+  { query: "back hurts", expectedTopLabel: "Back Pain" },
+  { query: "neck hurts", expectedTopLabel: "Neck Pain" },
+  { query: "throat hurts", expectedTopLabel: "Sore Throat" },
+  { query: "sick", expectedTopLabel: "Cold" },
+  { query: "feeling sick", expectedTopLabel: "Cold" },
+  { query: "under the weather", expectedTopLabel: "Cold" },
+  { query: "pimple", expectedTopLabel: "Acne" },
+  { query: "dehydrated", expectedTopLabel: "Dehydration" },
+  { query: "thirsty", expectedTopLabel: "Dehydration" },
+  { query: "gas pain", expectedTopLabel: "Gas" },
+  { query: "earache", expectedTopLabel: "Ear Pain" },
+  { query: "sinus pain", expectedTopLabel: "Sinus Pressure" },
 ];
 
 export default BENCHMARK_QUERIES;
