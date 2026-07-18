@@ -75,7 +75,7 @@ function EmergencyBanner() {
 
 function EvidenceBanner() {
   return (
-    <div className="flex items-center justify-center gap-2 py-3">
+    <div className="flex items-center justify-center gap-2 py-2">
       <ShieldCheck className="w-4 h-4 text-success" />
       <p className="text-sm text-ink-muted">All remedies are evidence-backed and safety-checked</p>
     </div>
@@ -280,7 +280,7 @@ export function Results() {
       ) : (
         <>
           {grouped?.bestMatch && (
-            <div className="max-w-4xl mx-auto px-6 mb-4">
+            <div className="max-w-4xl mx-auto px-6 mb-2">
               <FeaturedRemedyCard
                 remedy={grouped.bestMatch}
                 isSafe={safeFilter(grouped.bestMatch)}

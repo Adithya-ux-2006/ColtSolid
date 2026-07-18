@@ -26,7 +26,7 @@ export function AltRemedyRow({ remedy, isSafe, evidenceScore, safetyScore, showD
     <div className={cn(showDivider && 'border-b border-border', className)}>
       <Link
         to={`/remedy/${remedy.id}`}
-        className="hidden md:grid grid-cols-[80px_2fr_160px_160px_170px_40px] items-center gap-4 h-[112px] px-5 hover:bg-mint/30 rounded-xl transition-colors"
+        className="hidden md:grid grid-cols-[80px_2fr_160px_160px_170px_40px] items-center gap-4 h-[112px] px-4 hover:bg-mint/30 rounded-xl transition-colors"
       >
         <div className="flex items-center justify-center">
           <RemedyImage category={remedy.category} size="sm" alt={remedy.name} />

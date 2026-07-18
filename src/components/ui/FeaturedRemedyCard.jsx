@@ -77,7 +77,7 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
         )}
       >
         <div className="grid grid-cols-1 md:grid-cols-[25%_45%_30%] min-h-[360px] md:h-[400px]">
-          <div className="flex items-center justify-center p-8 bg-mint/40">
+          <div className="flex items-center justify-center py-8 px-4 bg-mint/40">
             <div className="w-[180px] h-[180px] rounded-full bg-card/80 flex items-center justify-center">
               <RemedyImage
                 category={remedy.category}
@@ -119,14 +119,14 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
 
             <Link
               to={`/remedy/${remedy.id}`}
-              className="mt-7 flex items-center justify-center w-[90%] h-14 rounded-2xl bg-primary text-white text-base font-semibold shadow-glow hover:bg-primary-dark transition-all hover:-translate-y-0.5"
+              className="mt-8 flex items-center justify-center w-[90%] h-14 rounded-2xl bg-primary text-white text-base font-semibold shadow-glow hover:bg-primary-dark transition-all hover:-translate-y-0.5"
             >
               View Remedy
             </Link>
           </div>
 
-          <div className="bg-mint/60 px-8 py-9 flex flex-col items-start">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-5">
+          <div className="bg-mint/60 px-8 py-8 flex flex-col items-start">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-4">
               Why We Recommend This
             </p>
             {reasons.length > 0 ? (

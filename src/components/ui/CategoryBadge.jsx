@@ -19,7 +19,7 @@ export function CategoryBadge({ category, firstOccurrence, className }) {
   return (
     <span
       className={cn(
-        'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border',
+        'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border',
         STYLES[category] || 'bg-primary/10 text-primary border-primary/20',
         className
       )}

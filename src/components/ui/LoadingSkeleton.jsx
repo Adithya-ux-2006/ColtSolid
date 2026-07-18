@@ -23,7 +23,7 @@ export function LoadingSkeleton({ count = 1, className }) {
           )}
         >
           <div className="flex flex-col md:flex-row h-[400px]">
-            <div className="md:w-[25%] flex items-center justify-center p-8 bg-mint/30">
+            <div className="md:w-[25%] flex items-center justify-center py-8 px-4 bg-mint/30">
               <div className="w-[180px] h-[180px] rounded-full bg-mint/60" />
             </div>
             <div className="md:w-[45%] p-8 flex flex-col gap-3">
@@ -38,8 +38,8 @@ export function LoadingSkeleton({ count = 1, className }) {
               </div>
               <div className="h-14 w-full bg-mint rounded-2xl mt-2" />
             </div>
-            <div className="md:w-[30%] bg-mint/40 px-8 py-9">
-              <div className="h-3 w-32 bg-mint/80 rounded mb-5" />
+            <div className="md:w-[30%] bg-mint/40 px-8 py-8">
+              <div className="h-3 w-32 bg-mint/80 rounded mb-4" />
               <div className="space-y-4">
                 <div className="h-4 w-full bg-mint/60 rounded" />
                 <div className="h-4 w-4/5 bg-mint/60 rounded" />
