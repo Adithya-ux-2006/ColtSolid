@@ -41,6 +41,7 @@ export function mapRemedy(remedy) {
     difficulty: remedy.difficulty,
     cost: remedy.cost,
     isFeatured: remedy.is_featured ?? remedy.isFeatured ?? false,
+    isPurchasable: remedy.is_purchasable ?? remedy.isPurchasable ?? (remedy.category !== 'Lifestyle' || (remedy.ingredients ?? []).length > 0),
     researchPapers: remedy.research_papers?.map((paper) => ({
       title: paper.title,
       journal: paper.journal,

@@ -11,6 +11,10 @@ export class ErrorBoundary extends Component {
     return { hasError: true, error };
   }
 
+  componentDidCatch(error, errorInfo) {
+    console.error(`ErrorBoundary caught at ${window.location.pathname}:`, error, errorInfo);
+  }
+
   handleReset = () => {
     this.setState({ hasError: false, error: null });
   };
