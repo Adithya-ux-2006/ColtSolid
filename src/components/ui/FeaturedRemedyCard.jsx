@@ -95,7 +95,7 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
             <h3 className="text-[36px] leading-tight font-bold text-ink mb-3 line-clamp-2">{remedy.name}</h3>
             <p className="text-ink-muted text-sm leading-relaxed line-clamp-3 mb-6">{remedy.shortDescription}</p>
 
-            <div className="flex flex-wrap gap-6 w-full mb-6">
+            <div className="flex flex-wrap md:flex-nowrap gap-6 w-full mb-6">
               <MetadataCell icon={<Clock className="w-4 h-4 text-primary" />} label="Time to relief">
                 {remedy.timeToEffect || 'Varies'}
               </MetadataCell>
