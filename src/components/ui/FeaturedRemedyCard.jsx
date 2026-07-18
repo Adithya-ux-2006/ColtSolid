@@ -88,18 +88,8 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
           </div>
 
           <div className="p-8 flex flex-col items-start text-left min-w-0">
-            <div className="flex items-center justify-between w-full mb-4 gap-2">
+            <div className="mb-4">
               <CategoryBadge category={remedy.category} firstOccurrence />
-              <button
-                onClick={handleFavorite}
-                className={cn(
-                  'p-1.5 rounded-full transition-colors shrink-0',
-                  favorited ? 'text-primary' : 'text-ink-muted hover:text-primary'
-                )}
-                aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
-              >
-                <Heart className={cn('w-5 h-5', favorited && 'fill-primary')} />
-              </button>
             </div>
 
             <h3 className="text-[36px] leading-tight font-bold text-ink mb-3 line-clamp-2">{remedy.name}</h3>
@@ -128,9 +118,21 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
           </div>
 
           <div className="bg-mint/60 px-8 py-8 flex flex-col items-start">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-4 shrink-0">
-              Why We Recommend This
-            </p>
+            <div className="flex items-center justify-between w-full mb-4 shrink-0">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
+                Why We Recommend This
+              </p>
+              <button
+                onClick={handleFavorite}
+                className={cn(
+                  'p-1.5 rounded-full transition-colors shrink-0',
+                  favorited ? 'text-primary' : 'text-ink-muted hover:text-primary'
+                )}
+                aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
+              >
+                <Heart className={cn('w-5 h-5', favorited && 'fill-primary')} />
+              </button>
+            </div>
             {reasons.length > 0 ? (
               <ul className="space-y-4">
                 {reasons.map((reason, i) => (
