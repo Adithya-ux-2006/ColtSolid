@@ -30,7 +30,7 @@ export async function handler(event) {
       return buildResponse(400, { error: 'Invalid coordinates.' });
     }
 
-    const apiKey = process.env.VITE_GEOAPIFY_KEY;
+    const apiKey = process.env.GEOAPIFY_KEY;
     if (!apiKey) {
       return buildResponse(500, { error: 'Geoapify API key not configured.' });
     }
