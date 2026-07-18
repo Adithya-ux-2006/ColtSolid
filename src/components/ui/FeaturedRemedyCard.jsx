@@ -72,12 +72,12 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
     >
       <div
         className={cn(
-          'bg-card rounded-[28px] shadow-soft-lg overflow-hidden',
+          'bg-card rounded-[28px] border border-border shadow-soft-lg overflow-hidden',
           className
         )}
       >
         <div className="grid grid-cols-1 md:grid-cols-[25%_45%_30%] min-h-[360px] md:h-[400px]">
-          <div className="flex items-center justify-center p-6 bg-mint/40">
+          <div className="flex items-center justify-center p-8 bg-mint/40">
             <div className="w-[180px] h-[180px] rounded-full bg-card/80 flex items-center justify-center">
               <RemedyImage
                 category={remedy.category}
@@ -87,8 +87,8 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
             </div>
           </div>
 
-          <div className="p-6 md:px-8 md:py-6 flex flex-col items-start text-left">
-            <div className="flex items-center justify-between w-full mb-3">
+          <div className="p-8 flex flex-col items-start text-left">
+            <div className="flex items-center justify-between w-full mb-4">
               <CategoryBadge category={remedy.category} firstOccurrence />
               <button
                 onClick={handleFavorite}
@@ -102,10 +102,10 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
               </button>
             </div>
 
-            <h3 className="text-[36px] leading-tight font-bold text-ink mb-2">{remedy.name}</h3>
-            <p className="text-ink-muted text-sm leading-relaxed line-clamp-2 mb-5">{remedy.shortDescription}</p>
+            <h3 className="text-[36px] leading-tight font-bold text-ink mb-3">{remedy.name}</h3>
+            <p className="text-ink-muted text-sm leading-relaxed line-clamp-2 mb-6">{remedy.shortDescription}</p>
 
-            <div className="grid grid-cols-3 gap-4 w-full mb-auto">
+            <div className="grid grid-cols-3 gap-6 w-full mb-auto">
               <MetadataCell icon={<Clock className="w-4 h-4 text-primary" />} label="Time to relief">
                 {remedy.timeToEffect || 'Varies'}
               </MetadataCell>
@@ -119,28 +119,28 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
 
             <Link
               to={`/remedy/${remedy.id}`}
-              className="mt-5 flex items-center justify-center w-[90%] h-14 rounded-2xl bg-primary text-white text-base font-semibold shadow-glow hover:bg-primary-dark transition-all hover:-translate-y-0.5"
+              className="mt-7 flex items-center justify-center w-[90%] h-14 rounded-2xl bg-primary text-white text-base font-semibold shadow-glow hover:bg-primary-dark transition-all hover:-translate-y-0.5"
             >
               View Remedy
             </Link>
           </div>
 
-          <div className="bg-mint/60 p-6 flex flex-col items-start">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-4">
+          <div className="bg-mint/60 px-8 py-9 flex flex-col items-start">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted mb-5">
               Why We Recommend This
             </p>
             {reasons.length > 0 ? (
-              <ul className="space-y-3">
+              <ul className="space-y-4">
                 {reasons.map((reason, i) => (
                   <motion.li
                     key={reason}
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: i * 0.08 }}
-                    className="flex items-start gap-2.5 text-sm text-ink"
+                    className="flex items-start gap-3 text-sm text-ink"
                   >
-                    <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                    <span>{reason}</span>
+                    <Check className="w-4 h-4 text-primary shrink-0 mt-[3px]" />
+                    <span className="leading-snug">{reason}</span>
                   </motion.li>
                 ))}
               </ul>

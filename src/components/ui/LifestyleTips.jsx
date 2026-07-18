@@ -16,9 +16,9 @@ export function LifestyleTips({ symptomId, className }) {
   const tips = LIFESTYLE_TIPS[symptomId] || FALLBACK_TIPS;
 
   return (
-    <div className={cn('rounded-3xl bg-mint/50 border border-primary/8 p-6', className)}>
-      <h2 className="text-section-heading font-bold text-ink mb-5">Lifestyle & Support</h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className={cn('rounded-3xl bg-mint/50 border border-primary/8 p-8', className)}>
+      <h2 className="text-section-heading font-bold text-ink mb-6">Lifestyle & Support</h2>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         {tips.map((tip, i) => (
           <div
             key={`${symptomId}-${i}`}
