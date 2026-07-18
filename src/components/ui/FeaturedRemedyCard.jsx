@@ -40,10 +40,10 @@ function generateReasons(remedy, evidenceScore, safetyScore) {
 
 function MetadataCell({ icon, children, label }) {
   return (
-    <div className="flex flex-col items-start gap-1.5 min-w-0">
+    <div className="flex flex-col items-start gap-1.5 shrink-0">
       <span className="text-ink-muted">{icon}</span>
-      <span className="font-semibold text-ink text-sm leading-tight truncate w-full">{children}</span>
-      <span className="text-[11px] text-ink-muted leading-tight truncate w-full">{label}</span>
+      <span className="font-semibold text-ink text-sm leading-tight whitespace-nowrap">{children}</span>
+      <span className="text-[11px] text-ink-muted leading-tight whitespace-nowrap">{label}</span>
     </div>
   );
 }
@@ -105,7 +105,7 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
             <h3 className="text-[36px] leading-tight font-bold text-ink mb-3 line-clamp-2">{remedy.name}</h3>
             <p className="text-ink-muted text-sm leading-relaxed line-clamp-3 mb-6">{remedy.shortDescription}</p>
 
-            <div className="grid grid-cols-3 gap-6 w-full mb-6">
+            <div className="flex flex-wrap gap-6 w-full mb-6">
               <MetadataCell icon={<Clock className="w-4 h-4 text-primary" />} label="Time to relief">
                 {remedy.timeToEffect || 'Varies'}
               </MetadataCell>
