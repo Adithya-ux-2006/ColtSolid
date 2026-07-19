@@ -1,5 +1,5 @@
 // Auto-generated from SQL migrations
-// Generated: 2026-06-22T14:53:32.534Z
+// Generated: 2026-07-19T10:33:03.713Z
 
 export const LOCAL_SYMPTOMS = [
   {
@@ -125,115 +125,115 @@ export const LOCAL_SYMPTOMS = [
   {
     "id": "cough",
     "label": "Cough",
-    "emoji": "💊",
+    "emoji": "??",
     "color": "sage"
   },
   {
     "id": "congestion",
     "label": "Congestion",
-    "emoji": "💊",
+    "emoji": "??",
     "color": "sage"
   },
   {
     "id": "sinus_pressure",
     "label": "Sinus Pressure",
-    "emoji": "💊",
+    "emoji": "??",
     "color": "amber"
   },
   {
     "id": "indigestion",
     "label": "Indigestion",
-    "emoji": "🧠",
+    "emoji": "???",
     "color": "amber"
   },
   {
     "id": "heartburn",
     "label": "Heartburn",
-    "emoji": "💊",
+    "emoji": "??",
     "color": "amber"
   },
   {
     "id": "constipation",
     "label": "Constipation",
-    "emoji": "💊",
+    "emoji": "??",
     "color": "sage"
   },
   {
     "id": "diarrhea",
     "label": "Diarrhea",
-    "emoji": "💊",
+    "emoji": "??",
     "color": "sage"
   },
   {
     "id": "brain_fog",
     "label": "Brain Fog",
-    "emoji": "🧠",
+    "emoji": "???",
     "color": "amber"
   },
   {
     "id": "burnout",
     "label": "Burnout",
-    "emoji": "😮‍💨",
+    "emoji": "?????",
     "color": "amber"
   },
   {
     "id": "joint_pain",
     "label": "Joint Pain",
-    "emoji": "💊",
+    "emoji": "??",
     "color": "forest"
   },
   {
     "id": "muscle_pain",
     "label": "Muscle Pain",
-    "emoji": "💊",
+    "emoji": "??",
     "color": "forest"
   },
   {
     "id": "dry_skin",
     "label": "Dry Skin",
-    "emoji": "💊",
+    "emoji": "??",
     "color": "sage"
   },
   {
     "id": "acne",
     "label": "Acne",
-    "emoji": "💊",
+    "emoji": "??",
     "color": "sage"
   },
   {
     "id": "pms",
     "label": "PMS",
-    "emoji": "💊",
+    "emoji": "??",
     "color": "forest"
   },
   {
     "id": "menopause",
     "label": "Menopause",
-    "emoji": "💊",
+    "emoji": "??",
     "color": "amber"
   },
   {
     "id": "dehydration",
     "label": "Dehydration",
-    "emoji": "💊",
+    "emoji": "??",
     "color": "amber"
   },
   {
     "id": "low_energy",
     "label": "Low Energy",
-    "emoji": "💊",
+    "emoji": "??",
     "color": "forest"
   },
   {
     "id": "stomach_ache",
     "label": "Stomach Ache",
-    "emoji": "💊",
+    "emoji": "??",
     "color": "sage"
   },
   {
     "id": "gas",
     "label": "Gas",
-    "emoji": "💊",
+    "emoji": "??",
     "color": "sage"
   },
   {
