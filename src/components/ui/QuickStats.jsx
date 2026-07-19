@@ -1,74 +1,119 @@
 import { motion } from 'framer-motion';
 import { Clock, ShieldCheck, BarChart3, PenLine } from 'lucide-react';
 import { cn } from '../../utils/cn';
-import { SafetyLabel } from './SafetyLabel';
-import { EvidenceLabel } from './EvidenceLabel';
 
-const STAT_ICONS = {
-  time: { Icon: Clock, bg: 'bg-primary/10', color: 'text-primary' },
-  safety: { Icon: ShieldCheck, bg: 'bg-success/10', color: 'text-success' },
-  evidence: { Icon: BarChart3, bg: 'bg-primary/10', color: 'text-primary' },
-  difficulty: { Icon: PenLine, bg: 'bg-primary/10', color: 'text-primary' },
-};
+function getSafetyText(score, hasConflicts) {
+  if (hasConflicts) return 'Not Safe';
+  if (score >= 85) return 'Very Safe';
+  if (score >= 60) return 'Safe';
+  if (score >= 30) return 'Caution';
+  return 'Not Safe';
+}
 
-function StatCell({ icon, value, label, delay }) {
+function getSafetyColor(score, hasConflicts) {
+  if (hasConflicts) return 'text-danger';
+  if (score >= 60) return 'text-success';
+  if (score >= 30) return 'text-warning';
+  return 'text-danger';
+}
+
+function getEvidenceText(score) {
+  if (score >= 7) return 'High';
+  if (score >= 4) return 'Moderate';
+  if (score > 0) return 'Limited';
+  return '—';
+}
+
+function StatColumn({ icon: Icon, iconBg, iconColor, value, label, ariaLabel, delay, isLast }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay }}
-      className="flex flex-col items-center gap-2.5 text-center min-w-0 py-2"
+      role="group"
+      aria-label={ariaLabel}
+      className={cn(
+        'flex flex-col items-center justify-center gap-1.5 text-center min-w-0',
+        'py-3 px-1 sm:py-4 sm:px-2 md:py-5 md:px-3',
+        !isLast && 'border-r border-border-subtle'
+      )}
     >
-      <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center shrink-0', icon.bg)}>
-        <icon.Icon className={cn('w-5 h-5', icon.color)} />
+      <div className={cn(
+        'rounded-full flex items-center justify-center shrink-0',
+        'w-8 h-8 sm:w-9 sm:h-9 md:w-11 md:h-11',
+        iconBg
+      )}>
+        <Icon className={cn(
+          'w-4 h-4 sm:w-[18px] sm:h-[18px] md:w-5 md:h-5',
+          iconColor
+        )} />
       </div>
-      <div className="min-w-0">
-        {typeof value === 'string' || typeof value === 'number' ? (
-          <span className="font-semibold text-ink text-sm leading-tight block whitespace-nowrap overflow-hidden text-ellipsis">{value}</span>
-        ) : (
-          value
-        )}
-      </div>
-      <span className="text-xs text-ink-muted leading-tight whitespace-nowrap">{label}</span>
+      <span className={cn(
+        'font-semibold text-ink leading-tight truncate w-full',
+        'text-[13px] sm:text-sm md:text-[17px]'
+      )}>
+        {value}
+      </span>
+      <span className={cn(
+        'text-ink-muted leading-tight truncate w-full',
+        'text-[10px] sm:text-[11px] md:text-xs'
+      )}>
+        {label}
+      </span>
     </motion.div>
   );
 }
 
 export function QuickStats({ remedy, isSafe, evidenceScore, safetyScore, className }) {
+  const safetyText = getSafetyText(safetyScore, !isSafe);
+  const safetyColor = getSafetyColor(safetyScore, !isSafe);
+  const evidenceText = getEvidenceText(evidenceScore);
+
   return (
-    <div className={cn(
-      'grid grid-cols-2 md:grid-cols-4 gap-0',
-      className
-    )}>
-      <StatCell
-        icon={STAT_ICONS.time}
+    <div
+      className={cn('grid grid-cols-4', className)}
+      role="region"
+      aria-label="Quick remedy statistics"
+    >
+      <StatColumn
+        icon={Clock}
+        iconBg="bg-primary/10"
+        iconColor="text-primary"
         value={remedy.timeToEffect || 'Varies'}
         label="Time to relief"
+        ariaLabel={`Time to relief: ${remedy.timeToEffect || 'Varies'}`}
         delay={0}
+        isLast={false}
       />
-      <div className="hidden md:block w-px self-stretch bg-border-subtle mx-auto my-3" />
-      <div className="block md:hidden h-px self-stretch bg-border-subtle mx-3" />
-      <StatCell
-        icon={STAT_ICONS.safety}
-        value={<SafetyLabel safetyScore={safetyScore} hasConflicts={!isSafe} />}
+      <StatColumn
+        icon={ShieldCheck}
+        iconBg="bg-success/10"
+        iconColor={safetyColor}
+        value={safetyText}
         label="Safety"
-        delay={0.05}
+        ariaLabel={`Safety: ${safetyText}`}
+        delay={0.04}
+        isLast={false}
       />
-      <div className="hidden md:block w-px self-stretch bg-border-subtle mx-auto my-3" />
-      <div className="block md:hidden h-px self-stretch bg-border-subtle mx-3" />
-      <StatCell
-        icon={STAT_ICONS.evidence}
-        value={<EvidenceLabel score={evidenceScore} />}
+      <StatColumn
+        icon={BarChart3}
+        iconBg="bg-primary/10"
+        iconColor="text-primary"
+        value={evidenceText}
         label="Evidence"
-        delay={0.1}
+        ariaLabel={`Evidence: ${evidenceText}`}
+        delay={0.08}
+        isLast={false}
       />
-      <div className="hidden md:block w-px self-stretch bg-border-subtle mx-auto my-3" />
-      <div className="block md:hidden h-px self-stretch bg-border-subtle mx-3" />
-      <StatCell
-        icon={STAT_ICONS.difficulty}
+      <StatColumn
+        icon={PenLine}
+        iconBg="bg-primary/10"
+        iconColor="text-primary"
         value={remedy.difficulty || 'Easy'}
         label="Difficulty"
-        delay={0.15}
+        ariaLabel={`Difficulty: ${remedy.difficulty || 'Easy'}`}
+        delay={0.12}
+        isLast={true}
       />
     </div>
   );
