@@ -255,7 +255,7 @@ export function Results() {
         )}
 
         {matchedSymptom && (
-          <p className="text-ink-muted text-sm mb-8">
+          <p className="text-ink-muted text-lg mb-8">
             Based on your input, here&apos;s the best next step.
           </p>
         )}
