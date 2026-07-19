@@ -44,7 +44,7 @@ export function RemedyHero({ remedy, isSafe, evidenceScore, className }) {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.08 }}
-          className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-4"
+          className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-5"
         >
           <CategoryBadge category={remedy.category} firstOccurrence />
           {isSafe ? (
@@ -64,7 +64,7 @@ export function RemedyHero({ remedy, isSafe, evidenceScore, className }) {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.12 }}
-          className="page-title mb-4"
+          className="page-title mb-5"
         >
           {remedy.name}
         </motion.h1>
