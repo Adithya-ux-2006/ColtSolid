@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Clock, ShieldCheck, BarChart3, PenLine } from 'lucide-react';
+import { Clock, ShieldCheck, BarChart3, Gauge } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
 function getSafetyText(score, hasConflicts) {
@@ -106,7 +106,7 @@ export function QuickStats({ remedy, isSafe, evidenceScore, safetyScore, classNa
         isLast={false}
       />
       <StatColumn
-        icon={PenLine}
+        icon={Gauge}
         iconBg="bg-primary/10"
         iconColor="text-primary"
         value={remedy.difficulty || 'Easy'}

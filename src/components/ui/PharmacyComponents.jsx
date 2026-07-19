@@ -2,18 +2,32 @@ import { ExternalLink, MapPin, Navigation, Store } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
 function formatDistance(meters) {
+  if (meters == null || Number.isNaN(meters)) return null;
   if (meters < 1000) return `${Math.round(meters)}m`;
   return `${(meters / 1000).toFixed(1)}km`;
+}
+
+function DistanceSkeleton() {
+  return (
+    <span className="inline-flex items-center gap-1 text-xs text-ink-muted">
+      <Navigation className="w-3 h-3" />
+      <span className="h-3 w-8 rounded bg-surface animate-pulse" />
+    </span>
+  );
 }
 
 export function FeaturedPharmacy({ shop, className }) {
   if (!shop) return null;
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${shop.lat},${shop.lon}`;
   const isOpen = shop.isOpen !== false;
+  const distanceText = formatDistance(shop.distance);
 
   return (
     <div className={cn(
       'rounded-2xl p-5 bg-success/[0.04] border border-success/15',
+      'transition-all duration-200',
+      'hover:shadow-lg hover:-translate-y-0.5',
+      'active:scale-[0.98] active:shadow-md',
       className
     )}>
       <div className="flex items-center gap-2 mb-4">
@@ -31,10 +45,14 @@ export function FeaturedPharmacy({ shop, className }) {
           <p className="font-semibold text-ink truncate">{shop.name}</p>
           <p className="text-sm text-ink-muted truncate">{shop.address}</p>
           <div className="flex items-center gap-3 mt-1.5">
-            <span className="flex items-center gap-1 text-xs text-ink-muted">
-              <Navigation className="w-3 h-3" />
-              {formatDistance(shop.distance)}
-            </span>
+            {distanceText ? (
+              <span className="flex items-center gap-1 text-xs text-ink-muted">
+                <Navigation className="w-3 h-3" />
+                {distanceText}
+              </span>
+            ) : (
+              <DistanceSkeleton />
+            )}
             <span className={cn(
               'text-xs font-medium',
               isOpen ? 'text-success' : 'text-danger'
@@ -49,7 +67,7 @@ export function FeaturedPharmacy({ shop, className }) {
         href={mapsUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center justify-center w-full h-11 rounded-xl bg-primary text-white text-sm font-semibold shadow-glow hover:bg-primary-dark transition-all duration-150 hover:-translate-y-0.5"
+        className="flex items-center justify-center w-full h-11 rounded-xl bg-primary text-white text-sm font-semibold shadow-glow transition-all duration-200 hover:bg-primary-dark hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] active:shadow-md"
       >
         Get Directions
       </a>
@@ -61,6 +79,7 @@ export function PharmacyCard({ shop, className }) {
   if (!shop) return null;
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${shop.lat},${shop.lon}`;
   const isOpen = shop.isOpen !== false;
+  const distanceText = formatDistance(shop.distance);
 
   return (
     <a
@@ -68,7 +87,9 @@ export function PharmacyCard({ shop, className }) {
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        'flex items-center gap-3 p-3 rounded-xl hover:bg-surface/50 transition-colors duration-150',
+        'flex items-center gap-3 p-3 rounded-xl transition-all duration-200',
+        'hover:bg-surface/50',
+        'active:scale-[0.99] active:bg-surface/70',
         className
       )}
     >
@@ -79,10 +100,14 @@ export function PharmacyCard({ shop, className }) {
         <p className="text-sm font-medium text-ink truncate">{shop.name}</p>
         <p className="text-xs text-ink-muted truncate">{shop.address}</p>
         <div className="flex items-center gap-3 mt-1">
-          <span className="flex items-center gap-1 text-xs text-ink-muted">
-            <Navigation className="w-3 h-3" />
-            {formatDistance(shop.distance)}
-          </span>
+          {distanceText ? (
+            <span className="flex items-center gap-1 text-xs text-ink-muted">
+              <Navigation className="w-3 h-3" />
+              {distanceText}
+            </span>
+          ) : (
+            <DistanceSkeleton />
+          )}
           <span className={cn(
             'text-xs font-medium',
             isOpen ? 'text-success' : 'text-danger'
@@ -91,7 +116,7 @@ export function PharmacyCard({ shop, className }) {
           </span>
         </div>
       </div>
-      <ExternalLink className="w-4 h-4 text-ink-subtle shrink-0" />
+      <ExternalLink className="w-4 h-4 text-ink-subtle shrink-0 transition-colors duration-200 group-hover:text-primary" />
     </a>
   );
 }

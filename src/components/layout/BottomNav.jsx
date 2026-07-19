@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Search, Heart, User } from 'lucide-react';
 import { cn } from '../../utils/cn';
@@ -7,6 +8,14 @@ export function BottomNav() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const location = useLocation();
   const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 120);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   if (location.pathname === '/' || location.pathname === '/onboarding' || location.pathname === '/login' || location.pathname === '/register') {
     return null;
@@ -24,7 +33,11 @@ export function BottomNav() {
 
   return (
     <nav
-      className="md:hidden fixed bottom-3 left-3 right-3 z-50 rounded-2xl bg-card/70 backdrop-blur-xl border border-white/10 dark:border-white/5 shadow-glass"
+      className={cn(
+        'md:hidden fixed bottom-3 left-3 right-3 z-50 rounded-2xl border border-white/10 dark:border-white/5 shadow-glass',
+        'transition-all duration-300 ease-in-out',
+        scrolled ? 'bg-card/85 backdrop-blur-2xl' : 'bg-card/60 backdrop-blur-xl'
+      )}
       style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
     >
       <div className="flex justify-around items-center h-14">
@@ -35,7 +48,7 @@ export function BottomNav() {
                 key={item.to}
                 type="button"
                 onClick={handleLockedClick}
-                className="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-0.5 text-ink-muted hover:text-ink transition-colors duration-150"
+                className="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-0.5 text-ink-muted transition-colors duration-200 hover:text-ink active:scale-95"
               >
                 <item.icon className="w-5 h-5" />
                 <span className="text-[10px] font-medium">{item.label}</span>
@@ -48,7 +61,8 @@ export function BottomNav() {
               key={item.to}
               to={item.to}
               className={({ isActive }) => cn(
-                'flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-0.5 transition-colors duration-150',
+                'flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-0.5 transition-colors duration-200',
+                'active:scale-95',
                 isActive ? 'text-primary' : 'text-ink-muted hover:text-ink'
               )}
             >

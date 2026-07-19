@@ -1,3 +1,4 @@
+import { motion, useReducedMotion } from 'framer-motion';
 import { ExternalLink, BookOpen } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
@@ -8,7 +9,8 @@ const STUDY_TYPE_COLORS = {
   'Clinical Study': 'bg-amber-500/10 text-amber-500 dark:text-amber-400',
 };
 
-export function EvidenceCard({ source, onTrackClick, className }) {
+export function EvidenceCard({ source, onTrackClick, delay = 0, className }) {
+  const reduced = useReducedMotion();
   const studyType = source.type || source.journal?.match(/meta-analysis|randomized|systematic/i)?.[0];
   const normalizedType = studyType
     ? studyType.charAt(0).toUpperCase() + studyType.slice(1).toLowerCase()
@@ -18,52 +20,60 @@ export function EvidenceCard({ source, onTrackClick, className }) {
   );
 
   return (
-    <a
-      href={source.url || '#'}
-      target="_blank"
-      rel="noreferrer"
-      onClick={onTrackClick}
-      className={cn(
-        'group block py-4 border-b border-border-subtle last:border-0',
-        'hover:bg-surface/30 -mx-1 px-1 rounded-lg transition-colors duration-150',
-        className
-      )}
+    <motion.div
+      initial={reduced ? { opacity: 0 } : { opacity: 0, y: 10 }}
+      whileInView={reduced ? { opacity: 1 } : { opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.3, delay, ease: 'easeOut' }}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary uppercase tracking-wider">
-              <BookOpen className="w-3.5 h-3.5 shrink-0" />
-              {source.journal || source.label || 'Clinical Research'}
-            </span>
-            {source.journal && (
-              <span className="inline-flex items-center text-[10px] font-medium text-primary/60 bg-primary/5 rounded-full px-1.5 py-0.5">
-                Peer-reviewed
+      <a
+        href={source.url || '#'}
+        target="_blank"
+        rel="noreferrer"
+        onClick={onTrackClick}
+        className={cn(
+          'group block py-4 border-b border-border-subtle last:border-0',
+          'hover:bg-surface/30 -mx-1 px-1 rounded-lg transition-all duration-200',
+          'active:bg-surface/50',
+          className
+        )}
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary uppercase tracking-wider">
+                <BookOpen className="w-3.5 h-3.5 shrink-0" />
+                {source.journal || source.label || 'Clinical Research'}
               </span>
+              {source.journal && (
+                <span className="inline-flex items-center text-[10px] font-medium text-primary/60 bg-primary/5 rounded-full px-1.5 py-0.5">
+                  Peer-reviewed
+                </span>
+              )}
+              {source.year && (
+                <span className="text-[11px] text-ink-subtle font-medium">{source.year}</span>
+              )}
+            </div>
+            {source.keyFinding && (
+              <p className="text-sm text-ink leading-relaxed line-clamp-2">&ldquo;{source.keyFinding}&rdquo;</p>
             )}
-            {source.year && (
-              <span className="text-[11px] text-ink-subtle font-medium">{source.year}</span>
+            {source.label && !source.keyFinding && (
+              <p className="text-sm text-ink line-clamp-2">{source.label}</p>
             )}
           </div>
-          {source.keyFinding && (
-            <p className="text-sm text-ink leading-relaxed line-clamp-2">&ldquo;{source.keyFinding}&rdquo;</p>
-          )}
-          {source.label && !source.keyFinding && (
-            <p className="text-sm text-ink line-clamp-2">{source.label}</p>
-          )}
+          <div className="flex items-center gap-2 shrink-0 mt-0.5">
+            {typeKey && (
+              <span className={cn(
+                'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold whitespace-nowrap',
+                STUDY_TYPE_COLORS[typeKey]
+              )}>
+                {typeKey}
+              </span>
+            )}
+            <ExternalLink className="w-3.5 h-3.5 text-ink-subtle transition-colors duration-200 group-hover:text-primary" />
+          </div>
         </div>
-        <div className="flex items-center gap-2 shrink-0 mt-0.5">
-          {typeKey && (
-            <span className={cn(
-              'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold whitespace-nowrap',
-              STUDY_TYPE_COLORS[typeKey]
-            )}>
-              {typeKey}
-            </span>
-          )}
-          <ExternalLink className="w-3.5 h-3.5 text-ink-subtle group-hover:text-primary transition-colors" />
-        </div>
-      </div>
-    </a>
+      </a>
+    </motion.div>
   );
 }

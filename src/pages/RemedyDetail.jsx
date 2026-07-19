@@ -12,6 +12,7 @@ import { EvidenceCard } from '../components/ui/EvidenceCard';
 import { AdvisoryCard } from '../components/ui/AdvisoryCard';
 import { DoctorGuidance } from '../components/ui/DoctorGuidance';
 import { NearbyShops } from '../components/ui/NearbyShops';
+import { Reveal } from '../components/ui/Reveal';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
@@ -20,11 +21,28 @@ import { isRemedySafeForUser } from '../utils/guestProfile';
 import { cn } from '../utils/cn';
 import { trackRemedyEvent } from '../utils/analytics';
 
-const DEFAULT_BENEFITS = [
-  { title: 'Fast acting', description: 'Many users report relief within minutes.' },
-  { title: 'Low risk', description: 'Generally well tolerated with minimal side effects.' },
-  { title: 'Easy to use', description: 'Simple application with no special equipment needed.' },
-];
+const CATEGORY_BENEFITS = {
+  Natural: [
+    { title: 'Gentle & plant-based', description: 'Derived from natural sources with minimal processing.' },
+    { title: 'Holistic relief', description: 'Addresses root causes, not just surface symptoms.' },
+    { title: 'Low side-effect profile', description: 'Well tolerated by most people when used as directed.' },
+  ],
+  TCM: [
+    { title: 'Ancient clinical wisdom', description: 'Rooted in centuries of traditional Chinese medicine.' },
+    { title: 'Whole-body balance', description: 'Restores harmony across multiple body systems.' },
+    { title: 'Non-invasive approach', description: 'Drug-free method using natural pressure points.' },
+  ],
+  Conventional: [
+    { title: 'Clinically validated', description: 'Backed by rigorous trials and peer-reviewed research.' },
+    { title: 'Fast-acting relief', description: 'Rapid onset of symptom relief when needed most.' },
+    { title: 'Precise, standardised dosing', description: 'Consistent formulation for predictable results.' },
+  ],
+  Lifestyle: [
+    { title: 'No medication required', description: 'Drug-free habit built from everyday routines.' },
+    { title: 'Long-term health gains', description: 'Builds sustainable improvements over time.' },
+    { title: 'Combines with any treatment', description: 'Zero drug interactions or contraindications.' },
+  ],
+};
 
 const EVIDENCE_SHOW_LIMIT = 4;
 
@@ -60,22 +78,47 @@ export function RemedyDetail() {
 
   const howToUseSteps = useMemo(() => {
     if (!remedy?.howToUse) return [];
-    return remedy.howToUse.split('\n').filter(Boolean).map(step => step.replace(/^\d+\.\s*/, ''));
+    const raw = remedy.howToUse.split('\n').filter(Boolean);
+    const steps = raw.map(step => step.replace(/^\d+\.\s*/, ''));
+    if (steps.length >= 3) return steps.slice(0, 3);
+    if (steps.length === 1) {
+      const text = steps[0];
+      const parts = text
+        .split(/[,;]/)
+        .map(s => s.trim())
+        .filter(Boolean);
+      if (parts.length >= 3) return parts.slice(0, 3);
+      if (parts.length === 2) {
+        const merged = parts[0];
+        const tail = parts[1];
+        const sub = tail.split(/\s+and\s+|\s+then\s+|\s+while\s+|\s+to\s+/i).map(s => s.trim()).filter(Boolean);
+        if (sub.length >= 2) return [merged, sub[0], sub.slice(1).join(' ')];
+        return [merged, tail];
+      }
+      return steps;
+    }
+    return steps;
+  }, [remedy]);
+
+  const benefits = useMemo(() => {
+    if (remedy?.benefits) return remedy.benefits;
+    const category = remedy?.category;
+    const defaults = CATEGORY_BENEFITS[category] || CATEGORY_BENEFITS.Natural;
+    if (!remedy?.longDescription) return defaults;
+    const parts = remedy.longDescription.split(/\.\s+/).filter(Boolean);
+    if (parts.length <= 1) return defaults;
+    return parts.slice(0, 3).map((sentence, i) => {
+      const clean = sentence.trim().replace(/\.$/, '');
+      return {
+        title: clean.length > 60 ? clean.slice(0, 57) + '…' : clean,
+        description: defaults[i]?.description || undefined,
+      };
+    });
   }, [remedy]);
 
   const researchLinks = useMemo(() => {
     if (!remedy) return [];
     return remedy.researchPapers || remedy.researchLinks || [];
-  }, [remedy]);
-
-  const benefits = useMemo(() => {
-    if (!remedy?.longDescription) return DEFAULT_BENEFITS;
-    const parts = remedy.longDescription.split(/\.\s+/).filter(Boolean);
-    if (parts.length <= 1) return [{ title: 'Benefits', description: remedy.longDescription }];
-    return parts.slice(0, 3).map((sentence, i) => ({
-      title: sentence.trim().replace(/\.$/, ''),
-      description: i === 0 ? 'First-line treatment option.' : undefined,
-    }));
   }, [remedy]);
 
   const evidenceScore = useMemo(() => {
@@ -114,7 +157,6 @@ export function RemedyDetail() {
 
   return (
     <PageWrapper className="min-h-screen bg-bg pb-28 md:pb-24">
-      {/* Top Navigation Bar */}
       <div className="sticky top-0 z-40 bg-bg/80 backdrop-blur-md border-b border-border">
         <div className="max-w-[800px] mx-auto px-5 md:px-8 h-14 flex items-center justify-between">
           <button
@@ -125,7 +167,7 @@ export function RemedyDetail() {
                 navigate('/search');
               }
             }}
-            className="flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink transition-colors duration-150 min-h-[44px]"
+            className="flex items-center gap-1.5 text-sm text-ink-muted transition-colors duration-200 min-h-[44px] hover:text-ink active:text-ink/70"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
@@ -136,7 +178,8 @@ export function RemedyDetail() {
               toggleFavorite(remedy);
             }}
             className={cn(
-              'p-2.5 rounded-full transition-colors duration-150 min-w-[44px] min-h-[44px] flex items-center justify-center',
+              'p-2.5 rounded-full transition-colors duration-200 min-w-[44px] min-h-[44px] flex items-center justify-center',
+              'active:scale-90',
               favorite ? 'text-primary' : 'text-ink-muted hover:text-primary'
             )}
             aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
@@ -146,7 +189,6 @@ export function RemedyDetail() {
         </div>
       </div>
 
-      {/* ─── Hero ─── Open layout, no card, generous whitespace */}
       <div className="max-w-[800px] mx-auto px-5 md:px-8 pt-10 pb-8 md:pt-14 md:pb-10">
         <RemedyHero
           remedy={remedy}
@@ -156,36 +198,39 @@ export function RemedyDetail() {
         />
       </div>
 
-      {/* ─── Quick Stats ─── Borderless strip, no card wrapper */}
       <div className="max-w-[800px] mx-auto px-5 md:px-8 pb-12 md:pb-16">
-        <div className="rounded-2xl bg-card border border-border p-4 md:p-5" style={{ boxShadow: 'var(--shadow-card)' }}>
-          <QuickStats
-            remedy={remedy}
-            isSafe={isSafe}
-            evidenceScore={evidenceScore}
-            safetyScore={safetyScore}
-          />
-        </div>
+        <Reveal>
+          <div className="rounded-2xl bg-card border border-border p-4 md:p-5" style={{ boxShadow: 'var(--shadow-card)' }}>
+            <QuickStats
+              remedy={remedy}
+              isSafe={isSafe}
+              evidenceScore={evidenceScore}
+              safetyScore={safetyScore}
+            />
+          </div>
+        </Reveal>
       </div>
 
       <div className="max-w-[800px] mx-auto px-5 md:px-8">
 
-        {/* ─── Safety ─── Banner-style, no hard borders */}
         <div className="mb-12 md:mb-16">
           {!isSafe && remedy.warnings ? (
-            <AdvisoryCard
-              title="Allergy conflict detected"
-              message="This remedy may not be suitable based on your health profile. Please consult with a healthcare professional before use."
-            />
+            <Reveal>
+              <AdvisoryCard
+                title="Allergy conflict detected"
+                message="This remedy may not be suitable based on your health profile. Please consult with a healthcare professional before use."
+              />
+            </Reveal>
           ) : (
             <SafetyBanner />
           )}
         </div>
 
-        {/* ─── Benefits ─── Single card with internal grid and inset dividers */}
-        {remedy.longDescription && (
+        {benefits.length > 0 && (
           <section className="mb-12 md:mb-16">
-            <h2 className="section-title mb-5">Benefits</h2>
+            <Reveal>
+              <h2 className="section-title mb-5">Benefits</h2>
+            </Reveal>
             <div className="rounded-[20px] bg-card border border-border p-6 md:p-8 shadow-card hover:shadow-card-lg transition-shadow duration-200">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-0">
                 {benefits.map((benefit, i) => (
@@ -198,7 +243,7 @@ export function RemedyDetail() {
                     <BenefitCard
                       title={benefit.title}
                       description={benefit.description}
-                      delay={i * 0.05}
+                      delay={i * 0.07}
                     />
                   </div>
                 ))}
@@ -207,10 +252,11 @@ export function RemedyDetail() {
           </section>
         )}
 
-        {/* ─── How To Use ─── Card with horizontal timeline */}
         {howToUseSteps.length > 0 && (
           <section className="mb-12 md:mb-16">
-            <h2 className="section-title mb-5">How To Use</h2>
+            <Reveal>
+              <h2 className="section-title mb-5">How To Use</h2>
+            </Reveal>
             <div className="rounded-[20px] bg-card border border-border p-6 md:p-8 shadow-card hover:shadow-card-lg transition-shadow duration-200">
               {howToUseSteps.map((step, i) => (
                 <TimelineStep
@@ -218,31 +264,34 @@ export function RemedyDetail() {
                   number={i + 1}
                   description={step}
                   isLast={i === howToUseSteps.length - 1}
-                  delay={i * 0.05}
+                  delay={i * 0.15}
+                  arrowDelay={(i + 1) * 0.15 + 0.05}
                 />
               ))}
             </div>
           </section>
         )}
 
-        {/* ─── Evidence ─── Dense, journal-style, no card wrapper */}
         {researchLinks.length > 0 && (
           <section className="mb-12 md:mb-16">
-            <div className="flex items-center justify-between mb-2">
-              <h2 className="section-title mb-0">Evidence</h2>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary">
-                <BookOpen className="w-3.5 h-3.5" />
-                {evidenceScore >= 7 ? 'High Quality' : evidenceScore >= 4 ? 'Moderate' : 'Some'}
-              </span>
-            </div>
-            <p className="text-sm text-ink-muted mb-5">
-              Based on {researchLinks.length} peer-reviewed {researchLinks.length === 1 ? 'study' : 'studies'}
-            </p>
+            <Reveal>
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="section-title mb-0">Evidence</h2>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary">
+                  <BookOpen className="w-3.5 h-3.5" />
+                  {evidenceScore >= 7 ? 'High Quality' : evidenceScore >= 4 ? 'Moderate' : 'Some'}
+                </span>
+              </div>
+              <p className="text-sm text-ink-muted mb-5">
+                Based on {researchLinks.length} peer-reviewed {researchLinks.length === 1 ? 'study' : 'studies'}
+              </p>
+            </Reveal>
             <div className="divide-y divide-border-subtle">
               {visibleEvidence.map((source, idx) => (
                 <EvidenceCard
                   key={idx}
                   source={source}
+                  delay={idx * 0.06}
                   onTrackClick={() => trackRemedyEvent({ remedyId: remedy.id, eventType: 'research_clicked', metadata: { url: source.url, label: source.journal || source.label } }).catch(() => {})}
                 />
               ))}
@@ -250,7 +299,7 @@ export function RemedyDetail() {
             {!showAllEvidence && researchLinks.length > EVIDENCE_SHOW_LIMIT && (
               <button
                 onClick={() => setShowAllEvidence(true)}
-                className="flex items-center gap-1 text-sm font-medium text-primary mt-4 hover:opacity-80 transition-opacity"
+                className="flex items-center gap-1 text-sm font-medium text-primary mt-4 transition-all duration-200 hover:opacity-80 active:opacity-60"
               >
                 Show {researchLinks.length - EVIDENCE_SHOW_LIMIT} more {researchLinks.length - EVIDENCE_SHOW_LIMIT === 1 ? 'study' : 'studies'}
                 <ChevronRight className="w-4 h-4" />
@@ -259,25 +308,26 @@ export function RemedyDetail() {
           </section>
         )}
 
-        {/* ─── Where To Buy ─── Featured + compact list */}
         {remedy.isPurchasable !== false && (
           <div className="mb-12 md:mb-16">
             <NearbyShops remedyName={remedy.name} />
           </div>
         )}
 
-        {/* ─── Safety Information ─── Amber advisory */}
         {remedy.warnings && (
           <section className="mb-12 md:mb-16">
-            <h2 className="section-title mb-5">Safety Information</h2>
-            <AdvisoryCard
-              title="Important"
-              message={remedy.warnings}
-            />
+            <Reveal>
+              <h2 className="section-title mb-5">Safety Information</h2>
+            </Reveal>
+            <Reveal delay={0.08}>
+              <AdvisoryCard
+                title="Important"
+                message={remedy.warnings}
+              />
+            </Reveal>
           </section>
         )}
 
-        {/* ─── When To See A Doctor ─── Checklist */}
         <section className="mb-12 md:mb-16">
           <DoctorGuidance />
         </section>

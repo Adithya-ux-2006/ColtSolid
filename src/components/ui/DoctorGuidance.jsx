@@ -1,6 +1,7 @@
 import { Stethoscope, MapPin } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { Checklist } from './Checklist';
+import { Reveal } from './Reveal';
 
 const DEFAULT_FLAGS = [
   'Symptoms last over 48 hours',
@@ -14,7 +15,7 @@ export function DoctorGuidance({ message, flags, ctaLabel, onCtaClick, className
   const items = flags || DEFAULT_FLAGS;
 
   return (
-    <div className={cn("section-card", className)}>
+    <Reveal className={cn("section-card", className)}>
       <div className="flex items-center gap-3 mb-4">
         <div className="w-11 h-11 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
           <Stethoscope className="w-5 h-5 text-primary" />
@@ -33,15 +34,15 @@ export function DoctorGuidance({ message, flags, ctaLabel, onCtaClick, className
         </p>
       )}
 
-      <Checklist items={items} delay={0.1} className="mb-6" />
+      <Checklist items={items} delay={0.1} className="mb-6 space-y-3" />
 
       <button
         onClick={onCtaClick}
-        className="flex items-center justify-center gap-2 w-full h-12 rounded-2xl border border-border text-ink font-medium text-sm hover:bg-surface transition-colors duration-150"
+        className="flex items-center justify-center gap-2 w-full h-12 rounded-2xl border border-border text-ink font-medium text-sm transition-all duration-200 hover:bg-surface hover:border-border active:scale-[0.98] active:bg-surface/80"
       >
         <MapPin className="w-4 h-4" />
         {ctaLabel || 'Find Nearby Medical Centres'}
       </button>
-    </div>
+    </Reveal>
   );
 }

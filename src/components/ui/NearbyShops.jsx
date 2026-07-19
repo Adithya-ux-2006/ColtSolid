@@ -3,6 +3,7 @@ import { MapPin, Store } from 'lucide-react';
 import { getApiUrl } from '../../utils/api';
 import { cn } from '../../utils/cn';
 import { FeaturedPharmacy, PharmacyCard } from './PharmacyComponents';
+import { Reveal } from './Reveal';
 
 export function NearbyShops({ className }) {
   const [shops, setShops] = useState([]);
@@ -60,22 +61,24 @@ export function NearbyShops({ className }) {
 
   return (
     <section className={cn('', className)}>
-      <div className="flex items-center justify-between mb-5">
-        <h2 className="section-title mb-0">Where To Buy</h2>
-        <div className="flex items-center gap-1.5">
-          <MapPin className="w-3.5 h-3.5 text-ink-muted" />
-          <select
-            value={radius}
-            onChange={(e) => setRadius(Number(e.target.value))}
-            className="bg-transparent text-xs text-ink-muted border border-border rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-primary/30"
-          >
-            <option value={1000}>1km</option>
-            <option value={3000}>3km</option>
-            <option value={5000}>5km</option>
-            <option value={10000}>10km</option>
-          </select>
+      <Reveal>
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="section-title mb-0">Where To Buy</h2>
+          <div className="flex items-center gap-1.5">
+            <MapPin className="w-3.5 h-3.5 text-ink-muted" />
+            <select
+              value={radius}
+              onChange={(e) => setRadius(Number(e.target.value))}
+              className="bg-transparent text-xs text-ink-muted border border-border rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-primary/30"
+            >
+              <option value={1000}>1km</option>
+              <option value={3000}>3km</option>
+              <option value={5000}>5km</option>
+              <option value={10000}>10km</option>
+            </select>
+          </div>
         </div>
-      </div>
+      </Reveal>
 
       {locationDenied && (
         <div className="text-center py-10 section-card">
@@ -83,7 +86,7 @@ export function NearbyShops({ className }) {
           <p className="text-sm text-ink-muted mb-3">Enable location to find nearby pharmacies</p>
           <button
             onClick={requestLocation}
-            className="text-sm text-primary font-medium hover:underline"
+            className="text-sm text-primary font-medium transition-all duration-200 hover:underline active:opacity-70"
           >
             Try again
           </button>
@@ -129,7 +132,7 @@ export function NearbyShops({ className }) {
               {!showAll && shops.length > 4 && (
                 <button
                   onClick={() => setShowAll(true)}
-                  className="w-full text-center text-sm font-medium text-primary mt-3 hover:underline"
+                  className="w-full text-center text-sm font-medium text-primary mt-3 transition-all duration-200 hover:underline active:opacity-70"
                 >
                   View More Pharmacies
                 </button>

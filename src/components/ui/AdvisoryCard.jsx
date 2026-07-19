@@ -1,17 +1,21 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ShieldAlert } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
 export function AdvisoryCard({ title, message, className }) {
+  const reduced = useReducedMotion();
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+      initial={reduced ? { opacity: 0 } : { opacity: 0, y: 14 }}
+      whileInView={reduced ? { opacity: 1 } : { opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.35, ease: 'easeOut' }}
       role="alert"
       className={cn(
         'rounded-2xl p-5 flex items-start gap-4',
         'bg-warning/[0.06]',
+        'transition-shadow duration-200 hover:shadow-lg',
         className
       )}
     >
