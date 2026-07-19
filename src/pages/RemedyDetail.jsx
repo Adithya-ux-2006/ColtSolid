@@ -182,20 +182,25 @@ export function RemedyDetail() {
           )}
         </div>
 
-        {/* ─── Benefits ─── Single card with internal grid and dividers */}
+        {/* ─── Benefits ─── Single card with internal grid and inset dividers */}
         {remedy.longDescription && (
           <section className="mb-12 md:mb-16">
             <h2 className="section-title mb-5">Benefits</h2>
-            <div className="section-card">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-border-subtle">
+            <div className="rounded-[20px] bg-card border border-border p-6 md:p-8 shadow-card hover:shadow-card-lg transition-shadow duration-200">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-0">
                 {benefits.map((benefit, i) => (
-                  <BenefitCard
-                    key={i}
-                    title={benefit.title}
-                    description={benefit.description}
-                    delay={i * 0.05}
-                    className="sm:px-5 first:sm:pl-0 last:sm:pr-0 py-4 sm:py-2"
-                  />
+                  <div key={i} className={cn(
+                    'relative',
+                    i < benefits.length - 1 && 'lg:border-r lg:border-border-subtle lg:pr-6',
+                    i > 0 && 'lg:border-l-0',
+                    'lg:first:pl-0'
+                  )}>
+                    <BenefitCard
+                      title={benefit.title}
+                      description={benefit.description}
+                      delay={i * 0.05}
+                    />
+                  </div>
                 ))}
               </div>
             </div>
@@ -206,7 +211,7 @@ export function RemedyDetail() {
         {howToUseSteps.length > 0 && (
           <section className="mb-12 md:mb-16">
             <h2 className="section-title mb-5">How To Use</h2>
-            <div className="section-card">
+            <div className="rounded-[20px] bg-card border border-border p-6 md:p-8 shadow-card hover:shadow-card-lg transition-shadow duration-200">
               {howToUseSteps.map((step, i) => (
                 <TimelineStep
                   key={i}

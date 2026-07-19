@@ -9,17 +9,17 @@ export function BenefitCard({ title, description, delay = 0, className }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, delay }}
       className={cn(
-        'flex items-start gap-3 py-1',
+        'flex flex-col items-start gap-3.5 py-2',
         className
       )}
     >
-      <div className="w-7 h-7 rounded-lg bg-success/10 flex items-center justify-center shrink-0 mt-0.5">
-        <Check className="w-3.5 h-3.5 text-success" />
+      <div className="w-12 h-12 rounded-full bg-success/[0.08] border border-success/15 flex items-center justify-center shrink-0 shadow-[0_0_12px_hsl(var(--success)/0.06)]">
+        <Check className="w-5 h-5 text-success" />
       </div>
       <div className="min-w-0">
-        <p className="font-semibold text-ink text-sm mb-0.5 leading-snug">{title}</p>
+        <p className="font-semibold text-ink text-lg leading-snug mb-1 line-clamp-2">{title}</p>
         {description && (
-          <p className="text-[13px] text-ink-muted leading-relaxed">{description}</p>
+          <p className="text-[14px] text-ink-muted leading-relaxed line-clamp-2">{description}</p>
         )}
       </div>
     </motion.div>

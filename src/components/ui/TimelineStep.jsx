@@ -8,14 +8,17 @@ export function TimelineStep({ number, description, isLast = false, delay = 0, c
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, delay }}
+      whileHover={{ scale: 1.02 }}
       className={cn(
-        'flex flex-col md:flex-row md:items-start gap-3 md:gap-5',
+        'group flex flex-col md:flex-row md:items-center gap-3 md:gap-5',
+        'md:hover:bg-surface/30 md:rounded-2xl md:-mx-3 md:px-3 md:py-2',
+        'md:transition-all md:duration-200',
         className
       )}
     >
       <div className="flex md:flex-col items-center shrink-0 gap-3 md:gap-0">
-        <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
-          <span className="text-sm font-bold text-primary">{number}</span>
+        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center border border-primary/20 shadow-[0_0_16px_hsl(var(--primary)/0.2)]">
+          <span className="text-base font-bold text-primary-foreground">{number}</span>
         </div>
         {!isLast && (
           <>
@@ -24,11 +27,11 @@ export function TimelineStep({ number, description, isLast = false, delay = 0, c
           </>
         )}
       </div>
-      <div className={cn('pb-5', isLast && 'pb-0', 'md:flex-1 md:pt-1.5')}>
+      <div className={cn('pb-5 md:pb-0', isLast && 'pb-0', 'md:flex-1')}>
         <p className="text-[15px] text-ink leading-relaxed">{description}</p>
       </div>
       {!isLast && (
-        <ArrowRight className="hidden md:block w-4 h-4 text-ink-subtle shrink-0 mt-3" />
+        <ArrowRight className="hidden md:block w-4 h-4 text-ink-subtle shrink-0 opacity-60 group-hover:opacity-100 transition-opacity duration-200" />
       )}
     </motion.div>
   );
