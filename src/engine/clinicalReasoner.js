@@ -162,19 +162,19 @@ export function buildSymptomIndex(symptoms) {
   });
 }
 
-function scoreSymptom(queryTokens, normalizedQuery, symptomIndex) {
+function scoreSymptom(queryTokens, normalizedQuery, expandedQuery, symptomIndex) {
   const label = symptomIndex.normalizedLabel;
 
-  // Tier 1a: Exact match
+  // Tier 1a: Exact match (use original query — no expansion)
   if (normalizedQuery === label) return 1000;
 
-  // Tier 1b: Query contains the full symptom label
+  // Tier 1b: Query contains the full symptom label (use original query)
   if (normalizedQuery.includes(label)) return 1000;
 
-  // Tier 1c: Symptom label contains the full query
+  // Tier 1c: Symptom label contains the full query (use original query)
   if (label.includes(normalizedQuery)) return 800;
 
-  // Tier 1d: Word-level overlap >= 50% of label words
+  // Tier 1d: Word-level overlap >= 50% of label words (use original query)
   const queryWords = normalizedQuery.split(/\s+/);
   const labelWords = label.split(/\s+/);
   const overlapCount = queryWords.filter(w => labelWords.includes(w)).length;
@@ -182,9 +182,9 @@ function scoreSymptom(queryTokens, normalizedQuery, symptomIndex) {
     return 500 + overlapCount * 100;
   }
 
-  // Tier 2-3: Fuzzy matching (token overlap + n-gram similarity)
+  // Tier 2-3: Fuzzy matching (use expanded query + tokens for synonym awareness)
   const tokenOverlap = computeTokenOverlap(queryTokens, symptomIndex.labelTokens);
-  const ngramSim = computeOverallNgramSimilarity(normalizedQuery, label);
+  const ngramSim = computeOverallNgramSimilarity(expandedQuery, label);
   return tokenOverlap * 0.65 + ngramSim * 0.35;
 }
 
@@ -211,7 +211,7 @@ export function inferConcerns(query, symptoms) {
   const index = buildSymptomIndex(symptoms);
   const combinedTokens = [...new Set([...pp.queryTokens, ...pp.expandedTokens])];
   const combinedQueryStr = pp.expandedTokens.length > 0
-    ? pp.normalized + ' ' + pp.expandedTokens.join(' ')
+    ? pp.expandedTokens.join(' ')
     : pp.normalized;
 
   const conceptHintSet = new Set(pp.conceptHints);
@@ -228,10 +228,10 @@ export function inferConcerns(query, symptoms) {
   );
 
   const scored = index.map(si => {
-    let score = scoreSymptom(combinedTokens, combinedQueryStr, si);
+    let score = scoreSymptom(combinedTokens, pp.normalized, combinedQueryStr, si);
 
     if (conceptHintSet.has(si.id)) {
-      score = Math.min(score + 0.25, 1.0);
+      score = Math.min(score * 1.25, 1000);
     }
 
     if (negatedSet.has(si.id) || si.normalizedLabel.split(/\s+/).some(lw => negatedPhraseTokens.has(lw))) {
@@ -239,7 +239,7 @@ export function inferConcerns(query, symptoms) {
     }
 
     if (score > 10) {
-      console.log(`[SCORE] ${si.id} (${si.label}): ${score.toFixed(1)} | query="${combinedQueryStr}" label="${si.normalizedLabel}"`);
+      console.log(`[SCORE] ${si.id} (${si.label}): ${score.toFixed(1)} | query="${pp.normalized}" label="${si.normalizedLabel}"`);
     }
 
     return {
@@ -260,7 +260,7 @@ export function inferConcerns(query, symptoms) {
 
     for (const si of scored) {
       const compScore = compMap.get(si.symptomId) || 0;
-      if (compScore > 0) {
+      if (compScore > 0 && si.score < 500) {
         si.score = si.score * (1 - compWeight) + compScore * compWeight;
       }
     }
