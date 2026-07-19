@@ -108,10 +108,32 @@ export function resolveQuery(query, symptoms, geminiInterpretation) {
   const engineIdSet = new Set(base.symptomIds);
   const geminiOnlySecondary = geminiSecondary.filter(id => !engineIdSet.has(id));
 
-  const mergedIds = [...geminiPrimary, ...geminiOnlySecondary, ...base.symptomIds.filter(id => !geminiPrimary.includes(id))];
-  const uniqueMergedIds = [...new Set(mergedIds)];
+  const geminiPrimarySet = new Set(geminiPrimary);
+  const baseNonGemini = base.symptomIds.filter(id => !geminiPrimarySet.has(id));
 
   const geminiConfidence = Math.round((geminiInterpretation.confidence || 0.5) * 100);
+
+  let filteredBase;
+  if (geminiPrimary.length > 0 && geminiConfidence >= 60) {
+    filteredBase = baseNonGemini.filter(id => {
+      if (geminiPrimarySet.has(id)) return false;
+      if (geminiSecondary.includes(id)) return true;
+      const geminiPrimarySymptom = symptoms.find(s => geminiPrimarySet.has(s.id));
+      const candidateSymptom = symptoms.find(s => s.id === id);
+      if (!geminiPrimarySymptom || !candidateSymptom) return false;
+      const primaryLabel = geminiPrimarySymptom.label.toLowerCase();
+      const candidateLabel = candidateSymptom.label.toLowerCase();
+      const primaryTokens = primaryLabel.split(/\s+/);
+      const candidateTokens = candidateLabel.split(/\s+/);
+      const shared = primaryTokens.filter(t => candidateTokens.includes(t)).length;
+      return shared > 0;
+    });
+  } else {
+    filteredBase = baseNonGemini;
+  }
+
+  const mergedIds = [...geminiPrimary, ...geminiOnlySecondary, ...filteredBase];
+  const uniqueMergedIds = [...new Set(mergedIds)];
   const mergedConfidence = Math.max(base.confidence, geminiConfidence);
 
   const geminiSeverity = geminiInterpretation.severity || null;

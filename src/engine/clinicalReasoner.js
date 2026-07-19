@@ -231,7 +231,7 @@ export function inferConcerns(query, symptoms) {
     let score = scoreSymptom(combinedTokens, pp.normalized, combinedQueryStr, si);
 
     if (conceptHintSet.has(si.id)) {
-      score = Math.min(score * 1.25, 1000);
+      score = Math.min(score * 2.5, 1000);
     }
 
     if (negatedSet.has(si.id) || si.normalizedLabel.split(/\s+/).some(lw => negatedPhraseTokens.has(lw))) {
