@@ -76,6 +76,10 @@ export default {
           DEFAULT: 'hsl(var(--success))',
           light: 'hsl(var(--success-soft))',
         },
+        evidence: {
+          DEFAULT: 'hsl(var(--evidence))',
+          light: 'hsl(var(--evidence-soft))',
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

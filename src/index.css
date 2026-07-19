@@ -74,6 +74,8 @@
     --warning-soft: 48 96% 94%;
     --danger: 0 72% 51%;
     --danger-soft: 0 86% 97%;
+    --evidence: 262 60% 50%;
+    --evidence-soft: 262 50% 95%;
 
     --shadow-color: 155 30% 13%;
 
@@ -131,6 +133,8 @@
     --warning-soft: 36 40% 18%;
     --danger: 0 65% 50%;
     --danger-soft: 0 40% 18%;
+    --evidence: 262 50% 60%;
+    --evidence-soft: 262 25% 16%;
 
     --shadow-color: 210 40% 3%;
 

@@ -1,8 +1,9 @@
 /* global process */
+import { GoogleGenAI } from '@google/genai';
 import { parseBody } from './_parseBody.js';
 import { applySecurity, buildResponse, sanitizeInput, isValidQuery, getCORSHeaders } from './_middleware.js';
 
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+const GEMINI_MODEL = 'gemini-flash-latest';
 const TIMEOUT_MS = 8000;
 const MAX_RETRIES = 1;
 const CACHE_TTL_MS = 20 * 60 * 1000;
@@ -75,37 +76,24 @@ async function callGemini(prompt, apiKey) {
   const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
   try {
-    const url = `${GEMINI_API_URL}?key=${apiKey}`;
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: {
-          temperature: 0.1,
-          maxOutputTokens: 512,
-          responseMimeType: 'application/json',
-        },
-      }),
+    const ai = new GoogleGenAI({ apiKey });
+    const response = await ai.models.generateContent({
+      model: GEMINI_MODEL,
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      config: {
+        temperature: 0.1,
+        maxOutputTokens: 512,
+        responseMimeType: 'application/json',
+      },
       signal: controller.signal,
     });
 
-    if (!response.ok) {
-      const errText = await response.text().catch(() => '');
-      throw new Error(`Gemini API error ${response.status}: ${errText.slice(0, 200)}`);
-    }
-
-    const data = await response.json();
-    console.log('[GEMINI-NLU] Raw response keys:', Object.keys(data).join(', '), 'candidates:', data.candidates?.length || 0);
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const text = response.text;
     if (!text) {
-      console.log('[GEMINI-NLU] No text in response. Full:', JSON.stringify(data).slice(0, 500));
       throw new Error('Empty Gemini response');
     }
 
-    const parsed = JSON.parse(text);
-    console.log('[GEMINI-NLU] Parsed JSON keys:', Object.keys(parsed).join(', '));
-    return parsed;
+    return JSON.parse(text);
   } finally {
     clearTimeout(timeoutId);
   }
@@ -139,9 +127,7 @@ async function interpretWithGemini(query, symptomCatalog, apiKey) {
     try {
       const result = await callGemini(prompt, apiKey);
       if (validateInterpretation(result)) return result;
-      console.log('[GEMINI-NLU] Validation failed for attempt', attempt);
     } catch (err) {
-      console.log('[GEMINI-NLU] Attempt', attempt, 'failed:', err.message);
       if (attempt < MAX_RETRIES) {
         await new Promise(r => setTimeout(r, 300));
       }
@@ -176,10 +162,9 @@ export async function handler(event) {
       return buildResponse(400, { error: 'Symptom catalog is required.' });
     }
 
-    const apiKey = (process.env.GOOGLE_AI_STUDIO_API_KEY || '').trim();
-    console.log('[GEMINI-NLU] API key found:', Boolean(apiKey), 'length:', apiKey.length);
+    const apiKey = (process.env.GEMINI_API_KEY || process.env.GOOGLE_AI_STUDIO_API_KEY || '').trim();
+    console.log('[GEMINI-NLU] API key present:', !!apiKey, 'length:', apiKey?.length);
     if (!apiKey) {
-      console.log('[GEMINI-NLU] No API key configured. Available env keys:', Object.keys(process.env).filter(k => k.includes('GEMINI') || k.includes('GOOGLE') || k.includes('AI')).join(', '));
       return buildResponse(200, {
         interpretation: null,
         source: 'unavailable',
@@ -190,13 +175,10 @@ export async function handler(event) {
     const cacheKey = `${query}::${symptomCatalog.length}`;
     const cached = getCachedResult(cacheKey);
     if (cached) {
-      console.log('[GEMINI-NLU] Cache hit');
       return buildResponse(200, { interpretation: cached, source: 'cache' });
     }
 
-    console.log('[GEMINI-NLU] Calling Gemini for query:', query);
     const interpretation = await interpretWithGemini(query, symptomCatalog, apiKey);
-    console.log('[GEMINI-NLU] Interpretation result:', interpretation ? 'SUCCESS' : 'NULL', interpretation ? JSON.stringify(interpretation).slice(0, 500) : '');
 
     if (!interpretation) {
       return buildResponse(200, {
@@ -210,7 +192,6 @@ export async function handler(event) {
 
     return buildResponse(200, { interpretation, source: 'gemini' });
   } catch (err) {
-    console.log('[GEMINI-NLU] Unexpected error:', err.message);
     return buildResponse(200, {
       interpretation: null,
       source: 'fallback',

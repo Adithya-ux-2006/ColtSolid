@@ -3,6 +3,17 @@ import { supabase } from '../lib/supabase';
 import { getInitials } from '../utils/mappers';
 import { clearQuickSaves, getQuickSaves } from '../utils/quickSave';
 
+export function needsOnboardingProfile(user) {
+  if (!user) return false;
+
+  const hasCompletedOnboarding = user.has_completed_onboarding ?? false;
+  const hasGender = Boolean((user.gender || '').trim());
+  const hasConditions = (user.common_conditions ?? []).length > 0;
+  const hasAllergies = (user.known_allergies ?? []).length > 0;
+
+  return !hasCompletedOnboarding || (!hasGender && !hasConditions && !hasAllergies);
+}
+
 async function importQuickSavedFavorites(userId) {
   const quickSaves = getQuickSaves();
   const remedyIds = quickSaves?.remedyIds || [];
@@ -186,7 +197,7 @@ export const useAuthStore = create((set, get) => ({
         }));
       }
 
-      return { success: true, hasCompletedOnboarding: user.has_completed_onboarding };
+      return { success: true, needsOnboarding: needsOnboardingProfile(user) };
     } catch (error) {
       console.error('Login error:', error);
       return { success: false, error };
@@ -247,7 +258,7 @@ export const useAuthStore = create((set, get) => ({
       return {
         success: true,
         needsEmailConfirmation: !data.session,
-        hasCompletedOnboarding: data.session ? (get().user?.has_completed_onboarding ?? false) : false,
+          needsOnboarding: data.session ? needsOnboardingProfile(get().user) : true,
       };
     } catch (error) {
       console.error('Registration error:', error);

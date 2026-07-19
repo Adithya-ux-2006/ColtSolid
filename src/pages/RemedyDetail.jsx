@@ -232,14 +232,15 @@ export function RemedyDetail() {
               <h2 className="section-title mb-5">Benefits</h2>
             </Reveal>
             <div className="rounded-[20px] bg-card border border-border p-6 md:p-8 shadow-card hover:shadow-card-lg transition-shadow duration-200">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-0">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 {benefits.map((benefit, i) => (
                   <div key={i} className={cn(
                     'relative',
-                    i < benefits.length - 1 && 'lg:border-r lg:border-border-subtle lg:pr-6',
-                    i > 0 && 'lg:border-l-0',
-                    'lg:first:pl-0'
+                    i > 0 && 'lg:pl-8',
                   )}>
+                    {i < benefits.length - 1 && (
+                      <div className="hidden lg:block absolute top-3 bottom-3 left-0 w-px bg-border-subtle/60" />
+                    )}
                     <BenefitCard
                       title={benefit.title}
                       description={benefit.description}
@@ -277,7 +278,7 @@ export function RemedyDetail() {
             <Reveal>
               <div className="flex items-center justify-between mb-2">
                 <h2 className="section-title mb-0">Evidence</h2>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-evidence-light text-evidence">
                   <BookOpen className="w-3.5 h-3.5" />
                   {evidenceScore >= 7 ? 'High Quality' : evidenceScore >= 4 ? 'Moderate' : 'Some'}
                 </span>
@@ -286,7 +287,7 @@ export function RemedyDetail() {
                 Based on {researchLinks.length} peer-reviewed {researchLinks.length === 1 ? 'study' : 'studies'}
               </p>
             </Reveal>
-            <div className="divide-y divide-border-subtle">
+            <div className="space-y-4">
               {visibleEvidence.map((source, idx) => (
                 <EvidenceCard
                   key={idx}
@@ -299,7 +300,7 @@ export function RemedyDetail() {
             {!showAllEvidence && researchLinks.length > EVIDENCE_SHOW_LIMIT && (
               <button
                 onClick={() => setShowAllEvidence(true)}
-                className="flex items-center gap-1 text-sm font-medium text-primary mt-4 transition-all duration-200 hover:opacity-80 active:opacity-60"
+                className="flex items-center gap-1 text-sm font-medium text-evidence mt-4 transition-all duration-200 hover:opacity-80 active:opacity-60"
               >
                 Show {researchLinks.length - EVIDENCE_SHOW_LIMIT} more {researchLinks.length - EVIDENCE_SHOW_LIMIT === 1 ? 'study' : 'studies'}
                 <ChevronRight className="w-4 h-4" />

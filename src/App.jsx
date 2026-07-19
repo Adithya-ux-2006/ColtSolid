@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { Navbar, BottomNav, AppDock, AdminGuard } from './components/layout';
 import { ThemeProvider } from './context/ThemeContext';
-import { useAuthStore } from './store/authStore';
+import { needsOnboardingProfile, useAuthStore } from './store/authStore';
 import { useFavoritesStore } from './store/favoritesStore';
 import { useRemedyScheduleStore } from './store/remedyScheduleStore';
 import { useCatalogStore } from './store/catalogStore';
@@ -32,10 +32,35 @@ function Page({ children }) {
   );
 }
 
+/**
+ * AuthEnforcer: Runs on EVERY route to enforce onboarding for authenticated users
+ * with incomplete profiles. Redirects to /onboarding unless already on onboarding,
+ * login, or register pages.
+ */
+function AuthEnforcer({ children }) {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isInitialized = useAuthStore((state) => state.isInitialized);
+  const user = useAuthStore((state) => state.user);
+  const location = useLocation();
+
+  if (!isInitialized) {
+    return null;
+  }
+
+  const publicAuthPaths = ['/login', '/register', '/onboarding'];
+  const isPublicAuthPath = publicAuthPaths.includes(location.pathname);
+
+  if (isAuthenticated && !isPublicAuthPath && needsOnboardingProfile(user)) {
+    return <Navigate to="/onboarding" replace />;
+  }
+
+  return children;
+}
+
 function ProtectedRoute({ children }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isInitialized = useAuthStore((state) => state.isInitialized);
-  const hasCompletedOnboarding = useAuthStore((state) => state.user?.has_completed_onboarding ?? false);
+  const user = useAuthStore((state) => state.user);
   const location = useLocation();
 
   if (!isInitialized) {
@@ -46,7 +71,7 @@ function ProtectedRoute({ children }) {
     return <Navigate to="/login" replace />;
   }
 
-  if (!hasCompletedOnboarding && location.pathname !== '/onboarding') {
+  if (needsOnboardingProfile(user) && location.pathname !== '/onboarding') {
     return <Navigate to="/onboarding" replace />;
   }
 
@@ -61,26 +86,28 @@ function AppRoutes() {
   }
 
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<Page><Landing /></Page>} />
-      <Route path="/login" element={<Page><Login /></Page>} />
-      <Route path="/register" element={<Page><Register /></Page>} />
-      <Route path="/search" element={<Page><SymptomSearch /></Page>} />
-      <Route path="/results" element={<Page><Results /></Page>} />
-      <Route path="/remedy/:id" element={<Page><RemedyDetail /></Page>} />
+    <AuthEnforcer>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Page><Landing /></Page>} />
+        <Route path="/login" element={<Page><Login /></Page>} />
+        <Route path="/register" element={<Page><Register /></Page>} />
+        <Route path="/search" element={<Page><SymptomSearch /></Page>} />
+        <Route path="/results" element={<Page><Results /></Page>} />
+        <Route path="/remedy/:id" element={<Page><RemedyDetail /></Page>} />
 
-      {/* Protected Routes */}
-      <Route path="/dashboard" element={<ProtectedRoute><Page><Dashboard /></Page></ProtectedRoute>} />
-      <Route path="/favorites" element={<ProtectedRoute><Page><Favorites /></Page></ProtectedRoute>} />
-      <Route path="/schedules" element={<ProtectedRoute><Page><RemedySchedules /></Page></ProtectedRoute>} />
-      <Route path="/profile" element={<ProtectedRoute><Page><Profile /></Page></ProtectedRoute>} />
-      <Route path="/admin" element={<ProtectedRoute><AdminGuard><Page><AdminAnalytics /></Page></AdminGuard></ProtectedRoute>} />
-      <Route path="/onboarding" element={<ProtectedRoute><Page><Onboarding /></Page></ProtectedRoute>} />
-      
-      {/* Catch-all redirect */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        {/* Protected Routes */}
+        <Route path="/dashboard" element={<ProtectedRoute><Page><Dashboard /></Page></ProtectedRoute>} />
+        <Route path="/favorites" element={<ProtectedRoute><Page><Favorites /></Page></ProtectedRoute>} />
+        <Route path="/schedules" element={<ProtectedRoute><Page><RemedySchedules /></Page></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Page><Profile /></Page></ProtectedRoute>} />
+        <Route path="/admin" element={<ProtectedRoute><AdminGuard><Page><AdminAnalytics /></Page></AdminGuard></ProtectedRoute>} />
+        <Route path="/onboarding" element={<ProtectedRoute><Page><Onboarding /></Page></ProtectedRoute>} />
+        
+        {/* Catch-all redirect */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </AuthEnforcer>
   );
 }
 

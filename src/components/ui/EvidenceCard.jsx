@@ -2,11 +2,11 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { ExternalLink, BookOpen } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
-const STUDY_TYPE_COLORS = {
-  'Meta-analysis': 'bg-primary/10 text-primary',
-  'Randomized Trial': 'bg-blue-500/10 text-blue-500 dark:text-blue-400',
-  'Systematic Review': 'bg-violet-500/10 text-violet-500 dark:text-violet-400',
-  'Clinical Study': 'bg-amber-500/10 text-amber-500 dark:text-amber-400',
+const STUDY_TYPE_STYLES = {
+  'Meta-analysis': 'bg-evidence/10 text-evidence',
+  'Randomized Trial': 'bg-evidence/10 text-evidence',
+  'Systematic Review': 'bg-evidence/10 text-evidence',
+  'Clinical Study': 'bg-evidence/10 text-evidence',
 };
 
 export function EvidenceCard({ source, onTrackClick, delay = 0, className }) {
@@ -15,7 +15,7 @@ export function EvidenceCard({ source, onTrackClick, delay = 0, className }) {
   const normalizedType = studyType
     ? studyType.charAt(0).toUpperCase() + studyType.slice(1).toLowerCase()
     : null;
-  const typeKey = Object.keys(STUDY_TYPE_COLORS).find(
+  const typeKey = Object.keys(STUDY_TYPE_STYLES).find(
     k => k.toLowerCase() === normalizedType?.toLowerCase()
   );
 
@@ -25,6 +25,7 @@ export function EvidenceCard({ source, onTrackClick, delay = 0, className }) {
       whileInView={reduced ? { opacity: 1 } : { opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
       transition={{ duration: 0.3, delay, ease: 'easeOut' }}
+      className={className}
     >
       <a
         href={source.url || '#'}
@@ -32,21 +33,21 @@ export function EvidenceCard({ source, onTrackClick, delay = 0, className }) {
         rel="noreferrer"
         onClick={onTrackClick}
         className={cn(
-          'group block py-4 border-b border-border-subtle last:border-0',
-          'hover:bg-surface/30 -mx-1 px-1 rounded-lg transition-all duration-200',
-          'active:bg-surface/50',
-          className
+          'group block rounded-[20px] border border-border p-5 md:p-6',
+          'bg-card shadow-card hover:shadow-card-lg',
+          'transition-all duration-200',
+          'active:shadow-card active:scale-[0.995]',
         )}
       >
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary uppercase tracking-wider">
+            <div className="flex items-center gap-2 mb-2 flex-wrap">
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-evidence uppercase tracking-wider">
                 <BookOpen className="w-3.5 h-3.5 shrink-0" />
                 {source.journal || source.label || 'Clinical Research'}
               </span>
               {source.journal && (
-                <span className="inline-flex items-center text-[10px] font-medium text-primary/60 bg-primary/5 rounded-full px-1.5 py-0.5">
+                <span className="inline-flex items-center text-[10px] font-medium text-evidence/60 bg-evidence/5 rounded-full px-1.5 py-0.5">
                   Peer-reviewed
                 </span>
               )}
@@ -61,16 +62,16 @@ export function EvidenceCard({ source, onTrackClick, delay = 0, className }) {
               <p className="text-sm text-ink line-clamp-2">{source.label}</p>
             )}
           </div>
-          <div className="flex items-center gap-2 shrink-0 mt-0.5">
+          <div className="flex flex-col items-end gap-2 shrink-0 mt-0.5">
+            <ExternalLink className="w-4 h-4 text-ink-subtle transition-colors duration-200 group-hover:text-evidence" />
             {typeKey && (
               <span className={cn(
                 'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold whitespace-nowrap',
-                STUDY_TYPE_COLORS[typeKey]
+                STUDY_TYPE_STYLES[typeKey]
               )}>
                 {typeKey}
               </span>
             )}
-            <ExternalLink className="w-3.5 h-3.5 text-ink-subtle transition-colors duration-200 group-hover:text-primary" />
           </div>
         </div>
       </a>

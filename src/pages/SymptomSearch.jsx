@@ -24,6 +24,10 @@ const DEFAULT_SYMPTOM_CARDS = [
   { id: 'fatigue', label: 'Fatigue', emoji: '🔋' },
 ];
 
+function normalizeValue(value) {
+  return value.toLowerCase().trim().replace(/\s+/g, ' ');
+}
+
 export function SymptomSearch() {
   const { searchTerm, setSearchTerm, debouncedTerm } = useSearch('', 300);
   const navigate = useNavigate();
@@ -53,6 +57,12 @@ export function SymptomSearch() {
     }
     return DEFAULT_SYMPTOM_CARDS;
   }, [symptoms]);
+
+  const exactSymptom = useMemo(() => {
+    const normalizedQuery = normalizeValue(searchTerm);
+    if (!normalizedQuery || !symptoms?.length) return null;
+    return symptoms.find((symptom) => normalizeValue(symptom.label) === normalizedQuery) || null;
+  }, [searchTerm, symptoms]);
 
   const symptomResolution = useMemo(
     () => (trimmedQuery.length >= 2 ? resolveQuery(trimmedQuery, symptoms) : { symptomIds: [], confidence: 0, allMatches: [] }),
@@ -85,6 +95,12 @@ export function SymptomSearch() {
   const goToResults = useCallback(async () => {
     const query = searchTerm.trim();
     if (!query) return;
+
+    if (exactSymptom) {
+      navigate(`/results?symptom=${encodeURIComponent(exactSymptom.id)}`);
+      return;
+    }
+
     trackSearchEvent({ source: 'text', queryText: query }).catch(() => {});
 
     try {
@@ -96,12 +112,12 @@ export function SymptomSearch() {
       console.error('[GEMINI-SEARCH] goToResults fetch failed:', err?.message || err);
       navigate(`/results?q=${encodeURIComponent(query)}`);
     }
-  }, [searchTerm, symptoms, navigate]);
+  }, [exactSymptom, searchTerm, symptoms, navigate]);
 
   const handleCardClick = (item) => {
     const query = item.label;
     trackSearchEvent({ source: 'symptom_card', queryText: query, symptomIds: [item.id] }).catch(() => {});
-    navigate(`/results?q=${encodeURIComponent(query)}`);
+    navigate(`/results?symptom=${encodeURIComponent(item.id)}`);
   };
 
   const handleKeyDown = (e) => {
@@ -162,16 +178,36 @@ export function SymptomSearch() {
                 <ArrowRight className="h-4 w-4 shrink-0 text-ink-muted" />
               </button>
 
-              <div className="border-t border-ink/5 px-4 py-3">
-                {isSearching || isCatalogLoading ? (
-                  <div className="space-y-2">
-                    <LoadingSkeleton count={3} className="h-8" />
-                  </div>
-                ) : dropdownResults.length > 0 ? (
-                  <>
-                    <p className="text-xs font-bold uppercase tracking-wider text-ink-muted mb-2">
-                      Recommended remedies
-                    </p>
+                <div className="border-t border-ink/5 px-4 py-3">
+                  {isSearching || isCatalogLoading ? (
+                    <div className="space-y-2">
+                      <LoadingSkeleton count={3} className="h-8" />
+                    </div>
+                  ) : dropdownResults.length > 0 ? (
+                    <>
+                      {symptomResolution.primarySymptom && (
+                        <div className="mb-3">
+                          <p className="text-xs font-bold uppercase tracking-wider text-ink-muted mb-2">
+                            Best symptom match
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => navigate(`/results?symptom=${encodeURIComponent(symptomResolution.primarySymptomId)}`)}
+                            className="flex w-full items-center justify-between gap-3 rounded-xl px-2 py-2 text-left text-ink transition-colors hover:bg-surface/50"
+                          >
+                            <span className="flex min-w-0 items-center gap-3">
+                              <span className="w-6 h-6 rounded-lg bg-surface text-primary flex items-center justify-center text-xs font-semibold shrink-0">
+                                {symptomResolution.primarySymptom.label.charAt(0)}
+                              </span>
+                              <span className="truncate font-semibold">{symptomResolution.primarySymptom.label}</span>
+                            </span>
+                            <ArrowRight className="h-4 w-4 shrink-0 text-ink-muted" />
+                          </button>
+                        </div>
+                      )}
+                      <p className="text-xs font-bold uppercase tracking-wider text-ink-muted mb-2">
+                        Recommended remedies
+                      </p>
                     <div className="space-y-1">
                       {dropdownResults.slice(0, 5).map((remedy) => (
                         <Link

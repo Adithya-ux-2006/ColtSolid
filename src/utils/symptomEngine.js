@@ -1,9 +1,69 @@
 import { inferConcerns } from '../engine/clinicalReasoner';
 
+function normalizeQuery(value) {
+  return (value || '').toLowerCase().trim().replace(/\s+/g, ' ');
+}
+
+function buildStrictMatches(query, symptoms) {
+  const normalizedQuery = normalizeQuery(query);
+  if (!normalizedQuery || !symptoms?.length) return [];
+
+  const queryTokens = normalizedQuery.split(/\s+/).filter(Boolean);
+
+  return symptoms
+    .map((symptom) => {
+      const normalizedLabel = normalizeQuery(symptom.label);
+      const labelTokens = normalizedLabel.split(/\s+/).filter(Boolean);
+      const overlapCount = labelTokens.filter((token) => queryTokens.includes(token)).length;
+      const coversFullLabel = labelTokens.length > 0 && overlapCount === labelTokens.length;
+      const isExactLabelMatch = normalizedQuery === normalizedLabel;
+
+      let score = 0;
+      if (isExactLabelMatch) score = 10000;
+      else if (normalizedQuery.includes(normalizedLabel)) score = 8000;
+      else if (normalizedLabel.includes(normalizedQuery)) score = 7000;
+      else if (coversFullLabel) score = 6000 + overlapCount * 100;
+      else if (overlapCount > 0 && overlapCount >= Math.ceil(labelTokens.length * 0.5)) score = 3000 + overlapCount * 200;
+
+      if (score === 0) return null;
+
+      return {
+        id: symptom.id,
+        label: symptom.label,
+        emoji: symptom.emoji,
+        score,
+        isExactMatch: isExactLabelMatch,
+      };
+    })
+    .filter(Boolean)
+    .sort((left, right) => right.score - left.score);
+}
+
 export function resolveQuery(query, symptoms, geminiInterpretation) {
   const result = inferConcerns(query, symptoms);
+  const strictMatches = buildStrictMatches(query, symptoms);
 
-  const allConcerns = [...result.primaryConcerns, ...result.secondaryConcerns];
+  const concernMap = new Map();
+  for (const concern of [...result.primaryConcerns, ...result.secondaryConcerns]) {
+    concernMap.set(concern.id, concern);
+  }
+  for (const strictMatch of strictMatches) {
+    if (!concernMap.has(strictMatch.id)) {
+      concernMap.set(strictMatch.id, strictMatch);
+    }
+  }
+
+  const strictIds = strictMatches.map((match) => match.id);
+  const inferredConcerns = [...result.primaryConcerns, ...result.secondaryConcerns]
+    .filter((concern) => !strictIds.includes(concern.id));
+  
+  const hasExactStructuralMatch = strictMatches.some(m => m.isExactMatch);
+  const strictPrimaryId = hasExactStructuralMatch
+    ? strictMatches.find(m => m.isExactMatch)?.id
+    : (strictMatches[0]?.id || result.primaryConcerns[0]?.id || null);
+
+  const allConcerns = [...strictMatches, ...inferredConcerns];
+  const basePrimaryId = strictPrimaryId;
 
   const base = {
     symptomIds: allConcerns.map(c => c.id),
@@ -14,10 +74,10 @@ export function resolveQuery(query, symptoms, geminiInterpretation) {
       id: c.id,
       score: Math.round(c.score * 100),
     })),
-    primarySymptom: result.primaryConcerns.length > 0
-      ? symptoms.find(s => s.id === result.primaryConcerns[0].id) || null
+    primarySymptom: basePrimaryId
+      ? symptoms.find(s => s.id === basePrimaryId) || null
       : null,
-    primarySymptomId: result.primaryConcerns[0]?.id || null,
+    primarySymptomId: basePrimaryId,
     topSymptoms: allConcerns.map(c => ({
       id: c.id,
       label: c.label,
@@ -30,21 +90,18 @@ export function resolveQuery(query, symptoms, geminiInterpretation) {
     userIntent: result.userIntent,
     severity: result.severity,
     emergencyIndicators: result.emergencyIndicators,
+    hasExactStructuralMatch,
   };
 
   if (!geminiInterpretation) {
-    console.log('[RESOLVE] No Gemini interpretation — using deterministic engine only');
     return base;
   }
-
-  console.log('[RESOLVE] Gemini interpretation received:', JSON.stringify(geminiInterpretation).slice(0, 300));
 
   const validGeminiIds = new Set(symptoms.map(s => s.id));
   const geminiPrimary = (geminiInterpretation.primarySymptoms || []).filter(id => validGeminiIds.has(id));
   const geminiSecondary = (geminiInterpretation.secondarySymptoms || []).filter(id => validGeminiIds.has(id));
 
   if (geminiPrimary.length === 0 && geminiSecondary.length === 0) {
-    console.log('[RESOLVE] Gemini returned no valid symptom IDs — falling back to base');
     return base;
   }
 
@@ -71,8 +128,6 @@ export function resolveQuery(query, symptoms, geminiInterpretation) {
   const matchedGeminiSymptom = geminiPrimary.length > 0
     ? symptoms.find(s => s.id === geminiPrimary[0]) || base.primarySymptom
     : base.primarySymptom;
-
-  console.log('[RESOLVE] Merged IDs:', uniqueMergedIds, 'gemini primary:', geminiPrimary, 'confidence:', mergedConfidence);
 
   return {
     ...base,
