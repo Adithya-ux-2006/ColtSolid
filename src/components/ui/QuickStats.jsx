@@ -14,13 +14,13 @@ const STAT_ICONS = {
 function StatCell({ icon, value, label, delay }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay }}
-      className="flex flex-col items-center gap-2 text-center min-w-0"
+      className="flex flex-col items-center gap-2.5 text-center min-w-0 py-2"
     >
-      <div className={cn('w-9 h-9 rounded-xl flex items-center justify-center shrink-0', icon.bg)}>
-        <icon.Icon className={cn('w-4.5 h-4.5', icon.color)} />
+      <div className={cn('w-10 h-10 rounded-xl flex items-center justify-center shrink-0', icon.bg)}>
+        <icon.Icon className={cn('w-5 h-5', icon.color)} />
       </div>
       <div className="min-w-0">
         {typeof value === 'string' || typeof value === 'number' ? (
@@ -29,35 +29,41 @@ function StatCell({ icon, value, label, delay }) {
           value
         )}
       </div>
-      <span className="text-[11px] text-ink-muted leading-tight whitespace-nowrap">{label}</span>
+      <span className="text-xs text-ink-muted leading-tight whitespace-nowrap">{label}</span>
     </motion.div>
   );
 }
 
 export function QuickStats({ remedy, isSafe, evidenceScore, safetyScore, className }) {
   return (
-    <div className={cn('grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-0', className)}>
+    <div className={cn(
+      'grid grid-cols-2 md:grid-cols-4 gap-0',
+      className
+    )}>
       <StatCell
         icon={STAT_ICONS.time}
         value={remedy.timeToEffect || 'Varies'}
         label="Time to relief"
         delay={0}
       />
-      <div className="hidden md:block w-px bg-border-subtle self-stretch mx-auto" />
+      <div className="hidden md:block w-px self-stretch bg-border-subtle mx-auto my-3" />
+      <div className="block md:hidden h-px self-stretch bg-border-subtle mx-3" />
       <StatCell
         icon={STAT_ICONS.safety}
         value={<SafetyLabel safetyScore={safetyScore} hasConflicts={!isSafe} />}
         label="Safety"
         delay={0.05}
       />
-      <div className="hidden md:block w-px bg-border-subtle self-stretch mx-auto" />
+      <div className="hidden md:block w-px self-stretch bg-border-subtle mx-auto my-3" />
+      <div className="block md:hidden h-px self-stretch bg-border-subtle mx-3" />
       <StatCell
         icon={STAT_ICONS.evidence}
         value={<EvidenceLabel score={evidenceScore} />}
         label="Evidence"
         delay={0.1}
       />
-      <div className="hidden md:block w-px bg-border-subtle self-stretch mx-auto" />
+      <div className="hidden md:block w-px self-stretch bg-border-subtle mx-auto my-3" />
+      <div className="block md:hidden h-px self-stretch bg-border-subtle mx-3" />
       <StatCell
         icon={STAT_ICONS.difficulty}
         value={remedy.difficulty || 'Easy'}

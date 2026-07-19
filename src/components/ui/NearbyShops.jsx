@@ -4,7 +4,7 @@ import { getApiUrl } from '../../utils/api';
 import { cn } from '../../utils/cn';
 import { FeaturedPharmacy, PharmacyCard } from './PharmacyComponents';
 
-export function NearbyShops({ remedyName, className }) {
+export function NearbyShops({ className }) {
   const [shops, setShops] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -78,8 +78,8 @@ export function NearbyShops({ remedyName, className }) {
       </div>
 
       {locationDenied && (
-        <div className="text-center py-8 section-card">
-          <MapPin className="w-8 h-8 text-ink-muted mx-auto mb-2" />
+        <div className="text-center py-10 section-card">
+          <MapPin className="w-8 h-8 text-ink-muted mx-auto mb-3" />
           <p className="text-sm text-ink-muted mb-3">Enable location to find nearby pharmacies</p>
           <button
             onClick={requestLocation}
@@ -102,14 +102,14 @@ export function NearbyShops({ remedyName, className }) {
       )}
 
       {error && !loading && (
-        <div className="text-center py-8 section-card">
+        <div className="text-center py-10 section-card">
           <p className="text-sm text-danger">{error}</p>
         </div>
       )}
 
       {!loading && !error && !locationDenied && shops.length === 0 && (
-        <div className="text-center py-8 section-card">
-          <Store className="w-8 h-8 text-ink-muted mx-auto mb-2" />
+        <div className="text-center py-10 section-card">
+          <Store className="w-8 h-8 text-ink-muted mx-auto mb-3" />
           <p className="text-sm text-ink-muted">No pharmacies found nearby</p>
         </div>
       )}
@@ -120,10 +120,8 @@ export function NearbyShops({ remedyName, className }) {
 
           {nearby.length > 0 && (
             <div className="section-card p-4">
-              <p className="text-xs font-bold uppercase tracking-wider text-ink-muted mb-3">
-                Nearby Pharmacies
-              </p>
-              <div className="space-y-1">
+              <p className="section-label mb-3">Nearby Pharmacies</p>
+              <div className="space-y-0.5">
                 {nearby.map((shop, idx) => (
                   <PharmacyCard key={idx} shop={shop} />
                 ))}

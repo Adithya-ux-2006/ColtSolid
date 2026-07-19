@@ -15,8 +15,8 @@ export function DoctorGuidance({ message, flags, ctaLabel, onCtaClick, className
 
   return (
     <div className={cn("section-card", className)}>
-      <div className="flex items-center gap-3 mb-2">
-        <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-11 h-11 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
           <Stethoscope className="w-5 h-5 text-primary" />
         </div>
         <div>
@@ -28,12 +28,12 @@ export function DoctorGuidance({ message, flags, ctaLabel, onCtaClick, className
       </div>
 
       {!message && (
-        <p className="text-sm text-ink-muted mb-4">
+        <p className="text-sm text-ink-muted mb-5">
           Seek medical attention if you experience any of the following:
         </p>
       )}
 
-      <Checklist items={items} delay={0.1} className="mb-5" />
+      <Checklist items={items} delay={0.1} className="mb-6" />
 
       <button
         onClick={onCtaClick}

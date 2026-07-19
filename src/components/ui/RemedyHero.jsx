@@ -19,22 +19,22 @@ function StarRating({ rating, reviewCount }) {
         })}
       </div>
       {reviewCount != null && (
-        <span className="text-xs text-ink-muted">({reviewCount.toLocaleString()})</span>
+        <span className="text-sm text-ink-muted">({reviewCount.toLocaleString()})</span>
       )}
     </div>
   );
 }
 
-export function RemedyHero({ remedy, isSafe, evidenceScore, safetyScore, className }) {
+export function RemedyHero({ remedy, isSafe, evidenceScore, className }) {
   return (
-    <section className={cn('flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8', className)}>
+    <section className={cn('flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12', className)}>
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0.92 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
         className="relative shrink-0"
       >
-        <div className="w-36 h-36 md:w-44 md:h-44 rounded-full bg-primary-tint flex items-center justify-center shadow-glow ring-4 ring-primary/10">
+        <div className="w-40 h-40 md:w-52 md:h-52 rounded-full bg-primary-tint flex items-center justify-center shadow-glow ring-[3px] ring-primary/10">
           <RemedyImage category={remedy.category} size="hero" alt={remedy.name} />
         </div>
       </motion.div>
@@ -43,8 +43,8 @@ export function RemedyHero({ remedy, isSafe, evidenceScore, safetyScore, classNa
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: 0.1 }}
-          className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-3"
+          transition={{ duration: 0.35, delay: 0.08 }}
+          className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-4"
         >
           <CategoryBadge category={remedy.category} firstOccurrence />
           {isSafe ? (
@@ -63,8 +63,8 @@ export function RemedyHero({ remedy, isSafe, evidenceScore, safetyScore, classNa
         <motion.h1
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: 0.15 }}
-          className="text-3xl md:text-[2.25rem] leading-tight font-bold text-ink mb-3 break-words"
+          transition={{ duration: 0.35, delay: 0.12 }}
+          className="page-title mb-4"
         >
           {remedy.name}
         </motion.h1>
@@ -72,8 +72,8 @@ export function RemedyHero({ remedy, isSafe, evidenceScore, safetyScore, classNa
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
-          className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-4"
+          transition={{ duration: 0.3, delay: 0.18 }}
+          className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-5"
         >
           {evidenceScore > 0 && <EvidenceLabel score={evidenceScore} />}
           {remedy.rating > 0 && (
@@ -85,8 +85,8 @@ export function RemedyHero({ remedy, isSafe, evidenceScore, safetyScore, classNa
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.3, delay: 0.25 }}
-            className="text-ink-muted text-sm md:text-base leading-relaxed line-clamp-2 max-w-lg"
+            transition={{ duration: 0.3, delay: 0.22 }}
+            className="text-ink-muted text-base leading-relaxed max-w-lg"
           >
             {remedy.shortDescription}
           </motion.p>

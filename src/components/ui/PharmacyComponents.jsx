@@ -13,18 +13,18 @@ export function FeaturedPharmacy({ shop, className }) {
 
   return (
     <div className={cn(
-      'rounded-3xl p-5 border-2 border-success/20 bg-card shadow-soft',
+      'rounded-2xl p-5 bg-success/[0.04] border border-success/15',
       className
     )}>
-      <div className="flex items-center gap-2 mb-3">
-        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-success/10 text-success">
+      <div className="flex items-center gap-2 mb-4">
+        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-success/10 text-success">
           <MapPin className="w-3 h-3" />
           Closest to You
         </span>
       </div>
 
-      <div className="flex items-start gap-3 mb-4">
-        <div className="w-10 h-10 rounded-2xl bg-success/10 flex items-center justify-center shrink-0">
+      <div className="flex items-start gap-3 mb-5">
+        <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center shrink-0">
           <Store className="w-5 h-5 text-success" />
         </div>
         <div className="flex-1 min-w-0">
@@ -49,7 +49,7 @@ export function FeaturedPharmacy({ shop, className }) {
         href={mapsUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center justify-center w-full h-12 rounded-2xl bg-primary text-white text-sm font-semibold shadow-glow hover:bg-primary-dark transition-all duration-150 hover:-translate-y-0.5"
+        className="flex items-center justify-center w-full h-11 rounded-xl bg-primary text-white text-sm font-semibold shadow-glow hover:bg-primary-dark transition-all duration-150 hover:-translate-y-0.5"
       >
         Get Directions
       </a>
@@ -68,7 +68,7 @@ export function PharmacyCard({ shop, className }) {
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        'flex items-center gap-3 p-3 rounded-2xl hover:bg-surface/50 transition-colors duration-150',
+        'flex items-center gap-3 p-3 rounded-xl hover:bg-surface/50 transition-colors duration-150',
         className
       )}
     >

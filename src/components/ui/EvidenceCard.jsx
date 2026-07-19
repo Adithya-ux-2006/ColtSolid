@@ -3,9 +3,9 @@ import { cn } from '../../utils/cn';
 
 const STUDY_TYPE_COLORS = {
   'Meta-analysis': 'bg-primary/10 text-primary',
-  'Randomized Trial': 'bg-blue-500/10 text-blue-500',
-  'Systematic Review': 'bg-violet-500/10 text-violet-500',
-  'Clinical Study': 'bg-amber-500/10 text-amber-500',
+  'Randomized Trial': 'bg-blue-500/10 text-blue-500 dark:text-blue-400',
+  'Systematic Review': 'bg-violet-500/10 text-violet-500 dark:text-violet-400',
+  'Clinical Study': 'bg-amber-500/10 text-amber-500 dark:text-amber-400',
 };
 
 export function EvidenceCard({ source, onTrackClick, className }) {
@@ -24,24 +24,25 @@ export function EvidenceCard({ source, onTrackClick, className }) {
       rel="noreferrer"
       onClick={onTrackClick}
       className={cn(
-        'group block rounded-2xl border border-border p-4 hover:border-primary/20 hover:bg-surface-raised/50 transition-all duration-150',
+        'group block py-4 border-b border-border-subtle last:border-0',
+        'hover:bg-surface/30 -mx-1 px-1 rounded-lg transition-colors duration-150',
         className
       )}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-2 flex-wrap">
+          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
             <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary uppercase tracking-wider">
               <BookOpen className="w-3.5 h-3.5 shrink-0" />
               {source.journal || source.label || 'Clinical Research'}
             </span>
             {source.journal && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-medium text-primary/70 bg-primary/5 rounded-full px-1.5 py-0.5">
+              <span className="inline-flex items-center text-[10px] font-medium text-primary/60 bg-primary/5 rounded-full px-1.5 py-0.5">
                 Peer-reviewed
               </span>
             )}
             {source.year && (
-              <span className="text-[10px] text-ink-subtle font-medium">{source.year}</span>
+              <span className="text-[11px] text-ink-subtle font-medium">{source.year}</span>
             )}
           </div>
           {source.keyFinding && (
@@ -51,7 +52,7 @@ export function EvidenceCard({ source, onTrackClick, className }) {
             <p className="text-sm text-ink line-clamp-2">{source.label}</p>
           )}
         </div>
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0 mt-0.5">
           {typeKey && (
             <span className={cn(
               'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold whitespace-nowrap',
@@ -60,7 +61,7 @@ export function EvidenceCard({ source, onTrackClick, className }) {
               {typeKey}
             </span>
           )}
-          <ExternalLink className="w-4 h-4 text-ink-subtle group-hover:text-primary transition-colors" />
+          <ExternalLink className="w-3.5 h-3.5 text-ink-subtle group-hover:text-primary transition-colors" />
         </div>
       </div>
     </a>

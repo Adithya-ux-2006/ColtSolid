@@ -28,15 +28,6 @@ const DEFAULT_BENEFITS = [
 
 const EVIDENCE_SHOW_LIMIT = 4;
 
-function SectionHeader({ title, badge, className }) {
-  return (
-    <div className={cn('flex items-center justify-between mb-5', className)}>
-      <h2 className="section-title mb-0">{title}</h2>
-      {badge}
-    </div>
-  );
-}
-
 export function RemedyDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -106,7 +97,7 @@ export function RemedyDetail() {
   if (!hasLoaded && isCatalogLoading) {
     return (
       <PageWrapper className="min-h-screen bg-bg">
-        <div className="max-w-2xl mx-auto px-5 md:px-8 pt-8">
+        <div className="max-w-[800px] mx-auto px-5 md:px-8 pt-8">
           <LoadingSkeleton count={1} />
         </div>
       </PageWrapper>
@@ -116,16 +107,16 @@ export function RemedyDetail() {
   if (!remedy) {
     return (
       <div className="min-h-screen bg-bg flex items-center justify-center px-6">
-        <p className="text-ink-muted">Remedy not found</p>
+        <p className="text-ink-muted text-base">Remedy not found</p>
       </div>
     );
   }
 
   return (
     <PageWrapper className="min-h-screen bg-bg pb-28 md:pb-24">
-      {/* Top Navigation */}
+      {/* Top Navigation Bar */}
       <div className="sticky top-0 z-40 bg-bg/80 backdrop-blur-md border-b border-border">
-        <div className="max-w-[840px] mx-auto px-5 md:px-8 h-14 flex items-center justify-between">
+        <div className="max-w-[800px] mx-auto px-5 md:px-8 h-14 flex items-center justify-between">
           <button
             onClick={() => {
               if (window.history.length > 1) {
@@ -155,8 +146,8 @@ export function RemedyDetail() {
         </div>
       </div>
 
-      {/* Hero Section */}
-      <div className="max-w-[840px] mx-auto px-5 md:px-8 pt-8 pb-6">
+      {/* ─── Hero ─── Open layout, no card, generous whitespace */}
+      <div className="max-w-[800px] mx-auto px-5 md:px-8 pt-10 pb-8 md:pt-14 md:pb-10">
         <RemedyHero
           remedy={remedy}
           isSafe={isSafe}
@@ -165,9 +156,9 @@ export function RemedyDetail() {
         />
       </div>
 
-      {/* Quick Stats */}
-      <div className="max-w-[840px] mx-auto px-5 md:px-8 pb-8">
-        <div className="section-card">
+      {/* ─── Quick Stats ─── Borderless strip, no card wrapper */}
+      <div className="max-w-[800px] mx-auto px-5 md:px-8 pb-12 md:pb-16">
+        <div className="rounded-2xl bg-card border border-border p-4 md:p-5" style={{ boxShadow: 'var(--shadow-card)' }}>
           <QuickStats
             remedy={remedy}
             isSafe={isSafe}
@@ -177,71 +168,72 @@ export function RemedyDetail() {
         </div>
       </div>
 
-      {/* Content Sections */}
-      <div className="max-w-[840px] mx-auto px-5 md:px-8 space-y-6 md:space-y-8">
+      <div className="max-w-[800px] mx-auto px-5 md:px-8">
 
-        {/* Safety Banner / Advisory */}
-        {!isSafe && remedy.warnings && (
-          <AdvisoryCard
-            title="Allergy conflict detected"
-            message="This remedy may not be suitable based on your health profile. Please consult with a healthcare professional before use."
-          />
-        )}
+        {/* ─── Safety ─── Banner-style, no hard borders */}
+        <div className="mb-12 md:mb-16">
+          {!isSafe && remedy.warnings ? (
+            <AdvisoryCard
+              title="Allergy conflict detected"
+              message="This remedy may not be suitable based on your health profile. Please consult with a healthcare professional before use."
+            />
+          ) : (
+            <SafetyBanner />
+          )}
+        </div>
 
-        {isSafe && (
-          <SafetyBanner />
-        )}
-
-        {/* Benefits */}
+        {/* ─── Benefits ─── Single card with internal grid and dividers */}
         {remedy.longDescription && (
-          <section className="section-card">
-            <SectionHeader title="Benefits" />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-0 divide-y md:divide-y-0 md:divide-x divide-border-subtle">
-              {benefits.map((benefit, i) => (
-                <BenefitCard
+          <section className="mb-12 md:mb-16">
+            <h2 className="section-title mb-5">Benefits</h2>
+            <div className="section-card">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-border-subtle">
+                {benefits.map((benefit, i) => (
+                  <BenefitCard
+                    key={i}
+                    title={benefit.title}
+                    description={benefit.description}
+                    delay={i * 0.05}
+                    className="sm:px-5 first:sm:pl-0 last:sm:pr-0 py-4 sm:py-2"
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ─── How To Use ─── Card with horizontal timeline */}
+        {howToUseSteps.length > 0 && (
+          <section className="mb-12 md:mb-16">
+            <h2 className="section-title mb-5">How To Use</h2>
+            <div className="section-card">
+              {howToUseSteps.map((step, i) => (
+                <TimelineStep
                   key={i}
-                  title={benefit.title}
-                  description={benefit.description}
+                  number={i + 1}
+                  description={step}
+                  isLast={i === howToUseSteps.length - 1}
                   delay={i * 0.05}
-                  className="md:px-5 first:md:pl-0 last:md:pr-0"
                 />
               ))}
             </div>
           </section>
         )}
 
-        {/* How To Use */}
-        {howToUseSteps.length > 0 && (
-          <section className="section-card">
-            <SectionHeader title="How To Use" />
-            {howToUseSteps.map((step, i) => (
-              <TimelineStep
-                key={i}
-                number={i + 1}
-                description={step}
-                isLast={i === howToUseSteps.length - 1}
-                delay={i * 0.05}
-              />
-            ))}
-          </section>
-        )}
-
-        {/* Scientific Evidence */}
+        {/* ─── Evidence ─── Dense, journal-style, no card wrapper */}
         {researchLinks.length > 0 && (
-          <section>
-            <SectionHeader
-              title="Evidence"
-              badge={
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary">
-                  <BookOpen className="w-3.5 h-3.5" />
-                  {evidenceScore >= 7 ? 'High Quality Evidence' : evidenceScore >= 4 ? 'Moderate Evidence' : 'Some Evidence'}
-                </span>
-              }
-            />
-            <p className="text-sm text-ink-muted mb-4">
+          <section className="mb-12 md:mb-16">
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="section-title mb-0">Evidence</h2>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary">
+                <BookOpen className="w-3.5 h-3.5" />
+                {evidenceScore >= 7 ? 'High Quality' : evidenceScore >= 4 ? 'Moderate' : 'Some'}
+              </span>
+            </div>
+            <p className="text-sm text-ink-muted mb-5">
               Based on {researchLinks.length} peer-reviewed {researchLinks.length === 1 ? 'study' : 'studies'}
             </p>
-            <div className="space-y-3">
+            <div className="divide-y divide-border-subtle">
               {visibleEvidence.map((source, idx) => (
                 <EvidenceCard
                   key={idx}
@@ -262,13 +254,17 @@ export function RemedyDetail() {
           </section>
         )}
 
-        {/* Where To Buy */}
-        {remedy.isPurchasable !== false && <NearbyShops remedyName={remedy.name} />}
+        {/* ─── Where To Buy ─── Featured + compact list */}
+        {remedy.isPurchasable !== false && (
+          <div className="mb-12 md:mb-16">
+            <NearbyShops remedyName={remedy.name} />
+          </div>
+        )}
 
-        {/* Safety Information */}
+        {/* ─── Safety Information ─── Amber advisory */}
         {remedy.warnings && (
-          <section>
-            <SectionHeader title="Safety Information" />
+          <section className="mb-12 md:mb-16">
+            <h2 className="section-title mb-5">Safety Information</h2>
             <AdvisoryCard
               title="Important"
               message={remedy.warnings}
@@ -276,8 +272,8 @@ export function RemedyDetail() {
           </section>
         )}
 
-        {/* When To See A Doctor */}
-        <section>
+        {/* ─── When To See A Doctor ─── Checklist */}
+        <section className="mb-12 md:mb-16">
           <DoctorGuidance />
         </section>
       </div>

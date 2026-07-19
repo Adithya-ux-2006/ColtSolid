@@ -10,7 +10,7 @@
 
   @screen md {
     html {
-      font-size: 17px;
+      font-size: 16px;
     }
   }
 
@@ -80,6 +80,7 @@
     --radius-card: 1.25rem;
     --radius-pill: 9999px;
     --shadow-card: 0 4px 20px hsl(155 30% 13% / 0.06);
+    --shadow-card-lg: 0 8px 40px hsl(155 30% 13% / 0.08);
   }
 
   .dark {
@@ -136,6 +137,7 @@
     --radius-card: 1.25rem;
     --radius-pill: 9999px;
     --shadow-card: 0 4px 20px hsl(210 40% 3% / 0.12);
+    --shadow-card-lg: 0 8px 40px hsl(210 40% 3% / 0.16);
   }
 }
 
@@ -147,30 +149,31 @@
 }
 
 @layer components {
+  .page-title {
+    @apply font-bold text-ink tracking-tight leading-[1.1];
+    font-size: clamp(2rem, 5vw, 3rem);
+  }
+
   .section-title {
-    @apply text-section-heading font-bold text-ink mb-5;
+    @apply font-semibold text-ink tracking-tight;
+    font-size: clamp(1.5rem, 3vw, 1.75rem);
+    line-height: 1.3;
   }
 
   .section-label {
-    @apply text-sm font-bold uppercase tracking-wider text-ink-muted mb-4;
+    @apply text-xs font-bold uppercase tracking-wider text-ink-muted;
   }
 
   .section-card {
-    @apply bg-card rounded-3xl p-6 border border-border;
+    @apply bg-card rounded-3xl border border-border;
+    padding: clamp(1.25rem, 3vw, 2rem);
     box-shadow: var(--shadow-card);
   }
 
-  .card-wellness {
-    @apply bg-card rounded-3xl p-6;
+  .section-card-lg {
+    @apply bg-card rounded-3xl border border-border;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
     box-shadow: var(--shadow-card);
-  }
-
-  .safety-box {
-    @apply rounded-3xl p-6 text-sm text-ink leading-relaxed;
-  }
-
-  .guidance-panel {
-    @apply bg-mint rounded-3xl p-5 border border-primary/10;
   }
 }
 

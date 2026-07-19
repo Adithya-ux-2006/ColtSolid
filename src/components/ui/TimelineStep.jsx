@@ -1,35 +1,34 @@
 import { motion } from 'framer-motion';
-import { ChevronRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
-export function TimelineStep({ number, title, description, isLast = false, delay = 0, className }) {
+export function TimelineStep({ number, description, isLast = false, delay = 0, className }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, delay }}
       className={cn(
-        'flex flex-col md:flex-row md:items-start gap-3 md:gap-4',
+        'flex flex-col md:flex-row md:items-start gap-3 md:gap-5',
         className
       )}
     >
-      <div className="flex md:flex-col items-center shrink-0">
-        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-          <span className="text-xs font-bold text-primary">{number}</span>
+      <div className="flex md:flex-col items-center shrink-0 gap-3 md:gap-0">
+        <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+          <span className="text-sm font-bold text-primary">{number}</span>
         </div>
         {!isLast && (
           <>
-            <div className="hidden md:block w-full h-px bg-border-subtle mt-2" />
-            <div className="md:hidden w-px h-4 bg-border-subtle mx-auto" />
+            <div className="hidden md:block w-full h-px bg-border-subtle mt-3" />
+            <div className="md:hidden w-px h-3 bg-border-subtle" />
           </>
         )}
       </div>
-      <div className={cn('pb-4', isLast && 'pb-0', 'md:flex-1')}>
-        {title && <p className="font-semibold text-ink text-sm mb-0.5">{title}</p>}
-        <p className="text-sm text-ink-muted leading-relaxed">{description}</p>
+      <div className={cn('pb-5', isLast && 'pb-0', 'md:flex-1 md:pt-1.5')}>
+        <p className="text-[15px] text-ink leading-relaxed">{description}</p>
       </div>
       {!isLast && (
-        <ChevronRight className="hidden md:block w-4 h-4 text-ink-subtle shrink-0 mt-2.5" />
+        <ArrowRight className="hidden md:block w-4 h-4 text-ink-subtle shrink-0 mt-3" />
       )}
     </motion.div>
   );
