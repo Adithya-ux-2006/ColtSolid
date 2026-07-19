@@ -1,18 +1,34 @@
 import { motion } from 'framer-motion';
+import { Clock, ShieldCheck, BarChart3, PenLine } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { SafetyLabel } from './SafetyLabel';
 import { EvidenceLabel } from './EvidenceLabel';
 
-function StatCard({ icon, value, label, delay }) {
+const STAT_ICONS = {
+  time: { Icon: Clock, bg: 'bg-primary/10', color: 'text-primary' },
+  safety: { Icon: ShieldCheck, bg: 'bg-success/10', color: 'text-success' },
+  evidence: { Icon: BarChart3, bg: 'bg-primary/10', color: 'text-primary' },
+  difficulty: { Icon: PenLine, bg: 'bg-primary/10', color: 'text-primary' },
+};
+
+function StatCell({ icon, value, label, delay }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay }}
-      className="flex flex-col items-center gap-1.5 text-center min-w-0"
+      className="flex flex-col items-center gap-2 text-center min-w-0"
     >
-      <span className="text-ink-muted">{icon}</span>
-      <span className="font-semibold text-ink text-sm leading-tight whitespace-nowrap">{value}</span>
+      <div className={cn('w-9 h-9 rounded-xl flex items-center justify-center shrink-0', icon.bg)}>
+        <icon.Icon className={cn('w-4.5 h-4.5', icon.color)} />
+      </div>
+      <div className="min-w-0">
+        {typeof value === 'string' || typeof value === 'number' ? (
+          <span className="font-semibold text-ink text-sm leading-tight block whitespace-nowrap overflow-hidden text-ellipsis">{value}</span>
+        ) : (
+          value
+        )}
+      </div>
       <span className="text-[11px] text-ink-muted leading-tight whitespace-nowrap">{label}</span>
     </motion.div>
   );
@@ -20,27 +36,30 @@ function StatCard({ icon, value, label, delay }) {
 
 export function QuickStats({ remedy, isSafe, evidenceScore, safetyScore, className }) {
   return (
-    <div className={cn('grid grid-cols-4 gap-4', className)}>
-      <StatCard
-        icon={<svg className="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>}
+    <div className={cn('grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-0', className)}>
+      <StatCell
+        icon={STAT_ICONS.time}
         value={remedy.timeToEffect || 'Varies'}
         label="Time to relief"
         delay={0}
       />
-      <StatCard
-        icon={<span className="text-lg">🛡</span>}
+      <div className="hidden md:block w-px bg-border-subtle self-stretch mx-auto" />
+      <StatCell
+        icon={STAT_ICONS.safety}
         value={<SafetyLabel safetyScore={safetyScore} hasConflicts={!isSafe} />}
         label="Safety"
         delay={0.05}
       />
-      <StatCard
-        icon={<span className="text-lg">📈</span>}
+      <div className="hidden md:block w-px bg-border-subtle self-stretch mx-auto" />
+      <StatCell
+        icon={STAT_ICONS.evidence}
         value={<EvidenceLabel score={evidenceScore} />}
         label="Evidence"
         delay={0.1}
       />
-      <StatCard
-        icon={<svg className="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>}
+      <div className="hidden md:block w-px bg-border-subtle self-stretch mx-auto" />
+      <StatCell
+        icon={STAT_ICONS.difficulty}
         value={remedy.difficulty || 'Easy'}
         label="Difficulty"
         delay={0.15}

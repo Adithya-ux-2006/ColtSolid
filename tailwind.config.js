@@ -9,6 +9,7 @@ export default {
     extend: {
       colors: {
         border: "hsl(var(--border))",
+        "border-subtle": "hsl(var(--border-subtle))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
@@ -18,6 +19,7 @@ export default {
           foreground: "hsl(var(--primary-foreground))",
           dark: "hsl(152 40% 22%)",
           light: "hsl(152 35% 88%)",
+          tint: "hsl(var(--primary-tint))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -34,6 +36,7 @@ export default {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
+          tint: "hsl(var(--accent-tint))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -54,6 +57,7 @@ export default {
         },
         surface: {
           DEFAULT: 'hsl(var(--surface))',
+          raised: 'hsl(var(--surface-raised))',
           light: 'hsl(var(--surface))',
           dark: 'hsl(var(--surface))',
         },
@@ -81,13 +85,16 @@ export default {
         '2xl': '1.25rem',
         '3xl': '1.5rem',
         '4xl': '2rem',
+        'card': 'var(--radius-card)',
+        'pill': 'var(--radius-pill)',
       },
       boxShadow: {
         'soft': '0 2px 12px hsl(var(--shadow-color) / 0.04)',
         'soft-lg': '0 4px 24px hsl(var(--shadow-color) / 0.06)',
-        'card': '0 4px 20px hsl(var(--shadow-color) / 0.06)',
+        'card': 'var(--shadow-card)',
         'card-hover': '0 8px 30px hsl(var(--shadow-color) / 0.1)',
         'glow': '0 4px 24px hsl(var(--primary) / 0.3)',
+        'glass': '0 8px 32px hsl(var(--shadow-color) / 0.08)',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
@@ -97,8 +104,14 @@ export default {
         'display-lg': ['3.5rem', { lineHeight: '1.08', letterSpacing: '-0.03em' }],
         'hero': ['4rem', { lineHeight: '1.05', letterSpacing: '-0.03em', fontWeight: '800' }],
         'heading': ['1.625rem', { lineHeight: '1.25' }],
-        'section-heading': ['1.625rem', { lineHeight: '1.35', fontWeight: '700' }],
+        'section-heading': ['1.375rem', { lineHeight: '1.35', fontWeight: '700' }],
         'body': ['1.0625rem', { lineHeight: '1.65' }],
+      },
+      spacing: {
+        '4.5': '1.125rem',
+        '13': '3.25rem',
+        '15': '3.75rem',
+        '18': '4.5rem',
       },
       backgroundImage: {
         'gradient-card': 'linear-gradient(135deg, hsl(var(--accent)) 0%, hsl(var(--background)) 100%)',

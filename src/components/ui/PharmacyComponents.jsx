@@ -1,4 +1,4 @@
-import { ExternalLink, BookOpen, MapPin, Navigation, Clock, Store } from 'lucide-react';
+import { ExternalLink, MapPin, Navigation, Store } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
 function formatDistance(meters) {
@@ -49,7 +49,7 @@ export function FeaturedPharmacy({ shop, className }) {
         href={mapsUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center justify-center w-full h-12 rounded-2xl bg-primary text-white text-sm font-semibold shadow-glow hover:bg-primary-dark transition-all hover:-translate-y-0.5"
+        className="flex items-center justify-center w-full h-12 rounded-2xl bg-primary text-white text-sm font-semibold shadow-glow hover:bg-primary-dark transition-all duration-150 hover:-translate-y-0.5"
       >
         Get Directions
       </a>
@@ -68,7 +68,7 @@ export function PharmacyCard({ shop, className }) {
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        'flex items-center gap-3 p-3 rounded-2xl bg-bg hover:bg-surface/50 transition-colors',
+        'flex items-center gap-3 p-3 rounded-2xl hover:bg-surface/50 transition-colors duration-150',
         className
       )}
     >

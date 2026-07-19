@@ -1,7 +1,6 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Heart, BookOpen } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { ArrowLeft, Heart, BookOpen, ChevronRight } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
 import { RemedyHero } from '../components/ui/RemedyHero';
@@ -27,6 +26,8 @@ const DEFAULT_BENEFITS = [
   { title: 'Easy to use', description: 'Simple application with no special equipment needed.' },
 ];
 
+const EVIDENCE_SHOW_LIMIT = 4;
+
 function SectionHeader({ title, badge, className }) {
   return (
     <div className={cn('flex items-center justify-between mb-5', className)}>
@@ -44,6 +45,7 @@ export function RemedyDetail() {
   const remedies = useCatalogStore((state) => state.remedies);
   const isCatalogLoading = useCatalogStore((state) => state.isLoading);
   const hasLoaded = useCatalogStore((state) => state.hasLoaded);
+  const [showAllEvidence, setShowAllEvidence] = useState(false);
 
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies) ?? [];
   const userConditions = useAuthStore((state) => state.user?.common_conditions);
@@ -99,10 +101,12 @@ export function RemedyDetail() {
     return 90;
   }, [remedy]);
 
+  const visibleEvidence = showAllEvidence ? researchLinks : researchLinks.slice(0, EVIDENCE_SHOW_LIMIT);
+
   if (!hasLoaded && isCatalogLoading) {
     return (
       <PageWrapper className="min-h-screen bg-bg">
-        <div className="max-w-2xl mx-auto px-6 pt-8">
+        <div className="max-w-2xl mx-auto px-5 md:px-8 pt-8">
           <LoadingSkeleton count={1} />
         </div>
       </PageWrapper>
@@ -118,10 +122,10 @@ export function RemedyDetail() {
   }
 
   return (
-    <PageWrapper className="min-h-screen bg-bg pb-24">
-      {/* Navigation */}
+    <PageWrapper className="min-h-screen bg-bg pb-28 md:pb-24">
+      {/* Top Navigation */}
       <div className="sticky top-0 z-40 bg-bg/80 backdrop-blur-md border-b border-border">
-        <div className="max-w-2xl mx-auto px-6 h-14 flex items-center justify-between">
+        <div className="max-w-[840px] mx-auto px-5 md:px-8 h-14 flex items-center justify-between">
           <button
             onClick={() => {
               if (window.history.length > 1) {
@@ -130,10 +134,10 @@ export function RemedyDetail() {
                 navigate('/search');
               }
             }}
-            className="flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink transition-colors"
+            className="flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink transition-colors duration-150 min-h-[44px]"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Remedies
+            Back
           </button>
           <button
             onClick={() => {
@@ -141,7 +145,7 @@ export function RemedyDetail() {
               toggleFavorite(remedy);
             }}
             className={cn(
-              'p-2 rounded-full transition-colors',
+              'p-2.5 rounded-full transition-colors duration-150 min-w-[44px] min-h-[44px] flex items-center justify-center',
               favorite ? 'text-primary' : 'text-ink-muted hover:text-primary'
             )}
             aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
@@ -152,7 +156,7 @@ export function RemedyDetail() {
       </div>
 
       {/* Hero Section */}
-      <div className="max-w-2xl mx-auto px-6 pt-8 pb-6">
+      <div className="max-w-[840px] mx-auto px-5 md:px-8 pt-8 pb-6">
         <RemedyHero
           remedy={remedy}
           isSafe={isSafe}
@@ -162,8 +166,8 @@ export function RemedyDetail() {
       </div>
 
       {/* Quick Stats */}
-      <div className="max-w-2xl mx-auto px-6 pb-8">
-        <div className="bg-card rounded-3xl p-6 border border-border shadow-soft">
+      <div className="max-w-[840px] mx-auto px-5 md:px-8 pb-8">
+        <div className="section-card">
           <QuickStats
             remedy={remedy}
             isSafe={isSafe}
@@ -174,9 +178,9 @@ export function RemedyDetail() {
       </div>
 
       {/* Content Sections */}
-      <div className="max-w-2xl mx-auto px-6 space-y-8">
+      <div className="max-w-[840px] mx-auto px-5 md:px-8 space-y-6 md:space-y-8">
 
-        {/* Safety Banner */}
+        {/* Safety Banner / Advisory */}
         {!isSafe && remedy.warnings && (
           <AdvisoryCard
             title="Allergy conflict detected"
@@ -190,15 +194,16 @@ export function RemedyDetail() {
 
         {/* Benefits */}
         {remedy.longDescription && (
-          <section>
+          <section className="section-card">
             <SectionHeader title="Benefits" />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-0 divide-y md:divide-y-0 md:divide-x divide-border-subtle">
               {benefits.map((benefit, i) => (
                 <BenefitCard
                   key={i}
                   title={benefit.title}
                   description={benefit.description}
                   delay={i * 0.05}
+                  className="md:px-5 first:md:pl-0 last:md:pr-0"
                 />
               ))}
             </div>
@@ -207,23 +212,21 @@ export function RemedyDetail() {
 
         {/* How To Use */}
         {howToUseSteps.length > 0 && (
-          <section>
+          <section className="section-card">
             <SectionHeader title="How To Use" />
-            <div className="bg-card rounded-3xl p-6 border border-border shadow-soft">
-              {howToUseSteps.map((step, i) => (
-                <TimelineStep
-                  key={i}
-                  number={i + 1}
-                  description={step}
-                  isLast={i === howToUseSteps.length - 1}
-                  delay={i * 0.05}
-                />
-              ))}
-            </div>
+            {howToUseSteps.map((step, i) => (
+              <TimelineStep
+                key={i}
+                number={i + 1}
+                description={step}
+                isLast={i === howToUseSteps.length - 1}
+                delay={i * 0.05}
+              />
+            ))}
           </section>
         )}
 
-        {/* Evidence */}
+        {/* Scientific Evidence */}
         {researchLinks.length > 0 && (
           <section>
             <SectionHeader
@@ -239,7 +242,7 @@ export function RemedyDetail() {
               Based on {researchLinks.length} peer-reviewed {researchLinks.length === 1 ? 'study' : 'studies'}
             </p>
             <div className="space-y-3">
-              {researchLinks.map((source, idx) => (
+              {visibleEvidence.map((source, idx) => (
                 <EvidenceCard
                   key={idx}
                   source={source}
@@ -247,6 +250,15 @@ export function RemedyDetail() {
                 />
               ))}
             </div>
+            {!showAllEvidence && researchLinks.length > EVIDENCE_SHOW_LIMIT && (
+              <button
+                onClick={() => setShowAllEvidence(true)}
+                className="flex items-center gap-1 text-sm font-medium text-primary mt-4 hover:opacity-80 transition-opacity"
+              >
+                Show {researchLinks.length - EVIDENCE_SHOW_LIMIT} more {researchLinks.length - EVIDENCE_SHOW_LIMIT === 1 ? 'study' : 'studies'}
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            )}
           </section>
         )}
 
@@ -256,8 +268,9 @@ export function RemedyDetail() {
         {/* Safety Information */}
         {remedy.warnings && (
           <section>
+            <SectionHeader title="Safety Information" />
             <AdvisoryCard
-              title="Safety Information"
+              title="Important"
               message={remedy.warnings}
             />
           </section>

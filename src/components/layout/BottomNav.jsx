@@ -23,21 +23,19 @@ export function BottomNav() {
   };
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card/80 backdrop-blur-md border-t border-border z-40 transition-colors duration-250" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
-      <div className="flex justify-around items-center h-16">
+    <nav
+      className="md:hidden fixed bottom-4 left-4 right-4 z-50 rounded-2xl bg-card/70 backdrop-blur-xl border border-border/50 shadow-glass transition-colors duration-250"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+    >
+      <div className="flex justify-around items-center h-14">
         {navItems.map((item) => {
-          const baseClassName = cn(
-            'flex flex-col items-center justify-center w-full h-full gap-0.5 transition-colors',
-            location.pathname === item.to ? 'text-primary' : 'text-ink-muted hover:text-ink'
-          );
-
           if (item.locked) {
             return (
               <button
                 key={item.to}
                 type="button"
                 onClick={handleLockedClick}
-                className={baseClassName}
+                className="flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-0.5 text-ink-muted hover:text-ink transition-colors duration-150"
               >
                 <item.icon className="w-5 h-5" />
                 <span className="text-[10px] font-medium">{item.label}</span>
@@ -50,7 +48,7 @@ export function BottomNav() {
               key={item.to}
               to={item.to}
               className={({ isActive }) => cn(
-                'flex flex-col items-center justify-center w-full h-full gap-0.5 transition-colors',
+                'flex flex-col items-center justify-center min-w-[44px] min-h-[44px] gap-0.5 transition-colors duration-150',
                 isActive ? 'text-primary' : 'text-ink-muted hover:text-ink'
               )}
             >

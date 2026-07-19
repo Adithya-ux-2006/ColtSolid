@@ -4,20 +4,6 @@ import { getApiUrl } from '../../utils/api';
 import { cn } from '../../utils/cn';
 import { FeaturedPharmacy, PharmacyCard } from './PharmacyComponents';
 
-function parseOpeningHours(hours) {
-  if (!hours) return null;
-  try {
-    const now = new Date();
-    const dayIndex = now.getDay();
-    const days = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-    const today = days[dayIndex];
-    const match = hours.match(new RegExp(`${today}\\s+(.+?)(?:;|$)`));
-    return match ? match[1] : null;
-  } catch {
-    return null;
-  }
-}
-
 export function NearbyShops({ remedyName, className }) {
   const [shops, setShops] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -92,7 +78,7 @@ export function NearbyShops({ remedyName, className }) {
       </div>
 
       {locationDenied && (
-        <div className="text-center py-8 bg-card rounded-3xl border border-border">
+        <div className="text-center py-8 section-card">
           <MapPin className="w-8 h-8 text-ink-muted mx-auto mb-2" />
           <p className="text-sm text-ink-muted mb-3">Enable location to find nearby pharmacies</p>
           <button
@@ -107,7 +93,7 @@ export function NearbyShops({ remedyName, className }) {
       {loading && (
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="animate-pulse bg-card rounded-3xl p-5 border border-border">
+            <div key={i} className="animate-pulse section-card">
               <div className="h-4 bg-surface rounded w-3/4 mb-2" />
               <div className="h-3 bg-surface rounded w-1/2" />
             </div>
@@ -116,13 +102,13 @@ export function NearbyShops({ remedyName, className }) {
       )}
 
       {error && !loading && (
-        <div className="text-center py-8 bg-card rounded-3xl border border-border">
+        <div className="text-center py-8 section-card">
           <p className="text-sm text-danger">{error}</p>
         </div>
       )}
 
       {!loading && !error && !locationDenied && shops.length === 0 && (
-        <div className="text-center py-8 bg-card rounded-3xl border border-border">
+        <div className="text-center py-8 section-card">
           <Store className="w-8 h-8 text-ink-muted mx-auto mb-2" />
           <p className="text-sm text-ink-muted">No pharmacies found nearby</p>
         </div>
@@ -133,7 +119,7 @@ export function NearbyShops({ remedyName, className }) {
           {featured && <FeaturedPharmacy shop={featured} />}
 
           {nearby.length > 0 && (
-            <div className="bg-card rounded-3xl border border-border p-4">
+            <div className="section-card p-4">
               <p className="text-xs font-bold uppercase tracking-wider text-ink-muted mb-3">
                 Nearby Pharmacies
               </p>

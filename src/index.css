@@ -33,11 +33,15 @@
     --card: 0 0% 100%;
     --card-foreground: 155 20% 14%;
 
+    --surface: 155 20% 97%;
+    --surface-raised: 0 0% 100%;
+
     --popover: 0 0% 100%;
     --popover-foreground: 155 20% 14%;
 
     --primary: 152 40% 29%;
     --primary-foreground: 0 0% 100%;
+    --primary-tint: 152 40% 94%;
 
     --secondary: 155 40% 96%;
     --secondary-foreground: 152 40% 29%;
@@ -47,17 +51,15 @@
 
     --accent: 155 35% 94%;
     --accent-foreground: 152 40% 29%;
+    --accent-tint: 155 35% 96%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 155 12% 91%;
+    --border-subtle: 155 10% 94%;
     --input: 155 12% 91%;
     --ring: 152 40% 29%;
-    --radius: 0.5rem;
-
-    --surface: 155 20% 97%;
-    --surface-foreground: 155 20% 14%;
 
     --ink: 155 20% 14%;
     --ink-muted: 155 8% 46%;
@@ -74,6 +76,10 @@
     --danger-soft: 0 86% 97%;
 
     --shadow-color: 155 30% 13%;
+
+    --radius-card: 1.25rem;
+    --radius-pill: 9999px;
+    --shadow-card: 0 4px 20px hsl(155 30% 13% / 0.06);
   }
 
   .dark {
@@ -83,11 +89,15 @@
     --card: 210 25% 12%;
     --card-foreground: 155 10% 94%;
 
+    --surface: 210 22% 13%;
+    --surface-raised: 210 25% 15%;
+
     --popover: 210 25% 12%;
     --popover-foreground: 155 10% 94%;
 
     --primary: 152 40% 48%;
     --primary-foreground: 155 30% 9%;
+    --primary-tint: 152 30% 15%;
 
     --secondary: 210 20% 14%;
     --secondary-foreground: 155 10% 90%;
@@ -97,17 +107,15 @@
 
     --accent: 155 25% 16%;
     --accent-foreground: 155 10% 90%;
+    --accent-tint: 155 20% 14%;
 
     --destructive: 0 65% 45%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 155 12% 18%;
+    --border-subtle: 155 10% 16%;
     --input: 210 18% 16%;
     --ring: 152 40% 48%;
-    --radius: 0.5rem;
-
-    --surface: 210 22% 13%;
-    --surface-foreground: 155 10% 94%;
 
     --ink: 155 10% 94%;
     --ink-muted: 155 8% 55%;
@@ -124,6 +132,10 @@
     --danger-soft: 0 40% 18%;
 
     --shadow-color: 210 40% 3%;
+
+    --radius-card: 1.25rem;
+    --radius-pill: 9999px;
+    --shadow-card: 0 4px 20px hsl(210 40% 3% / 0.12);
   }
 }
 
@@ -143,12 +155,14 @@
     @apply text-sm font-bold uppercase tracking-wider text-ink-muted mb-4;
   }
 
-  .card-wellness {
-    @apply bg-card rounded-3xl p-6 shadow-card;
+  .section-card {
+    @apply bg-card rounded-3xl p-6 border border-border;
+    box-shadow: var(--shadow-card);
   }
 
-  .section-card {
-    @apply bg-card rounded-3xl p-6 shadow-card;
+  .card-wellness {
+    @apply bg-card rounded-3xl p-6;
+    box-shadow: var(--shadow-card);
   }
 
   .safety-box {

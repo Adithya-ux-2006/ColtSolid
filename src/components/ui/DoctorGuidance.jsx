@@ -14,7 +14,7 @@ export function DoctorGuidance({ message, flags, ctaLabel, onCtaClick, className
   const items = flags || DEFAULT_FLAGS;
 
   return (
-    <div className={cn("bg-card rounded-3xl p-6 shadow-card border border-border", className)}>
+    <div className={cn("section-card", className)}>
       <div className="flex items-center gap-3 mb-2">
         <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
           <Stethoscope className="w-5 h-5 text-primary" />
@@ -37,7 +37,7 @@ export function DoctorGuidance({ message, flags, ctaLabel, onCtaClick, className
 
       <button
         onClick={onCtaClick}
-        className="flex items-center justify-center gap-2 w-full h-12 rounded-2xl border border-border text-ink font-medium text-sm hover:bg-surface transition-colors"
+        className="flex items-center justify-center gap-2 w-full h-12 rounded-2xl border border-border text-ink font-medium text-sm hover:bg-surface transition-colors duration-150"
       >
         <MapPin className="w-4 h-4" />
         {ctaLabel || 'Find Nearby Medical Centres'}
