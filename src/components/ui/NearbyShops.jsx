@@ -1,12 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { MapPin, Navigation, Clock, Store, ExternalLink } from 'lucide-react';
+import { MapPin, Store } from 'lucide-react';
 import { getApiUrl } from '../../utils/api';
 import { cn } from '../../utils/cn';
-
-function formatDistance(meters) {
-  if (meters < 1000) return `${Math.round(meters)}m`;
-  return `${(meters / 1000).toFixed(1)}km`;
-}
+import { FeaturedPharmacy, PharmacyCard } from './PharmacyComponents';
 
 function parseOpeningHours(hours) {
   if (!hours) return null;
@@ -28,6 +24,7 @@ export function NearbyShops({ remedyName, className }) {
   const [error, setError] = useState(null);
   const [locationDenied, setLocationDenied] = useState(() => !navigator.geolocation);
   const [radius, setRadius] = useState(3000);
+  const [showAll, setShowAll] = useState(false);
   const mountedRef = useRef(true);
 
   useEffect(() => {
@@ -72,11 +69,15 @@ export function NearbyShops({ remedyName, className }) {
     );
   }, [fetchShops]);
 
+  const featured = shops[0] || null;
+  const nearby = showAll ? shops.slice(1) : shops.slice(1, 4);
+
   return (
-    <section className={cn('section-card', className)}>
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="section-title mb-0">Where to Buy</h2>
-        <div className="flex items-center gap-1.5 text-xs text-ink-muted">
+    <section className={cn('', className)}>
+      <div className="flex items-center justify-between mb-5">
+        <h2 className="section-title mb-0">Where To Buy</h2>
+        <div className="flex items-center gap-1.5">
+          <MapPin className="w-3.5 h-3.5 text-ink-muted" />
           <select
             value={radius}
             onChange={(e) => setRadius(Number(e.target.value))}
@@ -91,7 +92,7 @@ export function NearbyShops({ remedyName, className }) {
       </div>
 
       {locationDenied && (
-        <div className="text-center py-6">
+        <div className="text-center py-8 bg-card rounded-3xl border border-border">
           <MapPin className="w-8 h-8 text-ink-muted mx-auto mb-2" />
           <p className="text-sm text-ink-muted mb-3">Enable location to find nearby pharmacies</p>
           <button
@@ -106,7 +107,7 @@ export function NearbyShops({ remedyName, className }) {
       {loading && (
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="animate-pulse">
+            <div key={i} className="animate-pulse bg-card rounded-3xl p-5 border border-border">
               <div className="h-4 bg-surface rounded w-3/4 mb-2" />
               <div className="h-3 bg-surface rounded w-1/2" />
             </div>
@@ -115,61 +116,43 @@ export function NearbyShops({ remedyName, className }) {
       )}
 
       {error && !loading && (
-        <p className="text-sm text-red-600 text-center py-4">{error}</p>
+        <div className="text-center py-8 bg-card rounded-3xl border border-border">
+          <p className="text-sm text-danger">{error}</p>
+        </div>
       )}
 
       {!loading && !error && !locationDenied && shops.length === 0 && (
-        <p className="text-sm text-ink-muted text-center py-4">No pharmacies found nearby</p>
-      )}
-
-      {!loading && shops.length > 0 && (
-        <div className="space-y-3">
-          {shops.map((shop, idx) => {
-            const hours = parseOpeningHours(shop.openingHours);
-            const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${shop.lat},${shop.lon}`;
-            return (
-              <div
-                key={idx}
-                className="flex items-start gap-3 p-3 rounded-2xl bg-bg hover:bg-surface/50 transition-colors"
-              >
-                <div className="w-9 h-9 rounded-xl bg-surface flex items-center justify-center shrink-0 mt-0.5">
-                  <Store className="w-4 h-4 text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-ink truncate">{shop.name}</p>
-                  <p className="text-xs text-ink-muted truncate">{shop.address}</p>
-                  <div className="flex items-center gap-3 mt-1.5">
-                    <span className="flex items-center gap-1 text-xs text-ink-muted">
-                      <Navigation className="w-3 h-3" />
-                      {formatDistance(shop.distance)}
-                    </span>
-                    {hours && (
-                      <span className="flex items-center gap-1 text-xs text-ink-muted">
-                        <Clock className="w-3 h-3" />
-                        {hours}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <a
-                  href={mapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="shrink-0 mt-1 p-1.5 rounded-lg text-ink-muted hover:text-primary hover:bg-surface transition-colors"
-                  aria-label={`Open ${shop.name} in Google Maps`}
-                >
-                  <ExternalLink className="w-4 h-4" />
-                </a>
-              </div>
-            );
-          })}
+        <div className="text-center py-8 bg-card rounded-3xl border border-border">
+          <Store className="w-8 h-8 text-ink-muted mx-auto mb-2" />
+          <p className="text-sm text-ink-muted">No pharmacies found nearby</p>
         </div>
       )}
 
       {!loading && shops.length > 0 && (
-        <p className="text-xs text-ink-muted text-center mt-4">
-          {remedyName ? `Pharmacies near you for ${remedyName}` : 'Pharmacies near you'}
-        </p>
+        <div className="space-y-4">
+          {featured && <FeaturedPharmacy shop={featured} />}
+
+          {nearby.length > 0 && (
+            <div className="bg-card rounded-3xl border border-border p-4">
+              <p className="text-xs font-bold uppercase tracking-wider text-ink-muted mb-3">
+                Nearby Pharmacies
+              </p>
+              <div className="space-y-1">
+                {nearby.map((shop, idx) => (
+                  <PharmacyCard key={idx} shop={shop} />
+                ))}
+              </div>
+              {!showAll && shops.length > 4 && (
+                <button
+                  onClick={() => setShowAll(true)}
+                  className="w-full text-center text-sm font-medium text-primary mt-3 hover:underline"
+                >
+                  View More Pharmacies
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       )}
     </section>
   );
