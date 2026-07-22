@@ -35,7 +35,7 @@
 
 @layer base {
   :root {
-    --background: 155 40% 98%;
+    --background: 155 40% 95%;
     --foreground: 155 20% 14%;
 
     --card: 0 0% 100%;
@@ -74,7 +74,7 @@
     --ink-subtle: 155 8% 63%;
 
     --mint: 155 35% 94%;
-    --bg-page: 155 40% 98%;
+    --bg-page: 155 40% 95%;
 
     --success: 122 39% 49%;
     --success-soft: 122 76% 96%;
