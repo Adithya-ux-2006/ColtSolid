@@ -73,7 +73,7 @@ export function RemedyScheduleForm({ remedies, favorites, initialData, onSubmit,
         </label>
         {formData.remedyId ? (
           <div className="flex items-center gap-2 px-3 py-2 border border-primary/30 rounded-xl bg-primary/5">
-            <Heart className={cn("w-4 h-4", favoriteIds.has(formData.remedyId) ? "text-primary fill-primary" : "text-ink-muted")} />
+            <Heart className={cn("w-4 h-4", favoriteIds.has(formData.remedyId) ? "text-primary" : "text-ink-muted")} fill={favoriteIds.has(formData.remedyId) ? "currentColor" : "none"} />
             <span className="flex-1 text-sm font-medium text-ink">{formData.remedyName}</span>
             <button type="button" onClick={clearSelection} className="p-1 text-ink-muted hover:text-ink rounded-full">
               <X className="w-4 h-4" />
@@ -114,7 +114,7 @@ export function RemedyScheduleForm({ remedies, favorites, initialData, onSubmit,
                     showFavoritesOnly ? "bg-primary text-white" : "border border-border text-ink"
                   )}
                 >
-                  <Heart className={cn("w-3 h-3", showFavoritesOnly ? "fill-white" : "fill-primary text-primary")} />
+                  <Heart className={cn("w-3 h-3", showFavoritesOnly ? "text-white" : "text-primary")} fill={showFavoritesOnly ? "currentColor" : "currentColor"} />
                   Favorites ({favorites.length})
                 </button>
               </div>
@@ -130,7 +130,7 @@ export function RemedyScheduleForm({ remedies, favorites, initialData, onSubmit,
                     onClick={() => handleRemedySelect(r)}
                     className="w-full flex items-center gap-3 px-3 py-2.5 text-left hover:bg-surface transition-colors"
                   >
-                    <Heart className={cn("w-4 h-4 shrink-0", favoriteIds.has(r.id) ? "text-primary fill-primary" : "text-ink-muted")} />
+                    <Heart className={cn("w-4 h-4 shrink-0", favoriteIds.has(r.id) ? "text-primary" : "text-ink-muted")} fill={favoriteIds.has(r.id) ? "currentColor" : "none"} />
                     <div className="min-w-0">
                       <p className="text-sm font-medium text-ink truncate">{r.name}</p>
                       <p className="text-xs text-ink-muted">{r.category}</p>

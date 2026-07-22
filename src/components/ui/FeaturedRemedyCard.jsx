@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clock, Heart, Check } from 'lucide-react';
+import { Clock, Check } from 'lucide-react';
+import { FavoriteHeart } from './FavoriteHeart';
 import { cn } from '../../utils/cn';
 import { CategoryBadge } from './CategoryBadge';
 import { RemedyImage } from './RemedyImage';
@@ -130,7 +131,7 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
                 )}
                 aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
               >
-                <Heart className={cn('w-5 h-5', favorited && 'fill-primary')} />
+                <FavoriteHeart favorited={favorited} />
               </button>
             </div>
             {reasons.length > 0 ? (

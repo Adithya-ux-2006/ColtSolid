@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clock, Star, Heart } from 'lucide-react';
+import { Clock, Star } from 'lucide-react';
+import { FavoriteHeart } from './FavoriteHeart';
 import { cn } from '../../utils/cn';
 import { CategoryBadge } from './CategoryBadge';
 import { RatingStars } from './RatingStars';
@@ -49,7 +50,7 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
                 )}
                 aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
               >
-                <Heart className={cn("w-4 h-4", favorited && "fill-primary")} />
+                <FavoriteHeart favorited={favorited} className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -98,7 +99,7 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
               )}
               aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
             >
-              <Heart className={cn("w-4 h-4", favorited && "fill-primary")} />
+              <FavoriteHeart favorited={favorited} className="w-4 h-4" />
             </button>
           </div>
           <h3 className="text-xl font-semibold text-ink mb-2">{remedy.name}</h3>
@@ -155,7 +156,7 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
               )}
               aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
             >
-              <Heart className={cn("w-4 h-4", favorited && "fill-primary")} />
+              <FavoriteHeart favorited={favorited} className="w-4 h-4" />
             </button>
           </div>
         </div>

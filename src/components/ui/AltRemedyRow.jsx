@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Clock, ChevronRight, Heart } from 'lucide-react';
+import { Clock, ChevronRight } from 'lucide-react';
+import { FavoriteHeart } from './FavoriteHeart';
 import { cn } from '../../utils/cn';
 import { RemedyImage } from './RemedyImage';
 import { CategoryBadge } from './CategoryBadge';
@@ -64,7 +65,7 @@ export function AltRemedyRow({ remedy, isSafe, evidenceScore, safetyScore, showD
             )}
             aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
           >
-            <Heart className={cn('w-4 h-4', favorited && 'fill-primary')} />
+            <FavoriteHeart favorited={favorited} className="w-4 h-4" />
           </button>
           <ChevronRight className="w-4 h-4 text-ink-subtle" />
         </div>
@@ -101,7 +102,7 @@ export function AltRemedyRow({ remedy, isSafe, evidenceScore, safetyScore, showD
             )}
             aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
           >
-            <Heart className={cn('w-4 h-4', favorited && 'fill-primary')} />
+            <FavoriteHeart favorited={favorited} className="w-4 h-4" />
           </button>
           <ChevronRight className="w-4 h-4 text-ink-subtle" />
         </div>

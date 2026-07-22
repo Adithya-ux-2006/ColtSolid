@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Heart, BookOpen, ChevronRight } from 'lucide-react';
+import { ArrowLeft, BookOpen, ChevronRight } from 'lucide-react';
+import { FavoriteHeart } from '../components/ui/FavoriteHeart';
 import { PageWrapper } from '../components/layout';
 import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
 import { RemedyHero } from '../components/ui/RemedyHero';
@@ -184,7 +185,7 @@ export function RemedyDetail() {
             )}
             aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
           >
-            <Heart className={cn('w-5 h-5', favorite && 'fill-primary')} />
+            <FavoriteHeart favorited={favorite} />
           </button>
         </div>
       </div>
