@@ -44,27 +44,31 @@ export function Login() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-ink mb-1" htmlFor="email">Email address</label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-ink/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                placeholder="you@university.edu"
-                required
-              />
+              <div className="bg-card rounded-full shadow-soft border border-border/50 transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_hsl(var(--primary)/0.25)] focus-within:border-primary/30">
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full bg-transparent px-5 py-3.5 text-base text-ink placeholder-ink-muted focus:outline-none"
+                  placeholder="you@university.edu"
+                  required
+                />
+              </div>
             </div>
             <div>
               <label className="block text-sm font-medium text-ink mb-1" htmlFor="password">Password</label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-ink/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                placeholder="••••••••"
-                required
-              />
+              <div className="bg-card rounded-full shadow-soft border border-border/50 transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_hsl(var(--primary)/0.25)] focus-within:border-primary/30">
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-transparent px-5 py-3.5 text-base text-ink placeholder-ink-muted focus:outline-none"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
             </div>
 
             <button
