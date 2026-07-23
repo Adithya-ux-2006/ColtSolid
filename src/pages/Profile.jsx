@@ -143,13 +143,15 @@ export function Profile() {
                   })}
                 </div>
                 {guestEditForm.selectedAllergies.includes('other') && (
-                  <input
-                    type="text"
-                    value={guestEditForm.otherAllergyText}
-                    onChange={(e) => setGuestEditForm({ ...guestEditForm, otherAllergyText: e.target.value })}
-                    placeholder="Please specify your allergy..."
-                    className="w-full rounded-xl border border-border px-3 py-2 text-sm mt-2"
-                  />
+                  <div className="bg-card rounded-xl shadow-soft border border-border/50 transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_hsl(var(--primary)/0.25)] focus-within:border-primary/30 mt-2">
+                    <input
+                      type="text"
+                      value={guestEditForm.otherAllergyText}
+                      onChange={(e) => setGuestEditForm({ ...guestEditForm, otherAllergyText: e.target.value })}
+                      placeholder="Please specify your allergy..."
+                      className="w-full bg-transparent px-3 py-2 text-sm text-ink placeholder-ink-muted focus:outline-none"
+                    />
+                  </div>
                 )}
               </div>
               {/* Conditions */}
@@ -312,13 +314,15 @@ export function Profile() {
           <div className="flex-1 w-full">
             {isEditing ? (
               <div className="space-y-3">
-                <input 
-                  type="text" 
-                  value={editForm.name} 
-                  onChange={e => setEditForm({...editForm, name: e.target.value})}
-                  className="w-full px-3 py-2 border rounded-xl"
-                  placeholder="Name"
-                />
+                <div className="bg-card rounded-xl shadow-soft border border-border/50 transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_hsl(var(--primary)/0.25)] focus-within:border-primary/30">
+                  <input 
+                    type="text" 
+                    value={editForm.name} 
+                    onChange={e => setEditForm({...editForm, name: e.target.value})}
+                    className="w-full bg-transparent px-3 py-2 text-sm text-ink placeholder-ink-muted focus:outline-none"
+                    placeholder="Name"
+                  />
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {['male', 'female', 'non-binary-other', 'prefer-not-to-say'].map((option) => {
                     const labels = {
@@ -413,13 +417,15 @@ export function Profile() {
                   })}
                 </div>
                 {healthForm.selectedConditions.includes('other') && (
-                  <input
-                    type="text"
-                    value={healthForm.otherConditionText}
-                    onChange={(e) => setHealthForm({ ...healthForm, otherConditionText: e.target.value })}
-                    placeholder="Please specify your condition..."
-                    className="w-full rounded-xl border border-border px-3 py-2 text-sm mt-2"
-                  />
+                  <div className="bg-card rounded-xl shadow-soft border border-border/50 transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_hsl(var(--primary)/0.25)] focus-within:border-primary/30 mt-2">
+                    <input
+                      type="text"
+                      value={healthForm.otherConditionText}
+                      onChange={(e) => setHealthForm({ ...healthForm, otherConditionText: e.target.value })}
+                      placeholder="Please specify your condition..."
+                      className="w-full bg-transparent px-3 py-2 text-sm text-ink placeholder-ink-muted focus:outline-none"
+                    />
+                  </div>
                 )}
                 </>
               ) : (
@@ -456,13 +462,15 @@ export function Profile() {
                   })}
                 </div>
                 {healthForm.selectedAllergies.includes('other') && (
-                  <input
-                    type="text"
-                    value={healthForm.otherAllergyText}
-                    onChange={(e) => setHealthForm({ ...healthForm, otherAllergyText: e.target.value })}
-                    placeholder="Please specify your allergy..."
-                    className="w-full rounded-xl border border-border px-3 py-2 text-sm mt-2"
-                  />
+                  <div className="bg-card rounded-xl shadow-soft border border-border/50 transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_hsl(var(--primary)/0.25)] focus-within:border-primary/30 mt-2">
+                    <input
+                      type="text"
+                      value={healthForm.otherAllergyText}
+                      onChange={(e) => setHealthForm({ ...healthForm, otherAllergyText: e.target.value })}
+                      placeholder="Please specify your allergy..."
+                      className="w-full bg-transparent px-3 py-2 text-sm text-ink placeholder-ink-muted focus:outline-none"
+                    />
+                  </div>
                 )}
                 </>
               ) : (
