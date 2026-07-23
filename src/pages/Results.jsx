@@ -7,7 +7,7 @@ import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
 import { EmptyState } from '../components/ui/EmptyState';
 import { SeverityBadge } from '../components/ui/SeverityBadge';
 import { GuidancePanel } from '../components/ui/GuidancePanel';
-import { FeaturedRemedyCard } from '../components/ui/FeaturedRemedyCard';
+import { HighlightedRemedyCard } from '../components/ui/HighlightedRemedyCard';
 import { AltRemedyRow } from '../components/ui/AltRemedyRow';
 import { LifestyleTips } from '../components/ui/LifestyleTips';
 import { MedicalGuidancePanel } from '../components/ui/MedicalGuidancePanel';
@@ -194,6 +194,17 @@ export function Results() {
 
   const grouped = searchResult.grouped;
 
+  const highlightedRemedies = useMemo(() => {
+    if (!grouped) return [];
+    const top = [grouped.bestMatch, ...(grouped.bestMatches || [])].filter(Boolean);
+    return top.slice(0, 3);
+  }, [grouped]);
+
+  const highlightedIds = useMemo(
+    () => new Set(highlightedRemedies.map((r) => r.id)),
+    [highlightedRemedies]
+  );
+
   const hasResults = (grouped?.bestMatch != null) || (grouped?.bestMatches?.length > 0)
     || (grouped?.additionalOptions?.length > 0) || (grouped?.supportive?.length > 0);
 
@@ -203,8 +214,8 @@ export function Results() {
       ...(grouped.bestMatches || []),
       ...(grouped.additionalOptions || []),
       ...(grouped.supportive || []),
-    ];
-  }, [grouped]);
+    ].filter((r) => !highlightedIds.has(r.id));
+  }, [grouped, highlightedIds]);
 
   const visibleAlternatives = showAllAlternatives ? allAlternatives : allAlternatives.slice(0, 5);
 
@@ -284,18 +295,29 @@ export function Results() {
         </div>
       ) : (
         <>
-          {grouped?.bestMatch && (
-            <div className="max-w-4xl mx-auto px-6 mb-2">
-              <FeaturedRemedyCard
-                remedy={grouped.bestMatch}
-                isSafe={safeFilter(grouped.bestMatch)}
-                evidenceScore={grouped.bestMatch._evidenceScore}
-                safetyScore={grouped.bestMatch._safetyScore}
-              />
+          {highlightedRemedies.length > 0 && (
+            <div className="max-w-4xl mx-auto px-6 mb-6">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-warning text-sm">&#9733;</span>
+                <p className="text-xs font-bold uppercase tracking-wider text-ink-muted">Recommended for you</p>
+              </div>
+              <p className="text-sm text-ink-muted mb-5">Top picks based on your symptoms and profile.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {highlightedRemedies.map((remedy, i) => (
+                  <HighlightedRemedyCard
+                    key={remedy.id}
+                    remedy={remedy}
+                    isSafe={safeFilter(remedy)}
+                    evidenceScore={remedy._evidenceScore}
+                    safetyScore={remedy._safetyScore}
+                    delay={i * 0.06}
+                  />
+                ))}
+              </div>
             </div>
           )}
 
-          {grouped?.bestMatch && <EvidenceBanner />}
+          {highlightedRemedies.length > 0 && <EvidenceBanner />}
 
           {allAlternatives.length > 0 && (
             <div className="max-w-4xl mx-auto px-6 mt-16">
