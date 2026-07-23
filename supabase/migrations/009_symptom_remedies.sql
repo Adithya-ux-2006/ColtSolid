@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS public.symptom_remedies (
 );
 
 ALTER TABLE public.symptom_remedies ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Allow public read access to symptom_remedies" ON public.symptom_remedies;
 CREATE POLICY "Allow public read access to symptom_remedies"
     ON public.symptom_remedies FOR SELECT USING (true);
 

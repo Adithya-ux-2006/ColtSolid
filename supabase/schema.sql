@@ -24,12 +24,14 @@ CREATE TABLE IF NOT EXISTS public.remedies (
     time_to_effect TEXT NOT NULL,
     difficulty TEXT NOT NULL,
     cost TEXT NOT NULL,
-    is_featured BOOLEAN DEFAULT false
+    is_featured BOOLEAN DEFAULT false,
+    ingredients TEXT[] DEFAULT '{}'
 );
 
 CREATE TABLE IF NOT EXISTS public.remedy_symptoms (
     remedy_id TEXT REFERENCES public.remedies(id) ON DELETE CASCADE,
     symptom_id TEXT REFERENCES public.symptoms(id) ON DELETE CASCADE,
+    match_strength TEXT NOT NULL DEFAULT 'primary' CHECK (match_strength IN ('primary', 'secondary')),
     PRIMARY KEY (remedy_id, symptom_id)
 );
 
@@ -57,6 +59,7 @@ CREATE TABLE IF NOT EXISTS public.users (
     treatment_prefs TEXT[] DEFAULT '{}' NOT NULL,
     has_completed_onboarding BOOLEAN DEFAULT false,
     is_admin BOOLEAN DEFAULT false,
+    search_count INTEGER DEFAULT 0,
     notify_nearby_launch BOOLEAN DEFAULT false,
     prefer_natural BOOLEAN DEFAULT false NOT NULL,
     avoid_medication BOOLEAN DEFAULT false NOT NULL,
@@ -84,6 +87,14 @@ CREATE TABLE IF NOT EXISTS public.appointments (
     type TEXT NOT NULL,
     status TEXT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS public.symptom_remedies (
+    symptom_id TEXT REFERENCES public.symptoms(id) ON DELETE CASCADE,
+    remedy_id TEXT REFERENCES public.remedies(id) ON DELETE CASCADE,
+    evidence_score INTEGER NOT NULL DEFAULT 5,
+    priority_rank INTEGER NOT NULL DEFAULT 5,
+    PRIMARY KEY (symptom_id, remedy_id)
 );
 
 CREATE TABLE IF NOT EXISTS public.search_events (
@@ -116,11 +127,24 @@ CREATE TABLE IF NOT EXISTS public.remedy_feedback (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS public.remedy_schedules (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    remedy_id TEXT NOT NULL,
+    remedy_name TEXT NOT NULL,
+    scheduled_time TIME NOT NULL,
+    recurrence TEXT NOT NULL DEFAULT 'daily',
+    days_of_week TEXT[] DEFAULT '{}',
+    active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
 -- 2. Row Level Security (RLS) Policies
 
 ALTER TABLE public.symptoms ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.remedies ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.remedy_symptoms ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.symptom_remedies ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.research_papers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.favorites ENABLE ROW LEVEL SECURITY;
@@ -128,6 +152,7 @@ ALTER TABLE public.appointments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.search_events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.remedy_events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.remedy_feedback ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.remedy_schedules ENABLE ROW LEVEL SECURITY;
 
 -- Public read access for core data
 DROP POLICY IF EXISTS "Allow public read access to symptoms" ON public.symptoms;
@@ -163,8 +188,6 @@ BEGIN
     NEW.raw_user_meta_data ->> 'current_year',
     NEW.raw_user_meta_data ->> 'university_name',
     NEW.raw_user_meta_data ->> 'current_year',
-    NEW.raw_user_meta_data ->> 'university',
-    NEW.raw_user_meta_data ->> 'year',
     COALESCE(NEW.raw_user_meta_data ->> 'gender', '')
   )
   ON CONFLICT (id) DO UPDATE SET
@@ -202,6 +225,50 @@ CREATE POLICY "Users can view their own appointments" ON public.appointments FOR
 CREATE POLICY "Users can insert their own appointments" ON public.appointments FOR INSERT WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Users can update their own appointments" ON public.appointments FOR UPDATE USING (auth.uid() = user_id);
 CREATE POLICY "Users can delete their own appointments" ON public.appointments FOR DELETE USING (auth.uid() = user_id);
+
+-- Validation analytics policies
+DROP POLICY IF EXISTS "Anyone can insert search events" ON public.search_events;
+DROP POLICY IF EXISTS "Authenticated admins can read search events" ON public.search_events;
+CREATE POLICY "Anyone can insert search events" ON public.search_events FOR INSERT WITH CHECK (true);
+CREATE POLICY "Authenticated admins can read search events" ON public.search_events FOR SELECT USING (
+    EXISTS (
+        SELECT 1 FROM public.users WHERE users.id = auth.uid() AND users.is_admin = true
+    )
+);
+
+DROP POLICY IF EXISTS "Anyone can insert remedy events" ON public.remedy_events;
+DROP POLICY IF EXISTS "Authenticated admins can read remedy events" ON public.remedy_events;
+CREATE POLICY "Anyone can insert remedy events" ON public.remedy_events FOR INSERT WITH CHECK (true);
+CREATE POLICY "Authenticated admins can read remedy events" ON public.remedy_events FOR SELECT USING (
+    EXISTS (
+        SELECT 1 FROM public.users WHERE users.id = auth.uid() AND users.is_admin = true
+    )
+);
+
+DROP POLICY IF EXISTS "Anyone can insert remedy feedback" ON public.remedy_feedback;
+DROP POLICY IF EXISTS "Anyone can update remedy feedback" ON public.remedy_feedback;
+DROP POLICY IF EXISTS "Authenticated admins can read remedy feedback" ON public.remedy_feedback;
+CREATE POLICY "Anyone can insert remedy feedback" ON public.remedy_feedback FOR INSERT WITH CHECK (true);
+CREATE POLICY "Users can update their own remedy feedback" ON public.remedy_feedback FOR UPDATE USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Authenticated admins can read remedy feedback" ON public.remedy_feedback FOR SELECT USING (
+    EXISTS (
+        SELECT 1 FROM public.users WHERE users.id = auth.uid() AND users.is_admin = true
+    )
+);
+
+-- Symptom-remedy ranking policies
+DROP POLICY IF EXISTS "Allow public read access to symptom_remedies" ON public.symptom_remedies;
+CREATE POLICY "Allow public read access to symptom_remedies" ON public.symptom_remedies FOR SELECT USING (true);
+
+-- Remedy schedules policies
+DROP POLICY IF EXISTS "Users can view their own schedules" ON public.remedy_schedules;
+DROP POLICY IF EXISTS "Users can insert their own schedules" ON public.remedy_schedules;
+DROP POLICY IF EXISTS "Users can update their own schedules" ON public.remedy_schedules;
+DROP POLICY IF EXISTS "Users can delete their own schedules" ON public.remedy_schedules;
+CREATE POLICY "Users can view their own schedules" ON public.remedy_schedules FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Users can insert their own schedules" ON public.remedy_schedules FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can update their own schedules" ON public.remedy_schedules FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "Users can delete their own schedules" ON public.remedy_schedules FOR DELETE USING (auth.uid() = user_id);
 
 -- Validation analytics policies
 DROP POLICY IF EXISTS "Anyone can insert search events" ON public.search_events;

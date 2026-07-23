@@ -18,7 +18,7 @@ ON CONFLICT (id) DO NOTHING;
 -- New remedies
 INSERT INTO public.remedies (id, name, category, rating, review_count, short_description, long_description, how_to_use, warnings, time_to_effect, difficulty, cost, is_featured) VALUES
   ('rem_101', 'Sleep & Stress Reset Routine', 'Lifestyle', 4.3, 0,
-   'Addresses two of the most common drivers of low desire — poor sleep and chronic stress.',
+   'Addresses two of the most common drivers of low desire - poor sleep and chronic stress.',
    'Low libido is frequently linked to chronic stress and sleep deprivation rather than a standalone issue. A consistent sleep schedule paired with a daily stress-reduction practice can meaningfully improve desire over several weeks.',
    '1. Keep a consistent sleep and wake time. 2. Add a 10-minute wind-down routine before bed. 3. Practice a short breathing or mindfulness exercise daily. 4. Reassess after 3-4 weeks.',
    'Not a substitute for medical evaluation if low libido is sudden, distressing, or persists despite lifestyle changes.',

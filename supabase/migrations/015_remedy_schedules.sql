@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS public.remedy_schedules (
 
 ALTER TABLE public.remedy_schedules ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Users can manage their own remedy schedules" ON public.remedy_schedules;
 CREATE POLICY "Users can manage their own remedy schedules"
     ON public.remedy_schedules
     FOR ALL

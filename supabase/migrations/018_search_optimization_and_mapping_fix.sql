@@ -254,12 +254,4 @@ ALTER TABLE public.remedies
   ADD CONSTRAINT remedies_category_check
   CHECK (category IN ('Lifestyle', 'Natural', 'TCM', 'Ayurveda', 'Conventional'));
 
-ALTER TABLE public.remedies
-  ADD CONSTRAINT remedies_difficulty_check
-  CHECK (difficulty IN ('Easy', 'Moderate'));
-
-ALTER TABLE public.remedies
-  ADD CONSTRAINT remedies_cost_check
-  CHECK (cost IN ('$', '$$', '$$$'));
-
 COMMIT;

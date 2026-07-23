@@ -4,7 +4,7 @@
 -- =====================================================
 
 -- 1. Ensure stomach_ache symptom exists
-INSERT INTO public.symptoms (id, label, emoji, color)
+INSERT INTO public.symptoms (id, label, emoji, color_theme)
 VALUES ('stomach_ache', 'Stomach Ache', '🤢', 'sage')
 ON CONFLICT (id) DO NOTHING;
 
@@ -35,6 +35,6 @@ ON CONFLICT DO NOTHING;
 SELECT sr.symptom_id, sr.remedy_id, s.label, r.name
 FROM public.symptom_remedies sr
 JOIN public.symptoms s ON s.id = sr.symptom_id
-JOIN public.remedies r ON r.id = sr.remediy_id
+JOIN public.remedies r ON r.id = sr.remedy_id
 WHERE sr.symptom_id = 'stomach_ache'
 ORDER BY sr.priority_rank DESC;

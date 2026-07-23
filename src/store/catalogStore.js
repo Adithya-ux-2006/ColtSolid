@@ -61,11 +61,13 @@ export const useCatalogStore = create((set, get) => ({
       let symptomRemediesData = {};
       try {
         const { data: srRows, error: srError } = await supabase.from('symptom_remedies').select('*');
-        if (!srError && srRows) {
+        if (srError) {
+          console.warn('[CATALOG] symptom_remedies query failed:', srError.message || srError);
+        } else if (srRows) {
           symptomRemediesData = buildSymptomRemediesMap(srRows);
         }
       } catch (srError) {
-        console.warn('symptom_remedies table not available, using default ranking:', srError);
+        console.warn('[CATALOG] symptom_remedies table not available, using default ranking:', srError.message || srError);
       }
 
       const hasData = (symptoms?.length > 0 || remedies?.length > 0);
@@ -84,7 +86,7 @@ export const useCatalogStore = create((set, get) => ({
         hasLoaded: true,
       });
     } catch (error) {
-      console.warn('Supabase catalog unavailable, falling back to local data:', error.message);
+      console.warn('[CATALOG] Supabase catalog unavailable, falling back to local data:', error.message || error);
       const local = await loadLocalCatalog();
       set({
         ...local,

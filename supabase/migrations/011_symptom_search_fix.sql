@@ -1,4 +1,4 @@
--- 011: Symptom search fix — canonical symptom IDs, primary/secondary mappings, ingredients
+-- 011: Symptom search fix - canonical symptom IDs, primary/secondary mappings, ingredients
 -- Fixes cross-contamination: "eye pain" → eye_strain remedies, proper ranking, allergy filtering
 
 BEGIN;
