@@ -84,12 +84,45 @@ function bestTokenNgramMatch(queryToken, labelTokens) {
   return best;
 }
 
+function levenshteinDistance(a, b) {
+  const matrix = Array.from({ length: a.length + 1 }, (_, i) =>
+    Array.from({ length: b.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
+  );
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,
+        matrix[i][j - 1] + 1,
+        matrix[i - 1][j - 1] + cost
+      );
+    }
+  }
+  return matrix[a.length][b.length];
+}
+
+function fuzzyMatchToken(queryToken, labelTokens) {
+  const maxDist = queryToken.length <= 4 ? 1 : queryToken.length <= 7 ? 2 : 3;
+  let best = 0;
+  for (const lt of labelTokens) {
+    const dist = levenshteinDistance(queryToken, lt);
+    if (dist === 0) return 1.0;
+    if (dist <= maxDist && lt.length >= 3) {
+      const similarity = 1 - dist / Math.max(queryToken.length, lt.length);
+      if (similarity > best) best = similarity;
+    }
+  }
+  return best;
+}
+
 function computeTokenOverlap(queryTokens, labelTokens) {
   if (queryTokens.length === 0) return 0;
   let matchSum = 0;
   let matchedCount = 0;
   for (const qt of queryTokens) {
-    const best = bestTokenNgramMatch(qt, labelTokens);
+    const ngramBest = bestTokenNgramMatch(qt, labelTokens);
+    const fuzzyBest = fuzzyMatchToken(qt, labelTokens);
+    const best = Math.max(ngramBest, fuzzyBest);
     matchSum += best;
     if (best > 0.25) matchedCount++;
   }
