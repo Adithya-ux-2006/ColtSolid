@@ -158,6 +158,20 @@
     @apply bg-background text-foreground;
     transition: background-color 250ms ease, color 250ms ease;
   }
+
+  .dark body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(
+      ellipse 80% 60% at 50% 15%,
+      hsl(155 35% 18% / 0.45) 0%,
+      hsl(155 30% 12% / 0.15) 50%,
+      transparent 80%
+    );
+    pointer-events: none;
+  }
 }
 
 @layer components {
