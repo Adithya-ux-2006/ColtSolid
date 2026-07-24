@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams, Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, AlertTriangle, Heart, ChevronDown, ShieldCheck } from 'lucide-react';
+import { cn } from '../utils/cn';
 import { PageWrapper } from '../components/layout';
 import { RemedyCarousel } from '../components/ui/RemedyCarousel';
 import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
@@ -196,8 +197,13 @@ export function Results() {
 
   const highlightedRemedies = useMemo(() => {
     if (!grouped) return [];
-    const top = [grouped.bestMatch, ...(grouped.bestMatches || [])].filter(Boolean);
-    return top.slice(0, 3);
+    const all = [
+      grouped.bestMatch,
+      ...(grouped.bestMatches || []),
+      ...(grouped.additionalOptions || []),
+      ...(grouped.supportive || []),
+    ].filter(Boolean);
+    return all.slice(0, 3);
   }, [grouped]);
 
   const highlightedIds = useMemo(
@@ -302,7 +308,12 @@ export function Results() {
                 <p className="text-xs font-bold uppercase tracking-wider text-ink-muted">Recommended for you</p>
               </div>
               <p className="text-sm text-ink-muted mb-5">Top picks based on your symptoms and profile.</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className={cn(
+                'grid gap-5',
+                highlightedRemedies.length === 1 && 'grid-cols-1 max-w-md mx-auto',
+                highlightedRemedies.length === 2 && 'grid-cols-1 sm:grid-cols-2',
+                highlightedRemedies.length >= 3 && 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+              )}>
                 {highlightedRemedies.map((remedy, i) => (
                   <HighlightedRemedyCard
                     key={remedy.id}
