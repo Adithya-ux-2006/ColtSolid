@@ -22,8 +22,12 @@ export const useFavoritesStore = create((set, get) => ({
         
       if (error) throw error;
       
-      const remedies = data.map((favorite) => mapRemedy(favorite.remedies));
-      set({ favorites: remedies });
+      const remedies = data.map((favorite) => {
+        const remedy = mapRemedy(favorite.remedies);
+        if (remedy) remedy._savedAt = favorite.created_at;
+        return remedy;
+      });
+      set({ favorites: remedies.sort((a, b) => new Date(b._savedAt) - new Date(a._savedAt)) });
     } catch (error) {
       console.error('Error fetching favorites:', error);
     } finally {
@@ -38,7 +42,8 @@ export const useFavoritesStore = create((set, get) => ({
     // Optimistic update
     const { favorites } = get();
     if (!favorites.some(f => f.id === remedy.id)) {
-      set({ favorites: [...favorites, remedy] });
+      const entry = { ...remedy, _savedAt: new Date().toISOString() };
+      set({ favorites: [entry, ...favorites.filter(f => f.id !== remedy.id)] });
     }
 
     try {
