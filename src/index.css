@@ -159,6 +159,28 @@
     transition: background-color 250ms ease, color 250ms ease;
   }
 
+  input,
+  select,
+  textarea {
+    @apply bg-transparent text-ink placeholder-ink-muted border-border;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    @apply outline-none ring-0;
+  }
+
+  input::-webkit-calendar-picker-indicator,
+  input::-webkit-date-and-time-field {
+    filter: invert(0.6);
+  }
+
+  .dark input::-webkit-calendar-picker-indicator,
+  .dark input::-webkit-date-and-time-field {
+    filter: invert(0.85);
+  }
+
   .dark body::before {
     content: '';
     position: fixed;

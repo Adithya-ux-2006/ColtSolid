@@ -89,7 +89,7 @@ export function RemedyScheduleForm({ remedies, favorites, initialData, onSubmit,
                 placeholder="Search remedies..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm"
+                className="w-full pl-9 pr-3 py-2 border border-border rounded-xl text-sm"
               />
             </div>
 
@@ -152,14 +152,16 @@ export function RemedyScheduleForm({ remedies, favorites, initialData, onSubmit,
         <label className="block text-sm font-medium text-ink mb-1" htmlFor="scheduledTime">
           Time *
         </label>
-        <input
-          id="scheduledTime"
-          type="time"
-          required
-          value={formData.scheduledTime}
-          onChange={(e) => setFormData((prev) => ({ ...prev, scheduledTime: e.target.value }))}
-          className="w-full px-3 py-2 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-        />
+        <div className="bg-card rounded-xl border border-border transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_hsl(var(--primary)/0.25)] focus-within:border-primary/30">
+          <input
+            id="scheduledTime"
+            type="time"
+            required
+            value={formData.scheduledTime}
+            onChange={(e) => setFormData((prev) => ({ ...prev, scheduledTime: e.target.value }))}
+            className="w-full px-3 py-2 rounded-xl text-sm"
+          />
+        </div>
       </div>
 
       {/* Recurrence */}
