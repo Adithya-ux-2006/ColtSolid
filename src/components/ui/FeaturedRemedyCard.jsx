@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Clock, Check } from 'lucide-react';
 import { FavoriteHeart } from './FavoriteHeart';
+import { ScheduleQuickAdd } from './ScheduleQuickAdd';
 import { cn } from '../../utils/cn';
 import { CategoryBadge } from './CategoryBadge';
 import { RemedyImage } from './RemedyImage';
@@ -123,16 +124,19 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
               <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
                 Why We Recommend This
               </p>
-              <button
-                onClick={handleFavorite}
-                className={cn(
-                  'p-1.5 rounded-full transition-colors shrink-0',
-                  favorited ? 'text-primary' : 'text-ink-muted hover:text-primary'
-                )}
-                aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
-              >
-                <FavoriteHeart favorited={favorited} />
-              </button>
+              <div className="flex items-center gap-1">
+                <ScheduleQuickAdd remedy={remedy} />
+                <button
+                  onClick={handleFavorite}
+                  className={cn(
+                    'p-1.5 rounded-full transition-colors shrink-0',
+                    favorited ? 'text-primary' : 'text-ink-muted hover:text-primary'
+                  )}
+                  aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
+                >
+                  <FavoriteHeart favorited={favorited} />
+                </button>
+              </div>
             </div>
             {reasons.length > 0 ? (
               <ul className="space-y-4">

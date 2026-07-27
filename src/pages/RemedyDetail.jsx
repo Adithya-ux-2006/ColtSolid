@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, BookOpen, ChevronRight } from 'lucide-react';
 import { FavoriteHeart } from '../components/ui/FavoriteHeart';
+import { ScheduleQuickAdd } from '../components/ui/ScheduleQuickAdd';
 import { PageWrapper } from '../components/layout';
 import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
 import { RemedyHero } from '../components/ui/RemedyHero';
@@ -173,20 +174,23 @@ export function RemedyDetail() {
             <ArrowLeft className="w-4 h-4" />
             Back
           </button>
-          <button
-            onClick={() => {
-              if (!isAuthenticated) { navigate('/register'); return; }
-              toggleFavorite(remedy);
-            }}
-            className={cn(
-              'p-2.5 rounded-full transition-colors duration-200 min-w-[44px] min-h-[44px] flex items-center justify-center',
-              'active:scale-90',
-              favorite ? 'text-primary' : 'text-ink-muted hover:text-primary'
-            )}
-            aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
-          >
-            <FavoriteHeart favorited={favorite} />
-          </button>
+          <div className="flex items-center gap-1">
+            <ScheduleQuickAdd remedy={remedy} className="!p-2.5 !min-w-[44px] !min-h-[44px]" />
+            <button
+              onClick={() => {
+                if (!isAuthenticated) { navigate('/register'); return; }
+                toggleFavorite(remedy);
+              }}
+              className={cn(
+                'p-2.5 rounded-full transition-colors duration-200 min-w-[44px] min-h-[44px] flex items-center justify-center',
+                'active:scale-90',
+                favorite ? 'text-primary' : 'text-ink-muted hover:text-primary'
+              )}
+              aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
+            >
+              <FavoriteHeart favorited={favorite} />
+            </button>
+          </div>
         </div>
       </div>
 

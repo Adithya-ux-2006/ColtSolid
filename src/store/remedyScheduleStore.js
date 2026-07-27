@@ -8,6 +8,10 @@ export const useRemedyScheduleStore = create((set, get) => ({
 
   clear: () => set({ schedules: [] }),
 
+  hasActiveSchedule: (remedyId) => {
+    return get().schedules.some((s) => s.remedy_id === remedyId && s.active);
+  },
+
   fetchSchedules: async () => {
     const user = useAuthStore.getState().user;
     if (!user) return;

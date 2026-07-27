@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Clock, Check, ArrowRight } from 'lucide-react';
 import { FavoriteHeart } from './FavoriteHeart';
+import { ScheduleQuickAdd } from './ScheduleQuickAdd';
 import { cn } from '../../utils/cn';
 import { CategoryBadge } from './CategoryBadge';
 import { RemedyImage } from './RemedyImage';
@@ -60,16 +61,19 @@ export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetySco
         <div className="p-5 flex flex-col flex-1">
           <div className="flex items-start justify-between mb-3">
             <CategoryBadge category={remedy.category} firstOccurrence />
-            <button
-              onClick={handleFavorite}
-              className={cn(
-                'p-1.5 rounded-full transition-colors shrink-0 -mt-0.5 -mr-0.5',
-                favorited ? 'text-primary' : 'text-ink-muted hover:text-primary'
-              )}
-              aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
-            >
-              <FavoriteHeart favorited={favorited} className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-1 shrink-0 -mt-0.5 -mr-0.5">
+              <ScheduleQuickAdd remedy={remedy} />
+              <button
+                onClick={handleFavorite}
+                className={cn(
+                  'p-1.5 rounded-full transition-colors',
+                  favorited ? 'text-primary' : 'text-ink-muted hover:text-primary'
+                )}
+                aria-label={favorited ? 'Remove from favorites' : 'Add to favorites'}
+              >
+                <FavoriteHeart favorited={favorited} className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
           <div className="flex items-center gap-3 mb-3">
