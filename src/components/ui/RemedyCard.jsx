@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Clock, Star } from 'lucide-react';
 import { FavoriteHeart } from './FavoriteHeart';
+import { ScheduleQuickAdd } from './ScheduleQuickAdd';
 import { cn } from '../../utils/cn';
 import { CategoryBadge } from './CategoryBadge';
 import { RatingStars } from './RatingStars';
@@ -42,6 +43,7 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
             <CategoryBadge category={remedy.category} />
             <div className="flex items-center gap-1">
               <AllergyBadge isSafe={isSafe} compact />
+              <ScheduleQuickAdd remedy={remedy} />
               <button
                 onClick={handleFavorite}
                 className={cn(
@@ -91,16 +93,19 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
             <span className="text-xs font-medium text-primary-light bg-card/60 px-2.5 py-0.5 rounded-full">
               Featured
             </span>
-            <button
-              onClick={handleFavorite}
-              className={cn(
-                "ml-auto p-1.5 rounded-full transition-colors",
-                favorited ? "text-primary" : "text-ink-muted hover:text-primary"
-              )}
-              aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
-            >
-              <FavoriteHeart favorited={favorited} className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-1 ml-auto">
+              <ScheduleQuickAdd remedy={remedy} />
+              <button
+                onClick={handleFavorite}
+                className={cn(
+                  "p-1.5 rounded-full transition-colors",
+                  favorited ? "text-primary" : "text-ink-muted hover:text-primary"
+                )}
+                aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
+              >
+                <FavoriteHeart favorited={favorited} className="w-4 h-4" />
+              </button>
+            </div>
           </div>
           <h3 className="text-xl font-semibold text-ink mb-2">{remedy.name}</h3>
           <p className="text-ink-muted text-sm mb-4 line-clamp-2">{remedy.shortDescription}</p>
@@ -148,6 +153,7 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
           </div>
           <div className="flex items-center gap-1">
             <AllergyBadge isSafe={isSafe} compact />
+            <ScheduleQuickAdd remedy={remedy} />
             <button
               onClick={handleFavorite}
               className={cn(

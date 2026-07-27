@@ -8,6 +8,7 @@ import { useRemedyScheduleStore } from './store/remedyScheduleStore';
 import { useCatalogStore } from './store/catalogStore';
 import { LoadingSkeleton } from './components/ui/LoadingSkeleton';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
+import { QuickScheduleModal } from './components/ui/QuickScheduleModal';
 
 // Pages — lazy-loaded for code splitting
 const Landing = lazy(() => import('./pages/Landing').then(m => ({ default: m.Landing })));
@@ -168,6 +169,7 @@ function App() {
             </main>
             <BottomNav />
             <AppDock />
+            <QuickScheduleModal />
           </div>
         </ErrorBoundary>
       </BrowserRouter>

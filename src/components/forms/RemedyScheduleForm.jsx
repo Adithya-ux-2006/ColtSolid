@@ -4,7 +4,7 @@ import { cn } from '../../utils/cn';
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-export function RemedyScheduleForm({ remedies, favorites, initialData, onSubmit, onCancel, error, isSubmitting }) {
+export function RemedyScheduleForm({ remedies, favorites, initialData, onSubmit, onCancel, error, isSubmitting, lockRemedy = false }) {
   const [formData, setFormData] = useState(
     initialData || {
       remedyId: '',
@@ -75,11 +75,13 @@ export function RemedyScheduleForm({ remedies, favorites, initialData, onSubmit,
           <div className="flex items-center gap-2 px-3 py-2 border border-primary/30 rounded-xl bg-primary/5">
             <Heart className={cn("w-4 h-4", favoriteIds.has(formData.remedyId) ? "text-primary" : "text-ink-muted")} fill={favoriteIds.has(formData.remedyId) ? "currentColor" : "none"} />
             <span className="flex-1 text-sm font-medium text-ink">{formData.remedyName}</span>
-            <button type="button" onClick={clearSelection} className="p-1 text-ink-muted hover:text-ink rounded-full">
-              <X className="w-4 h-4" />
-            </button>
+            {!lockRemedy && (
+              <button type="button" onClick={clearSelection} className="p-1 text-ink-muted hover:text-ink rounded-full">
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
-        ) : (
+        ) : lockRemedy ? null : (
           <>
             {/* Search input */}
             <div className="relative mb-2">
