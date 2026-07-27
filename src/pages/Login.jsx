@@ -30,7 +30,7 @@ export function Login() {
   };
 
   return (
-    <PageWrapper className="min-h-screen bg-gradient-hero flex flex-col items-center justify-center p-6">
+    <PageWrapper className="min-h-screen flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex w-14 h-14 bg-primary rounded-2xl items-center justify-center shadow-glow mb-4">

@@ -227,7 +227,7 @@ export function Results() {
 
   if (!hasLoaded && isCatalogLoading) {
     return (
-      <PageWrapper className="min-h-screen bg-bg pb-16">
+      <PageWrapper className="min-h-screen pb-16">
         <div className="max-w-4xl mx-auto px-6 pt-8">
           <LoadingSkeleton count={2} />
         </div>
@@ -237,7 +237,7 @@ export function Results() {
 
   if (!isFreeTextSearch && !matchedSymptom && hasLoaded) {
     return (
-      <PageWrapper className="min-h-screen bg-bg pt-16 px-6">
+      <PageWrapper className="min-h-screen pt-16 px-6">
         <EmptyState
           title="Symptom not found"
           description="Please select a valid symptom from the search page."
@@ -249,7 +249,7 @@ export function Results() {
   }
 
   return (
-    <PageWrapper className="min-h-screen bg-bg pb-24 md:pb-16">
+    <PageWrapper className="min-h-screen pb-24 md:pb-16">
       <div className="max-w-4xl mx-auto px-6 pt-8">
         <button
           onClick={() => navigate('/search')}

@@ -61,7 +61,7 @@ export function RemedySchedules() {
   };
 
   return (
-    <PageWrapper className="min-h-screen bg-bg pb-24 md:pb-8 pt-6 relative">
+    <PageWrapper className="min-h-screen pb-24 md:pb-8 pt-6 relative">
       <div className="max-w-3xl mx-auto px-6">
         <div className="flex justify-between items-end mb-6">
           <div>

@@ -141,7 +141,7 @@ export function RemedyDetail() {
 
   if (!hasLoaded && isCatalogLoading) {
     return (
-      <PageWrapper className="min-h-screen bg-bg">
+      <PageWrapper className="min-h-screen">
         <div className="max-w-[800px] mx-auto px-5 md:px-8 pt-8">
           <LoadingSkeleton count={1} />
         </div>
@@ -151,14 +151,14 @@ export function RemedyDetail() {
 
   if (!remedy) {
     return (
-      <div className="min-h-screen bg-bg flex items-center justify-center px-6">
+      <div className="min-h-screen flex items-center justify-center px-6">
         <p className="text-ink-muted text-base">Remedy not found</p>
       </div>
     );
   }
 
   return (
-    <PageWrapper className="min-h-screen bg-bg pb-28 md:pb-24">
+    <PageWrapper className="min-h-screen pb-28 md:pb-24">
       <div className="sticky top-0 z-40 bg-bg/80 backdrop-blur-md border-b border-border">
         <div className="max-w-[800px] mx-auto px-5 md:px-8 h-14 flex items-center justify-between">
           <button

@@ -22,7 +22,7 @@ export function Landing() {
   );
 
   return (
-    <PageWrapper className="min-h-screen bg-gradient-hero flex flex-col">
+    <PageWrapper className="min-h-screen flex flex-col">
       <section className="relative pt-24 pb-16 px-6 lg:px-8 overflow-hidden">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <div className="w-14 h-14 mx-auto bg-primary rounded-2xl flex items-center justify-center shadow-glow">

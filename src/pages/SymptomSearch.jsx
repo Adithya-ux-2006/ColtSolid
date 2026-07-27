@@ -142,7 +142,7 @@ export function SymptomSearch() {
   }
 
   return (
-    <PageWrapper className="min-h-screen bg-gradient-hero flex flex-col">
+    <PageWrapper className="min-h-screen flex flex-col">
       <div className="flex-1 flex flex-col justify-center px-6 py-16 max-w-2xl mx-auto w-full">
         <h1 className="text-display font-bold text-ink mb-2">
           Feel Better,

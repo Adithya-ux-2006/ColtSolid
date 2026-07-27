@@ -82,7 +82,7 @@ export function Profile() {
     };
 
     return (
-      <PageWrapper className="min-h-screen bg-bg pb-24 md:pb-8 pt-6">
+      <PageWrapper className="min-h-screen pb-24 md:pb-8 pt-6">
         <div className="max-w-2xl mx-auto px-6 space-y-8">
           {/* Guest Profile Card */}
           <div className="bg-card rounded-3xl p-6 md:p-8 shadow-sm border border-border flex flex-col items-center gap-4 text-center">
@@ -302,7 +302,7 @@ export function Profile() {
   };
 
   return (
-    <PageWrapper className="min-h-screen bg-bg pb-24 md:pb-8 pt-6">
+    <PageWrapper className="min-h-screen pb-24 md:pb-8 pt-6">
       <div className="max-w-2xl mx-auto px-6 space-y-8">
         
         {/* Profile Card */}
