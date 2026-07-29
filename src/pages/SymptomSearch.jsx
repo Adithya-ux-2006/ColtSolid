@@ -161,7 +161,7 @@ export function SymptomSearch() {
         <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-emerald-500/4 blur-3xl pointer-events-none" />
 
         <div className="max-w-[1280px] mx-auto px-5 md:px-8 pt-8 md:pt-12 pb-6 md:pb-10">
-          <div className="flex items-center justify-between gap-8">
+          <div className="flex items-center gap-12">
             <div className="max-w-xl">
               <div className="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-500 text-xs font-semibold px-3.5 py-1.5 rounded-full mb-4">
                 <ShieldCheck className="w-3.5 h-3.5" />
@@ -304,7 +304,7 @@ export function SymptomSearch() {
                     <p className="font-semibold text-ink">{item.label}</p>
                     <p className="text-sm text-ink-muted leading-snug mt-0.5">
                       {remedyCountBySymptom[item.id]
-                        ? `${remedyCountBySymptom[item.id]} remedy${remedyCountBySymptom[item.id] !== 1 ? 's' : ''}`
+                        ? `${remedyCountBySymptom[item.id]} ${remedyCountBySymptom[item.id] === 1 ? 'remedy' : 'remedies'}`
                         : 'Research-backed'}
                     </p>
                   </div>
