@@ -1,6 +1,11 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { LogOut, ChevronDown, User, Shield, Pencil, X, Check } from 'lucide-react';
+import { motion } from 'framer-motion';
+import {
+  LogOut, ChevronDown, User, Shield, Pencil, X, Check,
+  Leaf, TrendingUp, Clock, Sparkles, Search
+} from 'lucide-react';
+import { cn } from '../utils/cn';
 import { PageWrapper } from '../components/layout';
 import { FAQAccordion } from '../components/ui/FAQAccordion';
 import { useAuthStore } from '../store/authStore';
@@ -14,11 +19,182 @@ const ONBOARDING_LABELS = new Map(
   [...CONDITIONS, ...ALLERGIES].map((option) => [option.value, option.label])
 );
 
+const CONDITION_MAP = new Map(CONDITIONS.map((c) => [c.value, { label: c.label, emoji: c.emoji }]));
+const ALLERGY_MAP = new Map(ALLERGIES.map((a) => [a.value, { label: a.label, emoji: a.emoji }]));
+const OTHER_EMOJI = '✏️';
+const NONE_EMOJI = '○';
+
+const INITIAL_VISIBLE = 5;
+
 function formatChip(value) {
   if (!value) return value;
   if (value.startsWith('other:')) return value.slice(6).trim();
   if (ONBOARDING_LABELS.has(value)) return ONBOARDING_LABELS.get(value);
   return value.split('-').map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+}
+
+function getConditionDisplay(value) {
+  if (value.startsWith('other:')) return { emoji: OTHER_EMOJI, label: value.slice(6).trim() };
+  const entry = CONDITION_MAP.get(value);
+  if (entry) return entry;
+  return { emoji: NONE_EMOJI, label: formatChip(value) };
+}
+
+function getAllergyDisplay(value) {
+  if (value.startsWith('other:')) return { emoji: OTHER_EMOJI, label: value.slice(6).trim() };
+  const entry = ALLERGY_MAP.get(value);
+  if (entry) return entry;
+  return { emoji: NONE_EMOJI, label: formatChip(value) };
+}
+
+function parseReliefMinutes(timeStr) {
+  if (!timeStr) return null;
+  const s = timeStr.toLowerCase();
+  if (s.includes('immediate')) return 0;
+  if (s.includes('week') || s.includes('day')) return null;
+  const nums = s.match(/\d+/g);
+  if (!nums) return null;
+  const values = nums.map(Number);
+  const avg = (values[0] + (values[values.length - 1] || values[0])) / 2;
+  if (s.includes('hour')) return avg * 60;
+  return avg;
+}
+
+function computeAvgReliefTime(favorites) {
+  const minutes = favorites
+    .map((r) => parseReliefMinutes(r.timeToEffect))
+    .filter((m) => m !== null);
+  if (minutes.length === 0) return null;
+  const avg = minutes.reduce((a, b) => a + b, 0) / minutes.length;
+  if (avg < 1) return 'Immediate';
+  if (avg < 60) return `${Math.round(avg)} min`;
+  const h = Math.round(avg / 60);
+  return `${h} hr${h > 1 ? 's' : ''}`;
+}
+
+function ProfileHeroIllustration() {
+  return (
+    <svg
+      viewBox="0 0 240 240"
+      className="w-[180px] h-[180px] lg:w-[220px] lg:h-[220px] shrink-0"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <radialGradient id="profileGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#34D399" stopOpacity="0.3" />
+          <stop offset="60%" stopColor="#34D399" stopOpacity="0.1" />
+          <stop offset="100%" stopColor="#34D399" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+
+      <circle cx="120" cy="120" r="110" fill="url(#profileGlow)" />
+
+      {/* Person figure silhouette */}
+      <circle cx="120" cy="90" r="20" fill="#374151" opacity="0.8" />
+      <path
+        d="M82 180c0-24 36-24 36 0 0 8-8 14-18 14s-18-6-18-14z"
+        fill="#374151"
+        opacity="0.8"
+      />
+
+      {/* Shield-check badge */}
+      <g transform="translate(136, 84)">
+        <path
+          d="M0 3c0-3 8-6 16-9 8 3 16 6 16 9 0 14-4 24-16 30-12-6-16-16-16-30z"
+          fill="#34D399"
+          fillOpacity="0.25"
+          stroke="#34D399"
+          strokeWidth="1.5"
+        />
+        <path
+          d="M10 16l3 4 8-8"
+          stroke="#34D399"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </g>
+
+      {/* Leaf top-left */}
+      <path
+        d="M86 74c-6 14-2 28 2 32 4-4 8-18 2-32z"
+        fill="#34D399"
+        fillOpacity="0.3"
+      />
+      <path
+        d="M86 74c2 6 3 12 2 18"
+        stroke="#34D399"
+        strokeWidth="1"
+        strokeLinecap="round"
+        fill="none"
+      />
+
+      {/* Accent dots */}
+      <circle cx="156" cy="72" r="2" fill="#34D399" fillOpacity="0.45" />
+      <circle cx="163" cy="80" r="1.5" fill="#34D399" fillOpacity="0.35" />
+      <circle cx="78" cy="148" r="1.5" fill="#34D399" fillOpacity="0.25" />
+    </svg>
+  );
+}
+
+function StatCard({ icon: Icon, value, label, color }) {
+  return (
+    <motion.div
+      whileHover={{ y: -2 }}
+      transition={{ duration: 0.2 }}
+      className="bg-card rounded-[20px] border border-border/60 shadow-soft p-5 flex items-center gap-4"
+    >
+      <div className={cn(
+        'w-12 h-12 rounded-full flex items-center justify-center shrink-0',
+        color === 'emerald' && 'bg-emerald-500/10 text-emerald-500',
+        color === 'violet' && 'bg-violet-500/10 text-violet-500',
+        color === 'orange' && 'bg-orange-500/10 text-orange-500',
+      )}>
+        <Icon className="w-6 h-6" />
+      </div>
+      <div className="min-w-0">
+        <p className="text-2xl font-bold text-ink leading-none mb-1">{value}</p>
+        <p className="text-sm text-ink-muted truncate">{label}</p>
+      </div>
+    </motion.div>
+  );
+}
+
+function PillGroup({ items, getDisplay, emptyLabel }) {
+  const [showAll, setShowAll] = useState(false);
+  const visible = showAll ? items : items.slice(0, INITIAL_VISIBLE);
+  const remaining = items.length - INITIAL_VISIBLE;
+
+  if (items.length === 0) {
+    return <p className="text-sm text-ink-muted">{emptyLabel}</p>;
+  }
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {visible.map((value) => {
+        const { emoji, label } = getDisplay(value);
+        return (
+          <span
+            key={value}
+            className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary"
+          >
+            <span className="text-xs leading-none">{emoji}</span>
+            <span>{label}</span>
+          </span>
+        );
+      })}
+      {!showAll && remaining > 0 && (
+        <button
+          type="button"
+          onClick={() => setShowAll(true)}
+          className="rounded-full border border-border/60 px-3 py-1.5 text-sm font-medium text-ink-muted hover:text-ink hover:border-border transition-colors"
+        >
+          +{remaining} more
+        </button>
+      )}
+    </div>
+  );
 }
 
 export function Profile() {
@@ -34,8 +210,10 @@ export function Profile() {
   const navigate = useNavigate();
 
   const [isEditing, setIsEditing] = useState(false);
-  const [expandedSection, setExpandedSection] = useState(null);
   const [isEditingHealth, setIsEditingHealth] = useState(false);
+  const [expandedSection, setExpandedSection] = useState(null);
+  const [insightRange, setInsightRange] = useState('30d');
+  const [showInsightMenu, setShowInsightMenu] = useState(false);
   const [healthForm, setHealthForm] = useState({
     selectedConditions: [],
     selectedAllergies: [],
@@ -43,13 +221,13 @@ export function Profile() {
     otherAllergyText: '',
   });
 
-  // Guest profile editing state
   const [guestEditForm, setGuestEditForm] = useState({
     selectedConditions: guestConditions,
     selectedAllergies: guestAllergies,
     otherConditionText: '',
     otherAllergyText: '',
   });
+
   const [editForm, setEditForm] = useState({
     name: user?.name || '',
     gender: user?.gender || '',
@@ -57,7 +235,7 @@ export function Profile() {
     selectedAllergies: user?.known_allergies ?? [],
   });
 
-  // Guest profile view: not authenticated
+  // Guest profile view
   if (!isAuthenticated) {
     const handleGuestSave = () => {
       const conditions = guestEditForm.selectedConditions.filter(v => v !== 'none');
@@ -116,7 +294,6 @@ export function Profile() {
               <p className="text-xs text-ink-muted mt-1">Edit your allergies and conditions to get safer remedy recommendations.</p>
             </div>
             <div className="space-y-5 p-5">
-              {/* Allergies */}
               <div className="space-y-2">
                 <p className="text-sm font-semibold text-ink">Allergies & Sensitivities</p>
                 <div className="flex flex-wrap gap-2">
@@ -154,7 +331,6 @@ export function Profile() {
                   </div>
                 )}
               </div>
-              {/* Conditions */}
               <div className="space-y-2">
                 <p className="text-sm font-semibold text-ink">Health Conditions</p>
                 <div className="flex flex-wrap gap-2">
@@ -194,7 +370,6 @@ export function Profile() {
                 Save
               </button>
 
-              {/* Summary */}
               {(guestEditForm.selectedAllergies.length > 0 || guestEditForm.selectedConditions.length > 0) && (
                 <div className="pt-3 border-t border-border space-y-3">
                   <ProfileGroup title="Allergies" values={guestEditForm.selectedAllergies.map(formatValue)} emptyLabel="None selected" />
@@ -229,8 +404,7 @@ export function Profile() {
     );
   }
 
-  // Authenticated user profile
-
+  // Authenticated user
   const selectedConditions = user.common_conditions ?? [];
   const selectedAllergies = user.known_allergies ?? [];
 
@@ -301,207 +475,332 @@ export function Profile() {
     setHealthForm({ ...healthForm, [field]: next });
   };
 
+  // Stats computation
+  const naturalCount = favorites.filter((r) => r.category === 'Natural').length;
+  const naturalPercent = favorites.length > 0
+    ? Math.round((naturalCount / favorites.length) * 100)
+    : 0;
+
+  const highEvidenceCount = favorites.filter((r) => {
+    if (r._evidenceScore != null) return r._evidenceScore >= 7;
+    return r.rating >= 4.5;
+  }).length;
+
+  const avgReliefTime = useMemo(() => computeAvgReliefTime(favorites), [favorites]);
+
+  const insightRangeOptions = [
+    { value: '7d', label: '7 days' },
+    { value: '30d', label: '30 days' },
+    { value: 'all', label: 'All time' },
+  ];
+
+  const activeRangeLabel = insightRangeOptions.find((o) => o.value === insightRange)?.label || '30 days';
+
   return (
-    <PageWrapper className="min-h-screen pb-24 md:pb-8 pt-6">
-      <div className="max-w-2xl mx-auto px-6 space-y-8">
-        
-        {/* Profile Card */}
-        <div className="bg-card rounded-3xl p-6 md:p-8 shadow-sm border border-border flex flex-col md:flex-row items-center md:items-start gap-6 text-center md:text-left">
-          <div className="w-24 h-24 rounded-2xl bg-primary flex items-center justify-center text-3xl font-bold text-white shadow-glow shrink-0">
-            {user.avatar}
-          </div>
-          
-          <div className="flex-1 w-full">
-            {isEditing ? (
-              <div className="space-y-3">
-                <div className="bg-card rounded-xl shadow-soft border border-border/50 transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_hsl(var(--primary)/0.25)] focus-within:border-primary/30">
-                  <input 
-                    type="text" 
-                    value={editForm.name} 
-                    onChange={e => setEditForm({...editForm, name: e.target.value})}
-                    className="w-full bg-transparent px-3 py-2 text-sm text-ink placeholder-ink-muted focus:outline-none"
-                    placeholder="Name"
-                  />
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {['male', 'female', 'non-binary-other', 'prefer-not-to-say'].map((option) => {
-                    const labels = {
-                      male: 'Male',
-                      female: 'Female',
-                      'non-binary-other': 'Non-binary / Other',
-                      'prefer-not-to-say': 'Prefer not to say',
-                    };
+    <PageWrapper className="min-h-screen pb-28 md:pb-12">
+      <div className="max-w-2xl mx-auto px-5 md:px-8 pt-6 md:pt-8 space-y-6 md:space-y-8">
 
-                    const isSelected = editForm.gender === option;
-
-                    return (
-                      <button
-                        key={option}
-                        type="button"
-                        aria-pressed={isSelected}
-                        onClick={() => setEditForm({ ...editForm, gender: option })}
-                        className={isSelected ? 'rounded-full border border-forest bg-primary px-4 py-2 text-sm font-medium text-white' : 'rounded-full border border-border px-4 py-2 text-sm font-medium text-ink'}
-                      >
-                        {labels[option]}
-                      </button>
-                    );
-                  })}
-                </div>
-                <div className="flex gap-2 justify-center md:justify-start pt-2">
-                  <button onClick={() => setIsEditing(false)} className="px-4 py-1.5 rounded-full text-sm font-medium border text-ink">Cancel</button>
-                  <button onClick={handleSaveProfile} className="px-4 py-1.5 rounded-full text-sm font-medium bg-primary text-white">Save</button>
-                </div>
+        {/* ── Welcome Header Card ── */}
+        <section className="relative overflow-hidden bg-card rounded-3xl border border-border/60 shadow-soft">
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/8 via-emerald-500/5 to-transparent pointer-events-none" />
+          <div className="relative p-6 md:p-8 flex flex-col md:flex-row items-center md:items-start gap-6">
+            <div className="shrink-0">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-primary flex items-center justify-center text-2xl md:text-3xl font-bold text-white shadow-glow">
+                {user.avatar}
               </div>
-            ) : (
-              <div>
-                <h1 className="text-2xl font-bold text-ink mb-1">{user.name}</h1>
-                <p className="text-ink-muted mb-3">{user.email}</p>
-                <p className="text-sm text-ink-muted mb-4">Sex / Gender: {user.gender ? GENDER_OPTIONS.find((option) => option.value === user.gender)?.label || user.gender : 'Not provided'}</p>
+            </div>
+
+            <div className="flex-1 w-full text-center md:text-left">
+              {isEditing ? (
+                <div className="space-y-3">
+                  <div className="bg-card rounded-xl shadow-soft border border-border/50 transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_hsl(var(--primary)/0.25)] focus-within:border-primary/30">
+                    <input
+                      type="text"
+                      value={editForm.name}
+                      onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                      className="w-full bg-transparent px-3 py-2 text-sm text-ink placeholder-ink-muted focus:outline-none"
+                      placeholder="Name"
+                    />
+                  </div>
+                  <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+                    {GENDER_OPTIONS.map((option) => {
+                      const isSelected = editForm.gender === option.value;
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          aria-pressed={isSelected}
+                          onClick={() => setEditForm({ ...editForm, gender: option.value })}
+                          className={isSelected
+                            ? 'rounded-full border border-forest bg-primary px-4 py-2 text-sm font-medium text-white'
+                            : 'rounded-full border border-border px-4 py-2 text-sm font-medium text-ink'
+                          }
+                        >
+                          {option.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="flex gap-2 justify-center md:justify-start pt-2">
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      className="px-4 py-1.5 rounded-full text-sm font-medium border text-ink"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleSaveProfile}
+                      className="px-4 py-1.5 rounded-full text-sm font-medium bg-primary text-white"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              ) : (
                 <div>
-                  <button 
+                  <p className="text-xs font-semibold uppercase tracking-wider text-ink-muted mb-1.5">
+                    Welcome back
+                  </p>
+                  <h1 className="text-2xl md:text-3xl font-bold text-ink mb-1">{user.name}</h1>
+                  <p className="text-sm text-ink-muted mb-2">{user.email}</p>
+                  <p className="text-sm text-ink-muted">
+                    Sex / Gender:{' '}
+                    {user.gender
+                      ? GENDER_OPTIONS.find((option) => option.value === user.gender)?.label || user.gender
+                      : 'Not provided'}
+                  </p>
+                  <button
                     onClick={startEditing}
-                    className="text-sm font-semibold text-primary hover:underline"
+                    className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark transition-colors"
                   >
+                    <Pencil className="w-3.5 h-3.5" />
                     Edit Profile
                   </button>
                 </div>
-              </div>
-            )}
-          </div>
-        </div>
+              )}
+            </div>
 
-        {/* Health Profile — Prominent Editable Section */}
-        <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
-          <div className="p-5 border-b border-border flex items-center justify-between">
+            <div className="hidden md:block shrink-0">
+              <ProfileHeroIllustration />
+            </div>
+          </div>
+        </section>
+
+        {/* ── Health Profile Card ── */}
+        <section className="bg-card rounded-2xl shadow-sm border border-border/60 overflow-hidden">
+          <div className="p-5 border-b border-border/60 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Shield className="w-5 h-5 text-primary" />
               <h2 className="font-bold text-lg text-ink">Health Profile</h2>
             </div>
             {isEditingHealth ? (
               <div className="flex items-center gap-2">
-                <button onClick={() => setIsEditingHealth(false)} className="p-2 rounded-lg hover:bg-surface transition-colors text-ink-muted">
+                <button
+                  onClick={() => setIsEditingHealth(false)}
+                  className="p-2 rounded-lg hover:bg-surface transition-colors text-ink-muted"
+                >
                   <X className="w-4 h-4" />
                 </button>
-                <button onClick={handleSaveHealth} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-dark transition-colors">
+                <button
+                  onClick={handleSaveHealth}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-dark transition-colors"
+                >
                   <Check className="w-4 h-4" />
                   Save
                 </button>
               </div>
             ) : (
-              <button onClick={startEditingHealth} className="flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark transition-colors">
+              <button
+                onClick={startEditingHealth}
+                className="flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark transition-colors"
+              >
                 <Pencil className="w-3.5 h-3.5" />
                 Edit
               </button>
             )}
           </div>
+
           <div className="p-5 space-y-5">
             {/* Conditions */}
             <div className="space-y-2">
               <p className="text-sm font-semibold text-ink">Health Conditions</p>
               {isEditingHealth ? (
                 <>
-                <div className="flex flex-wrap gap-2">
-                  {CONDITIONS.map((option) => {
-                    const isSelected = healthForm.selectedConditions.includes(option.value);
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        aria-pressed={isSelected}
-                        onClick={() => toggleHealthChip(option.value, 'conditions')}
-                        className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-border px-3 py-1.5 text-sm font-medium text-ink'}
-                      >
-                        {option.label}
-                      </button>
-                    );
-                  })}
-                </div>
-                {healthForm.selectedConditions.includes('other') && (
-                  <div className="bg-card rounded-xl shadow-soft border border-border/50 transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_hsl(var(--primary)/0.25)] focus-within:border-primary/30 mt-2">
-                    <input
-                      type="text"
-                      value={healthForm.otherConditionText}
-                      onChange={(e) => setHealthForm({ ...healthForm, otherConditionText: e.target.value })}
-                      placeholder="Please specify your condition..."
-                      className="w-full bg-transparent px-3 py-2 text-sm text-ink placeholder-ink-muted focus:outline-none"
-                    />
+                  <div className="flex flex-wrap gap-2">
+                    {CONDITIONS.map((option) => {
+                      const isSelected = healthForm.selectedConditions.includes(option.value);
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          aria-pressed={isSelected}
+                          onClick={() => toggleHealthChip(option.value, 'conditions')}
+                          className={isSelected
+                            ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white'
+                            : 'rounded-full border border-border px-3 py-1.5 text-sm font-medium text-ink'
+                          }
+                        >
+                          {option.label}
+                        </button>
+                      );
+                    })}
                   </div>
-                )}
+                  {healthForm.selectedConditions.includes('other') && (
+                    <div className="bg-card rounded-xl shadow-soft border border-border/50 transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_hsl(var(--primary)/0.25)] focus-within:border-primary/30 mt-2">
+                      <input
+                        type="text"
+                        value={healthForm.otherConditionText}
+                        onChange={(e) => setHealthForm({ ...healthForm, otherConditionText: e.target.value })}
+                        placeholder="Please specify your condition..."
+                        className="w-full bg-transparent px-3 py-2 text-sm text-ink placeholder-ink-muted focus:outline-none"
+                      />
+                    </div>
+                  )}
                 </>
               ) : (
-                <div className="flex flex-wrap gap-2">
-                  {selectedConditions.length > 0 ? selectedConditions.map((value) => (
-                    <span key={value} className="rounded-full bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary">
-                      {formatChip(value)}
-                    </span>
-                  )) : (
-                    <p className="text-sm text-ink-muted">No conditions selected</p>
-                  )}
-                </div>
+                <PillGroup
+                  items={selectedConditions}
+                  getDisplay={getConditionDisplay}
+                  emptyLabel="No conditions selected"
+                />
               )}
             </div>
+
             {/* Allergies */}
             <div className="space-y-2">
               <p className="text-sm font-semibold text-ink">Allergies & Sensitivities</p>
               {isEditingHealth ? (
                 <>
-                <div className="flex flex-wrap gap-2">
-                  {ALLERGIES.map((option) => {
-                    const isSelected = healthForm.selectedAllergies.includes(option.value);
-                    return (
-                      <button
-                        key={option.value}
-                        type="button"
-                        aria-pressed={isSelected}
-                        onClick={() => toggleHealthChip(option.value, 'allergies')}
-                        className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-border px-3 py-1.5 text-sm font-medium text-ink'}
-                      >
-                        {option.label}
-                      </button>
-                    );
-                  })}
-                </div>
-                {healthForm.selectedAllergies.includes('other') && (
-                  <div className="bg-card rounded-xl shadow-soft border border-border/50 transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_hsl(var(--primary)/0.25)] focus-within:border-primary/30 mt-2">
-                    <input
-                      type="text"
-                      value={healthForm.otherAllergyText}
-                      onChange={(e) => setHealthForm({ ...healthForm, otherAllergyText: e.target.value })}
-                      placeholder="Please specify your allergy..."
-                      className="w-full bg-transparent px-3 py-2 text-sm text-ink placeholder-ink-muted focus:outline-none"
-                    />
+                  <div className="flex flex-wrap gap-2">
+                    {ALLERGIES.map((option) => {
+                      const isSelected = healthForm.selectedAllergies.includes(option.value);
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          aria-pressed={isSelected}
+                          onClick={() => toggleHealthChip(option.value, 'allergies')}
+                          className={isSelected
+                            ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white'
+                            : 'rounded-full border border-border px-3 py-1.5 text-sm font-medium text-ink'
+                          }
+                        >
+                          {option.label}
+                        </button>
+                      );
+                    })}
                   </div>
-                )}
+                  {healthForm.selectedAllergies.includes('other') && (
+                    <div className="bg-card rounded-xl shadow-soft border border-border/50 transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_hsl(var(--primary)/0.25)] focus-within:border-primary/30 mt-2">
+                      <input
+                        type="text"
+                        value={healthForm.otherAllergyText}
+                        onChange={(e) => setHealthForm({ ...healthForm, otherAllergyText: e.target.value })}
+                        placeholder="Please specify your allergy..."
+                        className="w-full bg-transparent px-3 py-2 text-sm text-ink placeholder-ink-muted focus:outline-none"
+                      />
+                    </div>
+                  )}
                 </>
               ) : (
-                <div className="flex flex-wrap gap-2">
-                  {selectedAllergies.length > 0 ? selectedAllergies.map((value) => (
-                    <span key={value} className="rounded-full bg-amber-50 border border-amber-200 px-3 py-1.5 text-sm font-medium text-amber-800">
-                      {formatChip(value)}
-                    </span>
-                  )) : (
-                    <p className="text-sm text-ink-muted">No allergies selected</p>
-                  )}
-                </div>
+                <PillGroup
+                  items={selectedAllergies}
+                  getDisplay={getAllergyDisplay}
+                  emptyLabel="No allergies selected"
+                />
               )}
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-card p-5 rounded-2xl shadow-sm border border-border flex flex-col items-center justify-between">
-            <span className="text-ink-muted font-medium text-sm">Saved</span>
-            <span className="text-2xl font-bold text-primary">{favorites.length}</span>
-          </div>
-          <div className="bg-card p-5 rounded-2xl shadow-sm border border-border flex flex-col items-center justify-between">
-            <span className="text-ink-muted font-medium text-sm">Schedules</span>
-            <span className="text-2xl font-bold text-primary-dark">{schedules.length}</span>
-          </div>
-        </div>
+        {/* ── Stat Cards ── */}
+        <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <StatCard
+            icon={Leaf}
+            value={favorites.length > 0 ? `${naturalPercent}%` : '—'}
+            label="Natural Preference"
+            color="emerald"
+          />
+          <StatCard
+            icon={TrendingUp}
+            value={favorites.length > 0 ? highEvidenceCount : '—'}
+            label="Evidence Focus"
+            color="violet"
+          />
+          <StatCard
+            icon={Clock}
+            value={avgReliefTime || '—'}
+            label="Avg. Relief Time"
+            color="orange"
+          />
+        </section>
 
-        {/* About Accordion */}
-        <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
+        {/* ── Personal Insights Card ── */}
+        <section className="bg-card rounded-2xl border border-border/60 shadow-soft overflow-hidden">
+          <div className="p-5 border-b border-border/60">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2 min-w-0">
+                <Sparkles className="w-5 h-5 text-violet-500 shrink-0" />
+                <h2 className="font-bold text-lg text-ink">Personal Insights</h2>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 uppercase tracking-wider shrink-0">
+                  Coming Soon
+                </span>
+              </div>
+
+              {/* Time range dropdown */}
+              <div className="relative shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setShowInsightMenu((v) => !v)}
+                  className="flex items-center gap-1.5 h-8 px-3 bg-surface/60 border border-border/60 rounded-lg text-xs font-medium text-ink-muted hover:text-ink hover:border-border transition-colors"
+                >
+                  {activeRangeLabel}
+                  <ChevronDown className="w-3.5 h-3.5" />
+                </button>
+                {showInsightMenu && (
+                  <>
+                    <div className="fixed inset-0 z-10" onClick={() => setShowInsightMenu(false)} />
+                    <div className="absolute right-0 top-full mt-1.5 z-20 bg-card border border-border/60 rounded-xl shadow-card-lg py-1 min-w-[120px]">
+                      {insightRangeOptions.map((opt) => (
+                        <button
+                          key={opt.value}
+                          type="button"
+                          onClick={() => { setInsightRange(opt.value); setShowInsightMenu(false); }}
+                          className={cn(
+                            'w-full text-left px-3.5 py-1.5 text-xs transition-colors',
+                            insightRange === opt.value
+                              ? 'text-primary font-medium bg-primary/5'
+                              : 'text-ink-muted hover:text-ink hover:bg-surface'
+                          )}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+            <p className="text-xs text-ink-muted mt-1">Track your patterns and preferences over time.</p>
+          </div>
+
+          <div className="p-5">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <InsightPlaceholder icon={Search} label="Most Searched" />
+              <InsightPlaceholder icon={Leaf} label="Preferred Type" />
+              <InsightPlaceholder icon={Clock} label="Best Time" />
+              <InsightPlaceholder icon={TrendingUp} label="Adherence" />
+            </div>
+            <div className="mt-4 p-3.5 rounded-xl bg-surface/60 border border-border/40 text-center">
+              <p className="text-xs text-ink-muted">
+                Start tracking your remedy usage to unlock personalised insights.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ── About curA Accordion ── */}
+        <section className="bg-card rounded-2xl shadow-sm border border-border/60 overflow-hidden">
           <button
             aria-expanded={expandedSection === 'about'}
             className="w-full p-5 flex justify-between items-center text-left"
@@ -511,7 +810,7 @@ export function Profile() {
             <ChevronDown className={`w-5 h-5 text-ink-muted transition-transform ${expandedSection === 'about' ? 'rotate-180' : ''}`} />
           </button>
           {expandedSection === 'about' && (
-            <div className="p-5 pt-0 text-sm text-ink-muted leading-relaxed border-t border-border">
+            <div className="p-5 pt-0 text-sm text-ink-muted leading-relaxed border-t border-border/60">
               <p className="mb-4">
                 curA is a health platform designed to provide evidence-backed remedies for common ailments.
                 Your profile, favorites, and remedy schedules are synced through Supabase. Always consult a certified medical professional for serious health concerns.
@@ -519,17 +818,30 @@ export function Profile() {
               <FAQAccordion items={FAQ_ITEMS.slice(0, 3)} />
             </div>
           )}
-        </div>
+        </section>
 
-        {/* Sign Out */}
-        <button 
+        {/* ── Sign Out ── */}
+        <button
           onClick={handleLogout}
-          className="w-full py-4 rounded-2xl border-2 border-primary text-primary-dark font-bold flex items-center justify-center gap-2 hover:bg-primary/5 transition-colors"
+          className="w-full py-4 rounded-2xl border-2 border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 font-bold flex items-center justify-center gap-2 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
         >
           <LogOut className="w-5 h-5" /> Sign Out
         </button>
+
       </div>
     </PageWrapper>
+  );
+}
+
+function InsightPlaceholder({ icon: Icon, label }) {
+  return (
+    <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-surface/40 border border-border/40">
+      <div className="w-10 h-10 rounded-full bg-ink-muted/10 flex items-center justify-center">
+        <Icon className="w-5 h-5 text-ink-muted/40" />
+      </div>
+      <p className="text-xs font-medium text-ink-muted text-center">{label}</p>
+      <span className="text-lg font-bold text-ink-muted/30">&mdash;</span>
+    </div>
   );
 }
 
