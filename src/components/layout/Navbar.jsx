@@ -22,7 +22,7 @@ export function Navbar() {
             <ThemeToggle />
             <Link
               to="/profile"
-              className="w-8 h-8 rounded-full bg-surface text-primary flex items-center justify-center text-sm font-semibold hover:bg-accent transition-colors"
+              className="min-w-[44px] min-h-[44px] rounded-full bg-surface text-primary flex items-center justify-center text-sm font-semibold hover:bg-accent transition-colors p-2"
             >
               {(user?.name?.[0] || 'U').toUpperCase()}
             </Link>
@@ -30,7 +30,7 @@ export function Navbar() {
         </div>
       ) : (
         <div className="h-full max-w-5xl mx-auto px-4 md:px-6 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2 min-w-[44px] min-h-[44px] p-1.5">
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-glow">
               C
             </div>

@@ -130,7 +130,8 @@ export function RemedySchedules() {
 
         <button
           onClick={() => setIsModalOpen(true)}
-          className="sm:hidden fixed bottom-20 right-6 w-14 h-14 bg-primary text-white rounded-full shadow-glow flex items-center justify-center hover:bg-primary-dark transition-colors z-40"
+          className="sm:hidden fixed right-6 bottom-20 w-14 h-14 bg-primary text-white rounded-full shadow-glow flex items-center justify-center hover:bg-primary-dark transition-colors z-40"
+          style={{ bottom: 'calc(5rem + env(safe-area-inset-bottom, 0px))' }}
         >
           <Plus className="w-6 h-6" />
         </button>

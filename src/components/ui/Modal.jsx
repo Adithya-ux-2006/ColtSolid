@@ -64,7 +64,7 @@ export function Modal({ isOpen, onClose, title, children, className }) {
   const titleId = title ? 'modal-title' : undefined;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))' }}>
       <div className="fixed inset-0 bg-ink/20" onClick={onClose} aria-hidden="true" />
       <div
         ref={modalRef}
