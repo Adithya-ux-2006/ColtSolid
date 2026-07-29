@@ -1,9 +1,9 @@
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, Leaf, Heart } from 'lucide-react';
 
 const TRUST_ITEMS = [
-  { label: 'Free to use', icon: ShieldCheck },
-  { label: 'Research-backed', icon: ShieldCheck },
-  { label: 'Trusted by everyone', icon: ShieldCheck },
+  { icon: ShieldCheck, label: 'Always research-backed. Trusted information.' },
+  { icon: Leaf, label: 'Always free. No hidden costs.' },
+  { icon: Heart, label: 'Not a substitute for professional medical advice.' },
 ];
 
 export function TrustBadges({ className = '' }) {

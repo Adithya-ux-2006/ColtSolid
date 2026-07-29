@@ -16,14 +16,15 @@ import { getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptom
 import { resolveQuery } from '../utils/symptomEngine';
 import { fetchGeminiInterpretation } from '../utils/geminiInterpreter';
 import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
+import { SYMPTOM_COLOR_CLASSES } from '../constants/symptoms';
 
 const DEFAULT_SYMPTOM_CARDS = [
-  { id: 'headache', label: 'Headache', emoji: '🤕' },
-  { id: 'congestion', label: 'Congestion', emoji: '🫁' },
-  { id: 'back_pain', label: 'Back Pain', emoji: '💪' },
-  { id: 'anxiety', label: 'Anxiety', emoji: '🧘' },
-  { id: 'stress', label: 'Stress', emoji: '😤' },
-  { id: 'fatigue', label: 'Fatigue', emoji: '🔋' },
+  { id: 'headache', label: 'Headache', color: 'sage' },
+  { id: 'congestion', label: 'Congestion', color: 'forest' },
+  { id: 'back_pain', label: 'Back Pain', color: 'sage' },
+  { id: 'anxiety', label: 'Anxiety', color: 'amber' },
+  { id: 'stress', label: 'Stress', color: 'amber' },
+  { id: 'fatigue', label: 'Fatigue', color: 'forest' },
 ];
 
 function normalizeValue(value) {
@@ -54,7 +55,7 @@ export function SymptomSearch() {
       return symptoms.slice(0, 6).map(s => ({
         id: s.id,
         label: s.label,
-        emoji: s.emoji || '💊',
+        color: s.color || 'sage',
       }));
     }
     return DEFAULT_SYMPTOM_CARDS;
@@ -277,17 +278,27 @@ export function SymptomSearch() {
 
         <div className="w-full mb-8">
           <p className="text-sm font-medium text-ink-muted mb-4 text-center">Popular symptoms</p>
-          <div className="flex flex-wrap justify-center gap-3">
-            {symptomCards.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => handleCardClick(item)}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card shadow-soft hover:shadow-card transition-shadow text-sm font-medium text-ink border border-ink/5"
-              >
-                <span className="text-lg">{item.emoji}</span>
-                {item.label}
-              </button>
-            ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {symptomCards.map((item) => {
+              const color = SYMPTOM_COLOR_CLASSES[item.color] || SYMPTOM_COLOR_CLASSES.sage;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => handleCardClick(item)}
+                  className="flex items-center gap-4 p-4 bg-card rounded-2xl shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all text-left"
+                >
+                  <div className={`w-12 h-12 rounded-full ${color.bg} flex items-center justify-center shrink-0`}>
+                    <span className={`text-lg font-bold ${color.text}`}>{item.label.charAt(0)}</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-ink">{item.label}</p>
+                    <p className="text-sm text-ink-muted leading-snug mt-0.5">
+                      Evidence-backed remedies
+                    </p>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -295,8 +306,6 @@ export function SymptomSearch() {
 
         <div className="w-full mt-auto pt-8 border-t border-ink/5">
           <p className="text-xs text-ink-subtle text-center leading-relaxed">
-            Always research-backed. Always free.
-            <br />
             Not a substitute for professional medical advice.
           </p>
         </div>
