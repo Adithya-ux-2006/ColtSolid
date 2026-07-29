@@ -19,12 +19,12 @@ import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
 import { SYMPTOM_COLOR_CLASSES } from '../constants/symptoms';
 
 const DEFAULT_SYMPTOM_CARDS = [
-  { id: 'headache', label: 'Headache', color: 'sage' },
-  { id: 'congestion', label: 'Congestion', color: 'forest' },
-  { id: 'back_pain', label: 'Back Pain', color: 'sage' },
-  { id: 'anxiety', label: 'Anxiety', color: 'amber' },
-  { id: 'stress', label: 'Stress', color: 'amber' },
-  { id: 'fatigue', label: 'Fatigue', color: 'forest' },
+  { id: 'headache', label: 'Headache', emoji: '🤕', color: 'sage' },
+  { id: 'congestion', label: 'Congestion', emoji: '🫁', color: 'forest' },
+  { id: 'back_pain', label: 'Back Pain', emoji: '💪', color: 'sage' },
+  { id: 'anxiety', label: 'Anxiety', emoji: '🧘', color: 'amber' },
+  { id: 'stress', label: 'Stress', emoji: '😤', color: 'amber' },
+  { id: 'fatigue', label: 'Fatigue', emoji: '🔋', color: 'forest' },
 ];
 
 function normalizeValue(value) {
@@ -50,11 +50,21 @@ export function SymptomSearch() {
   const isSearching = searchTerm !== debouncedTerm;
   const trimmedQuery = debouncedTerm.trim();
 
+  const remedyCountBySymptom = useMemo(() => {
+    if (!symptomRemedies) return {};
+    const counts = {};
+    Object.keys(symptomRemedies).forEach((symptomId) => {
+      counts[symptomId] = symptomRemedies[symptomId].length;
+    });
+    return counts;
+  }, [symptomRemedies]);
+
   const symptomCards = useMemo(() => {
     if (symptoms?.length >= 6) {
       return symptoms.slice(0, 6).map(s => ({
         id: s.id,
         label: s.label,
+        emoji: s.emoji || '💊',
         color: s.color || 'sage',
       }));
     }
@@ -288,12 +298,14 @@ export function SymptomSearch() {
                   className="flex items-center gap-4 p-4 bg-card rounded-2xl shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all text-left"
                 >
                   <div className={`w-12 h-12 rounded-full ${color.bg} flex items-center justify-center shrink-0`}>
-                    <span className={`text-lg font-bold ${color.text}`}>{item.label.charAt(0)}</span>
+                    <span className="text-xl">{item.emoji}</span>
                   </div>
                   <div>
                     <p className="font-semibold text-ink">{item.label}</p>
                     <p className="text-sm text-ink-muted leading-snug mt-0.5">
-                      Evidence-backed remedies
+                      {remedyCountBySymptom[item.id]
+                        ? `${remedyCountBySymptom[item.id]} remedy${remedyCountBySymptom[item.id] !== 1 ? 's' : ''}`
+                        : 'Research-backed'}
                     </p>
                   </div>
                 </button>
