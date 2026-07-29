@@ -1,12 +1,18 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clock, Heart } from 'lucide-react';
+import { Clock, Heart, Leaf, Pill, CircleDot } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { CategoryBadge } from './CategoryBadge';
-import { RemedyImage } from './RemedyImage';
 import { RatingStars } from './RatingStars';
 import { useFavoritesStore } from '../../store/favoritesStore';
 import { useAuthStore } from '../../store/authStore';
+
+const CATEGORY_STYLES = {
+  Natural: { bg: 'bg-emerald-500/10', circleBg: 'bg-emerald-500/15', color: 'text-emerald-500', Icon: Leaf },
+  Lifestyle: { bg: 'bg-violet-500/10', circleBg: 'bg-violet-500/15', color: 'text-violet-500', Icon: Heart },
+  Conventional: { bg: 'bg-orange-500/10', circleBg: 'bg-orange-500/15', color: 'text-orange-500', Icon: Pill },
+  TCM: { bg: 'bg-amber-500/10', circleBg: 'bg-amber-500/15', color: 'text-amber-500', Icon: CircleDot },
+};
 
 export function SavedRemedyCard({ remedy, className }) {
   const navigate = useNavigate();
@@ -22,6 +28,9 @@ export function SavedRemedyCard({ remedy, className }) {
     toggleFavorite(remedy);
   };
 
+  const catStyle = CATEGORY_STYLES[remedy.category] || CATEGORY_STYLES.Natural;
+  const { Icon, bg, circleBg, color } = catStyle;
+
   return (
     <motion.div
       whileHover={{ y: -4 }}
@@ -36,11 +45,11 @@ export function SavedRemedyCard({ remedy, className }) {
         )}
       >
         <div className="relative">
-          <RemedyImage
-            category={remedy.category}
-            size="lg"
-            className="rounded-t-[20px]"
-          />
+          <div className={cn('w-full aspect-square rounded-t-[20px] flex items-center justify-center', bg)}>
+            <div className={cn('w-16 h-16 rounded-2xl flex items-center justify-center', circleBg)}>
+              <Icon className={cn('w-10 h-10', color)} />
+            </div>
+          </div>
 
           <button
             onClick={handleFavorite}
