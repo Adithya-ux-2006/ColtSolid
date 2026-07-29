@@ -90,50 +90,65 @@ function ProfileHeroIllustration() {
 
       <circle cx="120" cy="120" r="110" fill="url(#profileGlow)" />
 
-      {/* Person figure silhouette */}
-      <circle cx="120" cy="90" r="20" fill="#374151" opacity="0.8" />
-      <path
-        d="M82 180c0-24 36-24 36 0 0 8-8 14-18 14s-18-6-18-14z"
-        fill="#374151"
-        opacity="0.8"
-      />
+      {/* Person silhouette — head + body as one continuous shape */}
+      <g opacity="0.8" fill="#374151">
+        <circle cx="120" cy="72" r="16" />
+        <path d="
+          M 108 86
+          C 94 88, 90 100, 90 112
+          L 90 174
+          C 90 186, 104 192, 120 192
+          C 136 192, 150 186, 150 174
+          L 150 112
+          C 150 100, 146 88, 132 86
+          Z
+        " />
+      </g>
 
-      {/* Shield-check badge */}
-      <g transform="translate(136, 84)">
+      {/* Shield-check badge — centered on chest */}
+      <g transform="translate(108, 100)">
         <path
-          d="M0 3c0-3 8-6 16-9 8 3 16 6 16 9 0 14-4 24-16 30-12-6-16-16-16-30z"
+          d="M0 4 Q6 -4 12 -6 Q18 -4 24 4 L22 26 Q12 32 2 26 Z"
           fill="#34D399"
           fillOpacity="0.25"
           stroke="#34D399"
           strokeWidth="1.5"
+          strokeLinejoin="round"
         />
         <path
-          d="M10 16l3 4 8-8"
+          d="M9 16 L13 22 L20 11"
           stroke="#34D399"
-          strokeWidth="1.5"
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
       </g>
 
-      {/* Leaf top-left */}
+      {/* Leaf accent top-left */}
       <path
-        d="M86 74c-6 14-2 28 2 32 4-4 8-18 2-32z"
+        d="M84 70 C76 88 80 102 84 106 C88 102 92 88 86 70 Z"
         fill="#34D399"
         fillOpacity="0.3"
       />
       <path
-        d="M86 74c2 6 3 12 2 18"
+        d="M84 76 C86 83 86 90 84 96"
         stroke="#34D399"
-        strokeWidth="1"
+        strokeWidth="1.2"
         strokeLinecap="round"
         fill="none"
       />
 
+      {/* Leaf accent top-right */}
+      <path
+        d="M158 72 C164 84 160 96 156 100 C152 96 148 84 154 72 Z"
+        fill="#34D399"
+        fillOpacity="0.25"
+      />
+
       {/* Accent dots */}
-      <circle cx="156" cy="72" r="2" fill="#34D399" fillOpacity="0.45" />
-      <circle cx="163" cy="80" r="1.5" fill="#34D399" fillOpacity="0.35" />
-      <circle cx="78" cy="148" r="1.5" fill="#34D399" fillOpacity="0.25" />
+      <circle cx="74" cy="134" r="1.5" fill="#34D399" fillOpacity="0.3" />
+      <circle cx="166" cy="138" r="1.5" fill="#34D399" fillOpacity="0.25" />
+      <circle cx="120" cy="48" r="2" fill="#34D399" fillOpacity="0.35" />
     </svg>
   );
 }
