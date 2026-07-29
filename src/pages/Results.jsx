@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams, Link, useLocation } from 'react-router-do
 import { ArrowLeft, AlertTriangle, Heart, ChevronDown, ShieldCheck } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { PageWrapper } from '../components/layout';
-import { RemedyCarousel } from '../components/ui/RemedyCarousel';
+
 import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
 import { EmptyState } from '../components/ui/EmptyState';
 import { SeverityBadge } from '../components/ui/SeverityBadge';
@@ -340,7 +340,7 @@ export function Results() {
                 {allAlternatives.length > 5 && !showAllAlternatives && (
                   <button
                     onClick={() => setShowAllAlternatives(true)}
-                    className="text-sm font-semibold text-primary hover:text-primary-dark transition-colors shrink-0"
+                    className="hidden md:inline-flex text-sm font-semibold text-primary hover:text-primary-dark transition-colors shrink-0"
                   >
                     Show all
                   </button>
@@ -348,7 +348,7 @@ export function Results() {
               </div>
 
               <div className="bg-card rounded-2xl border border-border overflow-hidden">
-                <div className="hidden md:block">
+                <div>
                   {visibleAlternatives.map((remedy, i) => (
                     <AltRemedyRow
                       key={remedy.id}
@@ -359,22 +359,6 @@ export function Results() {
                       showDivider={i < visibleAlternatives.length - 1}
                     />
                   ))}
-                </div>
-
-                <div className="md:hidden">
-                  <RemedyCarousel>
-                    {allAlternatives.map((remedy) => (
-                      <div key={remedy.id} className="w-72 shrink-0 snap-start">
-                        <AltRemedyRow
-                          remedy={remedy}
-                          isSafe={safeFilter(remedy)}
-                          evidenceScore={remedy._evidenceScore}
-                          safetyScore={remedy._safetyScore}
-                          showDivider={false}
-                        />
-                      </div>
-                    ))}
-                  </RemedyCarousel>
                 </div>
               </div>
 
