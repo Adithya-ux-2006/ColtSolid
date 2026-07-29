@@ -1,18 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Clock, Heart, Leaf, Pill, CircleDot } from 'lucide-react';
+import { Clock, Heart } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { CategoryBadge } from './CategoryBadge';
 import { RatingStars } from './RatingStars';
+import { RemedyImage } from './RemedyImage';
 import { useFavoritesStore } from '../../store/favoritesStore';
 import { useAuthStore } from '../../store/authStore';
-
-const CATEGORY_STYLES = {
-  Natural: { bg: 'bg-emerald-500/10', color: 'text-emerald-500', Icon: Leaf },
-  Lifestyle: { bg: 'bg-violet-500/10', color: 'text-violet-500', Icon: Heart },
-  Conventional: { bg: 'bg-orange-500/10', color: 'text-orange-500', Icon: Pill },
-  TCM: { bg: 'bg-amber-500/10', color: 'text-amber-500', Icon: CircleDot },
-};
 
 export function SavedRemedyCard({ remedy, className }) {
   const navigate = useNavigate();
@@ -28,9 +22,6 @@ export function SavedRemedyCard({ remedy, className }) {
     toggleFavorite(remedy);
   };
 
-  const catStyle = CATEGORY_STYLES[remedy.category] || CATEGORY_STYLES.Natural;
-  const { Icon, bg, color } = catStyle;
-
   return (
     <motion.div
       whileHover={{ y: -3 }}
@@ -45,12 +36,7 @@ export function SavedRemedyCard({ remedy, className }) {
         )}
       >
         <div className="flex items-start gap-3">
-          <div className={cn(
-            'w-12 h-12 rounded-xl flex items-center justify-center shrink-0',
-            bg
-          )}>
-            <Icon className={cn('w-7 h-7', color)} />
-          </div>
+          <RemedyImage category={remedy.category} size="card" />
 
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">

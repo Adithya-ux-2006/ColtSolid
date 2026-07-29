@@ -78,7 +78,7 @@ export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetySco
 
           <div className="flex items-center gap-3 mb-3">
             <div className="w-12 h-12 rounded-2xl bg-primary-tint flex items-center justify-center shrink-0">
-              <RemedyImage category={remedy.category} size="sm" alt={remedy.name} />
+              <RemedyImage category={remedy.category} size="card" alt={remedy.name} />
             </div>
             <div className="min-w-0">
               <h3 className="font-bold text-ink text-base leading-snug line-clamp-1">{remedy.name}</h3>
