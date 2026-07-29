@@ -144,7 +144,7 @@ export function Dashboard() {
         <section>
           <div className="flex items-center justify-between mb-4">
             <h2 className="section-title mb-0">Quick Search</h2>
-            <Link to="/search" className="text-sm font-medium text-primary hover:text-primary-dark flex items-center gap-1 transition-colors">
+            <Link to="/search" className="text-sm font-medium text-primary hover:text-primary-dark flex items-center gap-1 transition-colors relative before:absolute before:-inset-3 before:content-['']">
               View all <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -200,7 +200,7 @@ export function Dashboard() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="section-title mb-0">Saved Remedies</h2>
             {favoriteRemedies.length > 0 && (
-              <Link to="/favorites" className="text-sm text-primary font-medium hover:underline">
+              <Link to="/favorites" className="text-sm text-primary font-medium hover:underline relative before:absolute before:-inset-3 before:content-['']">
                 View all
               </Link>
             )}
