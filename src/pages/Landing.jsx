@@ -5,6 +5,7 @@ import { FAQAccordion } from '../components/ui/FAQAccordion';
 import { Modal } from '../components/ui/Modal';
 import { QuestionnaireFlow } from '../components/onboarding/QuestionnaireFlow';
 import { PageWrapper } from '../components/layout';
+import { TrustBadges } from '../components/ui/TrustBadges';
 import { useCatalogStore } from '../store/catalogStore';
 import { FAQ_ITEMS } from '../constants/onboarding';
 import { useGuestProfileStore } from '../store/guestProfileStore';
@@ -55,17 +56,7 @@ export function Landing() {
             </Link>
           </div>
 
-          <p className="text-sm font-medium text-ink-muted flex flex-wrap justify-center gap-x-4 gap-y-1">
-            <span className="flex items-center gap-1">
-              <ShieldCheck className="w-4 h-4 text-primary" /> Free to use
-            </span>
-            <span className="flex items-center gap-1">
-              <ShieldCheck className="w-4 h-4 text-primary" /> Research-backed
-            </span>
-            <span className="flex items-center gap-1">
-              <ShieldCheck className="w-4 h-4 text-primary" /> Trusted by everyone
-            </span>
-          </p>
+          <TrustBadges />
         </div>
       </section>
 

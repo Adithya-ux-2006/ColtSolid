@@ -1,8 +1,10 @@
 import { useMemo, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Search, ArrowRight } from 'lucide-react';
+import { Search, ArrowRight, ShieldCheck } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { SearchBar } from '../components/forms/SearchBar';
+import { HeroIllustration } from '../components/ui/HeroIllustration';
+import { TrustBadges } from '../components/ui/TrustBadges';
 import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
 import { useSearch } from '../hooks/useSearch';
 import { useCatalogStore } from '../store/catalogStore';
@@ -143,18 +145,39 @@ export function SymptomSearch() {
 
   return (
     <PageWrapper className="min-h-screen flex flex-col">
-      <div className="flex-1 flex flex-col justify-center px-6 py-16 max-w-2xl mx-auto w-full">
-        <h1 className="text-display font-bold text-ink mb-2">
-          Feel Better,
-          <br />
-          Naturally.
-        </h1>
-        <p className="text-lg text-ink-muted mb-10 leading-relaxed">
-          Evidence-backed remedies for common symptoms.{' '}
-          <span className="text-primary font-medium">No sign-up needed.</span>
-        </p>
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/8 via-emerald-500/5 to-transparent pointer-events-none" />
+        <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] rounded-full bg-emerald-500/4 blur-3xl pointer-events-none" />
 
-        <div onKeyDown={handleKeyDown} className="relative mb-12">
+        <div className="max-w-[1280px] mx-auto px-5 md:px-8 pt-8 md:pt-12 pb-6 md:pb-10">
+          <div className="flex items-center justify-between gap-8">
+            <div className="max-w-xl">
+              <div className="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-500 text-xs font-semibold px-3.5 py-1.5 rounded-full mb-4">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Research-backed remedies</span>
+              </div>
+
+              <h1 className="text-[44px] md:text-[52px] font-bold text-ink tracking-tight leading-[1.05] mb-3">
+                Feel Better,
+                <br />
+                <span className="text-primary">Naturally.</span>
+              </h1>
+
+              <p className="text-base md:text-lg text-ink-muted leading-relaxed max-w-lg">
+                Evidence-backed remedies for common symptoms.{' '}
+                <span className="text-primary font-medium">No sign-up needed.</span>
+              </p>
+            </div>
+
+            <div className="hidden md:block">
+              <HeroIllustration />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="flex-1 flex flex-col items-center px-6 py-8 max-w-2xl mx-auto w-full">
+        <div onKeyDown={handleKeyDown} className="relative mb-10 w-full">
           <SearchBar
             value={searchTerm}
             onChange={setSearchTerm}
@@ -252,23 +275,25 @@ export function SymptomSearch() {
           )}
         </div>
 
-        <div>
-          <p className="text-sm font-medium text-ink-muted mb-4">Popular symptoms</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div className="w-full mb-8">
+          <p className="text-sm font-medium text-ink-muted mb-4 text-center">Popular symptoms</p>
+          <div className="flex flex-wrap justify-center gap-3">
             {symptomCards.map((item) => (
               <button
                 key={item.id}
                 onClick={() => handleCardClick(item)}
-                className="flex flex-col items-center gap-2 bg-card rounded-2xl p-5 shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all text-center"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card shadow-soft hover:shadow-card transition-shadow text-sm font-medium text-ink border border-ink/5"
               >
-                <span className="text-2xl">{item.emoji}</span>
-                <span className="text-sm font-semibold text-ink">{item.label}</span>
+                <span className="text-lg">{item.emoji}</span>
+                {item.label}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-ink/5">
+        <TrustBadges className="mb-10" />
+
+        <div className="w-full mt-auto pt-8 border-t border-ink/5">
           <p className="text-xs text-ink-subtle text-center leading-relaxed">
             Always research-backed. Always free.
             <br />
