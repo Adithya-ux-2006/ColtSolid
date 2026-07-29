@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   LogOut, ChevronDown, User, Shield, Pencil, X, Check,
-  Leaf, TrendingUp, Clock, Sparkles, Search
+  Leaf, TrendingUp, Clock
 } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { PageWrapper } from '../components/layout';
@@ -155,7 +155,7 @@ function StatCard({ icon: Icon, value, label, color }) {
       </div>
       <div className="min-w-0">
         <p className="text-2xl font-bold text-ink leading-none mb-1">{value}</p>
-        <p className="text-sm text-ink-muted truncate">{label}</p>
+        <p className="text-sm text-ink-muted leading-snug">{label}</p>
       </div>
     </motion.div>
   );
@@ -212,8 +212,6 @@ export function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingHealth, setIsEditingHealth] = useState(false);
   const [expandedSection, setExpandedSection] = useState(null);
-  const [insightRange, setInsightRange] = useState('30d');
-  const [showInsightMenu, setShowInsightMenu] = useState(false);
   const [healthForm, setHealthForm] = useState({
     selectedConditions: [],
     selectedAllergies: [],
@@ -488,14 +486,6 @@ export function Profile() {
 
   const avgReliefTime = useMemo(() => computeAvgReliefTime(favorites), [favorites]);
 
-  const insightRangeOptions = [
-    { value: '7d', label: '7 days' },
-    { value: '30d', label: '30 days' },
-    { value: 'all', label: 'All time' },
-  ];
-
-  const activeRangeLabel = insightRangeOptions.find((o) => o.value === insightRange)?.label || '30 days';
-
   return (
     <PageWrapper className="min-h-screen pb-28 md:pb-12">
       <div className="max-w-2xl mx-auto px-5 md:px-8 pt-6 md:pt-8 space-y-6 md:space-y-8">
@@ -735,70 +725,6 @@ export function Profile() {
           />
         </section>
 
-        {/* ── Personal Insights Card ── */}
-        <section className="bg-card rounded-2xl border border-border/60 shadow-soft overflow-hidden">
-          <div className="p-5 border-b border-border/60">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2 min-w-0">
-                <Sparkles className="w-5 h-5 text-violet-500 shrink-0" />
-                <h2 className="font-bold text-lg text-ink">Personal Insights</h2>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 uppercase tracking-wider shrink-0">
-                  Coming Soon
-                </span>
-              </div>
-
-              {/* Time range dropdown */}
-              <div className="relative shrink-0">
-                <button
-                  type="button"
-                  onClick={() => setShowInsightMenu((v) => !v)}
-                  className="flex items-center gap-1.5 h-8 px-3 bg-surface/60 border border-border/60 rounded-lg text-xs font-medium text-ink-muted hover:text-ink hover:border-border transition-colors"
-                >
-                  {activeRangeLabel}
-                  <ChevronDown className="w-3.5 h-3.5" />
-                </button>
-                {showInsightMenu && (
-                  <>
-                    <div className="fixed inset-0 z-10" onClick={() => setShowInsightMenu(false)} />
-                    <div className="absolute right-0 top-full mt-1.5 z-20 bg-card border border-border/60 rounded-xl shadow-card-lg py-1 min-w-[120px]">
-                      {insightRangeOptions.map((opt) => (
-                        <button
-                          key={opt.value}
-                          type="button"
-                          onClick={() => { setInsightRange(opt.value); setShowInsightMenu(false); }}
-                          className={cn(
-                            'w-full text-left px-3.5 py-1.5 text-xs transition-colors',
-                            insightRange === opt.value
-                              ? 'text-primary font-medium bg-primary/5'
-                              : 'text-ink-muted hover:text-ink hover:bg-surface'
-                          )}
-                        >
-                          {opt.label}
-                        </button>
-                      ))}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-            <p className="text-xs text-ink-muted mt-1">Track your patterns and preferences over time.</p>
-          </div>
-
-          <div className="p-5">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <InsightPlaceholder icon={Search} label="Most Searched" />
-              <InsightPlaceholder icon={Leaf} label="Preferred Type" />
-              <InsightPlaceholder icon={Clock} label="Best Time" />
-              <InsightPlaceholder icon={TrendingUp} label="Adherence" />
-            </div>
-            <div className="mt-4 p-3.5 rounded-xl bg-surface/60 border border-border/40 text-center">
-              <p className="text-xs text-ink-muted">
-                Start tracking your remedy usage to unlock personalised insights.
-              </p>
-            </div>
-          </div>
-        </section>
-
         {/* ── About curA Accordion ── */}
         <section className="bg-card rounded-2xl shadow-sm border border-border/60 overflow-hidden">
           <button
@@ -830,18 +756,6 @@ export function Profile() {
 
       </div>
     </PageWrapper>
-  );
-}
-
-function InsightPlaceholder({ icon: Icon, label }) {
-  return (
-    <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-surface/40 border border-border/40">
-      <div className="w-10 h-10 rounded-full bg-ink-muted/10 flex items-center justify-center">
-        <Icon className="w-5 h-5 text-ink-muted/40" />
-      </div>
-      <p className="text-xs font-medium text-ink-muted text-center">{label}</p>
-      <span className="text-lg font-bold text-ink-muted/30">&mdash;</span>
-    </div>
   );
 }
 
