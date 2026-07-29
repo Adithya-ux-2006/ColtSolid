@@ -4,7 +4,7 @@ import { cn } from '../../utils/cn';
 const CATEGORY_ICONS = {
   Natural: { Icon: Leaf, bg: 'bg-emerald-500/10', color: 'text-emerald-500' },
   Lifestyle: { Icon: Heart, bg: 'bg-violet-500/10', color: 'text-violet-500' },
-  Conventional: { Icon: Pill, bg: 'bg-blue-500/10', color: 'text-blue-500' },
+  Conventional: { Icon: Pill, bg: 'bg-orange-500/10', color: 'text-orange-500' },
   TCM: { Icon: CircleDot, bg: 'bg-amber-500/10', color: 'text-amber-500' },
 };
 
