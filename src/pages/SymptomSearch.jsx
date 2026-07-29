@@ -17,14 +17,7 @@ import { fetchGeminiInterpretation } from '../utils/geminiInterpreter';
 import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
 import { SYMPTOM_COLOR_CLASSES } from '../constants/symptoms';
 
-const DEFAULT_SYMPTOM_CARDS = [
-  { id: 'headache', label: 'Headache', emoji: '🤕', color: 'sage' },
-  { id: 'congestion', label: 'Congestion', emoji: '🫁', color: 'forest' },
-  { id: 'back_pain', label: 'Back Pain', emoji: '💪', color: 'sage' },
-  { id: 'anxiety', label: 'Anxiety', emoji: '🧘', color: 'amber' },
-  { id: 'stress', label: 'Stress', emoji: '😤', color: 'amber' },
-  { id: 'fatigue', label: 'Fatigue', emoji: '🔋', color: 'forest' },
-];
+const SEARCH_POPULAR_IDS = ['cold', 'anxiety', 'back_pain', 'bloating', 'eye_pain', 'headache'];
 
 function normalizeValue(value) {
   return value.toLowerCase().trim().replace(/\s+/g, ' ');
@@ -59,15 +52,16 @@ export function SymptomSearch() {
   }, [symptomRemedies]);
 
   const symptomCards = useMemo(() => {
-    if (symptoms?.length >= 6) {
-      return symptoms.slice(0, 6).map(s => ({
+    if (!symptoms?.length) return [];
+    return SEARCH_POPULAR_IDS
+      .map(id => symptoms.find(s => s.id === id))
+      .filter(Boolean)
+      .map(s => ({
         id: s.id,
         label: s.label,
         emoji: s.emoji || '💊',
         color: s.color || 'sage',
       }));
-    }
-    return DEFAULT_SYMPTOM_CARDS;
   }, [symptoms]);
 
   const exactSymptom = useMemo(() => {
