@@ -99,7 +99,7 @@ export function Landing() {
               ))}
               <Link
                 to="/search"
-                className="snap-start shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 text-primary text-sm font-medium border border-primary/20 whitespace-nowrap hover:bg-primary/10 transition-colors relative before:absolute before:-inset-3 before:content-['']"
+                className="snap-start shrink-0 inline-flex items-center gap-2 px-4 py-3 rounded-full bg-primary/5 text-primary text-sm font-medium border border-primary/20 whitespace-nowrap hover:bg-primary/10 transition-colors"
               >
                 <Search className="w-4 h-4" />
                 View all
