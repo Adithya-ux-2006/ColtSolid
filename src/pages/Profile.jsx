@@ -72,87 +72,6 @@ function computeAvgReliefTime(favorites) {
   return `${h} hr${h > 1 ? 's' : ''}`;
 }
 
-function ProfileHeroIllustration() {
-  return (
-    <svg
-      viewBox="0 0 240 240"
-      className="w-[180px] h-[180px] lg:w-[220px] lg:h-[220px] shrink-0"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <defs>
-        <radialGradient id="profileGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#34D399" stopOpacity="0.3" />
-          <stop offset="60%" stopColor="#34D399" stopOpacity="0.1" />
-          <stop offset="100%" stopColor="#34D399" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-
-      <circle cx="120" cy="120" r="110" fill="url(#profileGlow)" />
-
-      {/* Person silhouette — head + body as one continuous shape */}
-      <g opacity="0.8" fill="#374151">
-        <circle cx="120" cy="72" r="16" />
-        <path d="
-          M 108 86
-          C 94 88, 90 100, 90 112
-          L 90 174
-          C 90 186, 104 192, 120 192
-          C 136 192, 150 186, 150 174
-          L 150 112
-          C 150 100, 146 88, 132 86
-          Z
-        " />
-      </g>
-
-      {/* Shield-check badge — centered on chest */}
-      <g transform="translate(108, 100)">
-        <path
-          d="M0 4 Q6 -4 12 -6 Q18 -4 24 4 L22 26 Q12 32 2 26 Z"
-          fill="#34D399"
-          fillOpacity="0.25"
-          stroke="#34D399"
-          strokeWidth="1.5"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M9 16 L13 22 L20 11"
-          stroke="#34D399"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </g>
-
-      {/* Leaf accent top-left */}
-      <path
-        d="M84 70 C76 88 80 102 84 106 C88 102 92 88 86 70 Z"
-        fill="#34D399"
-        fillOpacity="0.3"
-      />
-      <path
-        d="M84 76 C86 83 86 90 84 96"
-        stroke="#34D399"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-        fill="none"
-      />
-
-      {/* Leaf accent top-right */}
-      <path
-        d="M158 72 C164 84 160 96 156 100 C152 96 148 84 154 72 Z"
-        fill="#34D399"
-        fillOpacity="0.25"
-      />
-
-      {/* Accent dots */}
-      <circle cx="74" cy="134" r="1.5" fill="#34D399" fillOpacity="0.3" />
-      <circle cx="166" cy="138" r="1.5" fill="#34D399" fillOpacity="0.25" />
-      <circle cx="120" cy="48" r="2" fill="#34D399" fillOpacity="0.35" />
-    </svg>
-  );
-}
-
 function StatCard({ icon: Icon, value, label, color }) {
   return (
     <motion.div
@@ -585,9 +504,6 @@ export function Profile() {
               )}
             </div>
 
-            <div className="hidden md:block shrink-0">
-              <ProfileHeroIllustration />
-            </div>
           </div>
         </section>
 
