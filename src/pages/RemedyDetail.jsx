@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, BookOpen, ChevronRight } from 'lucide-react';
+import { ArrowLeft, BookOpen, ChevronRight, ShieldCheck } from 'lucide-react';
 import { FavoriteHeart } from '../components/ui/FavoriteHeart';
 import { ScheduleQuickAdd } from '../components/ui/ScheduleQuickAdd';
 import { PageWrapper } from '../components/layout';
@@ -278,41 +278,58 @@ export function RemedyDetail() {
           </section>
         )}
 
-        {researchLinks.length > 0 && (
-          <section className="mb-12 md:mb-16">
-            <Reveal>
-              <div className="flex items-center justify-between mb-2">
-                <h2 className="section-title mb-0">Evidence</h2>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-evidence-light text-evidence">
-                  <BookOpen className="w-3.5 h-3.5" />
-                  {evidenceScore >= 7 ? 'High Quality' : evidenceScore >= 4 ? 'Moderate' : 'Some'}
+        <section className="mb-12 md:mb-16">
+          <Reveal>
+            <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+              <h2 className="section-title mb-0">Evidence</h2>
+              <div className="flex items-center gap-2">
+                {researchLinks.length > 0 ? (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-evidence-light text-evidence">
+                    <BookOpen className="w-3.5 h-3.5" />
+                    {evidenceScore >= 7 ? 'High Quality' : evidenceScore >= 4 ? 'Moderate' : 'Some'}
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-ink-muted/10 text-ink-muted">
+                    <BookOpen className="w-3.5 h-3.5" />
+                    Not yet rated
+                  </span>
+                )}
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-success/10 text-success" aria-label="Medically reviewed">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  Medically Reviewed
                 </span>
               </div>
-              <p className="text-sm text-ink-muted mb-5">
-                Based on {researchLinks.length} peer-reviewed {researchLinks.length === 1 ? 'study' : 'studies'}
-              </p>
-            </Reveal>
-            <div className="space-y-4">
-              {visibleEvidence.map((source, idx) => (
-                <EvidenceCard
-                  key={idx}
-                  source={source}
-                  delay={idx * 0.06}
-                  onTrackClick={() => trackRemedyEvent({ remedyId: remedy.id, eventType: 'research_clicked', metadata: { url: source.url, label: source.journal || source.label } }).catch(() => {})}
-                />
-              ))}
             </div>
-            {!showAllEvidence && researchLinks.length > EVIDENCE_SHOW_LIMIT && (
-              <button
-                onClick={() => setShowAllEvidence(true)}
-                className="flex items-center gap-1 text-sm font-medium text-evidence mt-4 transition-all duration-200 hover:opacity-80 active:opacity-60"
-              >
-                Show {researchLinks.length - EVIDENCE_SHOW_LIMIT} more {researchLinks.length - EVIDENCE_SHOW_LIMIT === 1 ? 'study' : 'studies'}
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            )}
-          </section>
-        )}
+            <p className="text-sm text-ink-muted mb-5">
+              {researchLinks.length > 0
+                ? `Based on ${researchLinks.length} peer-reviewed ${researchLinks.length === 1 ? 'study' : 'studies'}`
+                : 'No published studies indexed yet'}
+            </p>
+          </Reveal>
+          {researchLinks.length > 0 && (
+            <>
+              <div className="space-y-4">
+                {visibleEvidence.map((source, idx) => (
+                  <EvidenceCard
+                    key={idx}
+                    source={source}
+                    delay={idx * 0.06}
+                    onTrackClick={() => trackRemedyEvent({ remedyId: remedy.id, eventType: 'research_clicked', metadata: { url: source.url, label: source.journal || source.label } }).catch(() => {})}
+                  />
+                ))}
+              </div>
+              {!showAllEvidence && researchLinks.length > EVIDENCE_SHOW_LIMIT && (
+                <button
+                  onClick={() => setShowAllEvidence(true)}
+                  className="flex items-center gap-1 text-sm font-medium text-evidence mt-4 transition-all duration-200 hover:opacity-80 active:opacity-60"
+                >
+                  Show {researchLinks.length - EVIDENCE_SHOW_LIMIT} more {researchLinks.length - EVIDENCE_SHOW_LIMIT === 1 ? 'study' : 'studies'}
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              )}
+            </>
+          )}
+        </section>
 
         {remedy.isPurchasable !== false && (
           <div className="mb-12 md:mb-16">
