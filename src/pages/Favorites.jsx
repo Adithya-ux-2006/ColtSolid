@@ -2,8 +2,8 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  Heart, Search, SlidersHorizontal, ArrowUpDown, Clock,
-  Leaf, TrendingUp
+  Heart, Search, SlidersHorizontal, ArrowUpDown,
+  LayoutGrid, TrendingUp, Calendar
 } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { PageWrapper } from '../components/layout';
@@ -19,32 +19,7 @@ const SORT_OPTIONS = [
   { value: 'rating', label: 'Highest Rated' },
 ];
 
-function parseReliefMinutes(timeStr) {
-  if (!timeStr) return null;
-  const s = timeStr.toLowerCase();
-  if (s.includes('immediate')) return 0;
-  if (s.includes('week') || s.includes('day')) return null;
-  const nums = s.match(/\d+/g);
-  if (!nums) return null;
-  const values = nums.map(Number);
-  const avg = (values[0] + (values[values.length - 1] || values[0])) / 2;
-  if (s.includes('hour')) return avg * 60;
-  return avg;
-}
-
-function computeAvgReliefTime(favorites) {
-  const minutes = favorites
-    .map((r) => parseReliefMinutes(r.timeToEffect))
-    .filter((m) => m !== null);
-  if (minutes.length === 0) return null;
-  const avg = minutes.reduce((a, b) => a + b, 0) / minutes.length;
-  if (avg < 1) return 'Immediate';
-  if (avg < 60) return `${Math.round(avg)} min`;
-  const h = Math.round(avg / 60);
-  return `${h} hr${h > 1 ? 's' : ''}`;
-}
-
-function StatCard({ icon: Icon, value, label, color }) {
+function StatCard({ icon: Icon, value, label, sub, color }) {
   return (
     <motion.div
       whileHover={{ y: -2 }}
@@ -63,6 +38,9 @@ function StatCard({ icon: Icon, value, label, color }) {
       <div className="min-w-0">
         <p className="text-xl md:text-2xl font-bold text-ink leading-none mb-1">{value}</p>
         <p className="text-xs md:text-sm text-ink-muted truncate">{label}</p>
+        {sub ? (
+          <p className="text-[11px] md:text-xs text-ink-muted/80 truncate">{sub}</p>
+        ) : null}
       </div>
     </motion.div>
   );
@@ -76,17 +54,26 @@ export function Favorites() {
   const [sortBy, setSortBy] = useState('newest');
   const [showSortMenu, setShowSortMenu] = useState(false);
 
-  const naturalCount = favorites.filter((r) => r.category === 'Natural').length;
-  const naturalPercent = favorites.length > 0
-    ? Math.round((naturalCount / favorites.length) * 100)
-    : 0;
+  const categoryCount = useMemo(
+    () => new Set(favorites.map((r) => r.category).filter(Boolean)).size,
+    [favorites]
+  );
 
   const highEvidenceCount = favorites.filter((r) => {
     if (r._evidenceScore != null) return r._evidenceScore >= 7;
     return r.rating >= 4.5;
   }).length;
 
-  const avgReliefTime = useMemo(() => computeAvgReliefTime(favorites), [favorites]);
+  const savedThisMonth = useMemo(() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    return favorites.filter((r) => {
+      if (!r._savedAt) return false;
+      const d = new Date(r._savedAt);
+      return d.getFullYear() === year && d.getMonth() === month;
+    }).length;
+  }, [favorites]);
 
   const filtered = useMemo(() => {
     let result = [...favorites];
@@ -163,10 +150,11 @@ export function Favorites() {
               color="emerald"
             />
             <StatCard
-              icon={Leaf}
-              value={`${naturalCount} (${naturalPercent}%)`}
-              label="Natural"
-              color="emerald"
+              icon={LayoutGrid}
+              value={categoryCount}
+              label="Categories"
+              sub="Types of remedies saved"
+              color="blue"
             />
             <StatCard
               icon={TrendingUp}
@@ -175,9 +163,10 @@ export function Favorites() {
               color="violet"
             />
             <StatCard
-              icon={Clock}
-              value={avgReliefTime || '—'}
-              label="Avg. Relief Time"
+              icon={Calendar}
+              value={savedThisMonth}
+              label="Saved This Month"
+              sub="New this month"
               color="orange"
             />
           </div>
