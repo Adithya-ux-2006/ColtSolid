@@ -1,3 +1,59 @@
+const PLAIN_LANGUAGE_REPLACEMENTS = [
+  [/\u00e2[\u20ac\ufffd][\u201d\u201c\u2013\u2014]/g, '-'],
+  [/\u00e2[\u20ac\ufffd]\u00a6/g, '...'],
+  [/[\u2014\u2013]/g, '-'],
+  [/\u2026/g, '...'],
+  [/\ufffd/g, '-'],
+  [/\bnon-pharmacological\b/gi, 'non-medicine'],
+  [/\bcontraindications\b/gi, 'reasons to avoid it'],
+  [/\bcontraindication\b/gi, 'reason to avoid it'],
+  [/\bmyofascial\b/gi, 'muscle and connective tissue'],
+  [/\bperistalsis\b/gi, 'normal gut movement'],
+  [/\bbioavailability\b/gi, 'absorption'],
+  [/\bdysmenorrhea\b/gi, 'period cramps'],
+  [/\bantimicrobial\b/gi, 'germ-fighting'],
+  [/\banti-inflammatory\b/gi, 'swelling-calming'],
+  [/\banalgesic\b/gi, 'pain-relieving'],
+  [/\bbronchodilator\b/gi, 'airway-opening medicine'],
+  [/\bprophylactic\b/gi, 'preventive'],
+  [/\bstandardized\b/gi, 'consistent-dose'],
+  [/\bclinician\b/gi, 'doctor or pharmacist'],
+  [/\bpractitioner\b/gi, 'doctor or pharmacist'],
+  [/\btopical\b/gi, 'on-skin'],
+  [/\boral\b/gi, 'by mouth'],
+  [/\bingestion\b/gi, 'swallowing'],
+  [/\badminister\b/gi, 'use'],
+  [/\badministration\b/gi, 'use'],
+  [/\bdiscontinue\b/gi, 'stop using'],
+  [/\bconsult\b/gi, 'ask'],
+  [/\bmedical provider\b/gi, 'doctor'],
+  [/\bhealthcare provider\b/gi, 'doctor'],
+  [/\bgastrointestinal\b/gi, 'stomach and gut'],
+  [/\brespiratory\b/gi, 'breathing'],
+  [/\bcardiovascular\b/gi, 'heart and blood vessel'],
+  [/\bdermatological\b/gi, 'skin'],
+  [/\bpediatric\b/gi, 'child'],
+  [/\bcontraindicated\b/gi, 'not recommended'],
+  [/\badverse reaction\b/gi, 'bad reaction'],
+  [/\badverse reactions\b/gi, 'bad reactions'],
+  [/\bdosage\b/gi, 'dose'],
+  [/\bmodality\b/gi, 'method'],
+  [/\betiology\b/gi, 'cause'],
+  [/\bsymptomatic relief\b/gi, 'symptom relief'],
+];
+
+function simplifyRemedyLanguage(value) {
+  if (typeof value !== 'string') return value;
+  return PLAIN_LANGUAGE_REPLACEMENTS.reduce(
+    (current, [pattern, replacement]) => current.replace(pattern, replacement),
+    value
+  ).replace(/\s+/g, ' ').trim();
+}
+
+function simplifyStringList(value) {
+  return Array.isArray(value) ? value.map(simplifyRemedyLanguage) : value;
+}
+
 export function getInitials(name = '') {
   const initials = name
     .split(' ')
@@ -30,13 +86,13 @@ export function mapRemedy(remedy) {
     secondarySymptoms: secondarySymptoms.length > 0 ? secondarySymptoms : [],
     rating: remedy.rating,
     reviewCount: remedy.review_count ?? remedy.reviewCount,
-    shortDescription: remedy.short_description ?? remedy.shortDescription,
-    longDescription: remedy.long_description ?? remedy.longDescription,
-    howToUse: remedy.how_to_use ?? remedy.howToUse,
-    warnings: remedy.warnings,
+    shortDescription: simplifyRemedyLanguage(remedy.short_description ?? remedy.shortDescription),
+    longDescription: simplifyRemedyLanguage(remedy.long_description ?? remedy.longDescription),
+    howToUse: simplifyRemedyLanguage(remedy.how_to_use ?? remedy.howToUse),
+    warnings: simplifyRemedyLanguage(remedy.warnings),
     allergen_tags: remedy.allergen_tags ?? remedy.allergenTags ?? [],
-    contraindications: remedy.contraindications ?? [],
-    ingredients: remedy.ingredients ?? [],
+    contraindications: simplifyStringList(remedy.contraindications ?? []),
+    ingredients: simplifyStringList(remedy.ingredients ?? []),
     timeToEffect: remedy.time_to_effect ?? remedy.timeToEffect,
     difficulty: remedy.difficulty,
     cost: remedy.cost,
@@ -48,7 +104,7 @@ export function mapRemedy(remedy) {
       title: paper.title,
       journal: paper.journal,
       url: paper.url,
-      keyFinding: paper.key_findings ?? paper.key_finding ?? paper.keyFinding,
+      keyFinding: simplifyRemedyLanguage(paper.key_findings ?? paper.key_finding ?? paper.keyFinding),
     })) || remedy.researchPapers || [],
     researchLinks: remedy.researchLinks || [],
   };

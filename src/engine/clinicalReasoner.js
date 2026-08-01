@@ -48,6 +48,54 @@ const EMERGENCY_TOKEN_SET = new Set([
   'cant breathe', 'difficulty breathing',
 ]);
 
+const GENERIC_SYMPTOM_TOKENS = new Set([
+  'pain', 'ache', 'aches', 'hurt', 'hurts', 'sore', 'soreness',
+  'stiff', 'stiffness', 'swollen', 'swelling', 'weak', 'weakness',
+  'burning', 'itchy', 'itching', 'tight', 'cramp', 'cramps',
+]);
+
+const ANATOMY_GROUPS = [
+  ['head', 'forehead', 'temple', 'skull', 'migraine'],
+  ['eye', 'eyes', 'vision', 'visual'],
+  ['ear', 'ears', 'hearing', 'tinnitus'],
+  ['nose', 'nasal', 'sinus', 'sinuses'],
+  ['throat', 'swallow', 'tonsil'],
+  ['chest', 'breast', 'rib', 'ribs'],
+  ['stomach', 'abdomen', 'abdominal', 'belly', 'tummy', 'gut'],
+  ['back', 'spine', 'sciatica'],
+  ['neck', 'cervical'],
+  ['shoulder'],
+  ['arm', 'elbow', 'hand', 'wrist', 'finger', 'fingers'],
+  ['hip', 'groin', 'pelvis', 'pelvic'],
+  ['leg', 'knee', 'ankle', 'foot', 'feet', 'toe', 'toes', 'shin'],
+  ['skin', 'rash', 'hives'],
+  ['mouth', 'tongue', 'gum', 'gums', 'tooth', 'teeth', 'jaw'],
+  ['urine', 'urinary', 'pee', 'peeing', 'bladder', 'kidney', 'prostate'],
+  ['testicle', 'testicular', 'vagina', 'vaginal', 'vulva', 'vulvar', 'penis'],
+];
+
+function anatomyGroupsForTokens(tokens) {
+  const groups = new Set();
+  for (const token of tokens) {
+    for (let i = 0; i < ANATOMY_GROUPS.length; i++) {
+      if (ANATOMY_GROUPS[i].includes(token)) groups.add(i);
+    }
+  }
+  return groups;
+}
+
+function hasAnatomyConflict(queryTokens, labelTokens) {
+  const queryGroups = anatomyGroupsForTokens(queryTokens);
+  const labelGroups = anatomyGroupsForTokens(labelTokens);
+  if (queryGroups.size === 0 || labelGroups.size === 0) return false;
+  return [...queryGroups].every(group => !labelGroups.has(group));
+}
+
+function isMostlyGenericPainMatch(queryTokens, labelTokens) {
+  const shared = queryTokens.filter(token => labelTokens.includes(token));
+  return shared.length > 0 && shared.every(token => GENERIC_SYMPTOM_TOKENS.has(token));
+}
+
 function normalize(str) {
   return str.toLowerCase().trim().replace(/\s+/g, ' ');
 }
@@ -205,20 +253,29 @@ function scoreSymptom(queryTokens, normalizedQuery, expandedQuery, symptomIndex)
   if (normalizedQuery.includes(label)) return 1000;
 
   // Tier 1c: Symptom label contains the full query (use original query)
-  if (label.includes(normalizedQuery)) return 800;
+  if (label.includes(normalizedQuery) && !hasAnatomyConflict(queryTokens, symptomIndex.labelTokens)) return 800;
 
   // Tier 1d: Word-level overlap >= 50% of label words (use original query)
   const queryWords = normalizedQuery.split(/\s+/);
   const labelWords = label.split(/\s+/);
   const overlapCount = queryWords.filter(w => labelWords.includes(w)).length;
-  if (overlapCount > 0 && overlapCount >= Math.ceil(labelWords.length * 0.5)) {
+  const anatomyConflict = hasAnatomyConflict(queryTokens, symptomIndex.labelTokens);
+  if (
+    overlapCount > 0 &&
+    overlapCount >= Math.ceil(labelWords.length * 0.5) &&
+    !anatomyConflict &&
+    !isMostlyGenericPainMatch(queryWords, labelWords)
+  ) {
     return 500 + overlapCount * 100;
   }
 
   // Tier 2-3: Fuzzy matching (use expanded query + tokens for synonym awareness)
   const tokenOverlap = computeTokenOverlap(queryTokens, symptomIndex.labelTokens);
   const ngramSim = computeOverallNgramSimilarity(expandedQuery, label);
-  return tokenOverlap * 0.65 + ngramSim * 0.35;
+  let score = tokenOverlap * 0.65 + ngramSim * 0.35;
+  if (anatomyConflict) score *= 0.08;
+  if (isMostlyGenericPainMatch(queryTokens, symptomIndex.labelTokens)) score *= 0.35;
+  return score;
 }
 
 export function inferConcerns(query, symptoms) {
@@ -231,6 +288,15 @@ export function inferConcerns(query, symptoms) {
   }
 
   const pp = preprocessQuery(query);
+
+  if (pp.hasEmergencyPhrase && pp.conceptHints.length === 0) {
+    return {
+      primaryConcerns: [], secondaryConcerns: [], confidence: 0,
+      severity: 'severe', emergencyIndicators: [{ source: 'query_keyword', match: 'emergency phrase' }], userIntent: inferUserIntent(query),
+      hasNegation: pp.hasNegation, matchedPhrases: pp.matchedPhrases,
+      queryContext: { raw: query, normalized: pp.normalized, tokens: pp.queryTokens },
+    };
+  }
 
   if (pp.queryTokens.length === 0 && pp.expandedTokens.length === 0) {
     return {
@@ -248,6 +314,7 @@ export function inferConcerns(query, symptoms) {
     : pp.normalized;
 
   const conceptHintSet = new Set(pp.conceptHints);
+  const conceptHintRank = new Map(pp.conceptHints.map((id, index) => [id, index]));
   const negatedSet = new Set(pp.negatedIds);
 
   const negatedPhraseTokens = new Set(
@@ -264,7 +331,8 @@ export function inferConcerns(query, symptoms) {
     let score = scoreSymptom(combinedTokens, pp.normalized, combinedQueryStr, si);
 
     if (conceptHintSet.has(si.id)) {
-      score = Math.min(score * 2.5, 1000);
+      const rankBoost = 1000 - (conceptHintRank.get(si.id) || 0);
+      score = Math.max(score, rankBoost);
     }
 
     if (negatedSet.has(si.id) || si.normalizedLabel.split(/\s+/).some(lw => negatedPhraseTokens.has(lw))) {
@@ -298,13 +366,13 @@ export function inferConcerns(query, symptoms) {
   scored.sort((a, b) => b.score - a.score);
 
   const topScore = scored.length > 0 ? scored[0].score : 0;
-  const threshold = 0.06;
+  const threshold = 0.18;
 
   const primaryConcerns = scored.filter(s => s.score >= topScore * 0.75);
   const secondaryConcerns = scored.filter(s => s.score >= topScore * 0.35 && s.score < topScore * 0.75);
 
-  const validPrimaryConcerns = primaryConcerns.filter(s => s.score >= threshold);
-  const validSecondaryConcerns = secondaryConcerns.filter(s => s.score >= threshold);
+  const validPrimaryConcerns = primaryConcerns.filter(s => s.score >= threshold || conceptHintSet.has(s.symptomId));
+  const validSecondaryConcerns = secondaryConcerns.filter(s => s.score >= threshold || conceptHintSet.has(s.symptomId));
 
   const hasValidConcerns = validPrimaryConcerns.length > 0 || validSecondaryConcerns.length > 0;
   const confidence = hasValidConcerns ? Math.round(Math.min(topScore * 100, 100)) : 0;

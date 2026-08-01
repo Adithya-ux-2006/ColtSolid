@@ -4,6 +4,47 @@ function normalizeQuery(value) {
   return (value || '').toLowerCase().trim().replace(/\s+/g, ' ');
 }
 
+const GENERIC_MATCH_TOKENS = new Set(['pain', 'ache', 'aches', 'hurt', 'hurts', 'sore', 'stiffness', 'weakness', 'swelling']);
+const ANATOMY_GROUPS = [
+  ['head', 'forehead', 'temple', 'migraine'],
+  ['eye', 'eyes', 'vision'],
+  ['ear', 'ears', 'hearing'],
+  ['nose', 'nasal', 'sinus', 'sinuses'],
+  ['throat'],
+  ['chest', 'breast', 'rib', 'ribs'],
+  ['stomach', 'abdomen', 'abdominal', 'belly', 'tummy', 'gut'],
+  ['back', 'spine'],
+  ['neck'],
+  ['shoulder'],
+  ['arm', 'elbow', 'hand', 'wrist', 'finger', 'fingers'],
+  ['hip', 'groin', 'pelvis', 'pelvic'],
+  ['leg', 'knee', 'ankle', 'foot', 'feet', 'toe', 'toes'],
+  ['mouth', 'tongue', 'gum', 'gums', 'tooth', 'teeth', 'jaw'],
+  ['urine', 'urinary', 'pee', 'bladder', 'kidney', 'prostate'],
+];
+
+function anatomyGroups(tokens) {
+  const groups = new Set();
+  for (const token of tokens) {
+    for (let i = 0; i < ANATOMY_GROUPS.length; i++) {
+      if (ANATOMY_GROUPS[i].includes(token)) groups.add(i);
+    }
+  }
+  return groups;
+}
+
+function hasAnatomyConflict(queryTokens, labelTokens) {
+  const queryGroups = anatomyGroups(queryTokens);
+  const labelGroups = anatomyGroups(labelTokens);
+  if (queryGroups.size === 0 || labelGroups.size === 0) return false;
+  return [...queryGroups].every(group => !labelGroups.has(group));
+}
+
+function onlyGenericOverlap(queryTokens, labelTokens) {
+  const shared = labelTokens.filter((token) => queryTokens.includes(token));
+  return shared.length > 0 && shared.every((token) => GENERIC_MATCH_TOKENS.has(token));
+}
+
 function buildStrictMatches(query, symptoms) {
   const normalizedQuery = normalizeQuery(query);
   if (!normalizedQuery || !symptoms?.length) return [];
@@ -21,9 +62,14 @@ function buildStrictMatches(query, symptoms) {
       let score = 0;
       if (isExactLabelMatch) score = 10000;
       else if (normalizedQuery.includes(normalizedLabel)) score = 8000;
-      else if (normalizedLabel.includes(normalizedQuery)) score = 7000;
-      else if (coversFullLabel) score = 6000 + overlapCount * 100;
-      else if (overlapCount > 0 && overlapCount >= Math.ceil(labelTokens.length * 0.5)) score = 3000 + overlapCount * 200;
+      else if (normalizedLabel.includes(normalizedQuery) && !hasAnatomyConflict(queryTokens, labelTokens)) score = 7000;
+      else if (coversFullLabel && !hasAnatomyConflict(queryTokens, labelTokens)) score = 6000 + overlapCount * 100;
+      else if (
+        overlapCount > 0 &&
+        overlapCount >= Math.ceil(labelTokens.length * 0.5) &&
+        !hasAnatomyConflict(queryTokens, labelTokens) &&
+        !onlyGenericOverlap(queryTokens, labelTokens)
+      ) score = 3000 + overlapCount * 200;
 
       if (score === 0) return null;
 
@@ -60,9 +106,11 @@ export function resolveQuery(query, symptoms, geminiInterpretation) {
   const hasExactStructuralMatch = strictMatches.some(m => m.isExactMatch);
   const strictPrimaryId = hasExactStructuralMatch
     ? strictMatches.find(m => m.isExactMatch)?.id
-    : (strictMatches[0]?.id || result.primaryConcerns[0]?.id || null);
+    : (result.primaryConcerns[0]?.id || strictMatches[0]?.id || null);
 
-  const allConcerns = [...strictMatches, ...inferredConcerns];
+  const allConcerns = hasExactStructuralMatch
+    ? [...strictMatches, ...inferredConcerns]
+    : [...result.primaryConcerns, ...result.secondaryConcerns, ...strictMatches.filter((match) => !concernMap.has(match.id))];
   const basePrimaryId = strictPrimaryId;
 
   const base = {
