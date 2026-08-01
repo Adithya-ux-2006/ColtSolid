@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ShieldCheck, AlertTriangle, Star, StarHalf } from 'lucide-react';
+import { Star, StarHalf } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { RemedyImage } from './RemedyImage';
 import { CategoryBadge } from './CategoryBadge';
@@ -22,7 +22,7 @@ function StarRating({ rating }) {
   );
 }
 
-export function RemedyHero({ remedy, isSafe, evidenceScore, className }) {
+export function RemedyHero({ remedy, evidenceScore, className }) {
   return (
     <section className={cn('flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12', className)}>
       <motion.div
@@ -44,17 +44,6 @@ export function RemedyHero({ remedy, isSafe, evidenceScore, className }) {
           className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-5"
         >
           <CategoryBadge category={remedy.category} firstOccurrence />
-          {isSafe ? (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-success/10 text-success">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              Safe
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-warning/10 text-warning">
-              <AlertTriangle className="w-3.5 h-3.5" />
-              Check
-            </span>
-          )}
         </motion.div>
 
         <motion.h1

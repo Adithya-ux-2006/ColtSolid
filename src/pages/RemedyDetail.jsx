@@ -7,7 +7,6 @@ import { PageWrapper } from '../components/layout';
 import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
 import { RemedyHero } from '../components/ui/RemedyHero';
 import { QuickStats } from '../components/ui/QuickStats';
-import { SafetyBanner } from '../components/ui/SafetyBanner';
 import { BenefitCard } from '../components/ui/BenefitCard';
 import { TimelineStep } from '../components/ui/TimelineStep';
 import { EvidenceCard } from '../components/ui/EvidenceCard';
@@ -197,7 +196,6 @@ export function RemedyDetail() {
       <div className="max-w-[800px] mx-auto px-5 md:px-8 pt-10 pb-8 md:pt-14 md:pb-10">
         <RemedyHero
           remedy={remedy}
-          isSafe={isSafe}
           evidenceScore={evidenceScore}
           safetyScore={safetyScore}
         />
@@ -217,19 +215,6 @@ export function RemedyDetail() {
       </div>
 
       <div className="max-w-[800px] mx-auto px-5 md:px-8">
-
-        <div className="mb-12 md:mb-16">
-          {!isSafe && remedy.warnings ? (
-            <Reveal>
-              <AdvisoryCard
-                title="Allergy conflict detected"
-                message="This remedy may not be suitable based on your health profile. Please consult with a healthcare professional before use."
-              />
-            </Reveal>
-          ) : (
-            <SafetyBanner />
-          )}
-        </div>
 
         {benefits.length > 0 && (
           <section className="mb-12 md:mb-16">

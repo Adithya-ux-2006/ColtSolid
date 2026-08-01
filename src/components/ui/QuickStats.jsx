@@ -24,7 +24,7 @@ function getEvidenceText(score) {
   return '—';
 }
 
-function StatColumn({ icon: Icon, iconBg, iconColor, value, label, ariaLabel, delay, isLast }) {
+function StatColumn({ icon: Icon, iconBg, iconColor, value, label, subLabel, subLabelClassName, ariaLabel, delay, isLast }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 6 }}
@@ -60,6 +60,15 @@ function StatColumn({ icon: Icon, iconBg, iconColor, value, label, ariaLabel, de
       )}>
         {label}
       </span>
+      {subLabel && (
+        <span className={cn(
+          'leading-tight w-full',
+          'text-[9px] sm:text-[10px] text-ink-muted',
+          subLabelClassName
+        )}>
+          {subLabel}
+        </span>
+      )}
     </motion.div>
   );
 }
@@ -68,6 +77,7 @@ export function QuickStats({ remedy, isSafe, evidenceScore, safetyScore, classNa
   const safetyText = getSafetyText(safetyScore, !isSafe);
   const safetyColor = getSafetyColor(safetyScore, !isSafe);
   const evidenceText = getEvidenceText(evidenceScore);
+  const safetySubLabel = isSafe ? 'Safe for you' : 'Potential conflict';
 
   return (
     <div
@@ -91,7 +101,9 @@ export function QuickStats({ remedy, isSafe, evidenceScore, safetyScore, classNa
         iconColor={safetyColor}
         value={safetyText}
         label="Safety"
-        ariaLabel={`Safety: ${safetyText}`}
+        subLabel={safetySubLabel}
+        subLabelClassName={isSafe ? undefined : 'text-danger'}
+        ariaLabel={`Safety: ${safetyText}, ${safetySubLabel}`}
         delay={0.04}
         isLast={false}
       />
