@@ -16,17 +16,77 @@ function buildSymptomRemediesMap(rows) {
   return map;
 }
 
+function buildLocalSymptomRemedies(remedies = []) {
+  const map = {};
+
+  remedies.forEach((remedy, remedyIndex) => {
+    for (const symptomId of remedy.primarySymptoms || remedy.symptoms || []) {
+      if (!map[symptomId]) map[symptomId] = [];
+      map[symptomId].push({
+        remedyId: remedy.id,
+        evidenceScore: 8,
+        priorityRank: Math.max(1, 1000 - remedyIndex),
+      });
+    }
+
+    for (const symptomId of remedy.secondarySymptoms || []) {
+      if (!map[symptomId]) map[symptomId] = [];
+      map[symptomId].push({
+        remedyId: remedy.id,
+        evidenceScore: 4,
+        priorityRank: Math.max(1, 500 - remedyIndex),
+      });
+    }
+  });
+
+  return map;
+}
+
 async function loadLocalCatalog() {
-  const { LOCAL_SYMPTOMS, LOCAL_REMEDIES, LOCAL_SYMPTOM_REMEDIES } = await import('../data/localCatalog');
+  const [{ SYMPTOMS }, { REMEDIES }] = await Promise.all([
+    import('../data/symptoms'),
+    import('../data/remedies'),
+  ]);
+
   return {
-    symptoms: LOCAL_SYMPTOMS.map((s) => ({
+    symptoms: SYMPTOMS.map((s) => ({
       id: s.id,
       label: s.label,
       emoji: s.emoji,
       color: s.color,
     })),
-    remedies: LOCAL_REMEDIES.map(mapRemedy),
-    symptomRemedies: LOCAL_SYMPTOM_REMEDIES,
+    remedies: REMEDIES.map(mapRemedy),
+    symptomRemedies: buildLocalSymptomRemedies(REMEDIES),
+  };
+}
+
+function mergeById(primary = [], fallback = []) {
+  const seen = new Set(primary.map((item) => item.id));
+  return [
+    ...primary,
+    ...fallback.filter((item) => item?.id && !seen.has(item.id)),
+  ];
+}
+
+function mergeSymptomRemedies(primary = {}, fallback = {}) {
+  const merged = { ...primary };
+
+  for (const [symptomId, localItems] of Object.entries(fallback || {})) {
+    const existing = merged[symptomId] || [];
+    const seenRemedies = new Set(existing.map((item) => item.remedyId));
+    const additions = (localItems || []).filter((item) => item?.remedyId && !seenRemedies.has(item.remedyId));
+    merged[symptomId] = [...existing, ...additions];
+  }
+
+  return merged;
+}
+
+async function enrichWithLocalCatalog(catalog) {
+  const local = await loadLocalCatalog();
+  return {
+    symptoms: mergeById(catalog.symptoms, local.symptoms),
+    remedies: mergeById(catalog.remedies, local.remedies),
+    symptomRemedies: mergeSymptomRemedies(catalog.symptomRemedies, local.symptomRemedies),
   };
 }
 
@@ -73,7 +133,7 @@ export const useCatalogStore = create((set, get) => ({
       const hasData = (symptoms?.length > 0 || remedies?.length > 0);
       if (!hasData) throw new Error('No data returned from Supabase');
 
-      set({
+      const enriched = await enrichWithLocalCatalog({
         symptoms: (symptoms || []).map((s) => ({
           id: s.id,
           label: s.label,
@@ -82,6 +142,10 @@ export const useCatalogStore = create((set, get) => ({
         })),
         remedies: (remedies || []).map(mapRemedy),
         symptomRemedies: symptomRemediesData,
+      });
+
+      set({
+        ...enriched,
         isLoading: false,
         hasLoaded: true,
       });

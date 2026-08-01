@@ -183,14 +183,28 @@ export function Results() {
   const isCatalogLoading = useCatalogStore((state) => state.isLoading);
   const hasLoaded = useCatalogStore((state) => state.hasLoaded);
 
-  const isFreeTextSearch = Boolean(queryParam.trim());
+  const knownSymptom = useMemo(
+    () => (symptomParam ? symptoms.find((symptom) => symptom.id === symptomParam) || null : null),
+    [symptomParam, symptoms]
+  );
+  const shouldResolveSymptomParamAsText = Boolean(hasLoaded && symptomParam && !knownSymptom);
+  const freeTextQuery = queryParam.trim() || (shouldResolveSymptomParamAsText ? symptomParam.trim() : '');
+  const isFreeTextSearch = Boolean(freeTextQuery);
+
+  const deterministicResolution = useMemo(
+    () => (isFreeTextSearch ? resolveQuery(freeTextQuery, symptoms, null) : null),
+    [isFreeTextSearch, freeTextQuery, symptoms]
+  );
+  const hasStrongPhraseMatch = Boolean(
+    deterministicResolution?.matchedPhrases?.length && deterministicResolution.confidence >= 80
+  );
 
   useEffect(() => {
-    if (!isFreeTextSearch || !queryParam || geminiInterpretation) return;
+    if (!isFreeTextSearch || !freeTextQuery || geminiInterpretation || hasStrongPhraseMatch) return;
 
     let cancelled = false;
 
-    fetchGeminiInterpretation(queryParam, symptoms)
+    fetchGeminiInterpretation(freeTextQuery, symptoms)
       .then((interp) => {
         if (!cancelled && interp) {
           setGeminiInterpretation(interp);
@@ -201,29 +215,32 @@ export function Results() {
       });
 
     return () => { cancelled = true; };
-  }, [isFreeTextSearch, queryParam, symptoms, geminiInterpretation]);
+  }, [isFreeTextSearch, freeTextQuery, symptoms, geminiInterpretation, hasStrongPhraseMatch]);
 
   const symptomResolution = useMemo(
-    () => (isFreeTextSearch ? resolveQuery(queryParam, symptoms, geminiInterpretation) : {
-      symptomIds: symptomParam ? [symptomParam] : [],
-      allSymptomIds: symptomParam ? [symptomParam] : [],
-      confidence: 100,
+    () => (isFreeTextSearch ? (hasStrongPhraseMatch ? deterministicResolution : resolveQuery(freeTextQuery, symptoms, geminiInterpretation)) : {
+      symptomIds: knownSymptom ? [knownSymptom.id] : [],
+      allSymptomIds: knownSymptom ? [knownSymptom.id] : [],
+      confidence: knownSymptom ? 100 : 0,
       allMatches: [],
-      primarySymptom: symptomParam ? symptoms.find(s => s.id === symptomParam) || null : null,
+      primarySymptom: knownSymptom,
+      primarySymptomId: knownSymptom?.id || null,
     }),
-    [isFreeTextSearch, queryParam, symptoms, symptomParam, geminiInterpretation]
+    [isFreeTextSearch, freeTextQuery, symptoms, knownSymptom, geminiInterpretation, hasStrongPhraseMatch, deterministicResolution]
   );
 
   const matchedSymptom = symptomResolution.primarySymptom;
   const queryConfidence = symptomResolution.confidence;
   const isLowConfidence = isFreeTextSearch && queryConfidence < 50 && symptomResolution.symptomIds.length > 0;
+  const emergencyQueryText = freeTextQuery || queryParam;
+  const isEmergencySearch = isEmergencyQuery(emergencyQueryText);
   const primarySymptomId = symptomResolution.symptomIds[0];
 
   useEffect(() => {
-    if (isFreeTextSearch && queryParam) {
+    if (isFreeTextSearch && freeTextQuery) {
       trackSearchEvent({
         source: symptomParam ? 'symptom_page' : 'text_direct',
-        queryText: queryParam,
+        queryText: freeTextQuery,
         symptomIds: symptomParam ? [symptomParam] : [],
       }).catch(() => {});
     } else if (symptomParam) {
@@ -236,7 +253,7 @@ export function Results() {
     if (isAuthenticated) {
       incrementSearchCount();
     }
-  }, [isFreeTextSearch, queryParam, symptomParam, isAuthenticated, incrementSearchCount]);
+  }, [isFreeTextSearch, freeTextQuery, symptomParam, isAuthenticated, incrementSearchCount]);
 
   const safeFilter = useMemo(
     () => (remedy) => isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions, ageRange: activeAgeRange }),
@@ -340,10 +357,10 @@ export function Results() {
         </button>
 
         <h1 className="text-hero font-extrabold text-ink mt-8 mb-4">
-          {matchedSymptom?.label || queryParam}
+          {isEmergencySearch ? emergencyQueryText : (matchedSymptom?.label || freeTextQuery)}
         </h1>
 
-        {matchedSymptom && (
+        {matchedSymptom && !isEmergencySearch && (
           <div className="flex flex-wrap items-center gap-2 mb-4">
             <SeverityBadge severity={symptomResolution.severity} />
             <IntentBadge intent={symptomResolution.userIntent} />
@@ -351,7 +368,7 @@ export function Results() {
           </div>
         )}
 
-        {matchedSymptom && (
+        {matchedSymptom && !isEmergencySearch && (
           <p className="text-ink-muted text-lg mb-8">
             Based on your input, here&apos;s the best next step.
           </p>
@@ -364,7 +381,7 @@ export function Results() {
         </div>
       )}
 
-      {hasResults && !isEmergencyQuery(queryParam) && (
+      {hasResults && !isEmergencySearch && (
         <SafetyProfilePanel
           ageRange={activeAgeRange}
           onSelectAgeRange={handleAgeRangeSelect}
@@ -372,7 +389,7 @@ export function Results() {
         />
       )}
 
-      {isEmergencyQuery(queryParam) ? (
+      {isEmergencySearch ? (
         <div className="max-w-4xl mx-auto px-6 mb-8">
           <EmergencyBanner />
         </div>
@@ -381,8 +398,8 @@ export function Results() {
           <EmptyState
             title="No remedies found"
             description={symptomResolution.symptomIds.length > 0
-              ? `No evidence-backed remedies were found for "${matchedSymptom?.label || queryParam}". Try a different search term.`
-              : `We couldn't confidently identify a matching symptom for "${queryParam}". Try a different search term.`}
+              ? `No evidence-backed remedies were found for "${matchedSymptom?.label || freeTextQuery}". Try a different search term.`
+              : `We couldn't confidently identify a matching symptom for "${freeTextQuery}". Try a different search term.`}
             ctaLabel="Search Again"
             ctaHref="/search"
           />

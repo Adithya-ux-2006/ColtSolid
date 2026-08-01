@@ -153,6 +153,12 @@ export function resolveQuery(query, symptoms, geminiInterpretation) {
     return base;
   }
 
+  const hasPhraseBackedMatch = (base.matchedPhrases || []).length > 0 && base.primarySymptomId;
+  const geminiAgreesWithPhrase = geminiPrimary.includes(base.primarySymptomId) || geminiSecondary.includes(base.primarySymptomId);
+  if (hasPhraseBackedMatch && base.confidence >= 80 && !geminiAgreesWithPhrase) {
+    return base;
+  }
+
   const engineIdSet = new Set(base.symptomIds);
   const geminiOnlySecondary = geminiSecondary.filter(id => !engineIdSet.has(id));
 
