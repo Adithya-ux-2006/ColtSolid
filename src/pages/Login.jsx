@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
+import { PasswordInput } from '../components/ui/PasswordInput';
 import { useAuthStore } from '../store/authStore';
 
 export function Login() {
@@ -58,17 +59,15 @@ export function Login() {
             </div>
             <div>
               <label className="block text-sm font-medium text-ink mb-1" htmlFor="password">Password</label>
-              <div className="bg-card rounded-full shadow-soft border border-border/50 transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_hsl(var(--primary)/0.25)] focus-within:border-primary/30">
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-transparent px-5 py-3.5 text-base text-ink placeholder-ink-muted focus:outline-none"
-                  placeholder="••••••••"
-                  required
-                />
-              </div>
+              <PasswordInput
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-transparent px-5 py-3.5 text-base text-ink placeholder-ink-muted focus:outline-none"
+                wrapperClassName="bg-card rounded-full shadow-soft border border-border/50 transition-shadow duration-200 focus-within:shadow-[0_0_0_2px_hsl(var(--primary)/0.25)] focus-within:border-primary/30"
+                placeholder="••••••••"
+                required
+              />
             </div>
 
             <button

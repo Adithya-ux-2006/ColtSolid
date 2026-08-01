@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
+import { PasswordInput } from '../components/ui/PasswordInput';
 import { useAuthStore } from '../store/authStore';
 import { cn } from '../utils/cn';
 
@@ -115,10 +116,9 @@ export function Register() {
 
             <div>
               <label className="block text-sm font-medium text-ink mb-1" htmlFor="password">Password</label>
-              <input
+              <PasswordInput
                 id="password"
                 name="password"
-                type="password"
                 value={formData.password}
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-ink/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
@@ -128,10 +128,9 @@ export function Register() {
 
             <div>
               <label className="block text-sm font-medium text-ink mb-1" htmlFor="confirmPassword">Confirm Password</label>
-              <input
+              <PasswordInput
                 id="confirmPassword"
                 name="confirmPassword"
-                type="password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 className={cn(
