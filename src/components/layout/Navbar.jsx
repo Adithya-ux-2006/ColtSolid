@@ -49,6 +49,20 @@ export function Navbar() {
               Sign Up Free
             </Link>
           </div>
+          <div className="md:hidden flex items-center gap-1.5">
+            <Link
+              to="/login"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center px-2 text-ink-muted hover:text-ink text-sm font-medium transition-colors"
+            >
+              Log In
+            </Link>
+            <Link
+              to="/register"
+              className="min-h-[44px] inline-flex items-center px-4 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:bg-primary-dark transition-colors shadow-glow"
+            >
+              Sign Up
+            </Link>
+          </div>
         </div>
       )}
     </nav>
