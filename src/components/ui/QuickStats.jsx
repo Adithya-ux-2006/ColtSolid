@@ -54,16 +54,18 @@ function StatColumn({ icon: Icon, iconBg, iconColor, value, label, subLabel, sub
       )}>
         {value}
       </span>
-      <span className={cn(
-        'text-ink-muted leading-tight truncate w-full',
-        'text-[10px] sm:text-[11px] md:text-xs'
-      )}>
-        {label}
-      </span>
+      {label && (
+        <span className={cn(
+          'text-ink-muted leading-tight truncate w-full',
+          'text-[10px] sm:text-[11px] md:text-xs'
+        )}>
+          {label}
+        </span>
+      )}
       {subLabel && (
         <span className={cn(
-          'leading-tight w-full',
-          'text-[9px] sm:text-[10px] text-ink-muted',
+          'font-medium leading-tight w-full',
+          'text-[11px] sm:text-xs md:text-sm text-ink-muted',
           subLabelClassName
         )}>
           {subLabel}
@@ -100,7 +102,6 @@ export function QuickStats({ remedy, isSafe, evidenceScore, safetyScore, classNa
         iconBg="bg-success/10"
         iconColor={safetyColor}
         value={safetyText}
-        label="Safety"
         subLabel={safetySubLabel}
         subLabelClassName={isSafe ? undefined : 'text-danger'}
         ariaLabel={`Safety: ${safetyText}, ${safetySubLabel}`}
