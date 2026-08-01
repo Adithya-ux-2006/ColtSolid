@@ -19,6 +19,7 @@ import { getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptom
 import { resolveQuery } from '../utils/symptomEngine';
 import { fetchGeminiInterpretation } from '../utils/geminiInterpreter';
 import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
+import { AGE_RANGE_OPTIONS } from '../constants/onboarding';
 import { trackSearchEvent } from '../utils/analytics';
 
 const EMPTY_ARRAY = [];
@@ -90,6 +91,65 @@ function MedicalDisclaimer() {
   );
 }
 
+function getAgeRangeLabel(ageRange) {
+  return AGE_RANGE_OPTIONS.find((option) => option.value === ageRange)?.label || 'Not set';
+}
+
+function SafetyProfilePanel({ ageRange, onSelectAgeRange, isSaving }) {
+  const hasAgeRange = Boolean(ageRange);
+
+  return (
+    <div className="max-w-4xl mx-auto px-6 mb-6">
+      <section className={cn(
+        'rounded-2xl border p-4 md:p-5 shadow-soft',
+        hasAgeRange ? 'border-success/20 bg-success/5' : 'border-warning/20 bg-warning/10'
+      )}>
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-start gap-3">
+            <div className={cn(
+              'mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full',
+              hasAgeRange ? 'bg-success/10 text-success' : 'bg-warning/15 text-warning'
+            )}>
+              <ShieldCheck className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-ink">Safety profile</p>
+              <p className="mt-1 text-sm leading-relaxed text-ink-muted">
+                {hasAgeRange
+                  ? `Results are using age range ${getAgeRangeLabel(ageRange)} for child and teen safety checks.`
+                  : 'Add an age range to apply child and teen safety checks to these recommendations.'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2 md:justify-end">
+            {AGE_RANGE_OPTIONS.map((option) => {
+              const isSelected = ageRange === option.value;
+              return (
+                <button
+                  key={option.value}
+                  type="button"
+                  disabled={isSaving}
+                  aria-pressed={isSelected}
+                  onClick={() => onSelectAgeRange(option.value)}
+                  className={cn(
+                    'min-h-[36px] rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors disabled:opacity-60',
+                    isSelected
+                      ? 'border-primary bg-primary text-white shadow-glow'
+                      : 'border-border bg-card text-ink hover:border-primary/30 hover:text-primary'
+                  )}
+                >
+                  {option.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 export function Results() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -101,15 +161,18 @@ export function Results() {
   const [geminiInterpretation, setGeminiInterpretation] = useState(
     location.state?.geminiInterpretation || null
   );
+  const [isSavingAgeRange, setIsSavingAgeRange] = useState(false);
 
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies ?? EMPTY_ARRAY);
   const userConditions = useAuthStore((state) => state.user?.common_conditions);
   const userAgeRange = useAuthStore((state) => state.user?.age_range);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const incrementSearchCount = useAuthStore((state) => state.incrementSearchCount);
+  const updateUser = useAuthStore((state) => state.updateUser);
   const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
   const guestConditions = useGuestProfileStore((state) => state.common_conditions);
   const guestAgeRange = useGuestProfileStore((state) => state.age_range);
+  const setGuestAgeRange = useGuestProfileStore((state) => state.setAgeRange);
   const activeAllergies = isAuthenticated ? userKnownAllergies : guestAllergies;
   const activeConditions = isAuthenticated ? userConditions : guestConditions;
   const activeAgeRange = isAuthenticated ? userAgeRange : guestAgeRange;
@@ -226,6 +289,22 @@ export function Results() {
 
   const visibleAlternatives = showAllAlternatives ? allAlternatives : allAlternatives.slice(0, 5);
 
+  const handleAgeRangeSelect = async (ageRange) => {
+    if (!ageRange || ageRange === activeAgeRange) return;
+
+    if (!isAuthenticated) {
+      setGuestAgeRange(ageRange);
+      return;
+    }
+
+    setIsSavingAgeRange(true);
+    try {
+      await updateUser({ age_range: ageRange });
+    } finally {
+      setIsSavingAgeRange(false);
+    }
+  };
+
   if (!hasLoaded && isCatalogLoading) {
     return (
       <PageWrapper className="min-h-screen pb-16">
@@ -285,6 +364,14 @@ export function Results() {
         </div>
       )}
 
+      {hasResults && !isEmergencyQuery(queryParam) && (
+        <SafetyProfilePanel
+          ageRange={activeAgeRange}
+          onSelectAgeRange={handleAgeRangeSelect}
+          isSaving={isSavingAgeRange}
+        />
+      )}
+
       {isEmergencyQuery(queryParam) ? (
         <div className="max-w-4xl mx-auto px-6 mb-8">
           <EmergencyBanner />
@@ -308,7 +395,7 @@ export function Results() {
                 <span className="text-warning text-sm">&#9733;</span>
                 <p className="text-xs font-bold uppercase tracking-wider text-ink-muted">Recommended for you</p>
               </div>
-              <p className="text-sm text-ink-muted mb-5">Top picks based on your symptoms and profile.</p>
+              <p className="text-sm text-ink-muted mb-5">Top picks based on your symptoms, safety profile, and available evidence.</p>
               <div className={cn(
                 'grid gap-5',
                 highlightedRemedies.length === 1 && 'grid-cols-1 max-w-md mx-auto',

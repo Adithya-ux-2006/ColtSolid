@@ -5,6 +5,15 @@ import { getChildSafetyStatus } from '../../utils/guestProfile';
 function getSafetyBadgeState(remedy, ageRange) {
   const childSafety = getChildSafetyStatus(remedy, ageRange);
 
+  if (!ageRange) {
+    return {
+      label: 'Age Not Set',
+      note: 'Add an age range to complete child and teen safety checks.',
+      Icon: AlertTriangle,
+      className: 'border-warning/25 bg-warning/10 text-warning',
+    };
+  }
+
   if (remedy?._allergyConflict || remedy?._childSafetyBlock || childSafety.isHardBlock) {
     return {
       label: 'Not Recommended',
