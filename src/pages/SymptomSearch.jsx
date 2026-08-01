@@ -42,15 +42,6 @@ export function SymptomSearch() {
   const isSearching = searchTerm !== debouncedTerm;
   const trimmedQuery = debouncedTerm.trim();
 
-  const remedyCountBySymptom = useMemo(() => {
-    if (!symptomRemedies) return {};
-    const counts = {};
-    Object.keys(symptomRemedies).forEach((symptomId) => {
-      counts[symptomId] = symptomRemedies[symptomId].length;
-    });
-    return counts;
-  }, [symptomRemedies]);
-
   const symptomCards = useMemo(() => {
     if (!symptoms?.length) return [];
     return SEARCH_POPULAR_IDS
@@ -281,11 +272,6 @@ export function SymptomSearch() {
                   </div>
                   <div>
                     <p className="font-semibold text-ink">{item.label}</p>
-                    <p className="text-sm text-ink-muted leading-snug mt-0.5">
-                      {remedyCountBySymptom[item.id]
-                        ? `${remedyCountBySymptom[item.id]} ${remedyCountBySymptom[item.id] === 1 ? 'remedy' : 'remedies'}`
-                        : 'Research-backed'}
-                    </p>
                   </div>
                 </button>
               );
