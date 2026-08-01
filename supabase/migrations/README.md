@@ -10,6 +10,8 @@ Run these in order in the Supabase SQL Editor when setting up a new environment.
 | 004_product_analytics.sql | Search analytics, remedy analytics, feedback |
 | 005_admin_authorization.sql | Admin access flag and analytics read protection |
 | 006_profile_collection_fields.sql | Personalization profile collection fields |
+| 020_remove_medication_allergies.sql | Remove Medication Allergies from onboarding options |
+| 021_rename_anxiety_label.sql | Rename "Anxiety" symptom label to "Anxious" |
 
 New changes: always create the next numbered file and add a row to this table.
 Never modify existing migration files.
