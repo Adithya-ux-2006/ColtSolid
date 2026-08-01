@@ -290,14 +290,14 @@ export function Favorites() {
 
           {/* Browse More CTA */}
           <section className="max-w-[1280px] mx-auto px-5 md:px-8 mb-8">
-            <div className="relative bg-gradient-to-br from-card to-card/80 rounded-[20px] border border-border/60 shadow-soft p-6 md:p-8 flex items-center gap-6 overflow-hidden">
+            <div className="relative bg-gradient-to-br from-card to-card/80 rounded-[20px] border border-border/60 shadow-soft p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-5 md:gap-6 overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent pointer-events-none" />
 
-              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 self-center md:self-auto">
                 <Heart className="w-7 h-7 md:w-8 md:h-8 text-emerald-500" />
               </div>
 
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-0 text-center md:text-left">
                 <h2 className="text-xl md:text-2xl font-bold text-ink mb-1">
                   Looking for more remedies?
                 </h2>
@@ -308,7 +308,7 @@ export function Favorites() {
 
               <Link
                 to="/search"
-                className="shrink-0 inline-flex items-center gap-2 px-5 md:px-6 py-2.5 md:py-3 bg-primary text-white rounded-full text-sm font-medium hover:bg-primary-dark transition-colors shadow-glow"
+                className="shrink-0 inline-flex items-center justify-center gap-2 px-5 md:px-6 py-3 w-full md:w-auto bg-primary text-white rounded-full text-sm font-medium hover:bg-primary-dark transition-colors shadow-glow"
               >
                 Browse Remedies
                 <span className="text-lg leading-none">&rarr;</span>
