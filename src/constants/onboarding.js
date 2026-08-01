@@ -35,10 +35,11 @@ export const ALLERGIES = [
   { value: 'ginger', label: 'Ginger', emoji: '🫚' },
   { value: 'aloe-vera', label: 'Aloe Vera', emoji: '🪴' },
   { value: 'essential-oils', label: 'Essential Oils', emoji: '🧴' },
-  { value: 'medication-allergies', label: 'Medication Allergies', emoji: '💊' },
   { value: 'other', label: 'Other', emoji: '✏️' },
   { value: 'none', label: 'None', emoji: '○' },
 ];
+
+export const REMOVED_ALLERGY_VALUES = ['medication-allergies'];
 
 export const FAQ_ITEMS = [
   {

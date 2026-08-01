@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { getInitials } from '../utils/mappers';
 import { clearQuickSaves, getQuickSaves } from '../utils/quickSave';
+import { REMOVED_ALLERGY_VALUES } from '../constants/onboarding';
 
 export function needsOnboardingProfile(user) {
   if (!user) return false;
@@ -48,7 +49,7 @@ async function migrateGuestProfileIfNeeded(user) {
     } catch { return []; }
   }
 
-  const guestAllergies = readArr(GUEST_ALLERGIES_KEY);
+  const guestAllergies = readArr(GUEST_ALLERGIES_KEY).filter((value) => !REMOVED_ALLERGY_VALUES.includes(value));
   const guestConditions = readArr(GUEST_CONDITIONS_KEY);
 
   if (guestAllergies.length === 0 && guestConditions.length === 0) return;

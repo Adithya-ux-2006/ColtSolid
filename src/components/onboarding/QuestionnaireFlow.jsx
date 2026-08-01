@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CheckCircle2, ChevronLeft } from 'lucide-react';
-import { CONDITIONS, ALLERGIES, GENDER_OPTIONS } from '../../constants/onboarding';
+import { CONDITIONS, ALLERGIES, GENDER_OPTIONS, REMOVED_ALLERGY_VALUES } from '../../constants/onboarding';
 import { cn } from '../../utils/cn';
 
 const STEPS = [
@@ -83,7 +83,9 @@ export function QuestionnaireFlow({
     setIsSaving(true);
 
     const trimmedOtherAllergy = otherAllergy.trim();
-    const normalizedAllergies = allergies.filter((value) => value !== 'none' && !value.startsWith('other:'));
+    const normalizedAllergies = allergies.filter(
+      (value) => value !== 'none' && !value.startsWith('other:') && !REMOVED_ALLERGY_VALUES.includes(value)
+    );
 
     if (trimmedOtherAllergy) {
       normalizedAllergies.push(`other:${trimmedOtherAllergy}`);
