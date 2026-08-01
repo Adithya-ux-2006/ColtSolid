@@ -280,12 +280,6 @@ export function SymptomSearch() {
         </div>
 
         <TrustBadges className="mb-10" />
-
-        <div className="w-full mt-auto pt-8 border-t border-ink/5">
-          <p className="text-xs text-ink-subtle text-center leading-relaxed">
-            Not a substitute for professional medical advice.
-          </p>
-        </div>
       </div>
     </PageWrapper>
   );

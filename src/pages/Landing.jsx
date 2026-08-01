@@ -139,7 +139,7 @@ export function Landing() {
           <div className="w-5 h-5 rounded-md bg-primary flex items-center justify-center text-white font-bold text-xs">C</div>
           <span className="font-bold text-ink">curA</span>
         </div>
-        <p className="text-xs text-ink-subtle">&copy; 2026 curA. Not a substitute for professional medical advice.</p>
+        <p className="text-xs text-ink-subtle">&copy; 2026 curA.</p>
       </footer>
 
       <Modal isOpen={isQuestionnaireOpen} onClose={() => setIsQuestionnaireOpen(false)} title="Quick Health Profile">
