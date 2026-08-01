@@ -98,7 +98,7 @@ export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetySco
               <div className="flex items-center gap-1 mb-0.5">
                 <span className="text-xs font-semibold text-ink">{getSafetyText(safetyScore, !isSafe)}</span>
               </div>
-              <span className="text-[10px] text-ink-muted">Safety</span>
+              <span className="text-[10px] text-ink-muted whitespace-nowrap">Safe for you</span>
             </div>
             <div className="flex flex-col items-center text-center">
               <div className="flex items-center gap-1 mb-0.5">
