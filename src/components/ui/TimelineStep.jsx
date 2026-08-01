@@ -1,8 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
-export function TimelineStep({ number, description, isLast = false, delay = 0, arrowDelay, className }) {
+export function TimelineStep({ number, description, isLast = false, delay = 0, className }) {
   const reduced = useReducedMotion();
   const baseTransition = { duration: 0.35, ease: 'easeOut' };
 
@@ -37,16 +36,6 @@ export function TimelineStep({ number, description, isLast = false, delay = 0, a
       <div className={cn('pb-5 md:pb-0', isLast && 'pb-0', 'md:flex-1')}>
         <p className="text-[15px] text-ink leading-relaxed">{description}</p>
       </div>
-      {!isLast && (
-        <motion.div
-          initial={reduced ? { opacity: 0 } : { opacity: 0 }}
-          whileInView={reduced ? { opacity: 1 } : { opacity: 1 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.25, delay: arrowDelay ?? delay + 0.1, ease: 'easeOut' }}
-        >
-          <ArrowRight className="hidden md:block w-4 h-4 text-ink-subtle shrink-0 opacity-60 group-hover:opacity-100 transition-opacity duration-200" />
-        </motion.div>
-      )}
     </motion.div>
   );
 }

@@ -79,26 +79,11 @@ export function RemedyDetail() {
 
   const howToUseSteps = useMemo(() => {
     if (!remedy?.howToUse) return [];
-    const raw = remedy.howToUse.split('\n').filter(Boolean);
-    const steps = raw.map(step => step.replace(/^\d+\.\s*/, ''));
-    if (steps.length >= 3) return steps.slice(0, 3);
-    if (steps.length === 1) {
-      const text = steps[0];
-      const parts = text
-        .split(/[,;]/)
-        .map(s => s.trim())
-        .filter(Boolean);
-      if (parts.length >= 3) return parts.slice(0, 3);
-      if (parts.length === 2) {
-        const merged = parts[0];
-        const tail = parts[1];
-        const sub = tail.split(/\s+and\s+|\s+then\s+|\s+while\s+|\s+to\s+/i).map(s => s.trim()).filter(Boolean);
-        if (sub.length >= 2) return [merged, sub[0], sub.slice(1).join(' ')];
-        return [merged, tail];
-      }
-      return steps;
-    }
-    return steps;
+    return remedy.howToUse
+      .split('\n')
+      .map(step => step.replace(/^\d+\.\s*/, ''))
+      .filter(Boolean)
+      .slice(0, 3);
   }, [remedy]);
 
   const benefits = useMemo(() => {
@@ -256,7 +241,6 @@ export function RemedyDetail() {
                   description={step}
                   isLast={i === howToUseSteps.length - 1}
                   delay={i * 0.15}
-                  arrowDelay={(i + 1) * 0.15 + 0.05}
                 />
               ))}
             </div>
