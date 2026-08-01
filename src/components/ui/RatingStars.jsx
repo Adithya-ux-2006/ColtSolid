@@ -8,7 +8,7 @@ const CATEGORY_STAR_COLORS = {
   TCM: 'fill-amber-500 text-amber-500',
 };
 
-export function RatingStars({ rating, reviewCount, size = 'sm', category, className }) {
+export function RatingStars({ rating, size = 'sm', category, className }) {
   const fullStars = Math.floor(rating);
   const hasHalf = rating - fullStars >= 0.3;
   const starSize = size === 'sm' ? 'w-4 h-4' : 'w-5 h-5';
@@ -27,9 +27,6 @@ export function RatingStars({ rating, reviewCount, size = 'sm', category, classN
           return <Star key={i} className={`${starSize} text-surface-dark`} />;
         })}
       </div>
-      {reviewCount !== undefined && (
-        <span className="text-xs text-ink-muted">({reviewCount})</span>
-      )}
     </div>
   );
 }

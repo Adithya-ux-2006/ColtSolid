@@ -5,7 +5,7 @@ import { RemedyImage } from './RemedyImage';
 import { CategoryBadge } from './CategoryBadge';
 import { EvidenceLabel } from './EvidenceLabel';
 
-function StarRating({ rating, reviewCount }) {
+function StarRating({ rating }) {
   const full = Math.floor(rating);
   const hasHalf = rating - full >= 0.3;
 
@@ -18,9 +18,6 @@ function StarRating({ rating, reviewCount }) {
           return <Star key={i} className="w-4 h-4 text-ink-subtle" />;
         })}
       </div>
-      {reviewCount != null && (
-        <span className="text-sm text-ink-muted">({reviewCount.toLocaleString()})</span>
-      )}
     </div>
   );
 }
@@ -77,7 +74,7 @@ export function RemedyHero({ remedy, isSafe, evidenceScore, className }) {
         >
           {evidenceScore > 0 && <EvidenceLabel score={evidenceScore} />}
           {remedy.rating > 0 && (
-            <StarRating rating={remedy.rating} reviewCount={remedy.reviewCount} />
+            <StarRating rating={remedy.rating} />
           )}
         </motion.div>
 

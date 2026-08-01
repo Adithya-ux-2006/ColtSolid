@@ -187,7 +187,7 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
         </div>
 
         <div className="flex items-center justify-between">
-          <RatingStars rating={remedy.rating} reviewCount={remedy.reviewCount} />
+          <RatingStars rating={remedy.rating} />
           <span className="text-sm font-medium text-primary hover:text-primary-dark transition-colors">
             View Details &rarr;
           </span>
