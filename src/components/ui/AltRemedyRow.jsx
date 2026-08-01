@@ -5,11 +5,11 @@ import { cn } from '../../utils/cn';
 import { RemedyImage } from './RemedyImage';
 import { CategoryBadge } from './CategoryBadge';
 import { EvidenceLabel } from './EvidenceLabel';
-import { SafetyLabel } from './SafetyLabel';
+import { SafetyBadge } from './SafetyBadge';
 import { useFavoritesStore } from '../../store/favoritesStore';
 import { useAuthStore } from '../../store/authStore';
 
-export function AltRemedyRow({ remedy, isSafe, evidenceScore, safetyScore, showDivider = true, className }) {
+export function AltRemedyRow({ remedy, evidenceScore, ageRange, showDivider = true, className }) {
   const navigate = useNavigate();
   const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);
   const isFavorite = useFavoritesStore((s) => s.isFavorite);
@@ -49,7 +49,7 @@ export function AltRemedyRow({ remedy, isSafe, evidenceScore, safetyScore, showD
         </div>
 
         <div className="flex items-center justify-center">
-          <SafetyLabel safetyScore={safetyScore} hasConflicts={!isSafe} compact />
+          <SafetyBadge remedy={remedy} ageRange={ageRange} compact />
         </div>
 
         <div className="flex items-center justify-center">
@@ -88,7 +88,7 @@ export function AltRemedyRow({ remedy, isSafe, evidenceScore, safetyScore, showD
                 {remedy.timeToEffect}
               </span>
             )}
-            <SafetyLabel safetyScore={safetyScore} hasConflicts={!isSafe} compact />
+            <SafetyBadge remedy={remedy} ageRange={ageRange} compact />
             <EvidenceLabel score={evidenceScore} size="sm" />
           </div>
         </div>

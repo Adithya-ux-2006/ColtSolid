@@ -7,6 +7,7 @@ import { PageWrapper } from '../components/layout';
 import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
 import { RemedyHero } from '../components/ui/RemedyHero';
 import { QuickStats } from '../components/ui/QuickStats';
+import { SafetyBadge } from '../components/ui/SafetyBadge';
 import { BenefitCard } from '../components/ui/BenefitCard';
 import { TimelineStep } from '../components/ui/TimelineStep';
 import { EvidenceCard } from '../components/ui/EvidenceCard';
@@ -27,11 +28,6 @@ const CATEGORY_BENEFITS = {
     { title: 'Gentle & plant-based', description: 'Derived from natural sources with minimal processing.' },
     { title: 'Holistic relief', description: 'Addresses root causes, not just surface symptoms.' },
     { title: 'Low side-effect profile', description: 'Well tolerated by most people when used as directed.' },
-  ],
-  TCM: [
-    { title: 'Ancient clinical wisdom', description: 'Rooted in centuries of traditional Chinese medicine.' },
-    { title: 'Whole-body balance', description: 'Restores harmony across multiple body systems.' },
-    { title: 'Non-invasive approach', description: 'Drug-free method using natural pressure points.' },
   ],
   Conventional: [
     { title: 'Clinically validated', description: 'Backed by rigorous trials and peer-reviewed research.' },
@@ -59,18 +55,21 @@ export function RemedyDetail() {
 
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies) ?? [];
   const userConditions = useAuthStore((state) => state.user?.common_conditions);
+  const userAgeRange = useAuthStore((state) => state.user?.age_range);
   const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
   const guestConditions = useGuestProfileStore((state) => state.common_conditions);
+  const guestAgeRange = useGuestProfileStore((state) => state.age_range);
   const activeAllergies = isAuthenticated ? userKnownAllergies : guestAllergies;
   const activeConditions = isAuthenticated ? userConditions : guestConditions;
+  const activeAgeRange = isAuthenticated ? userAgeRange : guestAgeRange;
 
   const remedy = remedies.find(r => r.id === id);
   const favorite = useFavoritesStore((state) => (remedy ? state.isFavorite(remedy.id) : false));
 
   const isSafe = useMemo(() => {
     if (!remedy) return true;
-    return isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions });
-  }, [remedy, activeAllergies, activeConditions]);
+    return isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions, ageRange: activeAgeRange });
+  }, [remedy, activeAllergies, activeConditions, activeAgeRange]);
 
   useEffect(() => {
     if (!remedy?.id) return;
@@ -195,6 +194,9 @@ export function RemedyDetail() {
               evidenceScore={evidenceScore}
               safetyScore={safetyScore}
             />
+            <div className="mt-4 flex justify-center">
+              <SafetyBadge remedy={remedy} ageRange={activeAgeRange} />
+            </div>
           </div>
         </Reveal>
       </div>

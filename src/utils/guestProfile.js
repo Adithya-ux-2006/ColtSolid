@@ -67,8 +67,41 @@ export function getGuestConditions() {
   return getGuestProfile().common_conditions ?? [];
 }
 
-export function isRemedySafeForUser(remedy, { allergies, conditions }) {
+export function isRemedySafeForUser(remedy, { allergies, conditions, ageRange }) {
   if (remedyMatchesAllergies(remedy, allergies)) return false;
   if (remedyHasContraindication(remedy, conditions)) return false;
+  if (getChildSafetyStatus(remedy, ageRange).isHardBlock) return false;
   return true;
+}
+
+export function isChildAgeRange(ageRange) {
+  return ageRange === 'under-12' || ageRange === '12-17';
+}
+
+export function getChildSafetyStatus(remedy, ageRange) {
+  if (!isChildAgeRange(ageRange)) {
+    return { hasConcern: false, isHardBlock: false, note: '' };
+  }
+
+  if (remedy?.childSafe === false || remedy?.child_safe === false) {
+    return {
+      hasConcern: true,
+      isHardBlock: true,
+      note: remedy.childSafetyNote || remedy.child_safety_note || 'Not recommended for children or teens without clinician guidance.',
+    };
+  }
+
+  if (remedy?.childSafe === true || remedy?.child_safe === true) {
+    return {
+      hasConcern: false,
+      isHardBlock: false,
+      note: remedy.childSafetyNote || remedy.child_safety_note || '',
+    };
+  }
+
+  return {
+    hasConcern: true,
+    isHardBlock: false,
+    note: 'Child safety has not been reviewed for this remedy. Check with a clinician before use.',
+  };
 }

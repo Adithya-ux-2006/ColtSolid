@@ -1,4 +1,5 @@
 import { buildKnowledgeContext } from './knowledgeGraph';
+import { getChildSafetyStatus } from '../utils/guestProfile';
 
 export const REMEDY_TIER = {
   DIRECT: 0,
@@ -104,10 +105,16 @@ function computeSupportiveScore(rating) {
 }
 
 function computeUserContextPenalty(remedy, userContext) {
+  delete remedy._allergyConflict;
+  delete remedy._contraindicationConflict;
+  delete remedy._childSafetyBlock;
+  delete remedy._childSafetyConcern;
+  delete remedy._childSafetyNote;
+
   if (!userContext) return 0;
 
   let penalty = 0;
-  const { allergies, conditions } = userContext;
+  const { allergies, conditions, ageRange } = userContext;
 
   if (allergies?.length) {
     const remedyAllergens = (remedy.allergen_tags || []).map(t => t.toLowerCase());
@@ -139,6 +146,17 @@ function computeUserContextPenalty(remedy, userContext) {
         remedy._contraindicationConflict = condition;
       }
     }
+  }
+
+  const childSafety = getChildSafetyStatus(remedy, ageRange);
+  if (childSafety.isHardBlock) {
+    penalty += 40;
+    remedy._childSafetyBlock = true;
+    remedy._childSafetyNote = childSafety.note;
+  } else if (childSafety.hasConcern) {
+    penalty += 15;
+    remedy._childSafetyConcern = true;
+    remedy._childSafetyNote = childSafety.note;
   }
 
   return penalty;

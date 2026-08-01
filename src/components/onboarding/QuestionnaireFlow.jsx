@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CheckCircle2, ChevronLeft } from 'lucide-react';
-import { CONDITIONS, ALLERGIES, GENDER_OPTIONS, REMOVED_ALLERGY_VALUES } from '../../constants/onboarding';
+import { CONDITIONS, ALLERGIES, GENDER_OPTIONS, REMOVED_ALLERGY_VALUES, AGE_RANGE_OPTIONS } from '../../constants/onboarding';
 import { cn } from '../../utils/cn';
 
 const STEPS = [
@@ -9,6 +9,11 @@ const STEPS = [
     key: 'gender',
     title: 'Sex / Gender Information *',
     options: GENDER_OPTIONS,
+  },
+  {
+    key: 'ageRange',
+    title: 'Age Range',
+    options: AGE_RANGE_OPTIONS,
   },
   {
     key: 'conditions',
@@ -35,6 +40,7 @@ export function QuestionnaireFlow({
   const [showComplete, setShowComplete] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [gender, setGender] = useState(initialValues?.gender ?? '');
+  const [ageRange, setAgeRange] = useState(initialValues?.age_range ?? initialValues?.ageRange ?? '');
   const [conditions, setConditions] = useState(initialValues?.common_conditions ?? []);
   const [allergies, setAllergies] = useState(initialValues?.known_allergies ?? []);
   const [otherAllergy, setOtherAllergy] = useState(
@@ -74,6 +80,11 @@ export function QuestionnaireFlow({
       return;
     }
 
+    if (currentStep.key === 'ageRange' && !ageRange) {
+      setErrorMessage('Select an age range to continue.');
+      return;
+    }
+
     if (stepIndex < STEPS.length - 1) {
       setDirection(1);
       setStepIndex((current) => current + 1);
@@ -100,6 +111,7 @@ export function QuestionnaireFlow({
 
     const result = await onSubmit({
       gender,
+      ageRange,
       commonConditions: normalizedConditions,
       knownAllergies: normalizedAllergies,
     });
@@ -155,7 +167,7 @@ export function QuestionnaireFlow({
             </div>
           ))}
         </div>
-        <p className="text-sm font-medium text-ink-muted">Step {progress} of 3</p>
+        <p className="text-sm font-medium text-ink-muted">Step {progress} of {STEPS.length}</p>
       </div>
 
       <div className={cn('relative flex-1 overflow-hidden rounded-[2rem] border border-white/70 bg-card/60 shadow-sm backdrop-blur', compact ? 'p-5 md:p-6' : 'p-6 md:p-10')}>
@@ -175,15 +187,23 @@ export function QuestionnaireFlow({
               </h1>
             </div>
 
-            <div className={cn('grid gap-3', currentStep.key === 'gender' ? 'grid-cols-1' : 'grid-cols-2 md:grid-cols-3')}>
+            <div className={cn('grid gap-3', currentStep.key === 'gender' || currentStep.key === 'ageRange' ? 'grid-cols-1' : 'grid-cols-2 md:grid-cols-3')}>
               {currentStep.options.map((option) => {
                 const isSelected = currentStep.key === 'gender'
                   ? gender === option.value
-                  : selectedValues.includes(option.value);
+                  : currentStep.key === 'ageRange'
+                    ? ageRange === option.value
+                    : selectedValues.includes(option.value);
                 const handleClick = () => {
                   if (currentStep.key === 'gender') {
                     setErrorMessage('');
                     setGender(option.value);
+                    return;
+                  }
+
+                  if (currentStep.key === 'ageRange') {
+                    setErrorMessage('');
+                    setAgeRange(option.value);
                     return;
                   }
 

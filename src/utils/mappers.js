@@ -42,6 +42,8 @@ export function mapRemedy(remedy) {
     cost: remedy.cost,
     isFeatured: remedy.is_featured ?? remedy.isFeatured ?? false,
     isPurchasable: remedy.is_purchasable ?? remedy.isPurchasable ?? (remedy.category !== 'Lifestyle' || (remedy.ingredients ?? []).length > 0),
+    childSafe: remedy.child_safe ?? remedy.childSafe,
+    childSafetyNote: remedy.child_safety_note ?? remedy.childSafetyNote ?? '',
     researchPapers: remedy.research_papers?.map((paper) => ({
       title: paper.title,
       journal: paper.journal,

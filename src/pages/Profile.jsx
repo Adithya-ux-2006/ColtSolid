@@ -13,10 +13,10 @@ import { useFavoritesStore } from '../store/favoritesStore';
 import { useRemedyScheduleStore } from '../store/remedyScheduleStore';
 import { useGuestProfileStore } from '../store/guestProfileStore';
 import { getInitials } from '../utils/mappers';
-import { ALLERGIES, CONDITIONS, FAQ_ITEMS, GENDER_OPTIONS } from '../constants/onboarding';
+import { ALLERGIES, CONDITIONS, FAQ_ITEMS, GENDER_OPTIONS, AGE_RANGE_OPTIONS } from '../constants/onboarding';
 
 const ONBOARDING_LABELS = new Map(
-  [...CONDITIONS, ...ALLERGIES].map((option) => [option.value, option.label])
+  [...CONDITIONS, ...ALLERGIES, ...AGE_RANGE_OPTIONS].map((option) => [option.value, option.label])
 );
 
 const CONDITION_MAP = new Map(CONDITIONS.map((c) => [c.value, { label: c.label, emoji: c.emoji }]));
@@ -140,6 +140,7 @@ export function Profile() {
   const schedules = useRemedyScheduleStore((state) => state.schedules);
   const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
   const guestConditions = useGuestProfileStore((state) => state.common_conditions);
+  const guestAgeRange = useGuestProfileStore((state) => state.age_range);
   const updateGuestProfile = useGuestProfileStore((state) => state.updateProfile);
   const navigate = useNavigate();
 
@@ -149,6 +150,7 @@ export function Profile() {
   const [healthForm, setHealthForm] = useState({
     selectedConditions: [],
     selectedAllergies: [],
+    ageRange: user?.age_range || '',
     otherConditionText: '',
     otherAllergyText: '',
   });
@@ -156,6 +158,7 @@ export function Profile() {
   const [guestEditForm, setGuestEditForm] = useState({
     selectedConditions: guestConditions,
     selectedAllergies: guestAllergies,
+    ageRange: guestAgeRange || '',
     otherConditionText: '',
     otherAllergyText: '',
   });
@@ -165,6 +168,7 @@ export function Profile() {
     gender: user?.gender || '',
     selectedConditions: user?.common_conditions ?? [],
     selectedAllergies: user?.known_allergies ?? [],
+    ageRange: user?.age_range || '',
   });
 
   // Guest profile view
@@ -181,6 +185,7 @@ export function Profile() {
       updateGuestProfile({
         known_allergies: allergies,
         common_conditions: conditions,
+        age_range: guestEditForm.ageRange,
       });
     };
 
@@ -226,6 +231,10 @@ export function Profile() {
               <p className="text-xs text-ink-muted mt-1">Edit your allergies and conditions to get safer remedy recommendations.</p>
             </div>
             <div className="space-y-5 p-5">
+              <AgeRangeField
+                value={guestEditForm.ageRange}
+                onChange={(ageRange) => setGuestEditForm({ ...guestEditForm, ageRange })}
+              />
               <div className="space-y-2">
                 <p className="text-sm font-semibold text-ink">Allergies & Sensitivities</p>
                 <div className="flex flex-wrap gap-2">
@@ -302,8 +311,9 @@ export function Profile() {
                 Save
               </button>
 
-              {(guestEditForm.selectedAllergies.length > 0 || guestEditForm.selectedConditions.length > 0) && (
+              {(guestEditForm.ageRange || guestEditForm.selectedAllergies.length > 0 || guestEditForm.selectedConditions.length > 0) && (
                 <div className="pt-3 border-t border-border space-y-3">
+                  <ProfileGroup title="Age Range" values={guestEditForm.ageRange ? [formatValue(guestEditForm.ageRange)] : []} emptyLabel="Not provided" />
                   <ProfileGroup title="Allergies" values={guestEditForm.selectedAllergies.map(formatValue)} emptyLabel="None selected" />
                   <ProfileGroup title="Conditions" values={guestEditForm.selectedConditions.map(formatValue)} emptyLabel="None selected" />
                 </div>
@@ -357,6 +367,7 @@ export function Profile() {
     updateUser({
       known_allergies: allergies,
       common_conditions: conditions,
+      age_range: healthForm.ageRange,
     });
     setIsEditingHealth(false);
   };
@@ -379,6 +390,7 @@ export function Profile() {
     updateUser({
       name: editForm.name,
       gender: editForm.gender,
+      age_range: editForm.ageRange,
       avatar: getInitials(editForm.name),
       known_allergies: editForm.selectedAllergies.filter(v => v !== 'none'),
       common_conditions: editForm.selectedConditions.filter(v => v !== 'none'),
@@ -392,6 +404,7 @@ export function Profile() {
       gender: user?.gender || '',
       selectedConditions: user?.common_conditions ?? [],
       selectedAllergies: user?.known_allergies ?? [],
+      ageRange: user?.age_range || '',
     });
     setIsEditing(true);
   };
@@ -493,6 +506,7 @@ export function Profile() {
                       ? GENDER_OPTIONS.find((option) => option.value === user.gender)?.label || user.gender
                       : 'Not provided'}
                   </p>
+                  <p className="text-sm text-ink-muted mt-1">Age Range: {user.age_range ? formatChip(user.age_range) : 'Not provided'}</p>
                   <button
                     onClick={startEditing}
                     className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark transition-colors"
@@ -542,6 +556,11 @@ export function Profile() {
           </div>
 
           <div className="p-5 space-y-5">
+            <AgeRangeField
+              value={isEditingHealth ? healthForm.ageRange : user.age_range}
+              onChange={(ageRange) => setHealthForm({ ...healthForm, ageRange })}
+              readOnly={!isEditingHealth}
+            />
             {/* Conditions */}
             <div className="space-y-2">
               <p className="text-sm font-semibold text-ink">Health Conditions</p>
@@ -690,6 +709,43 @@ export function Profile() {
   );
 }
 
+function AgeRangeField({ value, onChange, readOnly = false }) {
+  const label = value ? formatChip(value) : 'Not provided';
+
+  if (readOnly) {
+    return (
+      <div className="space-y-2">
+        <p className="text-sm font-semibold text-ink">Age Range</p>
+        <p className="text-sm text-ink-muted">{label}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-2">
+      <p className="text-sm font-semibold text-ink">Age Range</p>
+      <div className="flex flex-wrap gap-2">
+        {AGE_RANGE_OPTIONS.map((option) => {
+          const isSelected = value === option.value;
+          return (
+            <button
+              key={option.value}
+              type="button"
+              aria-pressed={isSelected}
+              onClick={() => onChange(option.value)}
+              className={isSelected
+                ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white'
+                : 'rounded-full border border-border px-3 py-1.5 text-sm font-medium text-ink'
+              }
+            >
+              {option.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 function ProfileGroup({ title, values, emptyLabel }) {
   return (
     <div className="space-y-2">

@@ -5,6 +5,7 @@ import { FavoriteHeart } from './FavoriteHeart';
 import { ScheduleQuickAdd } from './ScheduleQuickAdd';
 import { cn } from '../../utils/cn';
 import { CategoryBadge } from './CategoryBadge';
+import { SafetyBadge } from './SafetyBadge';
 import { RemedyImage } from './RemedyImage';
 import { useFavoritesStore } from '../../store/favoritesStore';
 import { useAuthStore } from '../../store/authStore';
@@ -34,7 +35,7 @@ function generateReasons(remedy, evidenceScore, safetyScore) {
   return reasons.slice(0, 3);
 }
 
-export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore, delay = 0 }) {
+export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore, ageRange, delay = 0 }) {
   const navigate = useNavigate();
   const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);
   const isFavorite = useFavoritesStore((s) => s.isFavorite);
@@ -60,7 +61,10 @@ export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetySco
       <div className="flex flex-col h-full bg-card rounded-3xl border border-border shadow-soft hover:shadow-card transition-shadow overflow-hidden">
         <div className="p-5 flex flex-col flex-1">
           <div className="flex items-start justify-between mb-3">
-            <CategoryBadge category={remedy.category} firstOccurrence />
+            <div className="flex flex-wrap gap-2">
+              <CategoryBadge category={remedy.category} firstOccurrence />
+              <SafetyBadge remedy={remedy} ageRange={ageRange} compact />
+            </div>
             <div className="flex items-center gap-1 shrink-0 -mt-0.5 -mr-0.5">
               <ScheduleQuickAdd remedy={remedy} />
               <button

@@ -4,6 +4,13 @@ export const GENDER_OPTIONS = [
   { value: 'non-binary-other', label: 'Non-binary / Other' },
   { value: 'prefer-not-to-say', label: 'Prefer not to say' },
 ];
+export const AGE_RANGE_OPTIONS = [
+  { value: 'under-12', label: 'Under 12' },
+  { value: '12-17', label: '12-17' },
+  { value: '18-64', label: '18-64' },
+  { value: '65-plus', label: '65+' },
+  { value: 'prefer-not-to-say', label: 'Prefer not to say' },
+];
 
 export const CONDITIONS = [
   { value: 'asthma', label: 'Asthma', emoji: '🫁' },
@@ -52,7 +59,7 @@ export const FAQ_ITEMS = [
   },
   {
     question: 'Where does the research come from?',
-    answer: 'Our remedy database is built from NIH studies, PubMed meta-analyses, WHO guidelines, and established traditional medicine references including TCM and Ayurveda texts. Each remedy card links to its source research.',
+    answer: 'Our remedy database is built from NIH studies, PubMed meta-analyses, WHO guidelines, and established conventional, lifestyle, natural, and Ayurveda references. Each remedy card links to its source research.',
   },
   {
     question: 'How are remedies personalized to me?',
@@ -72,8 +79,6 @@ export const FAQ_ITEMS = [
   },
   {
     question: 'Which countries is curA available in?',
-    answer: 'curA is available globally. Remedy content is in English. We include both Western conventional medicine and traditional systems including TCM and Ayurveda to serve users across different cultural health contexts.',
+    answer: 'curA is available globally. Remedy content is in English. We include both Western conventional medicine, lifestyle care, natural remedies, and Ayurveda to serve users across different cultural health contexts.',
   },
 ];
-
-

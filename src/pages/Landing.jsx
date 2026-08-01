@@ -111,7 +111,7 @@ export function Landing() {
             <Feature
               icon={Stethoscope}
               title="4 Treatment Approaches"
-              description="Filter by Natural, Traditional Chinese Medicine, Conventional, or Lifestyle remedies."
+              description="Filter by Natural, Natural, Ayurveda, Conventional, or Lifestyle remedies."
             />
             <Feature
               icon={GraduationCap}
@@ -147,9 +147,10 @@ export function Landing() {
           compact
           completeMessage="Your search is ready."
           initialValues={{}}
-          onSubmit={async ({ gender, commonConditions, knownAllergies }) => {
+          onSubmit={async ({ gender, ageRange, commonConditions, knownAllergies }) => {
             updateGuestProfile({
               gender,
+              age_range: ageRange,
               common_conditions: commonConditions,
               known_allergies: knownAllergies,
             });

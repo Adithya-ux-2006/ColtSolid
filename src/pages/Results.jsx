@@ -7,7 +7,6 @@ import { PageWrapper } from '../components/layout';
 import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
 import { EmptyState } from '../components/ui/EmptyState';
 import { SeverityBadge } from '../components/ui/SeverityBadge';
-import { GuidancePanel } from '../components/ui/GuidancePanel';
 import { HighlightedRemedyCard } from '../components/ui/HighlightedRemedyCard';
 import { AltRemedyRow } from '../components/ui/AltRemedyRow';
 import { LifestyleTips } from '../components/ui/LifestyleTips';
@@ -18,7 +17,6 @@ import { useGuestProfileStore } from '../store/guestProfileStore';
 import { isRemedySafeForUser } from '../utils/guestProfile';
 import { getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptomSearch';
 import { resolveQuery } from '../utils/symptomEngine';
-import { getSymptomGraphEntry } from '../data/symptomGraph';
 import { fetchGeminiInterpretation } from '../utils/geminiInterpreter';
 import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
 import { trackSearchEvent } from '../utils/analytics';
@@ -106,12 +104,15 @@ export function Results() {
 
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies ?? EMPTY_ARRAY);
   const userConditions = useAuthStore((state) => state.user?.common_conditions);
+  const userAgeRange = useAuthStore((state) => state.user?.age_range);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const incrementSearchCount = useAuthStore((state) => state.incrementSearchCount);
   const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
   const guestConditions = useGuestProfileStore((state) => state.common_conditions);
+  const guestAgeRange = useGuestProfileStore((state) => state.age_range);
   const activeAllergies = isAuthenticated ? userKnownAllergies : guestAllergies;
   const activeConditions = isAuthenticated ? userConditions : guestConditions;
+  const activeAgeRange = isAuthenticated ? userAgeRange : guestAgeRange;
 
   const symptoms = useCatalogStore((state) => state.symptoms);
   const remedies = useCatalogStore((state) => state.remedies);
@@ -154,7 +155,6 @@ export function Results() {
   const queryConfidence = symptomResolution.confidence;
   const isLowConfidence = isFreeTextSearch && queryConfidence < 50 && symptomResolution.symptomIds.length > 0;
   const primarySymptomId = symptomResolution.symptomIds[0];
-  const symptomGraph = primarySymptomId ? getSymptomGraphEntry(primarySymptomId) : null;
 
   useEffect(() => {
     if (isFreeTextSearch && queryParam) {
@@ -176,8 +176,8 @@ export function Results() {
   }, [isFreeTextSearch, queryParam, symptomParam, isAuthenticated, incrementSearchCount]);
 
   const safeFilter = useMemo(
-    () => (remedy) => isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions }),
-    [activeAllergies, activeConditions]
+    () => (remedy) => isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions, ageRange: activeAgeRange }),
+    [activeAllergies, activeConditions, activeAgeRange]
   );
 
   const searchResult = useMemo(() => {
@@ -188,10 +188,11 @@ export function Results() {
       symptoms,
       allergies: activeAllergies,
       conditions: activeConditions,
+      ageRange: activeAgeRange,
       queryConfidence: symptomResolution.confidence,
       primarySymptomId: symptomResolution.primarySymptomId,
     });
-  }, [symptomResolution.symptomIds, symptomResolution.confidence, symptomResolution.primarySymptomId, symptomRemedies, remedies, symptoms, activeAllergies, activeConditions]);
+  }, [symptomResolution.symptomIds, symptomResolution.confidence, symptomResolution.primarySymptomId, symptomRemedies, remedies, symptoms, activeAllergies, activeConditions, activeAgeRange]);
 
   const grouped = searchResult.grouped;
 
@@ -321,6 +322,7 @@ export function Results() {
                     isSafe={safeFilter(remedy)}
                     evidenceScore={remedy._evidenceScore}
                     safetyScore={remedy._safetyScore}
+                    ageRange={activeAgeRange}
                     delay={i * 0.06}
                   />
                 ))}
@@ -356,10 +358,12 @@ export function Results() {
                       isSafe={safeFilter(remedy)}
                       evidenceScore={remedy._evidenceScore}
                       safetyScore={remedy._safetyScore}
+                      ageRange={activeAgeRange}
                       showDivider={i < visibleAlternatives.length - 1}
                     />
                   ))}
                 </div>
+
               </div>
 
               {!showAllAlternatives && allAlternatives.length > 5 && (

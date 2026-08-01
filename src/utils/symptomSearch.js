@@ -22,6 +22,7 @@ export function getRankedRemediesForSymptoms(
     symptoms = [],
     allergies = [],
     conditions = [],
+    ageRange = '',
     queryConfidence = null,
     primarySymptomId = null,
   } = options;
@@ -34,6 +35,7 @@ export function getRankedRemediesForSymptoms(
   const userContext = {};
   if (allergies?.length) userContext.allergies = allergies;
   if (conditions?.length) userContext.conditions = conditions;
+  if (ageRange) userContext.ageRange = ageRange;
 
   const knowledgeCtx = buildKnowledgeContext(symptomIds, symptoms);
 
