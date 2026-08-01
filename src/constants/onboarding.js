@@ -11,7 +11,7 @@ export const CONDITIONS = [
   { value: 'high-blood-pressure', label: 'High Blood Pressure', emoji: '🫀' },
   { value: 'heart-conditions', label: 'Heart Conditions', emoji: '❤️' },
   { value: 'migraines', label: 'Migraines', emoji: '🤕' },
-  { value: 'anxiety', label: 'Anxiety', emoji: '😰' },
+  { value: 'anxiety', label: 'Anxious', emoji: '😰' },
   { value: 'depression', label: 'Depression', emoji: '🌧️' },
   { value: 'ibs-digestive-issues', label: 'IBS / Digestive Issues', emoji: '🤢' },
   { value: 'pcos', label: 'PCOS', emoji: '🌙' },

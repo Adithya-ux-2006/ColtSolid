@@ -16,7 +16,7 @@ export const LOCAL_SYMPTOMS = [
   },
   {
     "id": "anxiety",
-    "label": "Anxiety",
+    "label": "Anxious",
     "emoji": "😰",
     "color": "amber"
   },

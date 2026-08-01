@@ -26,7 +26,7 @@ const BENCHMARK_QUERIES = [
   { query: "stuffy nose", expectedTopLabel: "Congestion" },
   { query: "cant sleep", expectedTopLabel: "Insomnia" },
 
-  { query: "tight chest", expectedLabels: ["Anxiety", "Stress"] },
+  { query: "tight chest", expectedLabels: ["Anxious", "Stress"] },
   { query: "burning chest", expectedLabels: ["Heartburn", "Indigestion"] },
   { query: "my knee is swollen", expectedLabels: ["Joint Pain", "Knee Pain"] },
   { query: "headache behind eyes", expectedLabels: ["Headache", "Migraine", "Eye Strain"] },

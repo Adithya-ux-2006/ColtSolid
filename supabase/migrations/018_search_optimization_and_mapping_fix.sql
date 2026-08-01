@@ -16,7 +16,7 @@ ALTER TABLE public.remedies DROP CONSTRAINT IF EXISTS remedies_category_check;
 INSERT INTO public.symptoms (id, label, emoji, color_theme) VALUES
   ('headache', 'Headache', '🤕', 'forest'),
   ('cold', 'Cold', '🤧', 'sage'),
-  ('anxiety', 'Anxiety', '😰', 'amber'),
+  ('anxiety', 'Anxious', '😰', 'amber'),
   ('insomnia', 'Insomnia', '😴', 'sage'),
   ('nausea', 'Nausea', '🤢', 'sage'),
   ('stress', 'Stress', '😩', 'amber'),

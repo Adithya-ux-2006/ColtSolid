@@ -26,7 +26,7 @@ const CAUSES = {
   sinus_pressure: ['Sinus Congestion', 'Seasonal Allergies', 'Barometric Changes', 'Inflammation'],
   anxiety: ['Stress Response', 'Cognitive Overload', 'Caffeine Sensitivity', 'Sleep Debt'],
   insomnia: ['Stress', 'Caffeine Timing', 'Screen Exposure', 'Irregular Schedule'],
-  nausea: ['Digestive Irritation', 'Inner Ear Disturbance', 'Odor Sensitivity', 'Anxiety'],
+  nausea: ['Digestive Irritation', 'Inner Ear Disturbance', 'Odor Sensitivity', 'Anxious'],
   stress: ['Work Pressure', 'Information Overload', 'Sleep Disruption', 'Lifestyle'],
   fatigue: ['Sleep Debt', 'Nutritional Gaps', 'Stress', 'Sedentary Lifestyle'],
   low_energy: ['Sleep Quality', 'Hydration Status', 'Nutrition', 'Movement'],

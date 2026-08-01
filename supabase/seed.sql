@@ -3,7 +3,7 @@ BEGIN;
 INSERT INTO public.symptoms (id, label, emoji, color_theme) VALUES
   ('headache', 'Headache', '🤕', 'forest'),
   ('cold', 'Cold', '🤧', 'sage'),
-  ('anxiety', 'Anxiety', '😰', 'amber'),
+  ('anxiety', 'Anxious', '😰', 'amber'),
   ('insomnia', 'Insomnia', '😴', 'forest'),
   ('nausea', 'Nausea', '🤢', 'sage'),
   ('stress', 'Stress', '😤', 'amber'),

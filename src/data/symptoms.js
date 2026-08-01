@@ -5,7 +5,7 @@ export const SYMPTOMS = [
   { id: 'cough', label: 'Cough', emoji: '🤧', color: 'sage' },
   { id: 'congestion', label: 'Congestion', emoji: '🫁', color: 'sage' },
   { id: 'sinus_pressure', label: 'Sinus Pressure', emoji: '😤', color: 'amber' },
-  { id: 'anxiety',  label: 'Anxiety',  emoji: '😰', color: 'amber'},
+  { id: 'anxiety',  label: 'Anxious',  emoji: '😰', color: 'amber'},
   { id: 'insomnia', label: 'Insomnia', emoji: '😴', color: 'forest' },
   { id: 'nausea',   label: 'Nausea',   emoji: '🤢', color: 'sage'  },
   { id: 'stress',   label: 'Stress',   emoji: '😤', color: 'amber'},
