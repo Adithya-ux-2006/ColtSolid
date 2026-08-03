@@ -74,7 +74,7 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
     >
       <div
         className={cn(
-          'bg-card rounded-[28px] border border-border shadow-soft-lg overflow-hidden',
+          'bg-card rounded-[28px] border border-border overflow-hidden',
           className
         )}
       >
@@ -98,7 +98,7 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
             <p className="text-ink-muted text-sm leading-relaxed line-clamp-3 mb-6">{remedy.shortDescription}</p>
 
             <div className="grid grid-cols-3 gap-6 w-full mb-6">
-              <MetadataCell icon={<Clock className="w-4 h-4 text-primary" />} label="Time to relief">
+              <MetadataCell icon={<Clock className="w-4 h-4 text-ink-muted" />} label="Time to relief">
                 {remedy.timeToEffect || 'Varies'}
               </MetadataCell>
               <MetadataCell icon={<span className="text-sm">🛡</span>} label="Safety">
@@ -113,16 +113,16 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
 
             <Link
               to={`/remedy/${remedy.id}`}
-              className="flex items-center justify-center w-[90%] h-14 rounded-2xl bg-primary text-white text-base font-semibold shadow-glow hover:bg-primary-dark transition-all hover:-translate-y-0.5 shrink-0"
+              className="flex items-center justify-center w-[90%] h-14 rounded-2xl bg-ink text-card text-base font-semibold hover:bg-ink/90 transition-colors shrink-0"
             >
-              View Remedy
+              View remedy
             </Link>
           </div>
 
           <div className="bg-mint/60 px-8 py-8 flex flex-col items-start">
             <div className="flex items-center justify-between w-full mb-4 shrink-0">
               <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
-                Why We Recommend This
+                Why we recommend this
               </p>
               <div className="flex items-center gap-1">
                 <ScheduleQuickAdd remedy={remedy} />
@@ -148,7 +148,7 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
                     transition={{ duration: 0.3, delay: i * 0.08 }}
                     className="flex items-start gap-3 text-sm text-ink"
                   >
-                    <Check className="w-4 h-4 text-primary shrink-0 mt-[3px]" />
+                    <Check className="w-4 h-4 text-ink shrink-0 mt-[3px]" />
                     <span className="leading-snug">{reason}</span>
                   </motion.li>
                 ))}

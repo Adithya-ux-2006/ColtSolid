@@ -35,7 +35,7 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
         <Link
           to={`/remedy/${remedy.id}`}
           className={cn(
-            'block bg-card rounded-2xl p-4 shadow-soft hover:shadow-card transition-all h-full',
+            'block bg-card rounded-2xl border border-border p-4 transition-colors hover:bg-surface h-full',
             className
           )}
         >
@@ -60,7 +60,7 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
           <p className="text-xs text-ink-muted mb-3 line-clamp-1">{remedy.shortDescription}</p>
           <div className="flex items-center gap-2 text-xs text-ink-muted">
             {remedy._evidenceScore != null && (
-              <span className="bg-primary/10 text-primary font-semibold px-1.5 py-0.5 rounded-md">
+              <span className="bg-warning/10 text-warning font-semibold px-1.5 py-0.5 rounded-md">
                 E{remedy._evidenceScore}/10
               </span>
             )}
@@ -84,13 +84,13 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
         <Link
           to={`/remedy/${remedy.id}`}
           className={cn(
-            'block bg-gradient-card rounded-3xl p-6 shadow-card hover:shadow-card-hover transition-shadow',
+            'block bg-card rounded-3xl border border-border p-6 transition-colors hover:bg-surface',
             className
           )}
         >
           <div className="flex items-center gap-2 mb-3">
             <CategoryBadge category={remedy.category} />
-            <span className="text-xs font-medium text-primary-light bg-card/60 px-2.5 py-0.5 rounded-full">
+            <span className="text-xs font-medium text-ink-muted">
               Featured
             </span>
             <div className="flex items-center gap-1 ml-auto">
@@ -137,13 +137,13 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
       <Link
         to={`/remedy/${remedy.id}`}
         className={cn(
-          'block bg-card rounded-3xl p-5 shadow-soft hover:shadow-card transition-all',
+          'block bg-card rounded-3xl border border-border p-5 transition-colors hover:bg-surface',
           className
         )}
       >
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-2xl bg-surface flex items-center justify-center shrink-0 text-primary font-semibold text-sm">
+            <div className="w-10 h-10 rounded-2xl bg-surface flex items-center justify-center shrink-0 text-ink font-semibold text-sm">
               {remedy.name.charAt(0)}
             </div>
             <div className="min-w-0">
@@ -180,7 +180,7 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
             <span className="bg-surface px-2 py-0.5 rounded-md">{remedy.cost}</span>
           )}
           {remedy._evidenceScore ? (
-            <span className="text-primary font-medium" title="Evidence level">
+            <span className="text-warning font-medium" title="Evidence level">
               E{remedy._evidenceScore}/10
             </span>
           ) : null}
@@ -189,7 +189,7 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
         <div className="flex items-center justify-between">
           <RatingStars rating={remedy.rating} />
           <span className="text-sm font-medium text-primary hover:text-primary-dark transition-colors">
-            View Details &rarr;
+            View details &rarr;
           </span>
         </div>
       </Link>

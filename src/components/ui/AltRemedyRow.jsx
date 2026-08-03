@@ -27,7 +27,7 @@ export function AltRemedyRow({ remedy, evidenceScore, ageRange, showDivider = tr
     <div className={cn(showDivider && 'border-b border-border', className)}>
       <Link
         to={`/remedy/${remedy.id}`}
-        className="hidden md:grid grid-cols-[80px_2fr_160px_160px_170px_40px] items-center gap-4 h-[112px] px-4 hover:bg-mint/30 rounded-xl transition-colors"
+        className="hidden md:grid grid-cols-[80px_2fr_160px_160px_170px_40px] items-center gap-4 h-[112px] px-4 hover:bg-surface rounded-xl transition-colors"
       >
         <div className="flex items-center justify-center">
           <RemedyImage category={remedy.category} size="sm" alt={remedy.name} />
@@ -73,7 +73,7 @@ export function AltRemedyRow({ remedy, evidenceScore, ageRange, showDivider = tr
 
       <Link
         to={`/remedy/${remedy.id}`}
-        className="md:hidden flex items-center gap-3 py-4 px-2 hover:bg-mint/30 rounded-xl transition-colors"
+        className="md:hidden flex items-center gap-3 py-4 px-2 hover:bg-surface rounded-xl transition-colors"
       >
         <RemedyImage category={remedy.category} size="sm" alt={remedy.name} />
 

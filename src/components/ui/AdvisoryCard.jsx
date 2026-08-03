@@ -13,9 +13,8 @@ export function AdvisoryCard({ title, message, className }) {
       transition={{ duration: 0.35, ease: 'easeOut' }}
       role="alert"
       className={cn(
-        'rounded-2xl p-5 flex items-start gap-4',
-        'bg-warning/[0.06]',
-        'transition-shadow duration-200 hover:shadow-lg',
+        'rounded-r-2xl rounded-l-none border border-warning/30 border-l-4 border-l-warning p-5 flex items-start gap-4',
+        'bg-warning/[0.08]',
         className
       )}
     >

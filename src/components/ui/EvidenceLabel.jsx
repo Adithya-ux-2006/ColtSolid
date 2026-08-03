@@ -3,9 +3,9 @@ import { cn } from '../../utils/cn';
 
 function getEvidenceLevel(score) {
   if (score == null || score === 0) return null;
-  if (score >= 7) return { text: 'High Evidence', color: 'bg-success/10 text-success' };
-  if (score >= 4) return { text: 'Moderate Evidence', color: 'bg-warning/10 text-warning' };
-  return { text: 'Limited Evidence', color: 'bg-ink-muted/10 text-ink-muted' };
+  if (score >= 7) return { text: 'High evidence', color: 'bg-warning/10 text-warning border border-warning/30' };
+  if (score >= 4) return { text: 'Moderate evidence', color: 'bg-warning/10 text-warning border border-warning/30' };
+  return { text: 'Limited evidence', color: 'bg-ink-muted/10 text-ink-muted border border-border' };
 }
 
 export function EvidenceLabel({ score, size = 'md', className }) {

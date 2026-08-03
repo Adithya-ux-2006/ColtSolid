@@ -12,6 +12,7 @@ export function NearbyShops({ className }) {
   const [locationDenied, setLocationDenied] = useState(() => !navigator.geolocation);
   const [radius, setRadius] = useState(3000);
   const [showAll, setShowAll] = useState(false);
+  const [manualLocation, setManualLocation] = useState('');
   const mountedRef = useRef(true);
 
   useEffect(() => {
@@ -58,12 +59,18 @@ export function NearbyShops({ className }) {
 
   const featured = shops[0] || null;
   const nearby = showAll ? shops.slice(1) : shops.slice(1, 4);
+  const openManualSearch = (event) => {
+    event.preventDefault();
+    const query = manualLocation.trim();
+    if (!query) return;
+    window.open(`https://www.google.com/maps/search/pharmacy+near+${encodeURIComponent(query)}`, '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <section className={cn('', className)}>
       <Reveal>
         <div className="flex items-center justify-between mb-5">
-          <h2 className="section-title mb-0">Where To Buy</h2>
+          <h2 className="section-title mb-0">Where to buy</h2>
           <div className="flex items-center gap-1.5">
             <MapPin className="w-3.5 h-3.5 text-ink-muted" />
             <select
@@ -83,13 +90,26 @@ export function NearbyShops({ className }) {
       {locationDenied && (
         <div className="text-center py-10 section-card">
           <MapPin className="w-8 h-8 text-ink-muted mx-auto mb-3" />
-          <p className="text-sm text-ink-muted mb-3">Enable location to find nearby pharmacies</p>
+          <p className="text-sm text-ink-muted mb-4">Enable location to find nearby pharmacies, or search by area.</p>
           <button
             onClick={requestLocation}
-            className="text-sm text-primary font-medium transition-all duration-200 hover:underline active:opacity-70"
+            className="text-sm text-ink font-medium transition-all duration-200 hover:underline active:opacity-70"
           >
-            Try again
+            Enable location
           </button>
+          <form onSubmit={openManualSearch} className="mt-5 flex flex-col sm:flex-row gap-2 max-w-md mx-auto text-left">
+            <label className="sr-only" htmlFor="manual-location">Town or postcode</label>
+            <input
+              id="manual-location"
+              value={manualLocation}
+              onChange={(event) => setManualLocation(event.target.value)}
+              placeholder="Enter town or postcode"
+              className="min-h-11 flex-1 rounded-xl border border-border px-3 text-sm"
+            />
+            <button type="submit" className="min-h-11 rounded-xl bg-ink px-4 text-sm font-medium text-card transition-colors hover:bg-ink/90">
+              Search area
+            </button>
+          </form>
         </div>
       )}
 
@@ -132,9 +152,9 @@ export function NearbyShops({ className }) {
               {!showAll && shops.length > 4 && (
                 <button
                   onClick={() => setShowAll(true)}
-                  className="w-full text-center text-sm font-medium text-primary mt-3 transition-all duration-200 hover:underline active:opacity-70"
+                  className="w-full text-center text-sm font-medium text-ink mt-3 transition-all duration-200 hover:underline active:opacity-70"
                 >
-                  View More Pharmacies
+                  View more pharmacies
                 </button>
               )}
             </div>

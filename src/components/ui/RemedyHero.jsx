@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import { Star, StarHalf } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { RemedyImage } from './RemedyImage';
-import { CategoryBadge } from './CategoryBadge';
 import { EvidenceLabel } from './EvidenceLabel';
 
 function StarRating({ rating }) {
@@ -31,7 +30,7 @@ export function RemedyHero({ remedy, evidenceScore, className }) {
         transition={{ duration: 0.4, ease: 'easeOut' }}
         className="relative shrink-0"
       >
-        <div className="w-40 h-40 md:w-52 md:h-52 rounded-full bg-primary-tint flex items-center justify-center shadow-glow ring-[3px] ring-primary/10">
+        <div className="w-40 h-40 md:w-52 md:h-52 rounded-full bg-surface border border-border flex items-center justify-center">
           <RemedyImage category={remedy.category} size="hero" alt={remedy.name} />
         </div>
       </motion.div>
@@ -41,9 +40,9 @@ export function RemedyHero({ remedy, evidenceScore, className }) {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, delay: 0.08 }}
-          className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-5"
+          className="text-sm text-ink-muted mb-3"
         >
-          <CategoryBadge category={remedy.category} firstOccurrence />
+          {remedy.category}
         </motion.div>
 
         <motion.h1
