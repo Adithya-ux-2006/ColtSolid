@@ -2,9 +2,9 @@ import { Leaf, Heart, Pill } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
 const CATEGORY_ICONS = {
-  Natural: { Icon: Leaf, bg: 'bg-surface', color: 'text-ink-muted' },
-  Lifestyle: { Icon: Heart, bg: 'bg-surface', color: 'text-ink-muted' },
-  Conventional: { Icon: Pill, bg: 'bg-surface', color: 'text-ink-muted' },
+  Natural: { Icon: Leaf, bg: 'bg-emerald-500/10', color: 'text-emerald-500' },
+  Lifestyle: { Icon: Heart, bg: 'bg-violet-500/10', color: 'text-violet-500' },
+  Conventional: { Icon: Pill, bg: 'bg-orange-500/10', color: 'text-orange-500' },
 };
 
 const SIZE_CLASSES = {
@@ -29,7 +29,7 @@ export function RemedyImage({ category, size = 'md', src, alt, className }) {
       <img
         src={src}
         alt={alt || ''}
-        className={cn(SIZE_CLASSES[size], 'object-cover', className)}
+        className={cn(SIZE_CLASSES[size], 'object-cover shadow-soft', className)}
       />
     );
   }
@@ -42,7 +42,7 @@ export function RemedyImage({ category, size = 'md', src, alt, className }) {
       className={cn(
         SIZE_CLASSES[size],
         bg,
-        'flex items-center justify-center shrink-0',
+        'flex items-center justify-center shadow-soft shrink-0',
         className
       )}
       aria-hidden="true"

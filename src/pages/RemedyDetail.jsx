@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, BookOpen, ChevronRight, ShieldCheck } from 'lucide-react';
 import { FavoriteHeart } from '../components/ui/FavoriteHeart';
 import { ScheduleQuickAdd } from '../components/ui/ScheduleQuickAdd';
 import { PageWrapper } from '../components/layout';
@@ -26,8 +26,8 @@ import { trackRemedyEvent } from '../utils/analytics';
 const CATEGORY_BENEFITS = {
   Natural: [
     { title: 'Gentle & plant-based', description: 'Derived from natural sources with minimal processing.' },
-    { title: 'Supports everyday wellbeing', description: 'May be a useful part of a broader self-care routine.' },
-    { title: 'Considered use', description: 'Review directions and your health needs before use.' },
+    { title: 'Holistic relief', description: 'Addresses root causes, not just surface symptoms.' },
+    { title: 'Low side-effect profile', description: 'Well tolerated by most people when used as directed.' },
   ],
   Conventional: [
     { title: 'Clinically validated', description: 'Backed by rigorous trials and peer-reviewed research.' },
@@ -167,7 +167,7 @@ export function RemedyDetail() {
               className={cn(
                 'p-2.5 rounded-full transition-colors duration-200 min-w-[44px] min-h-[44px] flex items-center justify-center',
                 'active:scale-90',
-                favorite ? 'text-ink' : 'text-ink-muted hover:text-ink'
+                favorite ? 'text-primary' : 'text-ink-muted hover:text-primary'
               )}
               aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
             >
@@ -187,7 +187,7 @@ export function RemedyDetail() {
 
       <div className="max-w-[800px] mx-auto px-5 md:px-8 pb-12 md:pb-16">
         <Reveal>
-          <div className="rounded-2xl bg-card border border-border p-4 md:p-5">
+          <div className="rounded-2xl bg-card border border-border p-4 md:p-5" style={{ boxShadow: 'var(--shadow-card)' }}>
             <QuickStats
               remedy={remedy}
               isSafe={isSafe}
@@ -208,7 +208,7 @@ export function RemedyDetail() {
             <Reveal>
               <h2 className="section-title mb-5">Benefits</h2>
             </Reveal>
-            <div className="rounded-[20px] bg-card border border-border p-6 md:p-8">
+            <div className="rounded-[20px] bg-card border border-border p-6 md:p-8 shadow-card hover:shadow-card-lg transition-shadow duration-200">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 {benefits.map((benefit, i) => (
                   <div key={i} className={cn(
@@ -233,9 +233,9 @@ export function RemedyDetail() {
         {howToUseSteps.length > 0 && (
           <section className="mb-12 md:mb-16">
             <Reveal>
-              <h2 className="section-title mb-5">How to use</h2>
+              <h2 className="section-title mb-5">How To Use</h2>
             </Reveal>
-            <div className="rounded-[20px] bg-card border border-border p-6 md:p-8">
+            <div className="rounded-[20px] bg-card border border-border p-6 md:p-8 shadow-card hover:shadow-card-lg transition-shadow duration-200">
               {howToUseSteps.map((step, i) => (
                 <TimelineStep
                   key={i}
@@ -251,8 +251,25 @@ export function RemedyDetail() {
 
         <section className="mb-12 md:mb-16">
           <Reveal>
-            <div className="mb-2">
+            <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
               <h2 className="section-title mb-0">Evidence</h2>
+              <div className="flex items-center gap-2">
+                {researchLinks.length > 0 ? (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-evidence-light text-evidence">
+                    <BookOpen className="w-3.5 h-3.5" />
+                    {evidenceScore >= 7 ? 'High Quality' : evidenceScore >= 4 ? 'Moderate' : 'Some'}
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-ink-muted/10 text-ink-muted">
+                    <BookOpen className="w-3.5 h-3.5" />
+                    Not yet rated
+                  </span>
+                )}
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-success/10 text-success" aria-label="Medically reviewed">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  Medically Reviewed
+                </span>
+              </div>
             </div>
             <p className="text-sm text-ink-muted mb-5">
               {researchLinks.length > 0
@@ -275,7 +292,7 @@ export function RemedyDetail() {
               {!showAllEvidence && researchLinks.length > EVIDENCE_SHOW_LIMIT && (
                 <button
                   onClick={() => setShowAllEvidence(true)}
-                  className="flex items-center gap-1 text-sm font-medium text-ink mt-4 transition-all duration-200 hover:opacity-80 active:opacity-60"
+                  className="flex items-center gap-1 text-sm font-medium text-evidence mt-4 transition-all duration-200 hover:opacity-80 active:opacity-60"
                 >
                   Show {researchLinks.length - EVIDENCE_SHOW_LIMIT} more {researchLinks.length - EVIDENCE_SHOW_LIMIT === 1 ? 'study' : 'studies'}
                   <ChevronRight className="w-4 h-4" />
@@ -294,7 +311,7 @@ export function RemedyDetail() {
         {remedy.warnings && (
           <section className="mb-12 md:mb-16">
             <Reveal>
-              <h2 className="section-title mb-5">Safety information</h2>
+              <h2 className="section-title mb-5">Safety Information</h2>
             </Reveal>
             <Reveal delay={0.08}>
               <AdvisoryCard

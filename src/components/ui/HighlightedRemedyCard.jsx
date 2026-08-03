@@ -58,7 +58,7 @@ export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetySco
       whileHover={{ y: -3 }}
       className="flex flex-col h-full"
     >
-      <div className="flex flex-col h-full bg-card rounded-3xl border border-border overflow-hidden">
+      <div className="flex flex-col h-full bg-card rounded-3xl border border-border shadow-soft hover:shadow-card transition-shadow overflow-hidden">
         <div className="p-5 flex flex-col flex-1">
           <div className="flex items-start justify-between mb-3">
             <div className="flex flex-wrap gap-2">
@@ -81,7 +81,7 @@ export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetySco
           </div>
 
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 rounded-2xl bg-surface flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-primary-tint flex items-center justify-center shrink-0">
               <RemedyImage category={remedy.category} size="card" alt={remedy.name} />
             </div>
             <div className="min-w-0">
@@ -93,7 +93,7 @@ export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetySco
           <div className="grid grid-cols-3 gap-3 mb-4">
             <div className="flex flex-col items-center text-center">
               <div className="flex items-center gap-1 mb-0.5">
-                <Clock className="w-3 h-3 text-ink-muted" />
+                <Clock className="w-3 h-3 text-primary" />
                 <span className="text-xs font-semibold text-ink">{remedy.timeToEffect || 'Varies'}</span>
               </div>
               <span className="text-[10px] text-ink-muted">Relief</span>
@@ -106,7 +106,7 @@ export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetySco
             </div>
             <div className="flex flex-col items-center text-center">
               <div className="flex items-center gap-1 mb-0.5">
-                <span className="text-xs font-semibold text-warning">{getEvidenceText(evidenceScore)}</span>
+                <span className="text-xs font-semibold text-ink">{getEvidenceText(evidenceScore)}</span>
               </div>
               <span className="text-[10px] text-ink-muted">Evidence</span>
             </div>
@@ -115,12 +115,12 @@ export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetySco
           {reasons.length > 0 && (
             <div className="bg-surface/60 rounded-xl px-3 py-2.5 mb-4">
               <p className="text-[10px] font-bold uppercase tracking-wider text-ink-muted mb-1.5">
-                Why we recommend this
+                Why We Recommend This
               </p>
               <ul className="space-y-1">
                 {reasons.map((reason) => (
                   <li key={reason} className="flex items-start gap-2 text-xs text-ink">
-                    <Check className="w-3 h-3 text-ink shrink-0 mt-[2px]" />
+                    <Check className="w-3 h-3 text-primary shrink-0 mt-[2px]" />
                     <span className="leading-snug">{reason}</span>
                   </li>
                 ))}
@@ -131,9 +131,9 @@ export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetySco
           <div className="mt-auto">
             <Link
               to={`/remedy/${remedy.id}`}
-              className="flex items-center justify-center gap-2 w-full rounded-xl bg-ink px-4 py-2.5 text-sm font-semibold text-card hover:bg-ink/90 transition-colors"
+              className="flex items-center justify-center gap-2 w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-glow hover:bg-primary-dark transition-all hover:-translate-y-0.5"
             >
-              View remedy
+              View Remedy
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

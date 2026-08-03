@@ -25,9 +25,9 @@ import { trackSearchEvent } from '../utils/analytics';
 const EMPTY_ARRAY = [];
 
 const INTENT_LABELS = {
-  relief: 'Looking for relief',
-  cause: 'Understanding causes',
-  information: 'Seeking information',
+  relief: 'Looking for Relief',
+  cause: 'Understanding Causes',
+  information: 'Seeking Information',
   prevention: 'Prevention',
 };
 
@@ -36,7 +36,7 @@ function IntentBadge({ intent }) {
   if (!label) return null;
 
   return (
-    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-ink-muted">
+    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-mint text-primary">
       {label}
     </span>
   );
@@ -44,9 +44,9 @@ function IntentBadge({ intent }) {
 
 function MonitorBadge() {
   return (
-    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-warning/10 text-warning border border-warning/30">
+    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-warning/10 text-warning">
       <AlertTriangle className="w-3 h-3" />
-      Monitor closely
+      Monitor Closely
     </span>
   );
 }
@@ -350,10 +350,10 @@ export function Results() {
       <div className="max-w-4xl mx-auto px-6 pt-8">
         <button
           onClick={() => navigate('/search')}
-          className="flex items-center gap-1.5 text-sm font-medium text-ink hover:text-ink-muted transition-colors"
+          className="flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-dark transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to search
+          Back to Search
         </button>
 
         <h1 className="text-hero font-extrabold text-ink mt-8 mb-4">
@@ -440,13 +440,13 @@ export function Results() {
             <div className="max-w-4xl mx-auto px-6 mt-16">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h2 className="text-section-heading font-bold text-ink mb-1">Other remedies</h2>
+                  <h2 className="text-section-heading font-bold text-ink mb-1">Other Remedies</h2>
                   <p className="text-sm text-ink-muted">Excellent alternatives if you need another option.</p>
                 </div>
                 {allAlternatives.length > 5 && !showAllAlternatives && (
                   <button
                     onClick={() => setShowAllAlternatives(true)}
-                    className="hidden md:inline-flex text-sm font-semibold text-ink hover:text-ink-muted transition-colors shrink-0"
+                    className="hidden md:inline-flex text-sm font-semibold text-primary hover:text-primary-dark transition-colors shrink-0"
                   >
                     Show all
                   </button>
@@ -473,7 +473,7 @@ export function Results() {
               {!showAllAlternatives && allAlternatives.length > 5 && (
                 <button
                   onClick={() => setShowAllAlternatives(true)}
-                  className="mt-4 flex items-center gap-1.5 text-sm font-semibold text-ink hover:text-ink-muted transition-colors mx-auto md:hidden"
+                  className="mt-4 flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark transition-colors mx-auto md:hidden"
                 >
                   Show all {allAlternatives.length} alternatives
                   <ChevronDown className="w-4 h-4" />
@@ -503,9 +503,9 @@ export function Results() {
 
           {!isAuthenticated && hasResults && (
             <div className="max-w-4xl mx-auto px-6 mt-8">
-              <section className="rounded-3xl bg-card p-6 border border-border">
+              <section className="rounded-3xl bg-gradient-card p-6 shadow-soft border border-primary/10">
                 <div className="flex items-center gap-2 mb-3">
-                  <Heart className="w-5 h-5 text-ink" />
+                  <Heart className="w-5 h-5 text-primary" />
                   <p className="text-lg font-semibold text-ink">Save this remedy</p>
                 </div>
                 <p className="text-sm text-ink-muted leading-relaxed mb-4">
@@ -514,15 +514,15 @@ export function Results() {
                 <div className="space-y-2">
                   <Link
                     to="/register"
-                    className="block w-full rounded-xl bg-ink px-4 py-3 text-center text-sm font-semibold text-card hover:bg-ink/90 transition-colors"
+                    className="block w-full rounded-xl bg-primary px-4 py-3 text-center text-sm font-semibold text-white shadow-glow hover:bg-primary-dark transition-colors"
                   >
-                    Create free account
+                    Create Free Account
                   </Link>
                   <Link
                     to="/login"
-                    className="block w-full text-center text-sm font-semibold text-ink hover:text-ink-muted transition-colors"
+                    className="block w-full text-center text-sm font-semibold text-primary hover:text-primary-dark transition-colors"
                   >
-                    Log in
+                    Log In
                   </Link>
                 </div>
               </section>

@@ -15,13 +15,13 @@ export function DoctorGuidance({ message, flags, ctaLabel, onCtaClick, className
   const items = flags || DEFAULT_FLAGS;
 
   return (
-    <Reveal className={cn("bg-card border border-danger/30 border-l-4 border-l-danger rounded-r-3xl rounded-l-none p-5 md:p-8", className)}>
+    <Reveal className={cn("section-card", className)}>
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-full bg-danger/10 flex items-center justify-center shrink-0">
-          <Stethoscope className="w-5 h-5 text-danger" />
+        <div className="w-11 h-11 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
+          <Stethoscope className="w-5 h-5 text-primary" />
         </div>
         <div>
-          <p className="font-semibold text-ink">When to see a doctor</p>
+          <p className="font-semibold text-ink">When To See A Doctor</p>
           {message && (
             <p className="text-xs text-ink-muted">{message}</p>
           )}
@@ -34,11 +34,11 @@ export function DoctorGuidance({ message, flags, ctaLabel, onCtaClick, className
         </p>
       )}
 
-      <Checklist items={items} delay={0.1} tone="danger" className="mb-6 space-y-3" />
+      <Checklist items={items} delay={0.1} className="mb-6 space-y-3" />
 
       <button
         onClick={onCtaClick}
-        className="flex items-center justify-center gap-2 w-full h-12 rounded-xl bg-ink text-card font-medium text-sm transition-colors duration-200 hover:bg-ink/90 active:scale-[0.98]"
+        className="flex items-center justify-center gap-2 w-full h-12 rounded-2xl border border-border text-ink font-medium text-sm transition-all duration-200 hover:bg-surface hover:border-border active:scale-[0.98] active:bg-surface/80"
       >
         <MapPin className="w-4 h-4" />
         {ctaLabel || 'Find Nearby Medical Centres'}

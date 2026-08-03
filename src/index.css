@@ -35,62 +35,62 @@
 
 @layer base {
   :root {
-    --background: 40 20% 96%;
-    --foreground: 155 12% 14%;
+    --background: 155 40% 95%;
+    --foreground: 155 20% 14%;
 
     --card: 0 0% 100%;
     --card-foreground: 155 20% 14%;
 
-    --surface: 40 18% 98%;
+    --surface: 155 20% 97%;
     --surface-raised: 0 0% 100%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 155 20% 14%;
 
-    --primary: 155 12% 18%;
+    --primary: 152 40% 29%;
     --primary-foreground: 0 0% 100%;
-    --primary-tint: 40 18% 92%;
+    --primary-tint: 152 40% 94%;
 
-    --secondary: 40 18% 94%;
-    --secondary-foreground: 155 12% 18%;
+    --secondary: 155 40% 96%;
+    --secondary-foreground: 152 40% 29%;
 
     --muted: 155 20% 96%;
     --muted-foreground: 155 10% 46%;
 
-    --accent: 40 18% 94%;
-    --accent-foreground: 155 12% 18%;
-    --accent-tint: 40 18% 96%;
+    --accent: 155 35% 94%;
+    --accent-foreground: 152 40% 29%;
+    --accent-tint: 155 35% 96%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 40 10% 88%;
-    --border-subtle: 40 10% 92%;
-    --input: 40 10% 88%;
+    --border: 155 12% 91%;
+    --border-subtle: 155 10% 94%;
+    --input: 155 12% 91%;
     --ring: 152 40% 29%;
 
     --ink: 155 20% 14%;
     --ink-muted: 155 8% 46%;
     --ink-subtle: 155 8% 63%;
 
-    --mint: 40 18% 94%;
-    --bg-page: 40 20% 96%;
+    --mint: 155 35% 94%;
+    --bg-page: 155 40% 95%;
 
-    --success: 145 45% 34%;
-    --success-soft: 145 46% 94%;
+    --success: 122 39% 49%;
+    --success-soft: 122 76% 96%;
     --warning: 36 86% 53%;
     --warning-soft: 48 96% 94%;
     --danger: 0 72% 51%;
     --danger-soft: 0 86% 97%;
-    --evidence: 36 86% 42%;
-    --evidence-soft: 48 96% 94%;
+    --evidence: 262 60% 50%;
+    --evidence-soft: 262 50% 95%;
 
     --shadow-color: 155 30% 13%;
 
     --radius-card: 1.25rem;
     --radius-pill: 9999px;
-    --shadow-card: none;
-    --shadow-card-lg: none;
+    --shadow-card: 0 4px 20px hsl(155 30% 13% / 0.06);
+    --shadow-card-lg: 0 8px 40px hsl(155 30% 13% / 0.08);
   }
 
   .dark {
@@ -181,6 +181,19 @@
     filter: invert(0.85);
   }
 
+  .dark body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(
+      ellipse 80% 60% at 50% 15%,
+      hsl(155 35% 18% / 0.45) 0%,
+      hsl(155 30% 12% / 0.15) 50%,
+      transparent 80%
+    );
+    pointer-events: none;
+  }
 }
 
 @layer components {

@@ -89,8 +89,8 @@ export function QuickStats({ remedy, isSafe, evidenceScore, safetyScore, classNa
     >
       <StatColumn
         icon={Clock}
-        iconBg="bg-surface"
-        iconColor="text-ink-muted"
+        iconBg="bg-primary/10"
+        iconColor="text-primary"
         value={remedy.timeToEffect || 'Varies'}
         label="Time to relief"
         ariaLabel={`Time to relief: ${remedy.timeToEffect || 'Varies'}`}
@@ -99,7 +99,7 @@ export function QuickStats({ remedy, isSafe, evidenceScore, safetyScore, classNa
       />
       <StatColumn
         icon={ShieldCheck}
-        iconBg={isSafe ? 'bg-success/10' : safetyScore >= 30 ? 'bg-warning/10' : 'bg-danger/10'}
+        iconBg="bg-success/10"
         iconColor={safetyColor}
         value={safetyText}
         subLabel={safetySubLabel}
@@ -110,8 +110,8 @@ export function QuickStats({ remedy, isSafe, evidenceScore, safetyScore, classNa
       />
       <StatColumn
         icon={BarChart3}
-        iconBg="bg-warning/10"
-        iconColor="text-warning"
+        iconBg="bg-primary/10"
+        iconColor="text-primary"
         value={evidenceText}
         label="Evidence"
         ariaLabel={`Evidence: ${evidenceText}`}
@@ -120,8 +120,8 @@ export function QuickStats({ remedy, isSafe, evidenceScore, safetyScore, classNa
       />
       <StatColumn
         icon={Gauge}
-        iconBg="bg-surface"
-        iconColor="text-ink-muted"
+        iconBg="bg-primary/10"
+        iconColor="text-primary"
         value={remedy.difficulty || 'Easy'}
         label="Difficulty"
         ariaLabel={`Difficulty: ${remedy.difficulty || 'Easy'}`}

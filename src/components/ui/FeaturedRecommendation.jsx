@@ -16,14 +16,14 @@ export function FeaturedRecommendation({ remedy, evidenceScore, isSafe, safetyWa
       <Link
         to={`/remedy/${remedy.id}`}
         className={cn(
-          'block bg-card border border-border rounded-3xl p-6 transition-colors hover:bg-surface',
+          'block bg-gradient-card rounded-3xl p-6 shadow-card hover:shadow-card-hover transition-shadow',
           className
         )}
       >
         <div className="flex items-center justify-between mb-4">
           <CategoryBadge category={remedy.category} />
-          <span className="text-xs font-semibold text-ink">
-            Top recommendation
+          <span className="text-xs font-semibold text-primary bg-card/60 px-3 py-1 rounded-full">
+            Top Recommendation
           </span>
         </div>
 
@@ -33,18 +33,18 @@ export function FeaturedRecommendation({ remedy, evidenceScore, isSafe, safetyWa
         <div className="flex flex-wrap items-center gap-2 text-sm text-ink-muted mb-5">
           {remedy.timeToEffect && (
             <span className="flex items-center gap-1.5 bg-card/60 px-3 py-1.5 rounded-xl">
-              <Clock className="w-3.5 h-3.5 text-ink-muted" />
+              <Clock className="w-3.5 h-3.5 text-primary" />
               {remedy.timeToEffect}
             </span>
           )}
           {remedy.difficulty && (
             <span className="flex items-center gap-1.5 bg-card/60 px-3 py-1.5 rounded-xl">
-              <Star className="w-3.5 h-3.5 text-ink-muted" />
+              <Star className="w-3.5 h-3.5 text-primary" />
               {remedy.difficulty}
             </span>
           )}
           {evidenceScore != null && (
-            <span className="flex items-center gap-1.5 bg-warning/10 px-3 py-1.5 rounded-xl font-semibold text-warning">
+            <span className="flex items-center gap-1.5 bg-card/60 px-3 py-1.5 rounded-xl font-semibold text-primary">
               <FileText className="w-3.5 h-3.5" />
               Evidence {evidenceScore}/10
             </span>
@@ -64,7 +64,7 @@ export function FeaturedRecommendation({ remedy, evidenceScore, isSafe, safetyWa
           </div>
         )}
         {isSafe && !safetyWarnings && (
-          <div className="flex items-center gap-2 text-sm text-success bg-success/10 px-4 py-2.5 rounded-xl">
+          <div className="flex items-center gap-2 text-sm text-primary-dark bg-accent/20 px-4 py-2.5 rounded-xl">
             <ShieldCheck className="w-4 h-4" />
             No known conflicts with your profile
           </div>

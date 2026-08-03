@@ -34,7 +34,7 @@ export function EvidenceCard({ source, onTrackClick, delay = 0, className }) {
         onClick={onTrackClick}
         className={cn(
           'group block rounded-[20px] border border-border p-5 md:p-6',
-          'bg-card',
+          'bg-card shadow-card hover:shadow-card-lg',
           'transition-all duration-200',
           'active:shadow-card active:scale-[0.995]',
         )}
@@ -42,12 +42,12 @@ export function EvidenceCard({ source, onTrackClick, delay = 0, className }) {
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-evidence tracking-wider">
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-evidence uppercase tracking-wider">
                 <BookOpen className="w-3.5 h-3.5 shrink-0" />
                 {source.journal || source.label || 'Clinical Research'}
               </span>
               {source.journal && (
-              <span className="inline-flex items-center text-[10px] font-medium text-evidence bg-evidence/10 rounded-full px-1.5 py-0.5">
+                <span className="inline-flex items-center text-[10px] font-medium text-evidence/60 bg-evidence/5 rounded-full px-1.5 py-0.5">
                   Peer-reviewed
                 </span>
               )}
