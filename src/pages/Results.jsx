@@ -84,12 +84,7 @@ function EmergencyBanner() {
 }
 
 function EvidenceBanner() {
-  return (
-    <div className="flex items-center justify-center gap-2 py-2">
-      <ShieldCheck className="w-4 h-4 text-success" />
-      <p className="text-sm text-ink-muted">All remedies are evidence-backed and safety-checked</p>
-    </div>
-  );
+  return null;
 }
 
 function MedicalDisclaimer() {
@@ -407,9 +402,9 @@ export function Results() {
       ) : !hasResults && !isCatalogLoading ? (
         <div className="max-w-4xl mx-auto px-6 mb-8">
           <EmptyState
-            title="No remedies found"
+            title="No recommended steps found"
             description={symptomResolution.symptomIds.length > 0
-              ? `No evidence-backed remedies were found for "${matchedSymptom?.label || freeTextQuery}". Try a different search term.`
+              ? `No recommended steps were found for "${matchedSymptom?.label || freeTextQuery}". Try a different search term.`
               : `We couldn't confidently identify a matching symptom for "${freeTextQuery}". Try a different search term.`}
             ctaLabel="Search Again"
             ctaHref="/search"
@@ -451,8 +446,8 @@ export function Results() {
             <div className="max-w-4xl mx-auto px-6 mt-16">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h2 className="text-section-heading font-bold text-ink mb-1">Other Remedies</h2>
-                  <p className="text-sm text-ink-muted">Excellent alternatives if you need another option.</p>
+                  <h2 className="text-section-heading font-bold text-ink mb-1">Other Recommended Steps</h2>
+                  <p className="text-sm text-ink-muted">Other options you may want to consider.</p>
                 </div>
                 {allAlternatives.length > 5 && !showAllAlternatives && (
                   <button
@@ -517,10 +512,10 @@ export function Results() {
               <section className="rounded-3xl bg-gradient-card p-6 shadow-soft border border-primary/10">
                 <div className="flex items-center gap-2 mb-3">
                   <Heart className="w-5 h-5 text-primary" />
-                  <p className="text-lg font-semibold text-ink">Save this remedy</p>
+                  <p className="text-lg font-semibold text-ink">Save this step</p>
                 </div>
                 <p className="text-sm text-ink-muted leading-relaxed mb-4">
-                  Create a free account to track your recovery and build your personal remedy library.
+                  Create a free account to track your recovery and build your personal library of recommended steps.
                 </p>
                 <div className="space-y-2">
                   <Link

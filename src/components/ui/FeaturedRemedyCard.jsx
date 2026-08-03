@@ -94,11 +94,11 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
               <CategoryBadge category={remedy.category} firstOccurrence />
             </div>
 
-            <h3 className="text-[36px] leading-tight font-bold text-ink mb-3 line-clamp-2">{remedy.name}</h3>
-            <p className="text-ink-muted text-sm leading-relaxed line-clamp-3 mb-6">{remedy.shortDescription}</p>
+            <h3 className="text-[36px] leading-tight font-bold text-ink mb-3">{remedy.name}</h3>
+            <p className="text-ink-muted text-sm leading-relaxed mb-6">{remedy.shortDescription}</p>
 
             <div className="grid grid-cols-3 gap-6 w-full mb-6">
-              <MetadataCell icon={<Clock className="w-4 h-4 text-primary" />} label="Time to relief">
+              <MetadataCell icon={<Clock className="w-4 h-4 text-primary" />} label="When it may help">
                 {remedy.timeToEffect || 'Varies'}
               </MetadataCell>
               <MetadataCell icon={<span className="text-sm">🛡</span>} label="Safety">
@@ -115,14 +115,14 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
               to={`/remedy/${remedy.id}`}
               className="flex items-center justify-center w-[90%] h-14 rounded-2xl bg-primary text-white text-base font-semibold shadow-glow hover:bg-primary-dark transition-all hover:-translate-y-0.5 shrink-0"
             >
-              View Remedy
+              View Recommended Step
             </Link>
           </div>
 
           <div className="bg-mint/60 px-8 py-8 flex flex-col items-start">
             <div className="flex items-center justify-between w-full mb-4 shrink-0">
               <p className="text-[11px] font-bold uppercase tracking-wider text-ink-muted">
-                Why We Recommend This
+                Why This May Help
               </p>
               <div className="flex items-center gap-1">
                 <ScheduleQuickAdd remedy={remedy} />

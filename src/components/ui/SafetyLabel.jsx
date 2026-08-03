@@ -3,9 +3,9 @@ import { cn } from '../../utils/cn';
 
 function getSafetyLevel(score, hasConflicts) {
   if (hasConflicts) return { text: 'Not Recommended', color: 'bg-danger/10 text-danger', Icon: ShieldAlert };
-  if (score >= 85) return { text: 'Very Safe', color: 'bg-success/10 text-success', Icon: ShieldCheck };
-  if (score >= 60) return { text: 'Generally Safe', color: 'bg-success/10 text-success', Icon: ShieldCheck };
-  if (score >= 30) return { text: 'Use With Caution', color: 'bg-warning/10 text-warning', Icon: AlertTriangle };
+  if (score >= 85) return { text: 'Generally Well Tolerated', color: 'bg-success/10 text-success', Icon: ShieldCheck };
+  if (score >= 60) return { text: 'Usually Safe', color: 'bg-success/10 text-success', Icon: ShieldCheck };
+  if (score >= 30) return { text: 'Check With a Professional', color: 'bg-warning/10 text-warning', Icon: AlertTriangle };
   return { text: 'Not Recommended', color: 'bg-danger/10 text-danger', Icon: ShieldAlert };
 }
 

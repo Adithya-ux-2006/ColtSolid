@@ -39,7 +39,7 @@ export function WhyRecommended({ remedy, evidenceScore, safetyScore, className }
   return (
     <div className={cn('guidance-panel', className)}>
       <h3 className="text-sm font-bold uppercase tracking-wider text-ink-muted mb-3">
-        Why We Recommend This
+        Why This May Help
       </h3>
       <ul className="space-y-2.5">
         {reasons.map((reason, i) => (

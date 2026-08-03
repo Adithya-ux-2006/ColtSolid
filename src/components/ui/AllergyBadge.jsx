@@ -29,7 +29,7 @@ export function AllergyBadge({ isSafe, compact, className }) {
       className
     )}>
       {isSafe ? (
-        <><ShieldCheck className="w-4 h-4" /> Safe for you</>
+        <><ShieldCheck className="w-4 h-4" /> Generally safe</>
       ) : (
         <><AlertTriangle className="w-4 h-4" /> Allergy conflict detected</>
       )}

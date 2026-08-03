@@ -11,11 +11,11 @@ import { useFavoritesStore } from '../../store/favoritesStore';
 import { useAuthStore } from '../../store/authStore';
 
 function getSafetyText(score, hasConflicts) {
-  if (hasConflicts) return 'Not Safe';
-  if (score >= 85) return 'Very Safe';
-  if (score >= 60) return 'Safe';
-  if (score >= 30) return 'Caution';
-  return 'Not Safe';
+  if (hasConflicts) return 'Check first';
+  if (score >= 85) return 'Generally well tolerated';
+  if (score >= 60) return 'Usually safe';
+  if (score >= 30) return 'Check with a professional';
+  return 'Check first';
 }
 
 function getEvidenceText(score) {
@@ -85,8 +85,8 @@ export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetySco
               <RemedyImage category={remedy.category} size="card" alt={remedy.name} />
             </div>
             <div className="min-w-0">
-              <h3 className="font-bold text-ink text-base leading-snug line-clamp-1">{remedy.name}</h3>
-              <p className="text-xs text-ink-muted line-clamp-1 mt-0.5">{remedy.shortDescription}</p>
+              <h3 className="font-bold text-ink text-base leading-snug">{remedy.name}</h3>
+              <p className="text-xs text-ink-muted mt-0.5">{remedy.shortDescription}</p>
             </div>
           </div>
 
@@ -96,26 +96,26 @@ export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetySco
                 <Clock className="w-3 h-3 text-primary" />
                 <span className="text-xs font-semibold text-ink">{remedy.timeToEffect || 'Varies'}</span>
               </div>
-              <span className="text-[10px] text-ink-muted">Relief</span>
+              <span className="text-[10px] text-ink-muted">When it may help</span>
             </div>
             <div className="flex flex-col items-center text-center">
               <div className="flex items-center gap-1 mb-0.5">
                 <span className="text-xs font-semibold text-ink">{getSafetyText(safetyScore, !isSafe)}</span>
               </div>
-              <span className="text-[10px] text-ink-muted whitespace-nowrap">Safe for you</span>
+              <span className="text-[10px] text-ink-muted">Safety note</span>
             </div>
             <div className="flex flex-col items-center text-center">
               <div className="flex items-center gap-1 mb-0.5">
                 <span className="text-xs font-semibold text-ink">{getEvidenceText(evidenceScore)}</span>
               </div>
-              <span className="text-[10px] text-ink-muted">Evidence</span>
+              <span className="text-[10px] text-ink-muted">Supporting info</span>
             </div>
           </div>
 
           {reasons.length > 0 && (
             <div className="bg-surface/60 rounded-xl px-3 py-2.5 mb-4">
               <p className="text-[10px] font-bold uppercase tracking-wider text-ink-muted mb-1.5">
-                Why We Recommend This
+                Why This May Help
               </p>
               <ul className="space-y-1">
                 {reasons.map((reason) => (
@@ -133,7 +133,7 @@ export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetySco
               to={`/remedy/${remedy.id}`}
               className="flex items-center justify-center gap-2 w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-glow hover:bg-primary-dark transition-all hover:-translate-y-0.5"
             >
-              View Remedy
+              View Recommended Step
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

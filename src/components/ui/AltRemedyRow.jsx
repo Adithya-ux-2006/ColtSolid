@@ -35,8 +35,8 @@ export function AltRemedyRow({ remedy, evidenceScore, ageRange, showDivider = tr
 
         <div className="min-w-0 pr-4">
           <CategoryBadge category={remedy.category} className="scale-90 origin-left mb-1" />
-          <h4 className="font-semibold text-ink text-sm leading-snug truncate">{remedy.name}</h4>
-          <p className="text-xs text-ink-muted truncate mt-0.5">{remedy.shortDescription}</p>
+          <h4 className="font-semibold text-ink text-sm leading-snug">{remedy.name}</h4>
+          <p className="text-xs text-ink-muted mt-0.5">{remedy.shortDescription}</p>
         </div>
 
         <div className="flex items-center justify-center">
@@ -79,8 +79,8 @@ export function AltRemedyRow({ remedy, evidenceScore, ageRange, showDivider = tr
 
         <div className="flex-1 min-w-0">
           <CategoryBadge category={remedy.category} className="scale-90 origin-left mb-1" />
-          <h4 className="font-semibold text-ink text-sm leading-snug truncate">{remedy.name}</h4>
-          <p className="text-xs text-ink-muted truncate mt-0.5">{remedy.shortDescription}</p>
+          <h4 className="font-semibold text-ink text-sm leading-snug">{remedy.name}</h4>
+          <p className="text-xs text-ink-muted mt-0.5">{remedy.shortDescription}</p>
           <div className="flex items-center gap-2 mt-1.5">
             {remedy.timeToEffect && (
               <span className="flex items-center gap-1 text-xs text-ink-muted">
