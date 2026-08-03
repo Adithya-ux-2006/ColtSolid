@@ -16,6 +16,9 @@ dist-ssr
 # Playwright test results
 test-results/
 
+# Supabase temp files
+supabase/.temp/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
