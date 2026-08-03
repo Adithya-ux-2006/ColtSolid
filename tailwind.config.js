@@ -80,6 +80,9 @@ export default {
           DEFAULT: 'hsl(var(--evidence))',
           light: 'hsl(var(--evidence-soft))',
         },
+        kaggle: {
+          DEFAULT: '#20BEFF',
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

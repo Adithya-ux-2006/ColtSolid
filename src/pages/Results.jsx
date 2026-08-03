@@ -18,7 +18,6 @@ import { isRemedySafeForUser } from '../utils/guestProfile';
 import { getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptomSearch';
 import { resolveQuery } from '../utils/symptomEngine';
 import { fetchGeminiInterpretation } from '../utils/geminiInterpreter';
-import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
 import { AGE_RANGE_OPTIONS } from '../constants/onboarding';
 import { trackSearchEvent } from '../utils/analytics';
 
@@ -66,9 +65,20 @@ function LowConfidenceWarning() {
 function EmergencyBanner() {
   return (
     <div className="rounded-3xl border-2 border-danger/30 bg-danger/10 p-6">
-      <h2 className="text-xl font-bold text-danger mb-2">{EMERGENCY_MESSAGE}</h2>
-      <p className="text-danger font-medium mb-4">{EMERGENCY_ACTION}</p>
-      <p className="text-danger/80 text-sm">curA does not provide self-treatment guidance for potentially serious symptoms.</p>
+      <h2 className="text-xl font-bold text-danger mb-2">Get emergency help now</h2>
+      <p className="text-danger/90 font-medium mb-4">
+        Sudden difficulty breathing, chest pain, coughing up blood, fainting or severe weakness can be signs of a medical emergency. Call emergency services immediately.
+      </p>
+      <div className="flex flex-wrap gap-3">
+        <a
+          href="tel:112"
+          className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-danger text-white font-bold text-lg hover:bg-danger/90 transition-colors shadow-lg"
+        >
+          Call 112
+        </a>
+        <p className="text-danger/70 text-sm self-center">India's unified emergency number</p>
+      </div>
+      <p className="text-danger/70 text-sm mt-4">ClotSolid does not provide self-treatment guidance for potentially serious symptoms.</p>
     </div>
   );
 }
@@ -85,8 +95,9 @@ function EvidenceBanner() {
 function MedicalDisclaimer() {
   return (
     <p className="text-xs text-ink-muted leading-relaxed text-center">
-      curA provides general information and is not a substitute for professional medical advice.
-      Always consult a healthcare professional for personalised care.
+      ClotSolid provides general educational information and a basic symptom screening.
+      It cannot diagnose or rule out a blood clot. Only a qualified healthcare professional can assess your symptoms and arrange the correct tests.
+      Do not delay emergency care because of a result shown on this website.
     </p>
   );
 }

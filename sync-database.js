@@ -78,7 +78,7 @@ async function runMigration() {
     // ==============================================================
     console.log('\n3️⃣ Ensuring symptom_remedies table exists...');
     // Table creation is handled by migration, just verify
-    const { data: tableExists } = await supabase
+    const { error: _tableCheckError } = await supabase
       .from('symptom_remedies')
       .select('*', { count: 'exact', head: true });
     console.log('   ✅ Table verified');

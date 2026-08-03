@@ -1,4 +1,3 @@
-/* global process */
 import { applySecurity, buildResponse, getCORSHeaders } from './_middleware.js';
 
 const GEOAPIFY_BASE = 'https://api.geoapify.com/v2/places';

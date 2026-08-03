@@ -3,6 +3,24 @@
   "skills": {
     "paths": [".opencode/skills"]
   },
+  "provider": {
+    "omniroute": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "OmniRoute",
+      "options": {
+        "baseURL": "http://localhost:20128/v1",
+        "apiKey": "sk_omniroute"
+      },
+      "models": {
+        "auto/best-coding": { "name": "auto/best-coding" },
+        "auto/coding": { "name": "auto/coding" },
+        "auto/best-reasoning": { "name": "auto/best-reasoning" },
+        "auto/best-fast": { "name": "auto/best-fast" },
+        "aug/gemini-3.1-pro": { "name": "aug/gemini-3.1-pro" },
+        "aug/gemini-3.0-flash": { "name": "aug/gemini-3.0-flash" }
+      }
+    }
+  },
   "agent": {
     "council-design-reviewer": {
       "model": "anthropic/claude-sonnet-4-6",

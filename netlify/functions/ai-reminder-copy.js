@@ -1,4 +1,3 @@
-/* global process */
 import { applySecurity, buildResponse, sanitizeInput, getCORSHeaders } from './_middleware.js';
 
 const SYSTEM_PROMPT = `You are a friendly health reminder assistant for curA, an evidence-based remedy app.

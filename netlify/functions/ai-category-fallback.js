@@ -1,4 +1,3 @@
-/* global process */
 import { parseBody } from './_parseBody.js';
 import { applySecurity, buildResponse, sanitizeInput, isValidQuery, getCORSHeaders } from './_middleware.js';
 

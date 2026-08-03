@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { ThemeContext } from './themeContext';
 
-const ThemeContext = createContext(undefined);
 const STORAGE_KEY = 'cura-theme';
 
 function getSystemPreference() {
@@ -48,7 +48,9 @@ export function ThemeProvider({ children }) {
     setThemeState(next);
     try {
       localStorage.setItem(STORAGE_KEY, next);
-    } catch {}
+    } catch {
+      // localStorage may be unavailable in private browsing
+    }
   }, []);
 
   return (
@@ -56,10 +58,4 @@ export function ThemeProvider({ children }) {
       {children}
     </ThemeContext.Provider>
   );
-}
-
-export function useTheme() {
-  const ctx = useContext(ThemeContext);
-  if (!ctx) throw new Error('useTheme must be used within ThemeProvider');
-  return ctx;
 }

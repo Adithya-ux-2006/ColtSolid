@@ -10,7 +10,6 @@ import { PageWrapper } from '../components/layout';
 import { FAQAccordion } from '../components/ui/FAQAccordion';
 import { useAuthStore } from '../store/authStore';
 import { useFavoritesStore } from '../store/favoritesStore';
-import { useRemedyScheduleStore } from '../store/remedyScheduleStore';
 import { useGuestProfileStore } from '../store/guestProfileStore';
 import { getInitials } from '../utils/mappers';
 import { ALLERGIES, CONDITIONS, FAQ_ITEMS, GENDER_OPTIONS, AGE_RANGE_OPTIONS } from '../constants/onboarding';
@@ -137,12 +136,14 @@ export function Profile() {
   const logout = useAuthStore((state) => state.logout);
   const updateUser = useAuthStore((state) => state.updateUser);
   const favorites = useFavoritesStore((state) => state.favorites);
-  const schedules = useRemedyScheduleStore((state) => state.schedules);
   const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
   const guestConditions = useGuestProfileStore((state) => state.common_conditions);
   const guestAgeRange = useGuestProfileStore((state) => state.age_range);
   const updateGuestProfile = useGuestProfileStore((state) => state.updateProfile);
   const navigate = useNavigate();
+
+  // Stats computation (must be before any early returns)
+  const avgReliefTime = useMemo(() => computeAvgReliefTime(favorites), [favorites]);
 
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingHealth, setIsEditingHealth] = useState(false);
@@ -328,13 +329,13 @@ export function Profile() {
               className="w-full p-5 flex justify-between items-center text-left"
               onClick={() => setExpandedSection(expandedSection === 'about' ? null : 'about')}
             >
-              <span className="font-bold text-lg text-ink">About curA</span>
+              <span className="font-bold text-lg text-ink">About ClotSolid</span>
               <ChevronDown className={`w-5 h-5 text-ink-muted transition-transform ${expandedSection === 'about' ? 'rotate-180' : ''}`} />
             </button>
             {expandedSection === 'about' && (
               <div className="p-5 pt-0 text-sm text-ink-muted leading-relaxed border-t border-border">
                 <p className="mb-4">
-                  curA is a health platform designed to provide evidence-backed remedies for common ailments.
+                  ClotSolid is a health platform designed to provide evidence-backed information about blood clots and related conditions.
                   Always consult a certified medical professional for serious health concerns.
                 </p>
                 <FAQAccordion items={FAQ_ITEMS.slice(0, 3)} />
@@ -430,8 +431,6 @@ export function Profile() {
     if (r._evidenceScore != null) return r._evidenceScore >= 7;
     return r.rating >= 4.5;
   }).length;
-
-  const avgReliefTime = useMemo(() => computeAvgReliefTime(favorites), [favorites]);
 
   return (
     <PageWrapper className="min-h-screen pb-28 md:pb-12">
@@ -675,20 +674,20 @@ export function Profile() {
           />
         </section>
 
-        {/* ── About curA Accordion ── */}
+        {/* ── About ClotSolid Accordion ── */}
         <section className="bg-card rounded-2xl shadow-sm border border-border/60 overflow-hidden">
           <button
             aria-expanded={expandedSection === 'about'}
             className="w-full p-5 flex justify-between items-center text-left"
             onClick={() => setExpandedSection(expandedSection === 'about' ? null : 'about')}
           >
-            <span className="font-bold text-lg text-ink">About curA</span>
+            <span className="font-bold text-lg text-ink">About ClotSolid</span>
             <ChevronDown className={`w-5 h-5 text-ink-muted transition-transform ${expandedSection === 'about' ? 'rotate-180' : ''}`} />
           </button>
           {expandedSection === 'about' && (
             <div className="p-5 pt-0 text-sm text-ink-muted leading-relaxed border-t border-border/60">
               <p className="mb-4">
-                curA is a health platform designed to provide evidence-backed remedies for common ailments.
+                ClotSolid is a health platform designed to provide evidence-backed information about blood clots and related conditions.
                 Your profile, favorites, and remedy schedules are synced through Supabase. Always consult a certified medical professional for serious health concerns.
               </p>
               <FAQAccordion items={FAQ_ITEMS.slice(0, 3)} />

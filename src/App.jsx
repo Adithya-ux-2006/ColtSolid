@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { Navbar, BottomNav, AppDock, AdminGuard } from './components/layout';
-import { ThemeProvider } from './context/ThemeContext';
+import { ThemeProvider } from './context/ThemeProvider';
 import { needsOnboardingProfile, useAuthStore } from './store/authStore';
 import { useFavoritesStore } from './store/favoritesStore';
 import { useRemedyScheduleStore } from './store/remedyScheduleStore';
@@ -152,7 +152,7 @@ function App() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-ink-muted font-medium">Loading curA...</p>
+          <p className="text-sm text-ink-muted font-medium">Loading ClotSolid...</p>
         </div>
       </div>
     );

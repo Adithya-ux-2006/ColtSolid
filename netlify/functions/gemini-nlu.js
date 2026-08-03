@@ -1,4 +1,3 @@
-/* global process */
 import { GoogleGenAI } from '@google/genai';
 import { parseBody } from './_parseBody.js';
 import { applySecurity, buildResponse, sanitizeInput, isValidQuery, getCORSHeaders } from './_middleware.js';
@@ -127,7 +126,7 @@ async function interpretWithGemini(query, symptomCatalog, apiKey) {
     try {
       const result = await callGemini(prompt, apiKey);
       if (validateInterpretation(result)) return result;
-    } catch (err) {
+    } catch {
       if (attempt < MAX_RETRIES) {
         await new Promise(r => setTimeout(r, 300));
       }
@@ -191,7 +190,7 @@ export async function handler(event) {
     setCacheResult(cacheKey, interpretation);
 
     return buildResponse(200, { interpretation, source: 'gemini' });
-  } catch (err) {
+  } catch {
     return buildResponse(200, {
       interpretation: null,
       source: 'fallback',

@@ -1,0 +1,4420 @@
+{
+  "datasets": {
+    "shivanshmittal22/home-remedies": "C:\\Users\\Adithya\\.cache\\kagglehub\\datasets\\shivanshmittal22\\home-remedies\\versions\\1",
+    "devikshah/health-symptoms-and-disease-prediction-dataset": "C:\\Users\\Adithya\\.cache\\kagglehub\\datasets\\devikshah\\health-symptoms-and-disease-prediction-dataset\\versions\\1",
+    "dhivyeshrk/diseases-and-symptoms-dataset": "C:\\Users\\Adithya\\.cache\\kagglehub\\datasets\\dhivyeshrk\\diseases-and-symptoms-dataset\\versions\\1"
+  },
+  "counts": {
+    "datasetTerms": 477,
+    "exactMatches": 50,
+    "phrasingGaps": 71,
+    "genuineGapsForReview": 356
+  },
+  "exactMatches": [
+    "abdominal pain",
+    "allergic reaction",
+    "ankle pain",
+    "anxiety",
+    "back pain",
+    "bruising",
+    "chills",
+    "congestion",
+    "constipation",
+    "cough",
+    "dehydration",
+    "depression",
+    "diarrhea",
+    "dizziness",
+    "ear pain",
+    "elbow pain",
+    "eye strain",
+    "fatigue",
+    "fever",
+    "frequent urination",
+    "gum pain",
+    "headache",
+    "heartburn",
+    "hip pain",
+    "indigestion",
+    "insomnia",
+    "jaw pain",
+    "joint pain",
+    "knee pain",
+    "leg pain",
+    "loss of appetite",
+    "muscle pain",
+    "nasal congestion",
+    "nausea",
+    "neck pain",
+    "palpitations",
+    "pelvic pain",
+    "poor circulation",
+    "shoulder pain",
+    "sinus pressure",
+    "skin irritation",
+    "skin rash",
+    "sore throat",
+    "swollen lymph nodes",
+    "throat irritation",
+    "toothache",
+    "vaginal dryness",
+    "vomiting",
+    "weakness",
+    "wrist pain"
+  ],
+  "phrasingGaps": [
+    {
+      "datasetTerm": "ankle weakness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "weakness",
+        "score": 0.727,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "apnea",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "anemia",
+        "score": 0.727,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "arm pain",
+      "bestCatalogMatch": {
+        "symptomId": "ear_pain",
+        "term": "ear pain",
+        "score": 0.875,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "arm weakness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "weakness",
+        "score": 0.8,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "back weakness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "weakness",
+        "score": 0.762,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "belly pain",
+      "bestCatalogMatch": {
+        "symptomId": "eye_pain",
+        "term": "eye pain",
+        "score": 0.778,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "burning abdominal pain",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "abdominal pain",
+        "score": 0.778,
+        "tokenOverlap": 0.667
+      }
+    },
+    {
+      "datasetTerm": "chest pain",
+      "bestCatalogMatch": {
+        "symptomId": "breast_pain",
+        "term": "Breast Pain",
+        "score": 0.762,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "diarrhoea",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "diarrhea",
+        "score": 0.941,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "difficulty breathing",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "breathing difficulty",
+        "score": 1.0,
+        "tokenOverlap": 1.0
+      }
+    },
+    {
+      "datasetTerm": "elbow weakness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "weakness",
+        "score": 0.727,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "eye deviation",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "eye irritation",
+        "score": 0.741,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "eye redness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "eye dryness",
+        "score": 0.818,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "facial pain",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "abdominal pain",
+        "score": 0.72,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "feeling cold",
+      "bestCatalogMatch": {
+        "symptomId": "cold",
+        "term": "Cold",
+        "score": 0.5,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "focal weakness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "weakness",
+        "score": 0.727,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "foot or toe pain",
+      "bestCatalogMatch": {
+        "symptomId": "foot_pain",
+        "term": "Foot Pain",
+        "score": 0.72,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "frequent menstruation",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "frequent_urination",
+        "score": 0.769,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "frontal headache",
+      "bestCatalogMatch": {
+        "symptomId": "headache",
+        "term": "Headache",
+        "score": 0.667,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "groin pain",
+      "bestCatalogMatch": {
+        "symptomId": "joint_pain",
+        "term": "joint pain",
+        "score": 0.8,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "hand or finger pain",
+      "bestCatalogMatch": {
+        "symptomId": "hand_pain",
+        "term": "Hand Pain",
+        "score": 0.643,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "heavy menstrual flow",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "heavy menstruation",
+        "score": 0.789,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "high fever",
+      "bestCatalogMatch": {
+        "symptomId": "fever",
+        "term": "fever",
+        "score": 0.667,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "hip joint pain",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "joint_pain",
+        "score": 0.833,
+        "tokenOverlap": 0.667
+      }
+    },
+    {
+      "datasetTerm": "hip weakness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "weakness",
+        "score": 0.8,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "hot flashes",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "hot flushes",
+        "score": 0.909,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "incontinence of stool",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "incontinence",
+        "score": 0.727,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "infrequent menstruation",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "irregular menstruation",
+        "score": 0.756,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "itching",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "skin itching",
+        "score": 0.737,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "itching of skin",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "skin itching",
+        "score": 0.667,
+        "tokenOverlap": 0.667
+      }
+    },
+    {
+      "datasetTerm": "knee weakness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "weakness",
+        "score": 0.762,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "leg weakness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "weakness",
+        "score": 0.8,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "loss of balance",
+      "bestCatalogMatch": {
+        "symptomId": "loss_of_appetite",
+        "term": "Loss of Appetite",
+        "score": 0.645,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "loss of sensation",
+      "bestCatalogMatch": {
+        "symptomId": "loss_of_appetite",
+        "term": "loss of appetite",
+        "score": 0.667,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "loss of smell",
+      "bestCatalogMatch": {
+        "symptomId": "loss_of_appetite",
+        "term": "loss of appetite",
+        "score": 0.621,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "low back pain",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "lower back pain",
+        "score": 0.929,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "lower abdominal pain",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "abdominal pain",
+        "score": 0.824,
+        "tokenOverlap": 0.667
+      }
+    },
+    {
+      "datasetTerm": "lower body pain",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "lower back pain",
+        "score": 0.8,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "malaise",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "general malaise",
+        "score": 0.636,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "mild fever",
+      "bestCatalogMatch": {
+        "symptomId": "fever",
+        "term": "fever",
+        "score": 0.667,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "mouth pain",
+      "bestCatalogMatch": {
+        "symptomId": "foot_pain",
+        "term": "Foot Pain",
+        "score": 0.737,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "muscle wasting",
+      "bestCatalogMatch": {
+        "symptomId": "muscle_pain",
+        "term": "Muscle Pain",
+        "score": 0.8,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "muscle weakness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "muscle soreness",
+        "score": 0.8,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "neck stiffness or tightness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "neck stiffness",
+        "score": 0.683,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "neck weakness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "weakness",
+        "score": 0.762,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "pain during intercourse",
+      "bestCatalogMatch": {
+        "symptomId": "painful_intercourse",
+        "term": "painful intercourse",
+        "score": 0.81,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "pain in eye",
+      "bestCatalogMatch": {
+        "symptomId": "eye_pain",
+        "term": "eye pain",
+        "score": 0.667,
+        "tokenOverlap": 0.667
+      }
+    },
+    {
+      "datasetTerm": "painful menstruation",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "irregular menstruation",
+        "score": 0.762,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "painful sinuses",
+      "bestCatalogMatch": {
+        "symptomId": "painful_intercourse",
+        "term": "painful intercourse",
+        "score": 0.765,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "painful walking",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "painful swallowing",
+        "score": 0.848,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "penis pain",
+      "bestCatalogMatch": {
+        "symptomId": "pelvic_pain",
+        "term": "pelvic pain",
+        "score": 0.762,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "restlessness",
+      "bestCatalogMatch": {
+        "symptomId": "restless_leg",
+        "term": "Restless Legs",
+        "score": 0.8,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "rib pain",
+      "bestCatalogMatch": {
+        "symptomId": "wrist_pain",
+        "term": "wrist pain",
+        "score": 0.778,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "sharp abdominal pain",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "abdominal pain",
+        "score": 0.824,
+        "tokenOverlap": 0.667
+      }
+    },
+    {
+      "datasetTerm": "shoulder swelling",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "shoulder_pain",
+        "score": 0.733,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "shoulder weakness",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "shoulder_pain",
+        "score": 0.733,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "side pain",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "shoulder_pain",
+        "score": 0.727,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "sinus congestion",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "congestion",
+        "score": 0.769,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "skin oiliness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "skin dryness",
+        "score": 0.72,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "skin pain",
+      "bestCatalogMatch": {
+        "symptomId": "knee_pain",
+        "term": "Knee Pain",
+        "score": 0.778,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "smoking problems",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "vision problems",
+        "score": 0.774,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "stomach pain",
+      "bestCatalogMatch": {
+        "symptomId": "constipation",
+        "term": "stomach_ache",
+        "score": 0.75,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "sweating",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "night sweating",
+        "score": 0.727,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "swelled lymph nodes",
+      "bestCatalogMatch": {
+        "symptomId": "swollen_lymph_nodes",
+        "term": "Swollen Lymph Nodes",
+        "score": 0.895,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "tongue pain",
+      "bestCatalogMatch": {
+        "symptomId": "gum_pain",
+        "term": "gum pain",
+        "score": 0.737,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "upper abdominal pain",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "abdominal pain",
+        "score": 0.824,
+        "tokenOverlap": 0.667
+      }
+    },
+    {
+      "datasetTerm": "vaginal itching",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "skin itching",
+        "score": 0.741,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "vaginal pain",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "abdominal pain",
+        "score": 0.769,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "vaginal redness",
+      "bestCatalogMatch": {
+        "symptomId": "vaginal_dryness",
+        "term": "Vaginal Dryness",
+        "score": 0.867,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "vomiting blood",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "vomiting",
+        "score": 0.727,
+        "tokenOverlap": 0.5
+      }
+    },
+    {
+      "datasetTerm": "wrist weakness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "weakness",
+        "score": 0.727,
+        "tokenOverlap": 0.5
+      }
+    }
+  ],
+  "genuineGapsForReview": [
+    {
+      "datasetTerm": "abdominal distention",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "abdominal pain",
+        "score": 0.706,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "abnormal appearing skin",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "abdominal bloating",
+        "score": 0.488,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "abnormal appearing tongue",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "abdominal bloating",
+        "score": 0.465,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "abnormal breathing sounds",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "abdominal bloating",
+        "score": 0.558,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "abnormal involuntary movements",
+      "bestCatalogMatch": {
+        "symptomId": "palpitations",
+        "term": "Heart Palpitations",
+        "score": 0.417,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "abnormal menstruation",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "heavy menstruation",
+        "score": 0.718,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "abnormal movement of eyelid",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "abdominal bloating",
+        "score": 0.356,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "absence of menstruation",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "heavy menstruation",
+        "score": 0.683,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "abusing alcohol",
+      "bestCatalogMatch": {
+        "symptomId": "bruising",
+        "term": "Bruising",
+        "score": 0.522,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "ache all over",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "hangover",
+        "score": 0.476,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "acidity",
+      "bestCatalogMatch": {
+        "symptomId": "tremor",
+        "term": "anxiety",
+        "score": 0.571,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "acne or pimples",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "canker_sore",
+        "score": 0.538,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "acute liver failure",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "mental fatigue",
+        "score": 0.485,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "altered sensorium",
+      "bestCatalogMatch": {
+        "symptomId": "canker_sore",
+        "term": "Canker Sore",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "ankle stiffness or tightness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "neck stiffness",
+        "score": 0.571,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "ankle swelling",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "painful swallowing",
+        "score": 0.688,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "antisocial behavior",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "dental pain",
+        "score": 0.467,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "anxiety and nervousness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "eye dryness",
+        "score": 0.529,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "arm cramps or spasms",
+      "bestCatalogMatch": {
+        "symptomId": "period_cramps",
+        "term": "Period Cramps",
+        "score": 0.485,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "arm lump or mass",
+      "bestCatalogMatch": {
+        "symptomId": "hair_loss",
+        "term": "Hair Loss",
+        "score": 0.56,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "arm stiffness or tightness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "neck stiffness",
+        "score": 0.5,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "arm swelling",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "painful swallowing",
+        "score": 0.6,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "back cramps or spasms",
+      "bestCatalogMatch": {
+        "symptomId": "back_pain",
+        "term": "back pain",
+        "score": 0.467,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "back mass or lump",
+      "bestCatalogMatch": {
+        "symptomId": "back_pain",
+        "term": "back pain",
+        "score": 0.462,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "back stiffness or tightness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "neck stiffness",
+        "score": 0.585,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "back swelling",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "back_pain",
+        "score": 0.636,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "bedwetting",
+      "bestCatalogMatch": {
+        "symptomId": "bloating",
+        "term": "bloating",
+        "score": 0.556,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "blackheads",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "back_pain",
+        "score": 0.526,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "bladder discomfort",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "chest discomfort",
+        "score": 0.706,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "bladder mass",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "lightheadedness",
+        "score": 0.519,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "bleeding from ear",
+      "bestCatalogMatch": {
+        "symptomId": "brain_fog",
+        "term": "brain fog",
+        "score": 0.462,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "bleeding from eye",
+      "bestCatalogMatch": {
+        "symptomId": "brain_fog",
+        "term": "brain fog",
+        "score": 0.462,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "bleeding gums",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "bloating",
+        "score": 0.476,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "bleeding in mouth",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "dry_mouth",
+        "score": 0.538,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "bleeding or discharge from nipple",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "sleep disruption",
+        "score": 0.408,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "blindness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "skin dryness",
+        "score": 0.667,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "blister",
+      "bestCatalogMatch": {
+        "symptomId": "stress",
+        "term": "stress",
+        "score": 0.462,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "blood clots during menstrual periods",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "menstrual cramps",
+        "score": 0.462,
+        "tokenOverlap": 0.167
+      }
+    },
+    {
+      "datasetTerm": "blood in sputum",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "cold symptoms",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "blood in stool",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "body pain",
+        "score": 0.522,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "blood in urine",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "body pain",
+        "score": 0.522,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "bloody stool",
+      "bestCatalogMatch": {
+        "symptomId": "kidney_stone",
+        "term": "kidney stone",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "blurred and distorted vision",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "irregular menstruation",
+        "score": 0.48,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "bones are painful",
+      "bestCatalogMatch": {
+        "symptomId": "ear_pain",
+        "term": "ear pain",
+        "score": 0.64,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "bowlegged or knock kneed",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "lower back pain",
+        "score": 0.462,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "breathing fast",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "breathing difficulty",
+        "score": 0.706,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "breathlessness",
+      "bestCatalogMatch": {
+        "symptomId": "restless_leg",
+        "term": "Restless Legs",
+        "score": 0.667,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "brittle nails",
+      "bestCatalogMatch": {
+        "symptomId": "restless_leg",
+        "term": "Restless Legs",
+        "score": 0.538,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "bumps on penis",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "vision problems",
+        "score": 0.483,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "burning chest pain",
+      "bestCatalogMatch": {
+        "symptomId": "breast_pain",
+        "term": "Breast Pain",
+        "score": 0.69,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "burning micturition",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "skin irritation",
+        "score": 0.588,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "changes in stool appearance",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "canker_sore",
+        "score": 0.421,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "chest tightness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "chest congestion",
+        "score": 0.581,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "cloudy eye",
+      "bestCatalogMatch": {
+        "symptomId": "fatigue",
+        "term": "low_energy",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "cold hands and feets",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "cold symptoms",
+        "score": 0.485,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "coma",
+      "bestCatalogMatch": {
+        "symptomId": "eczema",
+        "term": "Eczema",
+        "score": 0.6,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "congestion in chest",
+      "bestCatalogMatch": {
+        "symptomId": "congestion",
+        "term": "congestion",
+        "score": 0.69,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "continuous feel of urine",
+      "bestCatalogMatch": {
+        "symptomId": "sinus_pressure",
+        "term": "sinus pressure",
+        "score": 0.474,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "continuous sneezing",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "incontinence",
+        "score": 0.516,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "coryza",
+      "bestCatalogMatch": {
+        "symptomId": "eczema",
+        "term": "Eczema",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "coughing up sputum",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "cold symptoms",
+        "score": 0.452,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "cramps",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "cramping",
+        "score": 0.714,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "cramps and spasms",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "cramping",
+        "score": 0.48,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "cross eyed",
+      "bestCatalogMatch": {
+        "symptomId": "rosacea",
+        "term": "Rosacea",
+        "score": 0.471,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "dark urine",
+      "bestCatalogMatch": {
+        "symptomId": "ear_pain",
+        "term": "ear pain",
+        "score": 0.556,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "decreased appetite",
+      "bestCatalogMatch": {
+        "symptomId": "loss_of_appetite",
+        "term": "Loss of Appetite",
+        "score": 0.588,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "decreased heart rate",
+      "bestCatalogMatch": {
+        "symptomId": "sore_throat",
+        "term": "Sore Throat",
+        "score": 0.452,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "delusions or hallucinations",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "frequent_urination",
+        "score": 0.533,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "depressive or psychotic symptoms",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "cold symptoms",
+        "score": 0.444,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "diaper rash",
+      "bestCatalogMatch": {
+        "symptomId": "skin_rash",
+        "term": "skin rash",
+        "score": 0.6,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "difficulty eating",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "night sweating",
+        "score": 0.581,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "difficulty in swallowing",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "painful swallowing",
+        "score": 0.714,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "difficulty speaking",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "night sweating",
+        "score": 0.545,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "diminished hearing",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "missed period",
+        "score": 0.581,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "diminished vision",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "missed period",
+        "score": 0.533,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "discharge in stools",
+      "bestCatalogMatch": {
+        "symptomId": "nausea",
+        "term": "indigestion",
+        "score": 0.467,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "dischromic patches",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "chronic fatigue",
+        "score": 0.606,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "diseases",
+      "bestCatalogMatch": {
+        "symptomId": "diarrhea",
+        "term": "diarrhea",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "distention of abdomen",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "vision problems",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "disturbance of memory",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "tremor",
+        "score": 0.444,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "disturbance of smell or taste",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "digestive upset",
+        "score": 0.409,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "double vision",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "sleep disruption",
+        "score": 0.552,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "drainage in throat",
+      "bestCatalogMatch": {
+        "symptomId": "sore_throat",
+        "term": "Sore Throat",
+        "score": 0.621,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "drug abuse",
+      "bestCatalogMatch": {
+        "symptomId": "nausea",
+        "term": "Nausea",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "dry lips",
+      "bestCatalogMatch": {
+        "symptomId": "dry_skin",
+        "term": "dry skin",
+        "score": 0.625,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "dry or flaky scalp",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "lower back pain",
+        "score": 0.424,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "drying and tingling lips",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "abdominal bloating",
+        "score": 0.429,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "elbow cramps or spasms",
+      "bestCatalogMatch": {
+        "symptomId": "cramping",
+        "term": "period_cramps",
+        "score": 0.514,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "elbow lump or mass",
+      "bestCatalogMatch": {
+        "symptomId": "elbow_pain",
+        "term": "elbow pain",
+        "score": 0.571,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "elbow stiffness or tightness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "neck stiffness",
+        "score": 0.524,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "elbow swelling",
+      "bestCatalogMatch": {
+        "symptomId": "elbow_pain",
+        "term": "Elbow Pain",
+        "score": 0.667,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "emotional symptoms",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "cold symptoms",
+        "score": 0.71,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "enlarged thyroid",
+      "bestCatalogMatch": {
+        "symptomId": "arthritis",
+        "term": "arthritis",
+        "score": 0.48,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "excessive anger",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "depression",
+        "score": 0.48,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "excessive appetite",
+      "bestCatalogMatch": {
+        "symptomId": "loss_of_appetite",
+        "term": "Loss of Appetite",
+        "score": 0.647,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "excessive growth",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "depression",
+        "score": 0.462,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "excessive hunger",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "digestive upset",
+        "score": 0.516,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "excessive urination at night",
+      "bestCatalogMatch": {
+        "symptomId": "frequent_urination",
+        "term": "frequent urination",
+        "score": 0.522,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "extra marital contacts",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "throat irritation",
+        "score": 0.513,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "eye burns or stings",
+      "bestCatalogMatch": {
+        "symptomId": "eye_strain",
+        "term": "eye strain",
+        "score": 0.552,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "eye moves abnormally",
+      "bestCatalogMatch": {
+        "symptomId": "eye_strain",
+        "term": "eye strain",
+        "score": 0.467,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "eyelid lesion or rash",
+      "bestCatalogMatch": {
+        "symptomId": "skin_rash",
+        "term": "skin rash",
+        "score": 0.467,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "eyelid retracted",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "eye_strain",
+        "score": 0.538,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "eyelid swelling",
+      "bestCatalogMatch": {
+        "symptomId": "eye_strain",
+        "term": "eye strain",
+        "score": 0.56,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "fainting",
+      "bestCatalogMatch": {
+        "symptomId": "burnout",
+        "term": "fatigue",
+        "score": 0.667,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "family history",
+      "bestCatalogMatch": {
+        "symptomId": "kidney_stone",
+        "term": "kidney stone",
+        "score": 0.462,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "fast heart rate",
+      "bestCatalogMatch": {
+        "symptomId": "heartburn",
+        "term": "heartburn",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "fears and phobias",
+      "bestCatalogMatch": {
+        "symptomId": "ear_pain",
+        "term": "ear pain",
+        "score": 0.48,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "feeling hot",
+      "bestCatalogMatch": {
+        "symptomId": "sore_throat",
+        "term": "Sore Throat",
+        "score": 0.455,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "feeling hot and cold",
+      "bestCatalogMatch": {
+        "symptomId": "foot_pain",
+        "term": "Foot Pain",
+        "score": 0.414,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "feeling ill",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "breathing difficulty",
+        "score": 0.452,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "feet turned in",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "frequent_urination",
+        "score": 0.562,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "flatulence",
+      "bestCatalogMatch": {
+        "symptomId": "weakness",
+        "term": "fatigue",
+        "score": 0.588,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "flu like syndrome",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "flu symptoms",
+        "score": 0.552,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "fluid in ear",
+      "bestCatalogMatch": {
+        "symptomId": "painful_intercourse",
+        "term": "painful intercourse",
+        "score": 0.452,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "fluid overload",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "missed period",
+        "score": 0.519,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "fluid overload 1",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "missed period",
+        "score": 0.483,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "fluid retention",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "allergic_reaction",
+        "score": 0.562,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "flushing",
+      "bestCatalogMatch": {
+        "symptomId": "bruising",
+        "term": "Bruising",
+        "score": 0.625,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "foot or toe swelling",
+      "bestCatalogMatch": {
+        "symptomId": "foot_pain",
+        "term": "Foot Pain",
+        "score": 0.483,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "foot or toe weakness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "weakness",
+        "score": 0.571,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "foreign body sensation in eye",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "erectile dysfunction",
+        "score": 0.49,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "foul smell of urine",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "painful swallowing",
+        "score": 0.541,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "groin mass",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "psoriasis",
+        "score": 0.526,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "hand or finger swelling",
+      "bestCatalogMatch": {
+        "symptomId": "nausea",
+        "term": "indigestion",
+        "score": 0.471,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "hand or finger weakness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "weakness",
+        "score": 0.516,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "health issue",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "head pressure",
+        "score": 0.64,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "hemoptysis",
+      "bestCatalogMatch": {
+        "symptomId": "endometriosis",
+        "term": "Endometriosis",
+        "score": 0.522,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "hesitancy",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "tension",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "hip lump or mass",
+      "bestCatalogMatch": {
+        "symptomId": "hair_loss",
+        "term": "Hair Loss",
+        "score": 0.56,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "hip stiffness or tightness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "neck stiffness",
+        "score": 0.5,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "hip swelling",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "night sweating",
+        "score": 0.615,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "history of alcohol consumption",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "nasal congestion",
+        "score": 0.522,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "hoarse voice",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "prostate_issues",
+        "score": 0.444,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "home remedy",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "head pressure",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "hostile behavior",
+      "bestCatalogMatch": {
+        "symptomId": "constipation",
+        "term": "Constipation",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "hurts to breath",
+      "bestCatalogMatch": {
+        "symptomId": "bad_breath",
+        "term": "Bad Breath",
+        "score": 0.56,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "hysterical behavior",
+      "bestCatalogMatch": {
+        "symptomId": "testicular_pain",
+        "term": "Testicular Pain",
+        "score": 0.471,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "impotence",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "incontinence",
+        "score": 0.667,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "increased appetite",
+      "bestCatalogMatch": {
+        "symptomId": "loss_of_appetite",
+        "term": "Loss of Appetite",
+        "score": 0.588,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "increased heart rate",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "insect_bite",
+        "score": 0.516,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "infant feeding problem",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "vision problems",
+        "score": 0.541,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "infant spitting up",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "skin itching",
+        "score": 0.533,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "infertility",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "insect_bite",
+        "score": 0.545,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "inflammatory nails",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "urinary pain",
+        "score": 0.533,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "intermenstrual bleeding",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "irregular menstruation",
+        "score": 0.578,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "internal itching",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "skin itching",
+        "score": 0.714,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "involuntary urination",
+      "bestCatalogMatch": {
+        "symptomId": "frequent_urination",
+        "term": "frequent urination",
+        "score": 0.667,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "irregular appearing nails",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "irregular menstruation",
+        "score": 0.553,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "irregular appearing scalp",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "irregular menstruation",
+        "score": 0.553,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "irregular belly button",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "irregular menstruation",
+        "score": 0.682,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "irregular heartbeat",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "irregular menstruation",
+        "score": 0.683,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "irregular sugar level",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "irregular menstruation",
+        "score": 0.605,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "irritability",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "low vitality",
+        "score": 0.583,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "irritable infant",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "eye irritation",
+        "score": 0.533,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "irritation in anus",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "eye irritation",
+        "score": 0.625,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "itchiness of eye",
+      "bestCatalogMatch": {
+        "symptomId": "loss_of_appetite",
+        "term": "loss of appetite",
+        "score": 0.5,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "itching of scrotum",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "breathing difficulty",
+        "score": 0.474,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "itching of the anus",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "lightheadedness",
+        "score": 0.471,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "itchy ear s",
+      "bestCatalogMatch": {
+        "symptomId": "night_sweats",
+        "term": "night sweats",
+        "score": 0.522,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "itchy eyelid",
+      "bestCatalogMatch": {
+        "symptomId": "constipation",
+        "term": "stomach_ache",
+        "score": 0.417,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "itchy scalp",
+      "bestCatalogMatch": {
+        "symptomId": "constipation",
+        "term": "stomach_ache",
+        "score": 0.435,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "jaundice",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "panic",
+        "score": 0.615,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "jaw swelling",
+      "bestCatalogMatch": {
+        "symptomId": "tmj_pain",
+        "term": "Jaw Pain",
+        "score": 0.6,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "joint stiffness or tightness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "neck stiffness",
+        "score": 0.524,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "joint swelling",
+      "bestCatalogMatch": {
+        "symptomId": "joint_pain",
+        "term": "joint pain",
+        "score": 0.667,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "kidney mass",
+      "bestCatalogMatch": {
+        "symptomId": "kidney_stone",
+        "term": "kidney stone",
+        "score": 0.696,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "knee cramps or spasms",
+      "bestCatalogMatch": {
+        "symptomId": "period_cramps",
+        "term": "Period Cramps",
+        "score": 0.471,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "knee lump or mass",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "knee_pain",
+        "score": 0.538,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "knee stiffness or tightness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "neck stiffness",
+        "score": 0.585,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "knee swelling",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "knee_pain",
+        "score": 0.636,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "lack of concentration",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "concentration difficulty",
+        "score": 0.578,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "lack of growth",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "cough",
+        "score": 0.421,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "lacrimation",
+      "bestCatalogMatch": {
+        "symptomId": "constipation",
+        "term": "Constipation",
+        "score": 0.609,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "leg cramps or spasms",
+      "bestCatalogMatch": {
+        "symptomId": "period_cramps",
+        "term": "Period Cramps",
+        "score": 0.485,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "leg lump or mass",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "swollen_lymph_nodes",
+        "score": 0.514,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "leg stiffness or tightness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "neck stiffness",
+        "score": 0.55,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "leg swelling",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "night sweating",
+        "score": 0.615,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "lethargy",
+      "bestCatalogMatch": {
+        "symptomId": "fatigue",
+        "term": "low_energy",
+        "score": 0.556,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "lip sore",
+      "bestCatalogMatch": {
+        "symptomId": "cold_sore",
+        "term": "cold sore",
+        "score": 0.706,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "lip swelling",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "night sweating",
+        "score": 0.615,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "long menstrual periods",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "menstrual cramps",
+        "score": 0.632,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "loss of sex drive",
+      "bestCatalogMatch": {
+        "symptomId": "loss_of_appetite",
+        "term": "loss of appetite",
+        "score": 0.667,
+        "tokenOverlap": 0.4
+      }
+    },
+    {
+      "datasetTerm": "low back cramps or spasms",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "lower back pain",
+        "score": 0.55,
+        "tokenOverlap": 0.143
+      }
+    },
+    {
+      "datasetTerm": "low back stiffness or tightness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "neck stiffness",
+        "score": 0.533,
+        "tokenOverlap": 0.167
+      }
+    },
+    {
+      "datasetTerm": "low back swelling",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "lower back pain",
+        "score": 0.688,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "low back weakness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "lower back pain",
+        "score": 0.688,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "low self esteem",
+      "bestCatalogMatch": {
+        "symptomId": "loss_of_appetite",
+        "term": "Loss of Appetite",
+        "score": 0.516,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "low urine output",
+      "bestCatalogMatch": {
+        "symptomId": "burnout",
+        "term": "burnout",
+        "score": 0.522,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "lump in throat",
+      "bestCatalogMatch": {
+        "symptomId": "sore_throat",
+        "term": "Sore Throat",
+        "score": 0.56,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "lump or mass of breast",
+      "bestCatalogMatch": {
+        "symptomId": "loss_of_appetite",
+        "term": "Loss of Appetite",
+        "score": 0.526,
+        "tokenOverlap": 0.143
+      }
+    },
+    {
+      "datasetTerm": "lump over jaw",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "lower back pain",
+        "score": 0.429,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "lymphedema",
+      "bestCatalogMatch": {
+        "symptomId": "edema",
+        "term": "Edema",
+        "score": 0.667,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "mass in scrotum",
+      "bestCatalogMatch": {
+        "symptomId": "yeast_infection",
+        "term": "Yeast Infection",
+        "score": 0.467,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "mass on ear",
+      "bestCatalogMatch": {
+        "symptomId": "nausea",
+        "term": "Nausea",
+        "score": 0.471,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "mass on eyelid",
+      "bestCatalogMatch": {
+        "symptomId": "loss_of_appetite",
+        "term": "loss of appetite",
+        "score": 0.467,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "mass on vulva",
+      "bestCatalogMatch": {
+        "symptomId": "loss_of_appetite",
+        "term": "loss of appetite",
+        "score": 0.414,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "melena",
+      "bestCatalogMatch": {
+        "symptomId": "muscle_pain",
+        "term": "Muscle Pain",
+        "score": 0.471,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "mood swings",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "dry_skin",
+        "score": 0.526,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "mouth dryness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "eye dryness",
+        "score": 0.667,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "mouth ulcer",
+      "bestCatalogMatch": {
+        "symptomId": "toothache",
+        "term": "Toothache",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "movement stiffness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "neck stiffness",
+        "score": 0.688,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "mucoid sputum",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "cold symptoms",
+        "score": 0.615,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "muscle cramps contractures or spasms",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "muscle cramping",
+        "score": 0.51,
+        "tokenOverlap": 0.167
+      }
+    },
+    {
+      "datasetTerm": "muscle stiffness or tightness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "muscle soreness",
+        "score": 0.545,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "muscle swelling",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "muscle_pain",
+        "score": 0.692,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "nailbiting",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "abdominal bloating",
+        "score": 0.571,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "name of item",
+      "bestCatalogMatch": {
+        "symptomId": "insect_bite",
+        "term": "insect bite",
+        "score": 0.522,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "neck cramps or spasms",
+      "bestCatalogMatch": {
+        "symptomId": "period_cramps",
+        "term": "Period Cramps",
+        "score": 0.471,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "neck mass",
+      "bestCatalogMatch": {
+        "symptomId": "neck_pain",
+        "term": "neck pain",
+        "score": 0.667,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "neck swelling",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "neck_pain",
+        "score": 0.636,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "nightmares",
+      "bestCatalogMatch": {
+        "symptomId": "night_sweats",
+        "term": "Night Sweats",
+        "score": 0.636,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "nodal skin eruptions",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "fungal_infection",
+        "score": 0.611,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "nose deformity",
+      "bestCatalogMatch": {
+        "symptomId": "insect_bite",
+        "term": "insect bite",
+        "score": 0.48,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "nosebleed",
+      "bestCatalogMatch": {
+        "symptomId": "insect_bite",
+        "term": "insect bite",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "obesity",
+      "bestCatalogMatch": {
+        "symptomId": "congestion",
+        "term": "congestion",
+        "score": 0.471,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "obsessions and compulsions",
+      "bestCatalogMatch": {
+        "symptomId": "period_cramps",
+        "term": "Period Cramps",
+        "score": 0.462,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "pain behind the eyes",
+      "bestCatalogMatch": {
+        "symptomId": "painful_intercourse",
+        "term": "painful intercourse",
+        "score": 0.513,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "pain during bowel movements",
+      "bestCatalogMatch": {
+        "symptomId": "vaginal_dryness",
+        "term": "Vaginal Dryness",
+        "score": 0.429,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "pain during pregnancy",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "vaginal_dryness",
+        "score": 0.444,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "pain in anal region",
+      "bestCatalogMatch": {
+        "symptomId": "painful_intercourse",
+        "term": "painful intercourse",
+        "score": 0.474,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "pain in gums",
+      "bestCatalogMatch": {
+        "symptomId": "painful_intercourse",
+        "term": "painful intercourse",
+        "score": 0.581,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "pain in testicles",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "painful_intercourse",
+        "score": 0.611,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "pain of the anus",
+      "bestCatalogMatch": {
+        "symptomId": "prostate_issues",
+        "term": "Prostate Issues",
+        "score": 0.452,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "pain or soreness of breast",
+      "bestCatalogMatch": {
+        "symptomId": "sinus_pressure",
+        "term": "sinus pressure",
+        "score": 0.45,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "painful urination",
+      "bestCatalogMatch": {
+        "symptomId": "frequent_urination",
+        "term": "frequent urination",
+        "score": 0.629,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "pallor",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "allergies",
+        "score": 0.533,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "paresthesia",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "asthma",
+        "score": 0.588,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "passage of gases",
+      "bestCatalogMatch": {
+        "symptomId": "loss_of_appetite",
+        "term": "loss of appetite",
+        "score": 0.5,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "patches in throat",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "sore_throat",
+        "score": 0.571,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "pelvic pressure",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "head pressure",
+        "score": 0.714,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "penile discharge",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "erectile_difficulty",
+        "score": 0.457,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "penis redness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "eye dryness",
+        "score": 0.583,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "peripheral edema",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "general malaise",
+        "score": 0.516,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "phlegm",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "pms",
+        "score": 0.444,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "plugged feeling in ear",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "painful_intercourse",
+        "score": 0.39,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "polyuria",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "psoriasis",
+        "score": 0.588,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "postpartum problems of the breast",
+      "bestCatalogMatch": {
+        "symptomId": "prostate_issues",
+        "term": "Prostate Issues",
+        "score": 0.417,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "posture problems",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "vision problems",
+        "score": 0.645,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "premature ejaculation",
+      "bestCatalogMatch": {
+        "symptomId": "poor_circulation",
+        "term": "poor circulation",
+        "score": 0.595,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "premenstrual tension or irritability",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "concentration difficulty",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "problems during pregnancy",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "vision problems",
+        "score": 0.4,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "problems with movement",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "vision problems",
+        "score": 0.432,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "problems with orgasm",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "vision problems",
+        "score": 0.457,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "prominent veins on calf",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "concentration difficulty",
+        "score": 0.468,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "puffy face and eyes",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "muscle soreness",
+        "score": 0.412,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "pulling at ears",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "painful_intercourse",
+        "score": 0.529,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "pupils unequal",
+      "bestCatalogMatch": {
+        "symptomId": "nausea",
+        "term": "Nausea",
+        "score": 0.4,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "pus draining from ear",
+      "bestCatalogMatch": {
+        "symptomId": "brain_fog",
+        "term": "brain fog",
+        "score": 0.467,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "pus filled pimples",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "swollen_lymph_nodes",
+        "score": 0.486,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "pus in sputum",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "flu symptoms",
+        "score": 0.48,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "pus in urine",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "skin dryness",
+        "score": 0.583,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "receiving blood transfusion",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "erectile dysfunction",
+        "score": 0.511,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "receiving unsterile injections",
+      "bestCatalogMatch": {
+        "symptomId": "uti",
+        "term": "Urinary Tract Infection",
+        "score": 0.566,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "recent pregnancy",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "frequent_urination",
+        "score": 0.588,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "recent weight loss",
+      "bestCatalogMatch": {
+        "symptomId": "night_sweats",
+        "term": "Night Sweats",
+        "score": 0.533,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "rectal bleeding",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "mental cloudiness",
+        "score": 0.562,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "red sore around nose",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "muscle soreness",
+        "score": 0.457,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "red spots over body",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "missed period",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "redness in ear",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "restless_leg",
+        "score": 0.538,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "redness in or around nose",
+      "bestCatalogMatch": {
+        "symptomId": "skin_rash",
+        "term": "skin rash",
+        "score": 0.412,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "redness of eyes",
+      "bestCatalogMatch": {
+        "symptomId": "restless_leg",
+        "term": "Restless Legs",
+        "score": 0.571,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "regurgitation",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "eye irritation",
+        "score": 0.667,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "regurgitation 1",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "eye irritation",
+        "score": 0.621,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "retention of urine",
+      "bestCatalogMatch": {
+        "symptomId": "frequent_urination",
+        "term": "frequent urination",
+        "score": 0.556,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "ringing in ear",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "incontinence",
+        "score": 0.462,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "runny nose",
+      "bestCatalogMatch": {
+        "symptomId": "rosacea",
+        "term": "Rosacea",
+        "score": 0.471,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "rusty sputum",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "flu symptoms",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "scanty menstrual flow",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "heavy menstruation",
+        "score": 0.615,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "scurring",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "cramping",
+        "score": 0.625,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "seizures",
+      "bestCatalogMatch": {
+        "symptomId": "tremor",
+        "term": "stress",
+        "score": 0.571,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "sharp chest pain",
+      "bestCatalogMatch": {
+        "symptomId": "wrist_pain",
+        "term": "Wrist Pain",
+        "score": 0.615,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "shivering",
+      "bestCatalogMatch": {
+        "symptomId": "vertigo",
+        "term": "Vertigo",
+        "score": 0.625,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "shortness of breath",
+      "bestCatalogMatch": {
+        "symptomId": "loss_of_appetite",
+        "term": "Loss of Appetite",
+        "score": 0.514,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "shoulder cramps or spasms",
+      "bestCatalogMatch": {
+        "symptomId": "shoulder_pain",
+        "term": "Shoulder Pain",
+        "score": 0.579,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "shoulder lump or mass",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "shoulder_pain",
+        "score": 0.647,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "shoulder stiffness or tightness",
+      "bestCatalogMatch": {
+        "symptomId": "shoulder_pain",
+        "term": "Shoulder Pain",
+        "score": 0.5,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "silver like dusting",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "sleep disruption",
+        "score": 0.571,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "skin growth",
+      "bestCatalogMatch": {
+        "symptomId": "skin_rash",
+        "term": "skin rash",
+        "score": 0.7,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "skin lesion",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "indigestion",
+        "score": 0.636,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "skin moles",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "vision problems",
+        "score": 0.64,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "skin peeling",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "skin itching",
+        "score": 0.667,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "skin swelling",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "painful swallowing",
+        "score": 0.645,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "sleepiness",
+      "bestCatalogMatch": {
+        "symptomId": "sleep_apnea",
+        "term": "Sleep Apnea",
+        "score": 0.667,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "sleepwalking",
+      "bestCatalogMatch": {
+        "symptomId": "muscle_pain",
+        "term": "Muscle Pain",
+        "score": 0.609,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "slurred speech",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "missed period",
+        "score": 0.444,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "slurring words",
+      "bestCatalogMatch": {
+        "symptomId": "skin_rash",
+        "term": "skin rash",
+        "score": 0.522,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "small dents in nails",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "dental pain",
+        "score": 0.452,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "sneezing",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "knee_pain",
+        "score": 0.588,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "sore in nose",
+      "bestCatalogMatch": {
+        "symptomId": "sore_throat",
+        "term": "Sore Throat",
+        "score": 0.522,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "spinning movements",
+      "bestCatalogMatch": {
+        "symptomId": "night_sweats",
+        "term": "night sweats",
+        "score": 0.467,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "spots or clouds in vision",
+      "bestCatalogMatch": {
+        "symptomId": "poor_circulation",
+        "term": "poor circulation",
+        "score": 0.488,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "spotting or bleeding during pregnancy",
+      "bestCatalogMatch": {
+        "symptomId": "minor_burn",
+        "term": "minor burn",
+        "score": 0.383,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "spotting urination",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "skin irritation",
+        "score": 0.667,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "stiff neck",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "neck stiffness",
+        "score": 0.583,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "stiffness all over",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "neck stiffness",
+        "score": 0.562,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "stomach bleeding",
+      "bestCatalogMatch": {
+        "symptomId": "constipation",
+        "term": "stomach_ache",
+        "score": 0.643,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "stomach bloating",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "abdominal bloating",
+        "score": 0.706,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "stuttering or stammering",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "urinary pain",
+        "score": 0.444,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "sunken eyes",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "skin dryness",
+        "score": 0.609,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "suprapubic pain",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "pelvic_pain",
+        "score": 0.615,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "swelling joints",
+      "bestCatalogMatch": {
+        "symptomId": "swollen_lymph_nodes",
+        "term": "Swollen Lymph Nodes",
+        "score": 0.471,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "swelling of scrotum",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "swollen_lymph_nodes",
+        "score": 0.421,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "swelling of stomach",
+      "bestCatalogMatch": {
+        "symptomId": "constipation",
+        "term": "stomach_ache",
+        "score": 0.452,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "swollen abdomen",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "swollen_lymph_nodes",
+        "score": 0.588,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "swollen blood vessels",
+      "bestCatalogMatch": {
+        "symptomId": "swollen_lymph_nodes",
+        "term": "Swollen Lymph Nodes",
+        "score": 0.65,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "swollen extremeties",
+      "bestCatalogMatch": {
+        "symptomId": "swollen_lymph_nodes",
+        "term": "Swollen Lymph Nodes",
+        "score": 0.579,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "swollen eye",
+      "bestCatalogMatch": {
+        "symptomId": "swollen_lymph_nodes",
+        "term": "Swollen Lymph Nodes",
+        "score": 0.6,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "swollen legs",
+      "bestCatalogMatch": {
+        "symptomId": "swollen_lymph_nodes",
+        "term": "Swollen Lymph Nodes",
+        "score": 0.71,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "swollen or red tonsils",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "muscle soreness",
+        "score": 0.541,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "swollen tongue",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "swollen_lymph_nodes",
+        "score": 0.606,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "symptoms of bladder",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "flu symptoms",
+        "score": 0.516,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "symptoms of eye",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "flu symptoms",
+        "score": 0.593,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "symptoms of infants",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "flu symptoms",
+        "score": 0.516,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "symptoms of prostate",
+      "bestCatalogMatch": {
+        "symptomId": "loss_of_appetite",
+        "term": "loss of appetite",
+        "score": 0.556,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "symptoms of the face",
+      "bestCatalogMatch": {
+        "symptomId": "toothache",
+        "term": "Toothache",
+        "score": 0.552,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "symptoms of the kidneys",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "flu symptoms",
+        "score": 0.457,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "symptoms of the scrotum and testes",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "prostate_issues",
+        "score": 0.367,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "temper problems",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "vision problems",
+        "score": 0.6,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "thirst",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "hives",
+        "score": 0.545,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "throat feels tight",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "throat pain",
+        "score": 0.552,
+        "tokenOverlap": 0.25
+      }
+    },
+    {
+      "datasetTerm": "throat redness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "throat pain",
+        "score": 0.64,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "throat swelling",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "throat pain",
+        "score": 0.692,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "tongue bleeding",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "abdominal bloating",
+        "score": 0.485,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "tongue lesions",
+      "bestCatalogMatch": {
+        "symptomId": "congestion",
+        "term": "congestion",
+        "score": 0.667,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "too little hair",
+      "bestCatalogMatch": {
+        "symptomId": "toothache",
+        "term": "Toothache",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "toxic look typhos",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "swollen_lymph_nodes",
+        "score": 0.444,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "ulcers on tongue",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "chronic fatigue",
+        "score": 0.581,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "underweight",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "depression",
+        "score": 0.476,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "unpredictable menstruation",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "heavy menstruation",
+        "score": 0.682,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "unsteadiness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "neck stiffness",
+        "score": 0.615,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "unwanted hair",
+      "bestCatalogMatch": {
+        "symptomId": "hand_pain",
+        "term": "hand pain",
+        "score": 0.545,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "urinating a lot",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "urinary pain",
+        "score": 0.519,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "uterine contractions",
+      "bestCatalogMatch": {
+        "symptomId": "uti",
+        "term": "Urinary Tract Infection",
+        "score": 0.605,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "vaginal bleeding after menopause",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "painful_intercourse",
+        "score": 0.549,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "vaginal discharge",
+      "bestCatalogMatch": {
+        "symptomId": "vaginal_dryness",
+        "term": "Vaginal Dryness",
+        "score": 0.625,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "visual disturbances",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "vaginal_dryness",
+        "score": 0.588,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "vulvar irritation",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "eye irritation",
+        "score": 0.71,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "vulvar sore",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "canker_sore",
+        "score": 0.636,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "warts",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "arthritis",
+        "score": 0.571,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "watering from eyes",
+      "bestCatalogMatch": {
+        "symptomId": "vaginal_dryness",
+        "term": "Vaginal Dryness",
+        "score": 0.485,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "weakness in limbs",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "weakness",
+        "score": 0.64,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "weakness of one body side",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "weakness",
+        "score": 0.485,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "weight gain",
+      "bestCatalogMatch": {
+        "symptomId": "wrist_pain",
+        "term": "wrist pain",
+        "score": 0.667,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "weight loss",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "appetite loss",
+        "score": 0.667,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "wheezing",
+      "bestCatalogMatch": {
+        "symptomId": "eye_pain",
+        "term": "eye pain",
+        "score": 0.5,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "white discharge from eye",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "chest discomfort",
+        "score": 0.45,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "wrinkles on skin",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "ankle_pain",
+        "score": 0.538,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "wrist lump or mass",
+      "bestCatalogMatch": {
+        "symptomId": "wrist_pain",
+        "term": "Wrist Pain",
+        "score": 0.571,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "wrist stiffness or tightness",
+      "bestCatalogMatch": {
+        "symptomId": "concepts",
+        "term": "neck stiffness",
+        "score": 0.476,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "wrist swelling",
+      "bestCatalogMatch": {
+        "symptomId": "wrist_pain",
+        "term": "wrist pain",
+        "score": 0.667,
+        "tokenOverlap": 0.333
+      }
+    },
+    {
+      "datasetTerm": "yellow crust ooze",
+      "bestCatalogMatch": {
+        "symptomId": "hintSymptoms",
+        "term": "poor_circulation",
+        "score": 0.424,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "yellow urine",
+      "bestCatalogMatch": {
+        "symptomId": "elbow_pain",
+        "term": "elbow pain",
+        "score": 0.636,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "yellowing of eyes",
+      "bestCatalogMatch": {
+        "symptomId": "loss_of_appetite",
+        "term": "loss of appetite",
+        "score": 0.485,
+        "tokenOverlap": 0.2
+      }
+    },
+    {
+      "datasetTerm": "yellowish skin",
+      "bestCatalogMatch": {
+        "symptomId": "elbow_pain",
+        "term": "elbow pain",
+        "score": 0.583,
+        "tokenOverlap": 0.0
+      }
+    },
+    {
+      "datasetTerm": "yogasan",
+      "bestCatalogMatch": {
+        "symptomId": "gas",
+        "term": "gas",
+        "score": 0.6,
+        "tokenOverlap": 0.0
+      }
+    }
+  ],
+  "termsByDataset": {
+    "shivanshmittal22/home-remedies": [
+      "health issue",
+      "home remedy",
+      "name of item",
+      "yogasan"
+    ],
+    "devikshah/health-symptoms-and-disease-prediction-dataset": [
+      "abdominal pain",
+      "abnormal menstruation",
+      "acidity",
+      "acute liver failure",
+      "altered sensorium",
+      "anxiety",
+      "back pain",
+      "belly pain",
+      "blackheads",
+      "bladder discomfort",
+      "blister",
+      "blood in sputum",
+      "bloody stool",
+      "blurred and distorted vision",
+      "breathlessness",
+      "brittle nails",
+      "bruising",
+      "burning micturition",
+      "chest pain",
+      "chills",
+      "cold hands and feets",
+      "coma",
+      "congestion",
+      "constipation",
+      "continuous feel of urine",
+      "continuous sneezing",
+      "cough",
+      "cramps",
+      "dark urine",
+      "dehydration",
+      "depression",
+      "diarrhoea",
+      "dischromic patches",
+      "distention of abdomen",
+      "dizziness",
+      "drying and tingling lips",
+      "enlarged thyroid",
+      "excessive hunger",
+      "extra marital contacts",
+      "family history",
+      "fast heart rate",
+      "fatigue",
+      "fluid overload",
+      "fluid overload 1",
+      "foul smell of urine",
+      "headache",
+      "heartburn",
+      "high fever",
+      "hip joint pain",
+      "history of alcohol consumption",
+      "increased appetite",
+      "indigestion",
+      "inflammatory nails",
+      "internal itching",
+      "irregular sugar level",
+      "irritability",
+      "irritation in anus",
+      "itching",
+      "joint pain",
+      "knee pain",
+      "lack of concentration",
+      "lethargy",
+      "loss of appetite",
+      "loss of balance",
+      "loss of smell",
+      "malaise",
+      "mild fever",
+      "mood swings",
+      "movement stiffness",
+      "mucoid sputum",
+      "muscle pain",
+      "muscle wasting",
+      "muscle weakness",
+      "nausea",
+      "neck pain",
+      "nodal skin eruptions",
+      "obesity",
+      "pain behind the eyes",
+      "pain during bowel movements",
+      "pain in anal region",
+      "painful walking",
+      "palpitations",
+      "passage of gases",
+      "patches in throat",
+      "phlegm",
+      "polyuria",
+      "prominent veins on calf",
+      "puffy face and eyes",
+      "pus filled pimples",
+      "receiving blood transfusion",
+      "receiving unsterile injections",
+      "red sore around nose",
+      "red spots over body",
+      "redness of eyes",
+      "restlessness",
+      "runny nose",
+      "rusty sputum",
+      "scurring",
+      "shivering",
+      "silver like dusting",
+      "sinus pressure",
+      "skin peeling",
+      "skin rash",
+      "slurred speech",
+      "small dents in nails",
+      "spinning movements",
+      "spotting urination",
+      "stiff neck",
+      "stomach bleeding",
+      "stomach pain",
+      "sunken eyes",
+      "sweating",
+      "swelled lymph nodes",
+      "swelling joints",
+      "swelling of stomach",
+      "swollen blood vessels",
+      "swollen extremeties",
+      "swollen legs",
+      "throat irritation",
+      "toxic look typhos",
+      "ulcers on tongue",
+      "unsteadiness",
+      "urinating a lot",
+      "visual disturbances",
+      "vomiting",
+      "watering from eyes",
+      "weakness in limbs",
+      "weakness of one body side",
+      "weight gain",
+      "weight loss",
+      "yellow crust ooze",
+      "yellow urine",
+      "yellowing of eyes",
+      "yellowish skin"
+    ],
+    "dhivyeshrk/diseases-and-symptoms-dataset": [
+      "abdominal distention",
+      "abnormal appearing skin",
+      "abnormal appearing tongue",
+      "abnormal breathing sounds",
+      "abnormal involuntary movements",
+      "abnormal movement of eyelid",
+      "absence of menstruation",
+      "abusing alcohol",
+      "ache all over",
+      "acne or pimples",
+      "allergic reaction",
+      "ankle pain",
+      "ankle stiffness or tightness",
+      "ankle swelling",
+      "ankle weakness",
+      "antisocial behavior",
+      "anxiety and nervousness",
+      "apnea",
+      "arm cramps or spasms",
+      "arm lump or mass",
+      "arm pain",
+      "arm stiffness or tightness",
+      "arm swelling",
+      "arm weakness",
+      "back cramps or spasms",
+      "back mass or lump",
+      "back pain",
+      "back stiffness or tightness",
+      "back swelling",
+      "back weakness",
+      "bedwetting",
+      "bladder mass",
+      "bleeding from ear",
+      "bleeding from eye",
+      "bleeding gums",
+      "bleeding in mouth",
+      "bleeding or discharge from nipple",
+      "blindness",
+      "blood clots during menstrual periods",
+      "blood in stool",
+      "blood in urine",
+      "bones are painful",
+      "bowlegged or knock kneed",
+      "breathing fast",
+      "bumps on penis",
+      "burning abdominal pain",
+      "burning chest pain",
+      "changes in stool appearance",
+      "chest tightness",
+      "chills",
+      "cloudy eye",
+      "congestion in chest",
+      "constipation",
+      "coryza",
+      "cough",
+      "coughing up sputum",
+      "cramps and spasms",
+      "cross eyed",
+      "decreased appetite",
+      "decreased heart rate",
+      "delusions or hallucinations",
+      "depression",
+      "depressive or psychotic symptoms",
+      "diaper rash",
+      "diarrhea",
+      "difficulty breathing",
+      "difficulty eating",
+      "difficulty in swallowing",
+      "difficulty speaking",
+      "diminished hearing",
+      "diminished vision",
+      "discharge in stools",
+      "diseases",
+      "disturbance of memory",
+      "disturbance of smell or taste",
+      "dizziness",
+      "double vision",
+      "drainage in throat",
+      "drug abuse",
+      "dry lips",
+      "dry or flaky scalp",
+      "ear pain",
+      "elbow cramps or spasms",
+      "elbow lump or mass",
+      "elbow pain",
+      "elbow stiffness or tightness",
+      "elbow swelling",
+      "elbow weakness",
+      "emotional symptoms",
+      "excessive anger",
+      "excessive appetite",
+      "excessive growth",
+      "excessive urination at night",
+      "eye burns or stings",
+      "eye deviation",
+      "eye moves abnormally",
+      "eye redness",
+      "eye strain",
+      "eyelid lesion or rash",
+      "eyelid retracted",
+      "eyelid swelling",
+      "facial pain",
+      "fainting",
+      "fatigue",
+      "fears and phobias",
+      "feeling cold",
+      "feeling hot",
+      "feeling hot and cold",
+      "feeling ill",
+      "feet turned in",
+      "fever",
+      "flatulence",
+      "flu like syndrome",
+      "fluid in ear",
+      "fluid retention",
+      "flushing",
+      "focal weakness",
+      "foot or toe pain",
+      "foot or toe swelling",
+      "foot or toe weakness",
+      "foreign body sensation in eye",
+      "frequent menstruation",
+      "frequent urination",
+      "frontal headache",
+      "groin mass",
+      "groin pain",
+      "gum pain",
+      "hand or finger pain",
+      "hand or finger swelling",
+      "hand or finger weakness",
+      "headache",
+      "heartburn",
+      "heavy menstrual flow",
+      "hemoptysis",
+      "hesitancy",
+      "hip lump or mass",
+      "hip pain",
+      "hip stiffness or tightness",
+      "hip swelling",
+      "hip weakness",
+      "hoarse voice",
+      "hostile behavior",
+      "hot flashes",
+      "hurts to breath",
+      "hysterical behavior",
+      "impotence",
+      "incontinence of stool",
+      "increased heart rate",
+      "infant feeding problem",
+      "infant spitting up",
+      "infertility",
+      "infrequent menstruation",
+      "insomnia",
+      "intermenstrual bleeding",
+      "involuntary urination",
+      "irregular appearing nails",
+      "irregular appearing scalp",
+      "irregular belly button",
+      "irregular heartbeat",
+      "irritable infant",
+      "itchiness of eye",
+      "itching of scrotum",
+      "itching of skin",
+      "itching of the anus",
+      "itchy ear s",
+      "itchy eyelid",
+      "itchy scalp",
+      "jaundice",
+      "jaw pain",
+      "jaw swelling",
+      "joint pain",
+      "joint stiffness or tightness",
+      "joint swelling",
+      "kidney mass",
+      "knee cramps or spasms",
+      "knee lump or mass",
+      "knee pain",
+      "knee stiffness or tightness",
+      "knee swelling",
+      "knee weakness",
+      "lack of growth",
+      "lacrimation",
+      "leg cramps or spasms",
+      "leg lump or mass",
+      "leg pain",
+      "leg stiffness or tightness",
+      "leg swelling",
+      "leg weakness",
+      "lip sore",
+      "lip swelling",
+      "long menstrual periods",
+      "loss of sensation",
+      "loss of sex drive",
+      "low back cramps or spasms",
+      "low back pain",
+      "low back stiffness or tightness",
+      "low back swelling",
+      "low back weakness",
+      "low self esteem",
+      "low urine output",
+      "lower abdominal pain",
+      "lower body pain",
+      "lump in throat",
+      "lump or mass of breast",
+      "lump over jaw",
+      "lymphedema",
+      "mass in scrotum",
+      "mass on ear",
+      "mass on eyelid",
+      "mass on vulva",
+      "melena",
+      "mouth dryness",
+      "mouth pain",
+      "mouth ulcer",
+      "muscle cramps contractures or spasms",
+      "muscle pain",
+      "muscle stiffness or tightness",
+      "muscle swelling",
+      "muscle weakness",
+      "nailbiting",
+      "nasal congestion",
+      "nausea",
+      "neck cramps or spasms",
+      "neck mass",
+      "neck pain",
+      "neck stiffness or tightness",
+      "neck swelling",
+      "neck weakness",
+      "nightmares",
+      "nose deformity",
+      "nosebleed",
+      "obsessions and compulsions",
+      "pain during intercourse",
+      "pain during pregnancy",
+      "pain in eye",
+      "pain in gums",
+      "pain in testicles",
+      "pain of the anus",
+      "pain or soreness of breast",
+      "painful menstruation",
+      "painful sinuses",
+      "painful urination",
+      "pallor",
+      "palpitations",
+      "paresthesia",
+      "pelvic pain",
+      "pelvic pressure",
+      "penile discharge",
+      "penis pain",
+      "penis redness",
+      "peripheral edema",
+      "plugged feeling in ear",
+      "polyuria",
+      "poor circulation",
+      "postpartum problems of the breast",
+      "posture problems",
+      "premature ejaculation",
+      "premenstrual tension or irritability",
+      "problems during pregnancy",
+      "problems with movement",
+      "problems with orgasm",
+      "pulling at ears",
+      "pupils unequal",
+      "pus draining from ear",
+      "pus in sputum",
+      "pus in urine",
+      "recent pregnancy",
+      "recent weight loss",
+      "rectal bleeding",
+      "redness in ear",
+      "redness in or around nose",
+      "regurgitation",
+      "regurgitation 1",
+      "restlessness",
+      "retention of urine",
+      "rib pain",
+      "ringing in ear",
+      "scanty menstrual flow",
+      "seizures",
+      "sharp abdominal pain",
+      "sharp chest pain",
+      "shortness of breath",
+      "shoulder cramps or spasms",
+      "shoulder lump or mass",
+      "shoulder pain",
+      "shoulder stiffness or tightness",
+      "shoulder swelling",
+      "shoulder weakness",
+      "side pain",
+      "sinus congestion",
+      "skin growth",
+      "skin irritation",
+      "skin lesion",
+      "skin moles",
+      "skin oiliness",
+      "skin pain",
+      "skin rash",
+      "skin swelling",
+      "sleepiness",
+      "sleepwalking",
+      "slurring words",
+      "smoking problems",
+      "sneezing",
+      "sore in nose",
+      "sore throat",
+      "spots or clouds in vision",
+      "spotting or bleeding during pregnancy",
+      "stiffness all over",
+      "stomach bloating",
+      "stuttering or stammering",
+      "suprapubic pain",
+      "sweating",
+      "swelling of scrotum",
+      "swollen abdomen",
+      "swollen eye",
+      "swollen lymph nodes",
+      "swollen or red tonsils",
+      "swollen tongue",
+      "symptoms of bladder",
+      "symptoms of eye",
+      "symptoms of infants",
+      "symptoms of prostate",
+      "symptoms of the face",
+      "symptoms of the kidneys",
+      "symptoms of the scrotum and testes",
+      "temper problems",
+      "thirst",
+      "throat feels tight",
+      "throat irritation",
+      "throat redness",
+      "throat swelling",
+      "tongue bleeding",
+      "tongue lesions",
+      "tongue pain",
+      "too little hair",
+      "toothache",
+      "underweight",
+      "unpredictable menstruation",
+      "unwanted hair",
+      "upper abdominal pain",
+      "uterine contractions",
+      "vaginal bleeding after menopause",
+      "vaginal discharge",
+      "vaginal dryness",
+      "vaginal itching",
+      "vaginal pain",
+      "vaginal redness",
+      "vomiting",
+      "vomiting blood",
+      "vulvar irritation",
+      "vulvar sore",
+      "warts",
+      "weakness",
+      "weight gain",
+      "wheezing",
+      "white discharge from eye",
+      "wrinkles on skin",
+      "wrist lump or mass",
+      "wrist pain",
+      "wrist stiffness or tightness",
+      "wrist swelling",
+      "wrist weakness"
+    ]
+  }
+}

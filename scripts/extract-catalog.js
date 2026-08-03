@@ -106,7 +106,7 @@ for (const block of insertBlocks) {
   for (const row of rows) {
     const p = parseRowCSV(row);
     if (p.length >= 15) {
-      const [id, name, cat, ratingStr, reviewStr, sd, ld, htu, warnings, at, ci, tte, diff, cost, feat] = p;
+      const [id, name, cat, ratingStr, reviewStr, sd, ld, htu, warnings, , , tte, diff, cost, feat] = p;
       // Skip deprioritized conventional (mig 012 part 9):
       // They have priority_rank set to 0 in symptom_remedies
       if (cat === 'Conventional') continue;
@@ -244,7 +244,6 @@ console.log('CASE WHEN entries:', caseEntries.length);
 if (skippedSids.size > 0) console.log('Skipped sids:', [...skippedSids].join(', '));
 
 // --- Also directly extract ingredient update statements from migration 012 ---
-const ingRegex = /WHEN\s+'([^']+)'\s+THEN\s+(ARRAY\[[^\]]*\])/gi;
 // We skip ingredients for now - they're not critical for the recommendation engine
 
 // --- BUILD remedies with primary/secondary symptoms ---

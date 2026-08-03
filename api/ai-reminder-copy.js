@@ -3,7 +3,6 @@
 // Called by the Edge Function before sending each reminder email.
 // Falls back to a static string if Claude API is unavailable.
 
-/* global process */
 import { applySecurity, json, sanitizeInput } from './middleware.js';
 
 const SYSTEM_PROMPT = `You are a friendly health reminder assistant for curA, an evidence-based remedy app.

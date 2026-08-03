@@ -1,4 +1,3 @@
-/* global process */
 import { parseBody } from './parseBody.js';
 import { applySecurity, json, sanitizeInput, isValidQuery } from './middleware.js';
 
@@ -155,7 +154,7 @@ export default async function handler(req, res) {
       detectedSymptoms,
       source: process.env.OPENAI_API_KEY ? 'ai' : 'fallback',
     });
-  } catch (error) {
+  } catch {
     return json(res, 500, { error: 'Unable to analyze symptoms.' });
   }
 }

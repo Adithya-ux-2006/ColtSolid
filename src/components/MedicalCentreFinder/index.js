@@ -1,0 +1,1 @@
+export { MedicalCentreFinder } from './MedicalCentreFinder';

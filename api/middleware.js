@@ -1,5 +1,3 @@
-/* global process */
-
 // ─── Rate Limiting (in-memory token bucket per IP) ──────────────────────────
 const rateLimitBuckets = new Map();
 const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
@@ -112,6 +110,7 @@ export function sanitizeInput(str, { maxLength = 2000 } = {}) {
     .trim()
     .slice(0, maxLength)
     // Remove null bytes and control characters (keep newlines for readability)
+    // eslint-disable-next-line no-control-regex -- intentional: sanitizing input
     .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
     // Limit consecutive newlines
     .replace(/\n{3,}/g, '\n\n');
