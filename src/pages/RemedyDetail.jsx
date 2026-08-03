@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, BookOpen, ChevronRight, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, BookOpen, ChevronRight, ShieldCheck, AlertTriangle } from 'lucide-react';
 import { FavoriteHeart } from '../components/ui/FavoriteHeart';
 import { ScheduleQuickAdd } from '../components/ui/ScheduleQuickAdd';
 import { PageWrapper } from '../components/layout';
@@ -135,7 +135,7 @@ export function RemedyDetail() {
   if (!remedy) {
     return (
       <div className="min-h-screen flex items-center justify-center px-6">
-        <p className="text-ink-muted text-base">Remedy not found</p>
+        <p className="text-ink-muted text-base">Recommended step not found</p>
       </div>
     );
   }
@@ -252,7 +252,7 @@ export function RemedyDetail() {
         <section className="mb-12 md:mb-16">
           <Reveal>
             <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
-              <h2 className="section-title mb-0">Evidence</h2>
+              <h2 className="section-title mb-0">Supporting Information</h2>
               <div className="flex items-center gap-2">
                 {researchLinks.length > 0 ? (
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-evidence-light text-evidence">
@@ -306,6 +306,24 @@ export function RemedyDetail() {
           <div className="mb-12 md:mb-16">
             <NearbyShops remedyName={remedy.name} />
           </div>
+        )}
+
+        {remedy.category === 'Conventional' && (
+          <section className="mb-12 md:mb-16">
+            <Reveal>
+              <div className="rounded-2xl border border-warning/20 bg-warning/5 p-5">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-warning shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-semibold text-ink text-sm mb-1">Medicine information</p>
+                    <p className="text-sm text-ink-muted leading-relaxed">
+                      This medicine may not be suitable for everyone. Check with a pharmacist or doctor if you have high blood pressure, heart problems, take other medicines, are pregnant, or are unsure.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+          </section>
         )}
 
         {remedy.warnings && (

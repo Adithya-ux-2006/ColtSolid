@@ -3,11 +3,11 @@ import { Clock, ShieldCheck, BarChart3, Gauge } from 'lucide-react';
 import { cn } from '../../utils/cn';
 
 function getSafetyText(score, hasConflicts) {
-  if (hasConflicts) return 'Not Safe';
-  if (score >= 85) return 'Very Safe';
-  if (score >= 60) return 'Safe';
-  if (score >= 30) return 'Caution';
-  return 'Not Safe';
+  if (hasConflicts) return 'Check first';
+  if (score >= 85) return 'Generally well tolerated';
+  if (score >= 60) return 'Usually safe';
+  if (score >= 30) return 'Check with a professional';
+  return 'Check first';
 }
 
 function getSafetyColor(score, hasConflicts) {
@@ -79,21 +79,21 @@ export function QuickStats({ remedy, isSafe, evidenceScore, safetyScore, classNa
   const safetyText = getSafetyText(safetyScore, !isSafe);
   const safetyColor = getSafetyColor(safetyScore, !isSafe);
   const evidenceText = getEvidenceText(evidenceScore);
-  const safetySubLabel = isSafe ? 'Safe for you' : 'Potential conflict';
+  const safetySubLabel = isSafe ? 'Generally safe' : 'Potential conflict — check with a professional';
 
   return (
     <div
       className={cn('grid grid-cols-4', className)}
       role="region"
-      aria-label="Quick remedy statistics"
+      aria-label="Quick statistics"
     >
       <StatColumn
         icon={Clock}
         iconBg="bg-primary/10"
         iconColor="text-primary"
         value={remedy.timeToEffect || 'Varies'}
-        label="Time to relief"
-        ariaLabel={`Time to relief: ${remedy.timeToEffect || 'Varies'}`}
+        label="When it may help"
+        ariaLabel={`When it may help: ${remedy.timeToEffect || 'Varies'}`}
         delay={0}
         isLast={false}
       />
@@ -113,8 +113,8 @@ export function QuickStats({ remedy, isSafe, evidenceScore, safetyScore, classNa
         iconBg="bg-primary/10"
         iconColor="text-primary"
         value={evidenceText}
-        label="Evidence"
-        ariaLabel={`Evidence: ${evidenceText}`}
+        label="Supporting info"
+        ariaLabel={`Supporting information: ${evidenceText}`}
         delay={0.08}
         isLast={false}
       />

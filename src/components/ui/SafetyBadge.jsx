@@ -27,7 +27,7 @@ function getSafetyBadgeState(remedy, ageRange) {
 
   if (remedy?._contraindicationConflict || remedy?._childSafetyConcern || childSafety.hasConcern) {
     return {
-      label: 'Check Before Use',
+      label: 'Check with a professional first',
       note: remedy?._contraindicationConflict
         ? `May conflict with: ${remedy._contraindicationConflict}`
         : remedy?._childSafetyNote || childSafety.note,
@@ -37,7 +37,7 @@ function getSafetyBadgeState(remedy, ageRange) {
   }
 
   return {
-    label: 'Generally Safe for You',
+    label: 'Generally Safe',
     note: '',
     Icon: ShieldCheck,
     className: 'border-success/25 bg-success/10 text-success',
