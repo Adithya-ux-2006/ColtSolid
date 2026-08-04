@@ -2,7 +2,7 @@ export const REMEDIES = [
   // HEADACHE
   {
     id: 'rem_001',
-    name: 'Peppermint Oil Roll-On',
+    name: 'Peppermint Oil on Temples',
     category: 'Natural',
     symptoms: ['headache'],
     primarySymptoms: ['headache'],
@@ -27,7 +27,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_003',
-    name: 'Ibuprofen (Advil/Motrin)',
+    name: 'Ibuprofen (Advil / Motrin)',
     category: 'Over-the-Counter',
     symptoms: ['headache'],
     primarySymptoms: ['headache'],
@@ -103,7 +103,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_006',
-    name: 'Antihistamine (Cetirizine)',
+    name: 'Cetirizine (Zyrtec)',
     category: 'Over-the-Counter',
     symptoms: ['allergies', 'hives', 'allergic_reaction', 'congestion'],
     primarySymptoms: ['allergies'],
@@ -127,7 +127,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_007',
-    name: 'Nasal Saline Rinse',
+    name: 'Salt Water Nose Rinse',
     category: 'Lifestyle',
     symptoms: ['allergies', 'congestion', 'sinus_pressure', 'cold'],
     primarySymptoms: ['allergies', 'congestion'],
@@ -150,7 +150,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_008',
-    name: 'Albuterol Inhaler (Rescue)',
+    name: 'Albuterol Rescue Inhaler',
     category: 'Over-the-Counter',
     symptoms: ['asthma', 'wheezing', 'cough'],
     primarySymptoms: ['asthma', 'cough'],
@@ -197,7 +197,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_010',
-    name: 'D-Mannose UTI Relief Powder',
+    name: 'D-Mannose Powder for UTI',
     category: 'Natural',
     symptoms: ['uti'],
     primarySymptoms: ['uti'],
@@ -267,7 +267,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_013',
-    name: 'L-Arginine Blood Flow Supplement',
+    name: 'L-Arginine for Blood Flow',
     category: 'Natural',
     symptoms: ['erectile_difficulty', 'low_libido', 'poor_circulation'],
     primarySymptoms: ['erectile_difficulty'],
@@ -290,7 +290,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_014',
-    name: 'Fenugreek Libido Capsule',
+    name: 'Fenugreek for Libido',
     category: 'Natural',
     symptoms: ['low_libido', 'low_energy'],
     primarySymptoms: ['low_libido'],
@@ -359,7 +359,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_017',
-    name: 'Saw Palmetto Prostate Support',
+    name: 'Saw Palmetto for Prostate',
     category: 'Natural',
     symptoms: ['prostate_issues', 'frequent_urination', 'hair_loss'],
     primarySymptoms: ['prostate_issues'],
@@ -382,7 +382,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_018',
-    name: 'Clove Oil (Dental)',
+    name: 'Clove Oil for Toothache',
     category: 'Natural',
     symptoms: ['toothache', 'gum_pain', 'canker_sore'],
     primarySymptoms: ['toothache'],
@@ -451,7 +451,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_021',
-    name: 'RICE Therapy',
+    name: 'Rest Ice Compress Elevate',
     category: 'Lifestyle',
     symptoms: ['sprain', 'ankle_pain', 'wrist_pain', 'elbow_pain', 'bruising'],
     primarySymptoms: ['sprain'],
@@ -590,7 +590,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_027',
-    name: 'Antacid (Calcium Carbonate)',
+    name: 'Antacid (Tums / Rolaids)',
     category: 'Over-the-Counter',
     symptoms: ['gerd', 'heartburn', 'indigestion'],
     primarySymptoms: ['gerd'],
@@ -614,7 +614,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_028',
-    name: 'Psyllium Husk Fiber',
+    name: 'Psyllium Fiber Supplement',
     category: 'Lifestyle',
     symptoms: ['ibs', 'constipation', 'diarrhea', 'hemorrhoids'],
     primarySymptoms: ['ibs'],
@@ -683,7 +683,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_031',
-    name: 'Ginkgo Biloba Brain & Ear Capsule',
+    name: 'Ginkgo Biloba for Brain and Ears',
     category: 'Natural',
     symptoms: ['tinnitus', 'vertigo', 'poor_circulation', 'brain_fog'],
     primarySymptoms: ['tinnitus'],
@@ -706,7 +706,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_032',
-    name: 'Head Repositioning Exercise for Vertigo',
+    name: 'Epley Maneuver for Vertigo',
     category: 'Lifestyle',
     symptoms: ['vertigo'],
     primarySymptoms: ['vertigo'],
@@ -729,7 +729,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_033',
-    name: 'Vitamin B Complex',
+    name: 'Vitamin B Complex Pills',
     category: 'Over-the-Counter',
     symptoms: ['neuropathy', 'fatigue', 'low_energy', 'hair_loss'],
     primarySymptoms: ['neuropathy'],
@@ -752,7 +752,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_034',
-    name: 'Buttock Stretch for Sciatica',
+    name: 'Buttock Stretch for Leg Pain',
     category: 'Lifestyle',
     symptoms: ['sciatica', 'back_pain', 'hip_pain'],
     primarySymptoms: ['sciatica'],
@@ -821,7 +821,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_037',
-    name: 'CoQ10 Heart & Energy Supplement',
+    name: 'CoQ10 for Heart and Energy',
     category: 'Natural',
     symptoms: ['palpitations', 'fatigue', 'low_energy'],
     primarySymptoms: ['palpitations'],
@@ -844,7 +844,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_038',
-    name: 'Anti-Inflammatory Diet for Endometriosis',
+    name: 'Anti-Inflammatory Diet for Period Pain',
     category: 'Lifestyle',
     symptoms: ['endometriosis', 'pelvic_pain', 'period_cramps'],
     primarySymptoms: ['endometriosis'],
@@ -1056,7 +1056,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_102',
-    name: 'Maca Root Energy & Libido Capsule',
+    name: 'Maca Root for Energy',
     category: 'Natural',
     symptoms: ['low_libido'],
     primarySymptoms: ['low_libido'],
@@ -1106,7 +1106,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_104',
-    name: 'Water-Based Personal Lubricant',
+    name: 'Water-Based Lubricant',
     category: 'Over-the-Counter',
     symptoms: ['vaginal_dryness', 'painful_intercourse'],
     primarySymptoms: ['vaginal_dryness'],
@@ -1132,7 +1132,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_105',
-    name: 'Vaginal Moisturizer (Non-Hormonal)',
+    name: 'Vaginal Moisturizer',
     category: 'Over-the-Counter',
     symptoms: ['vaginal_dryness'],
     primarySymptoms: ['vaginal_dryness'],
@@ -1158,7 +1158,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_106',
-    name: 'Warm Compress for Eyes',
+    name: 'Warm Cloth on Eyes',
     category: 'Lifestyle',
     symptoms: ['eye_pain', 'eye_strain', 'stye'],
     primarySymptoms: ['eye_pain', 'eye_strain'],
