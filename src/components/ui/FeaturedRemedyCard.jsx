@@ -115,7 +115,7 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
               to={`/remedy/${remedy.id}`}
               className="flex items-center justify-center w-[90%] h-14 rounded-2xl bg-primary text-white text-base font-semibold shadow-glow hover:bg-primary-dark transition-all hover:-translate-y-0.5 shrink-0"
             >
-              View Recommended Step
+              View Remedy
             </Link>
           </div>
 

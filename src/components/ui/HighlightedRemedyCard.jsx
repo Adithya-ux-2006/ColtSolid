@@ -133,7 +133,7 @@ export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetySco
               to={`/remedy/${remedy.id}`}
               className="flex items-center justify-center gap-2 w-full rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-glow hover:bg-primary-dark transition-all hover:-translate-y-0.5"
             >
-              View Recommended Step
+              View Remedy
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

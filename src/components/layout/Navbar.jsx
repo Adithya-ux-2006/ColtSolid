@@ -14,9 +14,9 @@ export function Navbar() {
           <div />
           <Link to="/dashboard" className="flex items-center gap-2 justify-self-center">
             <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground text-base font-bold shadow-glow">
-              C
+              R
             </div>
-            <span className="text-xl font-bold text-ink tracking-tight">ClotSolid</span>
+            <span className="text-xl font-bold text-ink tracking-tight">Remzy</span>
           </Link>
           <div className="flex items-center justify-self-end gap-2">
             <ThemeToggle />
@@ -32,9 +32,9 @@ export function Navbar() {
         <div className="h-full max-w-5xl mx-auto px-4 md:px-6 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 min-w-[44px] min-h-[44px] p-1.5">
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-glow">
-              C
+              R
             </div>
-            <span className="font-bold text-xl text-ink">ClotSolid</span>
+            <span className="font-bold text-xl text-ink">Remzy</span>
           </Link>
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />

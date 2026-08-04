@@ -32,3 +32,6 @@ supabase/.temp/
 
 # Office temp files
 ~$*
+
+# Local Netlify folder
+.netlify

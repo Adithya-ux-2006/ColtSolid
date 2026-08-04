@@ -1,15 +1,13 @@
-# ClotSolid
+# Remzy
 
-ClotSolid is a medical web application focused on blood clot awareness, symptom screening, and finding nearby medical centres. It provides educational information about deep vein thrombosis (DVT), pulmonary embolism (PE), and related conditions.
+Remzy is a health helper web application that helps you search symptoms and find evidence-backed remedies. It provides general educational information about common health concerns, covering natural, Ayurveda, conventional, and lifestyle approaches.
 
 ## Features
 
 - **Symptom Search**: Search symptoms and get evidence-backed remedy suggestions
 - **Medical Centre Finder**: Locate hospitals, clinics, and diagnostic centres near you using OpenStreetMap data
-- **Blood Clot Warning Signs**: Learn the warning signs of DVT and PE in plain language
-- **Research Datasets**: Browse relevant Kaggle datasets for blood clot research
-- **Risk Assessment**: Basic symptom screening with clear, plain-language results
-- **Prevention Tips**: General prevention information for blood clots
+- **Personalised Safety Checks**: allergy and health profile filtering for remedy recommendations
+- **Research Resources**: Browse relevant Kaggle datasets for medical research
 
 ## Tech Stack
 
@@ -64,7 +62,7 @@ VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 
 #### Medical Information
 
-- ClotSolid provides general educational information and basic symptom screening. It cannot diagnose or rule out a blood clot.
+- Remzy provides general educational information and basic symptom screening. It cannot diagnose or replace professional medical advice.
 - Only a qualified healthcare professional can assess symptoms and arrange the correct tests.
 - Do not delay emergency care because of a result shown on this website.
 - For emergencies in India, call 112.
@@ -80,4 +78,4 @@ This application is configured for deployment on Netlify. The `netlify.toml` fil
 
 ## License
 
-This project is for educational purposes. Medical datasets referenced from Kaggle are owned by their respective publishers.
+This project is for educational purposes.

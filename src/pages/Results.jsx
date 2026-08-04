@@ -78,7 +78,7 @@ function EmergencyBanner() {
         </a>
         <p className="text-danger/70 text-sm self-center">India's unified emergency number</p>
       </div>
-      <p className="text-danger/70 text-sm mt-4">ClotSolid does not provide self-treatment guidance for potentially serious symptoms.</p>
+      <p className="text-danger/70 text-sm mt-4">Remzy does not provide self-treatment guidance for potentially serious symptoms.</p>
     </div>
   );
 }
@@ -90,8 +90,8 @@ function EvidenceBanner() {
 function MedicalDisclaimer() {
   return (
     <p className="text-xs text-ink-muted leading-relaxed text-center">
-      ClotSolid provides general educational information and a basic symptom screening.
-      It cannot diagnose or rule out a blood clot. Only a qualified healthcare professional can assess your symptoms and arrange the correct tests.
+      Remzy provides general educational information and a basic symptom screening.
+      It cannot diagnose or replace professional medical advice. Only a qualified healthcare professional can assess your symptoms and arrange the correct tests.
       Do not delay emergency care because of a result shown on this website.
     </p>
   );
@@ -402,9 +402,9 @@ export function Results() {
       ) : !hasResults && !isCatalogLoading ? (
         <div className="max-w-4xl mx-auto px-6 mb-8">
           <EmptyState
-            title="No recommended steps found"
+            title="No remedies found"
             description={symptomResolution.symptomIds.length > 0
-              ? `No recommended steps were found for "${matchedSymptom?.label || freeTextQuery}". Try a different search term.`
+              ? `No evidence-backed remedies were found for "${matchedSymptom?.label || freeTextQuery}". Try a different search term.`
               : `We couldn't confidently identify a matching symptom for "${freeTextQuery}". Try a different search term.`}
             ctaLabel="Search Again"
             ctaHref="/search"
@@ -446,8 +446,8 @@ export function Results() {
             <div className="max-w-4xl mx-auto px-6 mt-16">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h2 className="text-section-heading font-bold text-ink mb-1">Other Recommended Steps</h2>
-                  <p className="text-sm text-ink-muted">Other options you may want to consider.</p>
+                  <h2 className="text-section-heading font-bold text-ink mb-1">Other Remedies</h2>
+                  <p className="text-sm text-ink-muted">Excellent alternatives if you need another option.</p>
                 </div>
                 {allAlternatives.length > 5 && !showAllAlternatives && (
                   <button
@@ -512,10 +512,10 @@ export function Results() {
               <section className="rounded-3xl bg-gradient-card p-6 shadow-soft border border-primary/10">
                 <div className="flex items-center gap-2 mb-3">
                   <Heart className="w-5 h-5 text-primary" />
-                  <p className="text-lg font-semibold text-ink">Save this step</p>
+                  <p className="text-lg font-semibold text-ink">Save this remedy</p>
                 </div>
                 <p className="text-sm text-ink-muted leading-relaxed mb-4">
-                  Create a free account to track your recovery and build your personal library of recommended steps.
+                  Create a free account to track your recovery and build your personal remedy library.
                 </p>
                 <div className="space-y-2">
                   <Link

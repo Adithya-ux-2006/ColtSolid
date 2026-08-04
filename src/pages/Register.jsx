@@ -75,10 +75,10 @@ export function Register() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex w-14 h-14 bg-primary rounded-2xl items-center justify-center shadow-glow mb-4">
-            <span className="text-2xl font-bold text-white">C</span>
+            <span className="text-2xl font-bold text-white">R</span>
           </Link>
           <h1 className="text-3xl font-bold text-ink">Create an account</h1>
-          <p className="text-ink-muted mt-2">Join ClotSolid for targeted relief</p>
+          <p className="text-ink-muted mt-2">Join Remzy for targeted relief</p>
         </div>
 
         <div className="bg-card rounded-3xl shadow-xl p-8 border border-ink/5">

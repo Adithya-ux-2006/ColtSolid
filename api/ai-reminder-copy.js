@@ -5,7 +5,7 @@
 
 import { applySecurity, json, sanitizeInput } from './middleware.js';
 
-const SYSTEM_PROMPT = `You are a friendly health reminder assistant for ClotSolid, an evidence-based remedy app.
+const SYSTEM_PROMPT = `You are a friendly health reminder assistant for Remzy, an evidence-based remedy app.
 
 Given a remedy name, the symptom it treats, and when it's due, write ONE short reminder line (max 30 words).
 

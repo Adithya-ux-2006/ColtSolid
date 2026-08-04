@@ -1,15 +1,12 @@
 import { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShieldCheck, Stethoscope, GraduationCap, Search, ArrowRight, Database } from 'lucide-react';
+import { ShieldCheck, Stethoscope, GraduationCap, Search, ArrowRight } from 'lucide-react';
 import { FAQAccordion } from '../components/ui/FAQAccordion';
 import { Modal } from '../components/ui/Modal';
 import { QuestionnaireFlow } from '../components/onboarding/QuestionnaireFlow';
 import { PageWrapper } from '../components/layout';
 import { TrustBadges } from '../components/ui/TrustBadges';
 import { MedicalCentreFinder } from '../components/MedicalCentreFinder';
-import { DatasetCatalogue } from '../components/Datasets';
-import { BloodClotWarningSigns } from '../components/ui/BloodClotWarningSigns';
-import { PreventionTips } from '../components/ui/PreventionTips';
 import { useCatalogStore } from '../store/catalogStore';
 import { FAQ_ITEMS } from '../constants/onboarding';
 import { useGuestProfileStore } from '../store/guestProfileStore';
@@ -31,7 +28,7 @@ export function Landing() {
       <section className="relative pt-24 pb-16 px-6 lg:px-8 overflow-hidden">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <div className="w-14 h-14 mx-auto bg-primary rounded-2xl flex items-center justify-center shadow-glow">
-            <span className="text-2xl font-bold text-white">C</span>
+            <span className="text-2xl font-bold text-white">R</span>
           </div>
 
           <h1 className="text-4xl md:text-6xl font-bold text-ink tracking-tight">
@@ -131,30 +128,6 @@ export function Landing() {
           <div id="medical-centres">
             <MedicalCentreFinder />
           </div>
-
-          <div id="symptom-warning-signs">
-            <BloodClotWarningSigns />
-          </div>
-
-          <div>
-            <PreventionTips />
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 px-6 bg-surface/50">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center gap-2 bg-kaggle/10 text-kaggle text-xs font-semibold px-3.5 py-1.5 rounded-full mb-4">
-              <Database className="w-3.5 h-3.5" />
-              <span>Research Resources</span>
-            </div>
-            <h2 className="text-3xl font-bold text-ink">Datasets for Blood Clot Research</h2>
-            <p className="text-ink-muted mt-2 max-w-xl mx-auto">
-              Explore relevant Kaggle datasets for medical imaging and blood clot research.
-            </p>
-          </div>
-          <DatasetCatalogue />
         </div>
       </section>
 
@@ -172,10 +145,10 @@ export function Landing() {
 
       <footer className="px-6 py-8 border-t border-ink/5 text-center">
         <div className="flex items-center justify-center gap-2 mb-2">
-          <div className="w-5 h-5 rounded-md bg-primary flex items-center justify-center text-white font-bold text-xs">C</div>
-          <span className="font-bold text-ink">ClotSolid</span>
+          <div className="w-5 h-5 rounded-md bg-primary flex items-center justify-center text-white font-bold text-xs">R</div>
+          <span className="font-bold text-ink">Remzy</span>
         </div>
-        <p className="text-xs text-ink-subtle">&copy; 2026 ClotSolid.</p>
+        <p className="text-xs text-ink-subtle">&copy; 2026 Remzy.</p>
       </footer>
 
       <Modal isOpen={isQuestionnaireOpen} onClose={() => setIsQuestionnaireOpen(false)} title="Quick Health Profile">

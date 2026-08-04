@@ -36,7 +36,7 @@ Review these files for UI/UX quality:
 
 Context: {description}
 
-Enforce the ClotSolid design system. Check color tokens, spacing scale,
+Enforce the Remzy design system. Check color tokens, spacing scale,
 typography, responsiveness, and accessibility. Compare against existing
 components for consistency. Return specific line-level feedback.
 ```
