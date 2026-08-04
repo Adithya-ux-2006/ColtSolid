@@ -26,34 +26,9 @@ export const REMEDIES = [
     isPurchasable: true,
   },
   {
-    id: 'rem_002',
-    name: 'Hand Pressure Point for Headaches',
-    category: 'Lifestyle',
-    symptoms: ['headache'],
-    primarySymptoms: ['headache'],
-    secondarySymptoms: ['stress'],
-    rating: 4.4,
-    reviewCount: 189,
-    shortDescription: 'A traditional Chinese technique applying pressure to the hand to relieve headaches and facial pain.',
-    longDescription: 'The LI4 (Hegu) acupressure point is located on the back of the hand between the base of the thumb and index finger. In traditional practice, stimulating this point is believed to clear blockages in the meridian and alleviate headaches, stress, and facial pain.',
-    howToUse: '1. Locate the highest spot of the muscle when the thumb and index finger are brought close together.\n2. Apply firm pressure using your other thumb.\n3. Massage in a small circle for 2-3 minutes.\n4. Repeat on the other hand.',
-    warnings: 'Should not be used during pregnancy as it may induce labor.',
-    ingredients: [],
-    allergen_tags: ['herbal'],
-    contraindications: ['pregnancy'],
-    researchPapers: [
-      { journal: 'Altern Ther Health Med', keyFinding: 'Effect of Acupressure on the Blood Pressure, Heart Rate, and Pain Severity of Patients who Underwent Coronary Angiography.', url: 'https://pubmed.ncbi.nlm.nih.gov/36112790/' },
-    ],
-    timeToEffect: '5–10 minutes',
-    difficulty: 'Easy',
-    cost: '$',
-    isFeatured: false,
-    isPurchasable: true,
-  },
-  {
     id: 'rem_003',
     name: 'Ibuprofen (Advil/Motrin)',
-    category: 'Conventional',
+    category: 'Over-the-Counter',
     symptoms: ['headache'],
     primarySymptoms: ['headache'],
     secondarySymptoms: ['cold'],
@@ -74,6 +49,7 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: true,
     isPurchasable: true,
+    productExamples: ['Advil', 'Motrin IB', 'Nurofen'],
   },
   {
     id: 'rem_004',
@@ -128,7 +104,7 @@ export const REMEDIES = [
   {
     id: 'rem_006',
     name: 'Antihistamine (Cetirizine)',
-    category: 'Conventional',
+    category: 'Over-the-Counter',
     symptoms: ['allergies', 'hives', 'allergic_reaction', 'congestion'],
     primarySymptoms: ['allergies'],
     secondarySymptoms: ['congestion'],
@@ -147,6 +123,7 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+    productExamples: ['Zyrtec', 'Cetirizine (Generic)'],
   },
   {
     id: 'rem_007',
@@ -174,7 +151,7 @@ export const REMEDIES = [
   {
     id: 'rem_008',
     name: 'Albuterol Inhaler (Rescue)',
-    category: 'Conventional',
+    category: 'Over-the-Counter',
     symptoms: ['asthma', 'wheezing', 'cough'],
     primarySymptoms: ['asthma', 'cough'],
     secondarySymptoms: [],
@@ -193,6 +170,7 @@ export const REMEDIES = [
     cost: '$$$',
     isFeatured: false,
     isPurchasable: true,
+    productExamples: ['ProAir HFA', 'Proventil HFA', 'Ventolin HFA'],
   },
   {
     id: 'rem_009',
@@ -266,7 +244,7 @@ export const REMEDIES = [
   {
     id: 'rem_012',
     name: 'Antifungal Cream',
-    category: 'Conventional',
+    category: 'Over-the-Counter',
     symptoms: ['yeast_infection', 'fungal_infection', 'skin_rash'],
     primarySymptoms: ['yeast_infection', 'fungal_infection'],
     secondarySymptoms: [],
@@ -285,6 +263,7 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+    productExamples: ['Lotrimin', 'Lamisil AT', 'Monistat'],
   },
   {
     id: 'rem_013',
@@ -588,7 +567,7 @@ export const REMEDIES = [
   {
     id: 'rem_026',
     name: 'Iron Supplement',
-    category: 'Conventional',
+    category: 'Over-the-Counter',
     symptoms: ['anemia', 'fatigue', 'low_energy', 'hair_loss', 'restless_leg'],
     primarySymptoms: ['anemia'],
     secondarySymptoms: ['fatigue'],
@@ -607,11 +586,12 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+    productExamples: ['Nature Made Iron', 'Slow Fe', 'Ferro-Sequels'],
   },
   {
     id: 'rem_027',
     name: 'Antacid (Calcium Carbonate)',
-    category: 'Conventional',
+    category: 'Over-the-Counter',
     symptoms: ['gerd', 'heartburn', 'indigestion'],
     primarySymptoms: ['gerd'],
     secondarySymptoms: [],
@@ -630,6 +610,7 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+    productExamples: ['Tums', 'Rolaids', 'Calcium 600 + D3'],
   },
   {
     id: 'rem_028',
@@ -749,7 +730,7 @@ export const REMEDIES = [
   {
     id: 'rem_033',
     name: 'Vitamin B Complex',
-    category: 'Conventional',
+    category: 'Over-the-Counter',
     symptoms: ['neuropathy', 'fatigue', 'low_energy', 'hair_loss'],
     primarySymptoms: ['neuropathy'],
     secondarySymptoms: ['fatigue'],
@@ -887,7 +868,7 @@ export const REMEDIES = [
   {
     id: 'rem_039',
     name: 'Biotin Supplement',
-    category: 'Conventional',
+    category: 'Over-the-Counter',
     symptoms: ['hair_loss'],
     primarySymptoms: ['hair_loss'],
     secondarySymptoms: [],
@@ -906,6 +887,7 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+    productExamples: ['Nature Made Biotin', 'Sports Research Biotin'],
   },
   {
     id: 'rem_040',
@@ -1125,7 +1107,7 @@ export const REMEDIES = [
   {
     id: 'rem_104',
     name: 'Water-Based Personal Lubricant',
-    category: 'Conventional',
+    category: 'Over-the-Counter',
     symptoms: ['vaginal_dryness', 'painful_intercourse'],
     primarySymptoms: ['vaginal_dryness'],
     secondarySymptoms: ['painful_intercourse'],
@@ -1146,11 +1128,12 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: true,
     isPurchasable: true,
+    productExamples: ['K-Y Jelly', 'astroglide'],
   },
   {
     id: 'rem_105',
     name: 'Vaginal Moisturizer (Non-Hormonal)',
-    category: 'Conventional',
+    category: 'Over-the-Counter',
     symptoms: ['vaginal_dryness'],
     primarySymptoms: ['vaginal_dryness'],
     secondarySymptoms: [],
@@ -1171,6 +1154,7 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+    productExamples: ['Replens', 'HYDROPHEN'],
   },
   {
     id: 'rem_106',

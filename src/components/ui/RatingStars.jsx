@@ -4,8 +4,7 @@ import { cn } from '../../utils/cn';
 const CATEGORY_STAR_COLORS = {
   Natural: 'fill-emerald-500 text-emerald-500',
   Lifestyle: 'fill-violet-500 text-violet-500',
-  Conventional: 'fill-orange-500 text-orange-500',
-  TCM: 'fill-amber-500 text-amber-500',
+  'Over-the-Counter': 'fill-orange-500 text-orange-500',
 };
 
 export function RatingStars({ rating, size = 'sm', category, className }) {

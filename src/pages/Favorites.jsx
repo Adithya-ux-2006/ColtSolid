@@ -11,7 +11,7 @@ import { SavedRemedyCard } from '../components/ui/SavedRemedyCard';
 import { HeroIllustration } from '../components/ui/HeroIllustration';
 import { useFavoritesStore } from '../store/favoritesStore';
 
-const CATEGORIES = ['All', 'Natural', 'Lifestyle', 'Conventional', 'TCM'];
+const CATEGORIES = ['All', 'Natural', 'Lifestyle', 'Over-the-Counter'];
 
 const SORT_OPTIONS = [
   { value: 'newest', label: 'Newest First' },

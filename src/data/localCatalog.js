@@ -296,28 +296,6 @@ export const LOCAL_REMEDIES = [
     "secondarySymptoms": []
   },
   {
-    "id": "rem_h03",
-    "name": "Hand Pressure Point for Headaches",
-    "category": "Lifestyle",
-    "rating": 4.3,
-    "reviewCount": 186,
-    "shortDescription": "A pressure-point technique on the hand used for headache relief.",
-    "longDescription": "LI4, or Hegu, is a traditional practice point between the thumb and index finger. Gentle sustained pressure may reduce muscle tension and provide a short burst of relief for stress-related headaches.",
-    "howToUse": "Press the point on one hand for 1 to 2 minutes while breathing slowly. Repeat on the other hand. Use up to three rounds.",
-    "warnings": "Avoid during pregnancy unless advised by a licensed clinician.",
-    "timeToEffect": "5-10 minutes",
-    "difficulty": "Easy",
-    "cost": "$",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "headache",
-      "stress"
-    ],
-    "secondarySymptoms": []
-  },
-  {
     "id": "rem_h05",
     "name": "Drink More Water",
     "category": "Lifestyle",
@@ -361,7 +339,8 @@ export const LOCAL_REMEDIES = [
     "secondarySymptoms": [
       "cough",
       "congestion"
-    ]
+    ],
+    "productExamples": ["Cold-EEZE","Zicam Cold Remedy","Nature's Way Zinc lozenges"]
   },
   {
     "id": "rem_c02",
@@ -386,28 +365,6 @@ export const LOCAL_REMEDIES = [
     "secondarySymptoms": [
       "cough"
     ]
-  },
-  {
-    "id": "rem_c03",
-    "name": "Gua Sha for Neck Tension",
-    "category": "Lifestyle",
-    "rating": 4.1,
-    "reviewCount": 112,
-    "shortDescription": "A scraping technique sometimes used to reduce muscular tension during early illness.",
-    "longDescription": "Gua sha is used in traditional East Asian practice to promote circulation and reduce neck and upper-back tightness that can accompany early cold symptoms.",
-    "howToUse": "Apply oil to the upper back or neck and use a smooth-edged tool with light to moderate pressure for several strokes.",
-    "warnings": "Expect temporary redness or bruising. Avoid broken skin, clotting disorders, or severe illness.",
-    "timeToEffect": "Immediate",
-    "difficulty": "Moderate",
-    "cost": "$",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "stress",
-      "cold"
-    ],
-    "secondarySymptoms": []
   },
   {
     "id": "rem_c05",
@@ -453,7 +410,8 @@ export const LOCAL_REMEDIES = [
       "anxiety",
       "brain_fog"
     ],
-    "secondarySymptoms": []
+    "secondarySymptoms": [],
+    "productExamples": ["Suntheanine L-Theanine","NOW Foods L-Theanine"]
   },
   {
     "id": "rem_a02",
@@ -476,28 +434,8 @@ export const LOCAL_REMEDIES = [
       "anxiety",
       "brain_fog"
     ],
-    "secondarySymptoms": []
-  },
-  {
-    "id": "rem_a03",
-    "name": "Forehead Pressure Point",
-    "category": "Lifestyle",
-    "rating": 4.2,
-    "reviewCount": 154,
-    "shortDescription": "Gentle pressure between the eyebrows used for short-term calming.",
-    "longDescription": "Yintang is a calming pressure point between the eyebrows that may support relaxation, especially when anxiety presents with racing thoughts or facial tension.",
-    "howToUse": "Sit quietly and apply light circular pressure between the eyebrows for 1 to 2 minutes while breathing slowly.",
-    "warnings": "Stop if it worsens dizziness or headache.",
-    "timeToEffect": "5-10 minutes",
-    "difficulty": "Easy",
-    "cost": "$",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "anxiety"
-    ],
-    "secondarySymptoms": []
+    "secondarySymptoms": [],
+    "productExamples": ["KSM-66 Ashwagandha","Organix Ashwagandha"]
   },
   {
     "id": "rem_a05",
@@ -541,7 +479,8 @@ export const LOCAL_REMEDIES = [
     "primarySymptoms": [
       "insomnia"
     ],
-    "secondarySymptoms": []
+    "secondarySymptoms": [],
+    "productExamples": ["Natrol Melatonin","Nature Made Melatonin","OLLY Sleep"]
   },
   {
     "id": "rem_i02",
@@ -561,28 +500,6 @@ export const LOCAL_REMEDIES = [
     "contraindications": [],
     "primarySymptoms": [
       "insomnia"
-    ],
-    "secondarySymptoms": []
-  },
-  {
-    "id": "rem_i03",
-    "name": "Ear Pressure Point for Relaxation",
-    "category": "Lifestyle",
-    "rating": 4,
-    "reviewCount": 98,
-    "shortDescription": "A low-risk ear pressure technique used for bedtime relaxation.",
-    "longDescription": "Shenmen is an auricular point often used in traditional practice to support calmness, especially when insomnia is tied to tension or overstimulation.",
-    "howToUse": "Use clean fingers or acupressure seeds to apply gentle pressure for one minute on each ear before bed.",
-    "warnings": "Do not use on irritated or infected skin.",
-    "timeToEffect": "10-20 minutes",
-    "difficulty": "Easy",
-    "cost": "$",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "insomnia",
-      "anxiety"
     ],
     "secondarySymptoms": []
   },
@@ -653,27 +570,6 @@ export const LOCAL_REMEDIES = [
     "secondarySymptoms": []
   },
   {
-    "id": "rem_n03",
-    "name": "Wrist Pressure Point for Nausea",
-    "category": "Lifestyle",
-    "rating": 4.5,
-    "reviewCount": 244,
-    "shortDescription": "A pressure-point technique commonly used for nausea relief.",
-    "longDescription": "The P6 or Neiguan point on the inner wrist is one of the best studied acupressure points for nausea, including motion sickness and postoperative nausea.",
-    "howToUse": "Apply firm pressure three finger-widths below the wrist crease between the tendons for one to two minutes on each side.",
-    "warnings": "Remove pressure if it causes pain or numbness.",
-    "timeToEffect": "5-15 minutes",
-    "difficulty": "Easy",
-    "cost": "$",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "nausea"
-    ],
-    "secondarySymptoms": []
-  },
-  {
     "id": "rem_n05",
     "name": "Oral Rehydration Drink",
     "category": "Lifestyle",
@@ -735,30 +631,6 @@ export const LOCAL_REMEDIES = [
     "primarySymptoms": [
       "stress",
       "insomnia"
-    ],
-    "secondarySymptoms": []
-  },
-  {
-    "id": "rem_s03",
-    "name": "Tai Chi Flow Session",
-    "category": "Lifestyle",
-    "rating": 4.5,
-    "reviewCount": 208,
-    "shortDescription": "Slow movement practice that combines breathing, balance, and attention.",
-    "longDescription": "Tai chi can lower perceived stress while improving body awareness and breathing regularity, which makes it practical for students who dislike seated meditation.",
-    "howToUse": "Follow a guided beginner routine for 10 to 20 minutes in a quiet room or outdoor space.",
-    "warnings": "Move within your comfort range if you have pain or dizziness.",
-    "timeToEffect": "10-20 minutes",
-    "difficulty": "Moderate",
-    "cost": "$",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "stress",
-      "anxiety",
-      "fatigue",
-      "brain_fog"
     ],
     "secondarySymptoms": []
   },
@@ -847,7 +719,8 @@ export const LOCAL_REMEDIES = [
     "primarySymptoms": [
       "back_pain"
     ],
-    "secondarySymptoms": []
+    "secondarySymptoms": [],
+    "productExamples": ["Nature Made Turmeric","Organifi Gold"]
   },
   {
     "id": "rem_st01",
@@ -977,7 +850,8 @@ export const LOCAL_REMEDIES = [
       "nausea",
       "period_cramps"
     ],
-    "secondarySymptoms": []
+    "secondarySymptoms": [],
+    "productExamples": ["HealthAde Ginger Kombucha","Traditional Medicinals Ginger Tea"]
   },
   {
     "id": "rem_fv01",
@@ -1262,27 +1136,7 @@ export const LOCAL_REMEDIES = [
     ],
     "secondarySymptoms": []
   },
-  {
-    "id": "rem_lp02",
-    "name": "Gentle Leg Stretching Routine",
-    "category": "Lifestyle",
-    "rating": 4.3,
-    "reviewCount": 156,
-    "shortDescription": "Light stretching to relieve leg muscle tightness and improve mobility.",
-    "longDescription": "Gentle calf, hamstring, and quadriceps stretches can reduce muscle tension and improve circulation when leg pain is related to tightness or mild overuse.",
-    "howToUse": "Hold each stretch for 20-30 seconds without bouncing. Stop if pain increases.",
-    "warnings": "Do not stretch through sharp pain or if you suspect a muscle tear.",
-    "timeToEffect": "10-20 minutes",
-    "difficulty": "Easy",
-    "cost": "$",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "leg_pain"
-    ],
-    "secondarySymptoms": []
-  },
+
   {
     "id": "rem_kp01",
     "name": "Knee Ice and Rest Therapy",
@@ -1304,27 +1158,7 @@ export const LOCAL_REMEDIES = [
     ],
     "secondarySymptoms": []
   },
-  {
-    "id": "rem_kp02",
-    "name": "Knee Support and Modified Activity",
-    "category": "Lifestyle",
-    "rating": 4.2,
-    "reviewCount": 132,
-    "shortDescription": "Supportive care for knee pain during daily activity and recovery.",
-    "longDescription": "Reducing stair climbing, using a compression sleeve, and avoiding deep knee bends can reduce irritation and support recovery.",
-    "howToUse": "Use a compression sleeve during activity. Take short rest breaks when walking. Avoid deep squats or lunges.",
-    "warnings": "Do not use compression if you have vascular issues or numbness.",
-    "timeToEffect": "1-7 days",
-    "difficulty": "Easy",
-    "cost": "$",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "knee_pain"
-    ],
-    "secondarySymptoms": []
-  },
+
   {
     "id": "rem_np01",
     "name": "Neck Stretching and Warmth Routine",
@@ -1346,27 +1180,7 @@ export const LOCAL_REMEDIES = [
     ],
     "secondarySymptoms": []
   },
-  {
-    "id": "rem_np02",
-    "name": "Neck Support and Posture Reset",
-    "category": "Lifestyle",
-    "rating": 4.4,
-    "reviewCount": 198,
-    "shortDescription": "Ergonomic adjustments and postural awareness for neck pain prevention.",
-    "longDescription": "Aligning the head over the shoulders, adjusting screen height, and using a supportive pillow can significantly reduce recurring neck pain.",
-    "howToUse": "Raise screen to eye level. Keep ears aligned over shoulders. Use a cervical curve-supporting pillow at night.",
-    "warnings": "Seek care for persistent numbness, weakness, or loss of coordination.",
-    "timeToEffect": "1-7 days",
-    "difficulty": "Easy",
-    "cost": "$",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "neck_pain"
-    ],
-    "secondarySymptoms": []
-  },
+
   {
     "id": "rem_sp01",
     "name": "Shoulder Ice and Mobility Routine",
@@ -1388,27 +1202,7 @@ export const LOCAL_REMEDIES = [
     ],
     "secondarySymptoms": []
   },
-  {
-    "id": "rem_sp02",
-    "name": "Shoulder Rest and Posture Check",
-    "category": "Lifestyle",
-    "rating": 4.1,
-    "reviewCount": 143,
-    "shortDescription": "Rest and ergonomic adjustments for shoulder pain from desk work.",
-    "longDescription": "Shoulder pain often stems from rounded-forward posture during long study sessions. Rest, scapular retraction exercises, and desk ergonomics can reduce recurrence.",
-    "howToUse": "Take breaks every 30 minutes. Roll shoulders back and down. Keep elbows at 90 degrees when typing.",
-    "warnings": "Seek care for sudden severe pain, popping with injury, or arm numbness.",
-    "timeToEffect": "1-7 days",
-    "difficulty": "Easy",
-    "cost": "$",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "shoulder_pain"
-    ],
-    "secondarySymptoms": []
-  },
+
   {
     "id": "rem_h06",
     "name": "Caffeine + L-Theanine Pair",
@@ -1428,33 +1222,13 @@ export const LOCAL_REMEDIES = [
     "primarySymptoms": [
       "headache"
     ],
-    "secondarySymptoms": []
-  },
-  {
-    "id": "rem_h07",
-    "name": "Temple Massage & Acupressure",
-    "category": "Lifestyle",
-    "rating": 4.6,
-    "reviewCount": 428,
-    "shortDescription": "Fingertip pressure on temples and occipital ridge to release tension without anything.",
-    "longDescription": "Applying sustained pressure to temporalis, occipital, and trapezius trigger points reduces muscle tension and improves local circulation, breaking the tension-pain cycle.",
-    "howToUse": "Sit comfortably. Press thumbs into temples with firm circular motion for 30s. Then press into the hollow at the base of the skull for 60s. Repeat every 2 hours.",
-    "warnings": "Avoid if you have a recent head or neck injury. Discontinue if pain worsens.",
-    "timeToEffect": "5-10 minutes",
-    "difficulty": "Easy",
-    "cost": "Free",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "headache"
-    ],
-    "secondarySymptoms": []
+    "secondarySymptoms": [],
+    "productExamples": ["Natural Stacks Smart Caffeine","Jarrow Formulas Theanine + Caffeine"]
   },
   {
     "id": "rem_h08",
     "name": "Herbal Brain Tonic Capsule",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.2,
     "reviewCount": 178,
     "shortDescription": "Bacopa monnieri, an Ayurvedic herb that calms Vata and soothes tension-type headache.",
@@ -1475,7 +1249,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_h09",
     "name": "Anu Tailam Nasal Oil",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4,
     "reviewCount": 95,
     "shortDescription": "Herbalized sesame oil for nasal instillation that clears head congestion and Vata-related headache.",
@@ -1496,7 +1270,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_h10",
     "name": "Shirodhara Therapy",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.7,
     "reviewCount": 64,
     "shortDescription": "Warm herbal oil streamed across the forehead for deep nervous system reset in headache.",
@@ -1517,7 +1291,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_c06",
     "name": "Tulsi Holy Basil Tea",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.5,
     "reviewCount": 312,
     "shortDescription": "Adaptogenic Ayurvedic tea that supports immunity and relieves cold symptoms.",
@@ -1540,7 +1314,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_c07",
     "name": "Trikatu Formula",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.1,
     "reviewCount": 134,
     "shortDescription": "Classic Ayurvedic blend of ginger, black pepper, and long pepper to kickstart digestion and clear mucus.",
@@ -1561,7 +1335,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_c08",
     "name": "Chyawanprash Immunity Jam",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.4,
     "reviewCount": 412,
     "shortDescription": "Traditional Ayurvedic nutraceutical jam that builds immunity and soothes respiratory passages.",
@@ -1627,7 +1401,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_a06",
     "name": "Ayurvedic Cold Relief Syrup",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.3,
     "reviewCount": 203,
     "shortDescription": "Ayurvedic nervine tonic that calms racing thoughts and supports sound sleep.",
@@ -1648,7 +1422,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_a07",
     "name": "Herbal Stress Relief Powder",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.1,
     "reviewCount": 118,
     "shortDescription": "Nardostachys jatamansi, a Himalayan herb known for deep calming and nervine support.",
@@ -1735,7 +1509,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_i06",
     "name": "Ashwagandha Warm Milk",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.4,
     "reviewCount": 289,
     "shortDescription": "Traditional Ayurvedic nightcap that promotes restful sleep by calming Vata.",
@@ -1756,7 +1530,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_i07",
     "name": "Herbal Sleep Capsule",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4,
     "reviewCount": 87,
     "shortDescription": "Valeriana wallichii, an Ayurvedic sedative herb that gently induces sleep without hangover.",
@@ -1840,7 +1614,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_n06",
     "name": "Herbal Digestive Tea",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.3,
     "reviewCount": 312,
     "shortDescription": "Simple Ayurvedic practice of chewing fennel seeds to settle digestive fire and stop nausea.",
@@ -1862,7 +1636,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_n07",
     "name": "Cumin & Cardamom Tea",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4,
     "reviewCount": 176,
     "shortDescription": "Digestive Ayurvedic tea that reduces nausea and bloating by balancing Agni.",
@@ -1870,27 +1644,6 @@ export const LOCAL_REMEDIES = [
     "howToUse": "Crush 1/2 tsp cumin seeds and 2 green cardamom pods. Simmer in 2 cups water for 10 minutes. Strain and sip slowly.",
     "warnings": "Avoid exceeding 3 cups daily. Cardamom may interact with blood-thinning medications.",
     "timeToEffect": "10-20 minutes",
-    "difficulty": "Easy",
-    "cost": "Low",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "nausea"
-    ],
-    "secondarySymptoms": []
-  },
-  {
-    "id": "rem_n08",
-    "name": "Acupressure Sea Bands",
-    "category": "Lifestyle",
-    "rating": 4.2,
-    "reviewCount": 198,
-    "shortDescription": "Wristbands that apply continuous pressure to P6 (Neiguan) point to suppress nausea.",
-    "longDescription": "P6 acupressure is one of the most well-studied non-pharmacological antiemetics. Cochrane review evidence supports efficacy.",
-    "howToUse": "Wear bands on both wrists with the plastic button positioned at the P6 point (3 finger-widths below the wrist crease). Adjust snugness.",
-    "warnings": "Avoid wearing too tight. Not recommended on broken or irritated skin.",
-    "timeToEffect": "5-15 minutes",
     "difficulty": "Easy",
     "cost": "Low",
     "isFeatured": false,
@@ -1946,7 +1699,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_s06",
     "name": "Shirodhara for Stress",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.8,
     "reviewCount": 78,
     "shortDescription": "Warm oil stream therapy that induces deep parasympathetic activation and mental stillness.",
@@ -1967,7 +1720,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_s07",
     "name": "Ayurvedic Brain Syrup",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.2,
     "reviewCount": 156,
     "shortDescription": "Ayurvedic cognitive calmative that reduces stress without sedating the mind.",
@@ -2053,7 +1806,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_bp04",
     "name": "Mahanarayan Oil Massage",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.5,
     "reviewCount": 198,
     "shortDescription": "Classical Ayurvedic medicated oil for deep tissue Vata-pacifying back pain relief.",
@@ -2063,27 +1816,6 @@ export const LOCAL_REMEDIES = [
     "timeToEffect": "30-60 minutes",
     "difficulty": "Moderate",
     "cost": "Low",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "back_pain"
-    ],
-    "secondarySymptoms": []
-  },
-  {
-    "id": "rem_bp05",
-    "name": "Cupping Therapy",
-    "category": "Lifestyle",
-    "rating": 4.3,
-    "reviewCount": 145,
-    "shortDescription": "Suction cup therapy that releases myofascial tension and improves blood flow.",
-    "longDescription": "Cupping uses vacuum suction to lift superficial tissues, increasing blood flow and releasing myofascial trigger points.",
-    "howToUse": "Visit a licensed practitioner. Cups placed on the back for 5-15 minutes. Typical course: 1-2 sessions per week for 4-6 weeks.",
-    "warnings": "Will leave circular bruises. Not for bleeding disorders or anticoagulant use.",
-    "timeToEffect": "1-3 days cumulative",
-    "difficulty": "Requires practitioner",
-    "cost": "Moderate",
     "isFeatured": false,
     "allergenTags": [],
     "contraindications": [],
@@ -2117,7 +1849,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_bp07",
     "name": "Kati Basti Therapy",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.4,
     "reviewCount": 45,
     "shortDescription": "Ayurvedic procedure where warm medicated oil is retained on the lower back in a dough dam.",
@@ -2138,7 +1870,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_st03",
     "name": "Licorice Root Soothing Tea",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.3,
     "reviewCount": 198,
     "shortDescription": "Sweet Ayurvedic demulcent that coats the throat and reduces inflammation.",
@@ -2159,7 +1891,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_st04",
     "name": "Turmeric Honey Ghee Lick",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.1,
     "reviewCount": 134,
     "shortDescription": "Ayurvedic throat-soothing paste combining turmeric, honey, and ghee.",
@@ -2222,30 +1954,9 @@ export const LOCAL_REMEDIES = [
     ]
   },
   {
-    "id": "rem_st07",
-    "name": "Chinese Pear & Goji Soup",
-    "category": "Lifestyle",
-    "rating": 4,
-    "reviewCount": 87,
-    "shortDescription": "Classic nourishing soup for dry throat and airway comfort.",
-    "longDescription": "Pear can soothe dry throat irritation and support hydration. Goji berries add a mildly sweet flavor and may support general immune nutrition.",
-    "howToUse": "Peel and core 1-2 Asian pears. Simmer with 1 tbsp goji berries, 1 tbsp rock sugar, and 500ml water for 30 minutes. Drink warm once daily.",
-    "warnings": "Not recommended for diarrhea. Goji may interact with warfarin.",
-    "timeToEffect": "30-60 minutes",
-    "difficulty": "Easy",
-    "cost": "Low",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "sore_throat"
-    ],
-    "secondarySymptoms": []
-  },
-  {
     "id": "rem_es03",
     "name": "Eye Moisturizing Drops",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.1,
     "reviewCount": 145,
     "shortDescription": "Ayurvedic herbal eyewash that soothes tired eyes and reduces strain-related discomfort.",
@@ -2306,30 +2017,9 @@ export const LOCAL_REMEDIES = [
     "secondarySymptoms": []
   },
   {
-    "id": "rem_es06",
-    "name": "Acupressure for Tired Eyes",
-    "category": "Lifestyle",
-    "rating": 4.2,
-    "reviewCount": 167,
-    "shortDescription": "Pressure points around the eyes that ease facial tension and relieve strain.",
-    "longDescription": "Acupressure on Zanzhu (BL-2), Taiyang (EX-HN5), and Sibai (ST-2) may reduce facial muscle tension associated with eye strain.",
-    "howToUse": "Press Zanzhu (inner eyebrow) for 30s. Press Taiyang (temple) for 30s. Press Sibai (below pupil) for 30s. Repeat 3 times. Do 2-3 times daily.",
-    "warnings": "Remove contact lenses. Wash hands thoroughly.",
-    "timeToEffect": "5-10 minutes",
-    "difficulty": "Easy",
-    "cost": "Free",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "eye_strain"
-    ],
-    "secondarySymptoms": []
-  },
-  {
     "id": "rem_pc03",
     "name": "Herbal Joint Decoction",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.3,
     "reviewCount": 145,
     "shortDescription": "Traditional ten-root Ayurvedic formula for Vata disorders of the female reproductive system.",
@@ -2350,7 +2040,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_pc04",
     "name": "Herbal Womb Tea",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.2,
     "reviewCount": 123,
     "shortDescription": "Saraca indica bark tea, the classical Ayurvedic uterine tonic for menstrual health.",
@@ -2390,30 +2080,9 @@ export const LOCAL_REMEDIES = [
     "secondarySymptoms": []
   },
   {
-    "id": "rem_pc06",
-    "name": "Moxibustion for Cramps",
-    "category": "Lifestyle",
-    "rating": 4.1,
-    "reviewCount": 98,
-    "shortDescription": "Heat therapy using mugwort near lower abdomen and leg points for cramp comfort.",
-    "longDescription": "Moxibustion involves burning dried mugwort near lower abdomen and inner leg points. The heat may relax pelvic muscle tension and improve comfort during cramps.",
-    "howToUse": "Visit a licensed practitioner. Moxa stick held 2-3cm above skin at lower abdomen and inner leg for 10-15 minutes each.",
-    "warnings": "Burn risk. Strong smoke � ensure ventilation. Not recommended during pregnancy.",
-    "timeToEffect": "1-3 hours",
-    "difficulty": "Requires practitioner",
-    "cost": "Low-Moderate",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "period_cramps"
-    ],
-    "secondarySymptoms": []
-  },
-  {
     "id": "rem_fv03",
     "name": "Giloy Juice",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.3,
     "reviewCount": 189,
     "shortDescription": "Tinospora cordifolia, the Ayurvedic queen of immunity for fever management.",
@@ -2434,7 +2103,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_fv04",
     "name": "Tulsi & Black Pepper Tea",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.1,
     "reviewCount": 156,
     "shortDescription": "Ayurvedic diaphoretic tea that induces healthy sweating to break a fever.",
@@ -2474,30 +2143,9 @@ export const LOCAL_REMEDIES = [
     "secondarySymptoms": []
   },
   {
-    "id": "rem_fv06",
-    "name": "Feng Chi (GB-20) Massage",
-    "category": "Lifestyle",
-    "rating": 4,
-    "reviewCount": 98,
-    "shortDescription": "Massage at the base of the skull that may ease fever-related headache tension.",
-    "longDescription": "Feng Chi (Wind Pool, GB-20) points help release fever-related tension, reduce fever-related headache, and support the body's defense.",
-    "howToUse": "Find hollows at base of skull. Press firmly with both thumbs. Make circular motions for 60 seconds. Repeat 3-4 times daily.",
-    "warnings": "Do not press on the spine. Stop if massage triggers dizziness.",
-    "timeToEffect": "Immediate",
-    "difficulty": "Easy",
-    "cost": "Free",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "fever"
-    ],
-    "secondarySymptoms": []
-  },
-  {
     "id": "rem_sr03",
     "name": "Neem & Turmeric Paste",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.4,
     "reviewCount": 198,
     "shortDescription": "Powerful Ayurvedic antimicrobial and anti-inflammatory paste for skin eruptions.",
@@ -2518,7 +2166,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_sr04",
     "name": "Aloe Vera & Sandalwood Gel",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.5,
     "reviewCount": 267,
     "shortDescription": "Cooling Ayurvedic gel that soothes inflamed skin and speeds healing.",
@@ -2558,30 +2206,9 @@ export const LOCAL_REMEDIES = [
     "secondarySymptoms": []
   },
   {
-    "id": "rem_sr06",
-    "name": "Cooling Herbal Wash",
-    "category": "Lifestyle",
-    "rating": 4,
-    "reviewCount": 87,
-    "shortDescription": "Herbal wash for external washing of heat-type skin rashes.",
-    "longDescription": "A wash made from Ku Shen, Di Fu Zi, and Bai Xian Pi may cool irritated skin and reduce itching when used externally.",
-    "howToUse": "Boil 30g combined herbs in 1L water for 20 min. Cool. Apply to affected areas or add to bath. Use once daily.",
-    "warnings": "For external use only. Patch test first. Discontinue if irritation increases.",
-    "timeToEffect": "15-30 minutes",
-    "difficulty": "Moderate",
-    "cost": "Low",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "skin_rash"
-    ],
-    "secondarySymptoms": []
-  },
-  {
     "id": "rem_ep03",
     "name": "Garlic & Sesame Oil Drops",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.2,
     "reviewCount": 134,
     "shortDescription": "Warm infused oil drops for ear pain relief with antimicrobial garlic.",
@@ -2602,7 +2229,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_ep04",
     "name": "Basil Leaf Juice Drops",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4,
     "reviewCount": 67,
     "shortDescription": "Tulsi leaf juice ear drops for antimicrobial and anti-inflammatory ear pain relief.",
@@ -2612,27 +2239,6 @@ export const LOCAL_REMEDIES = [
     "timeToEffect": "15-30 minutes",
     "difficulty": "Moderate",
     "cost": "Low",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "ear_pain"
-    ],
-    "secondarySymptoms": []
-  },
-  {
-    "id": "rem_ep05",
-    "name": "Triple Warmer Meridian Massage",
-    "category": "Lifestyle",
-    "rating": 4,
-    "reviewCount": 76,
-    "shortDescription": "Gentle massage around the ear that may relieve congestion-related ear pain.",
-    "longDescription": "Massaging points around the ear, including SJ-21 and GB-2, may ease local tension and pressure linked with congestion-related ear pain.",
-    "howToUse": "Press SJ-21 (in front of ear) for 30s. Press GB-2 (below ear) for 30s. Massage tragus in circles. Repeat 3 times.",
-    "warnings": "Avoid with TMJ disorder. Gentle pressure only.",
-    "timeToEffect": "5-10 minutes",
-    "difficulty": "Easy",
-    "cost": "Free",
     "isFeatured": false,
     "allergenTags": [],
     "contraindications": [],
@@ -2665,7 +2271,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_bg03",
     "name": "Fennel & Cumin Digestive Water",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.4,
     "reviewCount": 234,
     "shortDescription": "Ayurvedic infused water that stimulates Agni and prevents gas formation.",
@@ -2687,7 +2293,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_bg04",
     "name": "Hing (Asafoetida) Preparation",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.1,
     "reviewCount": 145,
     "shortDescription": "Powerful Ayurvedic anti-flatulent that instantly relieves bloating and gas pain.",
@@ -2750,34 +2356,13 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_ho03",
     "name": "Amla & Honey Morning Drink",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.2,
     "reviewCount": 134,
     "shortDescription": "Vitamin-C rich Ayurvedic drink that detoxifies the liver and rehydrates after alcohol.",
     "longDescription": "Amla is the richest natural source of vitamin C and a potent liver detoxifier. Combined with honey and warm water, it helps process alcohol metabolites.",
     "howToUse": "Mix 1 tsp amla powder with 1 tsp honey in 200ml warm water. Drink first thing in the morning on empty stomach.",
     "warnings": "Amla is very sour � may aggravate hyperacidity. Rinse mouth after.",
-    "timeToEffect": "30-60 minutes",
-    "difficulty": "Easy",
-    "cost": "Low",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "hangover"
-    ],
-    "secondarySymptoms": []
-  },
-  {
-    "id": "rem_ho04",
-    "name": "Goji & Chinese Date Recovery Tea",
-    "category": "Lifestyle",
-    "rating": 4,
-    "reviewCount": 67,
-    "shortDescription": "Hydrating goji and Chinese date tea for post-alcohol recovery.",
-    "longDescription": "Goji berries and Chinese dates add fluids, carbohydrates, and micronutrients that may support recovery after alcohol.",
-    "howToUse": "Add 1 tbsp goji berries and 3-4 red dates (pitted) to 500ml water. Simmer 20 min. Drink warm.",
-    "warnings": "Goji may interact with warfarin. Dates are high in sugar.",
     "timeToEffect": "30-60 minutes",
     "difficulty": "Easy",
     "cost": "Low",
@@ -2836,7 +2421,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_ft03",
     "name": "Chyawanprash for Energy",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.5,
     "reviewCount": 312,
     "shortDescription": "Traditional Ayurvedic Rasayana jam that builds Ojas and sustains energy levels.",
@@ -2857,7 +2442,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_ft04",
     "name": "Shilajit Resin",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.3,
     "reviewCount": 198,
     "shortDescription": "Mineral-rich Himalayan pitch that boosts mitochondrial ATP production and reduces fatigue.",
@@ -2872,29 +2457,6 @@ export const LOCAL_REMEDIES = [
     "contraindications": [],
     "primarySymptoms": [
       "fatigue"
-    ],
-    "secondarySymptoms": []
-  },
-  {
-    "id": "rem_ft05",
-    "name": "Qi Gong Energy Practice",
-    "category": "Lifestyle",
-    "rating": 4.4,
-    "reviewCount": 145,
-    "shortDescription": "Gentle movement meditation that combines breathing, posture, and attention for fatigue.",
-    "longDescription": "Qi Gong combines gentle movement, breath regulation, and attention. Low-intensity movement may support energy, coordination, and oxygen utilization.",
-    "howToUse": "Practice 15-20 minutes daily. Key exercises: Eight Brocades. Many free guided videos. Best done in the morning.",
-    "warnings": "Move slowly and gently. If dizzy, pause and breathe.",
-    "timeToEffect": "1-2 weeks cumulative",
-    "difficulty": "Easy",
-    "cost": "Free",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "stress",
-      "fatigue",
-      "brain_fog"
     ],
     "secondarySymptoms": []
   },
@@ -2945,7 +2507,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_lp04",
     "name": "Mahanarayan Oil Massage (Legs)",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.3,
     "reviewCount": 145,
     "shortDescription": "Ayurvedic herbal oil massage specifically for Vata-type leg pain and heaviness.",
@@ -2955,27 +2517,6 @@ export const LOCAL_REMEDIES = [
     "timeToEffect": "30-60 minutes",
     "difficulty": "Moderate",
     "cost": "Low",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "leg_pain"
-    ],
-    "secondarySymptoms": []
-  },
-  {
-    "id": "rem_lp05",
-    "name": "Cupping for Legs",
-    "category": "Lifestyle",
-    "rating": 4.1,
-    "reviewCount": 98,
-    "shortDescription": "Suction therapy that releases deep muscle tension and improves leg circulation.",
-    "longDescription": "Cupping along the back of the legs may ease deep muscle tension and improve local blood flow.",
-    "howToUse": "Visit licensed practitioner. Cups on back of thighs and calves 5-10 min. 4-6 session course.",
-    "warnings": "Not for varicose veins. Avoid with bleeding disorders.",
-    "timeToEffect": "1-3 days cumulative",
-    "difficulty": "Requires practitioner",
-    "cost": "Moderate",
     "isFeatured": false,
     "allergenTags": [],
     "contraindications": [],
@@ -3072,7 +2613,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_kp04",
     "name": "Turmeric & Ginger Compress",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.2,
     "reviewCount": 167,
     "shortDescription": "Ayurvedic warm poultice for deep anti-inflammatory action on knee joints.",
@@ -3082,27 +2623,6 @@ export const LOCAL_REMEDIES = [
     "timeToEffect": "30-45 minutes",
     "difficulty": "Moderate",
     "cost": "Low",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "knee_pain"
-    ],
-    "secondarySymptoms": []
-  },
-  {
-    "id": "rem_kp05",
-    "name": "Acupuncture for Knee Pain",
-    "category": "Lifestyle",
-    "rating": 4.3,
-    "reviewCount": 156,
-    "shortDescription": "Acupuncture targeting knee joint points to reduce pain and improve function.",
-    "longDescription": "Key points ST-35, SP-9, GB-34. Meta-analyses show significant pain reduction for knee osteoarthritis.",
-    "howToUse": "Visit licensed acupuncturist. 5-8 needles around knee. 20-30 min sessions. Standard: 8-12 sessions, 1-2x weekly.",
-    "warnings": "Minor bruising common. Not with anticoagulant therapy.",
-    "timeToEffect": "1-3 sessions cumulative",
-    "difficulty": "Requires practitioner",
-    "cost": "Moderate",
     "isFeatured": false,
     "allergenTags": [],
     "contraindications": [],
@@ -3135,7 +2655,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_kp07",
     "name": "Mahanarayan Oil (Knee)",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.2,
     "reviewCount": 98,
     "shortDescription": "Ayurvedic medicated oil therapy specifically for knee joint stiffness and Vata pain.",
@@ -3177,7 +2697,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_np04",
     "name": "Mahanarayan Oil (Neck)",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.3,
     "reviewCount": 134,
     "shortDescription": "Warm Ayurvedic oil massage for cervical Vata disorders and neck stiffness.",
@@ -3185,27 +2705,6 @@ export const LOCAL_REMEDIES = [
     "howToUse": "Warm oil. Apply to neck and upper shoulders. Massage gently 10 min. Wrap warm towel 20 min. Use daily 2 weeks.",
     "warnings": "Avoid front of neck. Not with cervical injury or acute nerve symptoms.",
     "timeToEffect": "30-60 minutes",
-    "difficulty": "Moderate",
-    "cost": "Low",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "neck_pain"
-    ],
-    "secondarySymptoms": []
-  },
-  {
-    "id": "rem_np05",
-    "name": "Gua Sha for Neck Tension",
-    "category": "Lifestyle",
-    "rating": 4.2,
-    "reviewCount": 178,
-    "shortDescription": "Instrument-assisted scraping that releases deep neck fascia and muscle tension.",
-    "longDescription": "Gua Sha breaks up trigger points, improves microcirculation, and reduces pain in trapezius and levator scapulae.",
-    "howToUse": "Apply oil. Scrape downward strokes along neck with Gua Sha tool. 20 strokes per area. Mild bruising expected. Use 2-3x weekly.",
-    "warnings": "Leaves temporary bruising. Not on moles, varicose veins, or swollen lymph nodes.",
-    "timeToEffect": "1-2 days cumulative",
     "difficulty": "Moderate",
     "cost": "Low",
     "isFeatured": false,
@@ -3262,7 +2761,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_np08",
     "name": "Abhyanga Neck Massage",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.4,
     "reviewCount": 123,
     "shortDescription": "Self-oil massage following Ayurvedic Abhyanga principles for daily neck care.",
@@ -3305,7 +2804,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_sp04",
     "name": "Abhyanga Shoulder Massage",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.3,
     "reviewCount": 167,
     "shortDescription": "Ayurvedic self-massage of the shoulders and upper back for Vata relief.",
@@ -3315,27 +2814,6 @@ export const LOCAL_REMEDIES = [
     "timeToEffect": "10-15 minutes",
     "difficulty": "Easy",
     "cost": "Low",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "shoulder_pain"
-    ],
-    "secondarySymptoms": []
-  },
-  {
-    "id": "rem_sp05",
-    "name": "Cupping for Shoulders",
-    "category": "Lifestyle",
-    "rating": 4.2,
-    "reviewCount": 123,
-    "shortDescription": "Cupping therapy that releases shoulder tension and improves mobility.",
-    "longDescription": "Cupping around the upper back and shoulder may ease myofascial tightness in the rotator cuff and deltoid region.",
-    "howToUse": "Visit licensed practitioner. Cups on upper back and shoulder for 5-10 min. 6-10 session course for chronic conditions.",
-    "warnings": "Circular marks normal. Not with bleeding disorders or shoulder infection.",
-    "timeToEffect": "1-3 days cumulative",
-    "difficulty": "Requires practitioner",
-    "cost": "Moderate",
     "isFeatured": false,
     "allergenTags": [],
     "contraindications": [],
@@ -3389,7 +2867,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_sp08",
     "name": "Mahanarayan Oil (Shoulder)",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.2,
     "reviewCount": 89,
     "shortDescription": "Deep-acting Ayurvedic oil therapy for shoulder joint stiffness and Vata pain.",
@@ -3410,7 +2888,7 @@ export const LOCAL_REMEDIES = [
   {
     "id": "rem_ey01",
     "name": "Triphala Eye Wash (Eye Pain)",
-    "category": "Ayurveda",
+    "category": "Natural",
     "rating": 4.2,
     "reviewCount": 134,
     "shortDescription": "Ayurvedic cool eyewash that reduces eye pain from strain, dryness, or allergy.",
@@ -3450,27 +2928,6 @@ export const LOCAL_REMEDIES = [
     "secondarySymptoms": []
   },
   {
-    "id": "rem_ey03",
-    "name": "Acupressure for Eye Pain",
-    "category": "Lifestyle",
-    "rating": 4.1,
-    "reviewCount": 145,
-    "shortDescription": "Pressure points around the eye that may relieve pain by easing facial tension.",
-    "longDescription": "Eye-area tension can contribute to discomfort. Points Zanzhu (BL-2) and Taiyang (EX-HN5) may provide short-term relief.",
-    "howToUse": "Press Zanzhu (inner brow) upward 30s. Press Taiyang (temple) 30s. Press Jingming (inner eye corner) gently 15s. Repeat 3-4 times.",
-    "warnings": "Wash hands. Remove contacts. Gentle pressure only.",
-    "timeToEffect": "5-10 minutes",
-    "difficulty": "Easy",
-    "cost": "Free",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
-      "eye_pain"
-    ],
-    "secondarySymptoms": []
-  },
-  {
     "id": "rem_ey04",
     "name": "Cold Spoon Compress",
     "category": "Lifestyle",
@@ -3488,27 +2945,6 @@ export const LOCAL_REMEDIES = [
     "contraindications": [],
     "primarySymptoms": [
       "headache",
-      "eye_pain"
-    ],
-    "secondarySymptoms": []
-  },
-  {
-    "id": "rem_ey05",
-    "name": "Rose Water Eye Drops",
-    "category": "Ayurveda",
-    "rating": 4.3,
-    "reviewCount": 189,
-    "shortDescription": "Ayurvedic cooling rose water drops that refresh tired, painful eyes.",
-    "longDescription": "Pure rose water has cooling (sheeta) and tridoshic properties. Soothes inflamed eyes, reduces redness, and provides gentle lubrication.",
-    "howToUse": "Instill 1-2 drops pure preservative-free rose water in each eye. Blink gently. Use as needed up to 4-5 times daily.",
-    "warnings": "Use only pure rose water without alcohol or preservatives. Discontinue if stinging.",
-    "timeToEffect": "Immediate",
-    "difficulty": "Easy",
-    "cost": "Low",
-    "isFeatured": false,
-    "allergenTags": [],
-    "contraindications": [],
-    "primarySymptoms": [
       "eye_pain"
     ],
     "secondarySymptoms": []
@@ -3545,11 +2981,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "priorityRank": 10
     },
     {
-      "remedyId": "rem_lp02",
-      "evidenceScore": 3,
-      "priorityRank": 8
-    },
-    {
       "remedyId": "rem_lp03",
       "evidenceScore": 5,
       "priorityRank": 7
@@ -3558,11 +2989,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "remedyId": "rem_lp04",
       "evidenceScore": 5,
       "priorityRank": 7
-    },
-    {
-      "remedyId": "rem_lp05",
-      "evidenceScore": 5,
-      "priorityRank": 6
     },
     {
       "remedyId": "rem_lp06",
@@ -3587,11 +3013,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "priorityRank": 10
     },
     {
-      "remedyId": "rem_kp02",
-      "evidenceScore": 3,
-      "priorityRank": 8
-    },
-    {
       "remedyId": "rem_kp03",
       "evidenceScore": 5,
       "priorityRank": 9
@@ -3600,11 +3021,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "remedyId": "rem_kp04",
       "evidenceScore": 5,
       "priorityRank": 7
-    },
-    {
-      "remedyId": "rem_kp05",
-      "evidenceScore": 5,
-      "priorityRank": 8
     },
     {
       "remedyId": "rem_kp06",
@@ -3624,11 +3040,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "priorityRank": 10
     },
     {
-      "remedyId": "rem_np02",
-      "evidenceScore": 3,
-      "priorityRank": 8
-    },
-    {
       "remedyId": "rem_np03",
       "evidenceScore": 5,
       "priorityRank": 9
@@ -3637,11 +3048,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "remedyId": "rem_np04",
       "evidenceScore": 5,
       "priorityRank": 8
-    },
-    {
-      "remedyId": "rem_np05",
-      "evidenceScore": 5,
-      "priorityRank": 7
     },
     {
       "remedyId": "rem_np06",
@@ -3666,22 +3072,12 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "priorityRank": 10
     },
     {
-      "remedyId": "rem_sp02",
-      "evidenceScore": 3,
-      "priorityRank": 8
-    },
-    {
       "remedyId": "rem_sp03",
       "evidenceScore": 5,
       "priorityRank": 9
     },
     {
       "remedyId": "rem_sp04",
-      "evidenceScore": 5,
-      "priorityRank": 7
-    },
-    {
-      "remedyId": "rem_sp05",
       "evidenceScore": 5,
       "priorityRank": 7
     },
@@ -3772,11 +3168,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "priorityRank": 9
     },
     {
-      "remedyId": "rem_h03",
-      "evidenceScore": 5,
-      "priorityRank": 8
-    },
-    {
       "remedyId": "rem_h05",
       "evidenceScore": 5,
       "priorityRank": 8
@@ -3803,11 +3194,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
     },
     {
       "remedyId": "rem_h06",
-      "evidenceScore": 5,
-      "priorityRank": 8
-    },
-    {
-      "remedyId": "rem_h07",
       "evidenceScore": 5,
       "priorityRank": 8
     },
@@ -3857,11 +3243,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "remedyId": "rem_fv01",
       "evidenceScore": 5,
       "priorityRank": 7
-    },
-    {
-      "remedyId": "rem_c03",
-      "evidenceScore": 5,
-      "priorityRank": 6
     },
     {
       "remedyId": "rem_st01",
@@ -3916,24 +3297,9 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "priorityRank": 8
     },
     {
-      "remedyId": "rem_a03",
-      "evidenceScore": 5,
-      "priorityRank": 8
-    },
-    {
-      "remedyId": "rem_i03",
-      "evidenceScore": 5,
-      "priorityRank": 6
-    },
-    {
       "remedyId": "rem_s01",
       "evidenceScore": 5,
       "priorityRank": 6
-    },
-    {
-      "remedyId": "rem_s03",
-      "evidenceScore": 5,
-      "priorityRank": 7
     },
     {
       "remedyId": "rem_a06",
@@ -3983,11 +3349,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "priorityRank": 7
     },
     {
-      "remedyId": "rem_i03",
-      "evidenceScore": 5,
-      "priorityRank": 7
-    },
-    {
       "remedyId": "rem_h02",
       "evidenceScore": 5,
       "priorityRank": 6
@@ -4028,11 +3389,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "remedyId": "rem_n01",
       "evidenceScore": 5,
       "priorityRank": 10
-    },
-    {
-      "remedyId": "rem_n03",
-      "evidenceScore": 5,
-      "priorityRank": 9
     },
     {
       "remedyId": "rem_n05",
@@ -4085,11 +3441,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "priorityRank": 7
     },
     {
-      "remedyId": "rem_n08",
-      "evidenceScore": 5,
-      "priorityRank": 8
-    },
-    {
       "remedyId": "rem_n09",
       "evidenceScore": 5,
       "priorityRank": 9
@@ -4115,11 +3466,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "remedyId": "rem_s05",
       "evidenceScore": 5,
       "priorityRank": 10
-    },
-    {
-      "remedyId": "rem_s03",
-      "evidenceScore": 5,
-      "priorityRank": 9
     },
     {
       "remedyId": "rem_i05",
@@ -4148,16 +3494,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
     },
     {
       "remedyId": "rem_h01",
-      "evidenceScore": 5,
-      "priorityRank": 5
-    },
-    {
-      "remedyId": "rem_h03",
-      "evidenceScore": 5,
-      "priorityRank": 5
-    },
-    {
-      "remedyId": "rem_c03",
       "evidenceScore": 5,
       "priorityRank": 5
     },
@@ -4217,11 +3553,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "priorityRank": 5
     },
     {
-      "remedyId": "rem_ft05",
-      "evidenceScore": 3,
-      "priorityRank": 5
-    },
-    {
       "remedyId": "rem_ft06",
       "evidenceScore": 3,
       "priorityRank": 5
@@ -4242,11 +3573,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "remedyId": "rem_bp03",
       "evidenceScore": 5,
       "priorityRank": 8
-    },
-    {
-      "remedyId": "rem_bp05",
-      "evidenceScore": 5,
-      "priorityRank": 7
     },
     {
       "remedyId": "rem_bp06",
@@ -4274,11 +3600,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "remedyId": "rem_st02",
       "evidenceScore": 5,
       "priorityRank": 9
-    },
-    {
-      "remedyId": "rem_st07",
-      "evidenceScore": 5,
-      "priorityRank": 6
     },
     {
       "remedyId": "rem_st03",
@@ -4328,11 +3649,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "priorityRank": 10
     },
     {
-      "remedyId": "rem_es06",
-      "evidenceScore": 5,
-      "priorityRank": 8
-    },
-    {
       "remedyId": "rem_ey06",
       "evidenceScore": 3,
       "priorityRank": 5
@@ -4355,11 +3671,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "priorityRank": 9
     },
     {
-      "remedyId": "rem_pc06",
-      "evidenceScore": 5,
-      "priorityRank": 7
-    },
-    {
       "remedyId": "rem_pc03",
       "evidenceScore": 5,
       "priorityRank": 8
@@ -4380,11 +3691,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "remedyId": "rem_fv02",
       "evidenceScore": 5,
       "priorityRank": 9
-    },
-    {
-      "remedyId": "rem_fv06",
-      "evidenceScore": 5,
-      "priorityRank": 6
     },
     {
       "remedyId": "rem_fv04",
@@ -4419,11 +3725,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "priorityRank": 7
     },
     {
-      "remedyId": "rem_sr06",
-      "evidenceScore": 5,
-      "priorityRank": 6
-    },
-    {
       "remedyId": "rem_sr03",
       "evidenceScore": 5,
       "priorityRank": 8
@@ -4454,11 +3755,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "remedyId": "rem_ep04",
       "evidenceScore": 5,
       "priorityRank": 6
-    },
-    {
-      "remedyId": "rem_ep05",
-      "evidenceScore": 5,
-      "priorityRank": 7
     },
     {
       "remedyId": "rem_ep06",
@@ -4520,11 +3816,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "priorityRank": 7
     },
     {
-      "remedyId": "rem_ho04",
-      "evidenceScore": 5,
-      "priorityRank": 6
-    },
-    {
       "remedyId": "rem_ho05",
       "evidenceScore": 5,
       "priorityRank": 8
@@ -4567,19 +3858,9 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "priorityRank": 7
     },
     {
-      "remedyId": "rem_ft05",
-      "evidenceScore": 5,
-      "priorityRank": 8
-    },
-    {
       "remedyId": "rem_ft06",
       "evidenceScore": 5,
       "priorityRank": 9
-    },
-    {
-      "remedyId": "rem_s03",
-      "evidenceScore": 3,
-      "priorityRank": 5
     },
     {
       "remedyId": "rem_ho05",
@@ -4594,22 +3875,12 @@ export const LOCAL_SYMPTOM_REMEDIES = {
   ],
   "eye_pain": [
     {
-      "remedyId": "rem_ey03",
-      "evidenceScore": 5,
-      "priorityRank": 7
-    },
-    {
       "remedyId": "rem_ey06",
       "evidenceScore": 5,
       "priorityRank": 8
     },
     {
       "remedyId": "rem_ey01",
-      "evidenceScore": 5,
-      "priorityRank": 7
-    },
-    {
-      "remedyId": "rem_ey05",
       "evidenceScore": 5,
       "priorityRank": 7
     },
@@ -4646,11 +3917,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
       "priorityRank": 5
     },
     {
-      "remedyId": "rem_s03",
-      "evidenceScore": 3,
-      "priorityRank": 5
-    },
-    {
       "remedyId": "rem_s05",
       "evidenceScore": 3,
       "priorityRank": 5
@@ -4677,11 +3943,6 @@ export const LOCAL_SYMPTOM_REMEDIES = {
     },
     {
       "remedyId": "rem_ho05",
-      "evidenceScore": 3,
-      "priorityRank": 5
-    },
-    {
-      "remedyId": "rem_ft05",
       "evidenceScore": 3,
       "priorityRank": 5
     },
