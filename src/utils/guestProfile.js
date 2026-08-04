@@ -67,19 +67,15 @@ export function getGuestConditions() {
   return getGuestProfile().common_conditions ?? [];
 }
 
-export function isRemedySafeForUser(remedy, { allergies, conditions, ageRange }) {
+export function isRemedySafeForUser(remedy, { allergies, conditions, isChildSafe }) {
   if (remedyMatchesAllergies(remedy, allergies)) return false;
   if (remedyHasContraindication(remedy, conditions)) return false;
-  if (getChildSafetyStatus(remedy, ageRange).isHardBlock) return false;
+  if (getChildSafetyStatus(remedy, isChildSafe).isHardBlock) return false;
   return true;
 }
 
-export function isChildAgeRange(ageRange) {
-  return ageRange === 'under-12' || ageRange === '12-17';
-}
-
-export function getChildSafetyStatus(remedy, ageRange) {
-  if (!isChildAgeRange(ageRange)) {
+export function getChildSafetyStatus(remedy, isChildSafe) {
+  if (!isChildSafe) {
     return { hasConcern: false, isHardBlock: false, note: '' };
   }
 

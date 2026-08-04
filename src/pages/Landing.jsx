@@ -151,10 +151,9 @@ export function Landing() {
           compact
           completeMessage="Your search is ready."
           initialValues={{}}
-          onSubmit={async ({ gender, ageRange, commonConditions, knownAllergies }) => {
+          onSubmit={async ({ gender, commonConditions, knownAllergies }) => {
             updateGuestProfile({
               gender,
-              age_range: ageRange,
               common_conditions: commonConditions,
               known_allergies: knownAllergies,
             });

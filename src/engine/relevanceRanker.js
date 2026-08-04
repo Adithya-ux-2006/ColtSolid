@@ -114,7 +114,7 @@ function computeUserContextPenalty(remedy, userContext) {
   if (!userContext) return 0;
 
   let penalty = 0;
-  const { allergies, conditions, ageRange } = userContext;
+  const { allergies, conditions, isChildSafe } = userContext;
 
   if (allergies?.length) {
     const remedyAllergens = (remedy.allergen_tags || []).map(t => t.toLowerCase());
@@ -148,7 +148,7 @@ function computeUserContextPenalty(remedy, userContext) {
     }
   }
 
-  const childSafety = getChildSafetyStatus(remedy, ageRange);
+  const childSafety = getChildSafetyStatus(remedy, isChildSafe);
   if (childSafety.isHardBlock) {
     penalty += 40;
     remedy._childSafetyBlock = true;

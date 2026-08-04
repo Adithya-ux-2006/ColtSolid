@@ -18,7 +18,6 @@ import { isRemedySafeForUser } from '../utils/guestProfile';
 import { getRankedRemediesForSymptoms, isEmergencyQuery, resolveWithSemanticFallback } from '../utils/symptomSearch';
 import { resolveQuery } from '../utils/symptomEngine';
 import { fetchGeminiInterpretation } from '../utils/geminiInterpreter';
-import { AGE_RANGE_OPTIONS } from '../constants/onboarding';
 import { trackSearchEvent } from '../utils/analytics';
 
 const EMPTY_ARRAY = [];
@@ -99,59 +98,49 @@ function MedicalDisclaimer() {
   );
 }
 
-function getAgeRangeLabel(ageRange) {
-  return AGE_RANGE_OPTIONS.find((option) => option.value === ageRange)?.label || 'Not set';
-}
-
-function SafetyProfilePanel({ ageRange, onSelectAgeRange, isSaving }) {
-  const hasAgeRange = Boolean(ageRange);
-
+function SafetyProfilePanel({ isChildSafe, onToggleChildSafe, isSaving }) {
   return (
     <div className="max-w-4xl mx-auto px-6 mb-6">
       <section className={cn(
         'rounded-2xl border p-4 md:p-5 shadow-soft',
-        hasAgeRange ? 'border-success/20 bg-success/5' : 'border-warning/20 bg-warning/10'
+        isChildSafe ? 'border-success/20 bg-success/5' : 'border-border bg-card'
       )}>
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex items-start gap-3">
             <div className={cn(
               'mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full',
-              hasAgeRange ? 'bg-success/10 text-success' : 'bg-warning/15 text-warning'
+              isChildSafe ? 'bg-success/10 text-success' : 'bg-surface text-ink-muted'
             )}>
               <ShieldCheck className="h-4 w-4" />
             </div>
             <div>
-              <p className="text-sm font-bold text-ink">Safety profile</p>
+              <p className="text-sm font-bold text-ink">Child Safe Mode</p>
               <p className="mt-1 text-sm leading-relaxed text-ink-muted">
-                {hasAgeRange
-                  ? `Results are using age range ${getAgeRangeLabel(ageRange)} for child and teen safety checks.`
-                  : 'Add an age range to apply child and teen safety checks to these recommendations.'}
+                {isChildSafe
+                  ? 'Filtering out remedies not recommended for children.'
+                  : 'Toggle on to filter remedies not safe for children.'}
               </p>
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2 md:justify-end">
-            {AGE_RANGE_OPTIONS.map((option) => {
-              const isSelected = ageRange === option.value;
-              return (
-                <button
-                  key={option.value}
-                  type="button"
-                  disabled={isSaving}
-                  aria-pressed={isSelected}
-                  onClick={() => onSelectAgeRange(option.value)}
-                  className={cn(
-                    'min-h-[36px] rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors disabled:opacity-60',
-                    isSelected
-                      ? 'border-primary bg-primary text-white shadow-glow'
-                      : 'border-border bg-card text-ink hover:border-primary/30 hover:text-primary'
-                  )}
-                >
-                  {option.label}
-                </button>
-              );
-            })}
-          </div>
+          <button
+            type="button"
+            disabled={isSaving}
+            onClick={() => onToggleChildSafe(!isChildSafe)}
+            className={cn(
+              'relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-60',
+              isChildSafe ? 'bg-primary' : 'bg-ink/20'
+            )}
+            role="switch"
+            aria-checked={isChildSafe}
+          >
+            <span
+              className={cn(
+                'pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out',
+                isChildSafe ? 'translate-x-5' : 'translate-x-0'
+              )}
+            />
+          </button>
         </div>
       </section>
     </div>
@@ -170,21 +159,21 @@ export function Results() {
     location.state?.geminiInterpretation || null
   );
   const [semanticFallbackId, setSemanticFallbackId] = useState(null);
-  const [isSavingAgeRange, setIsSavingAgeRange] = useState(false);
+  const [isSavingChildSafe, setIsSavingChildSafe] = useState(false);
 
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies ?? EMPTY_ARRAY);
   const userConditions = useAuthStore((state) => state.user?.common_conditions);
-  const userAgeRange = useAuthStore((state) => state.user?.age_range);
+  const userIsChildSafe = useAuthStore((state) => state.user?.is_child_safe ?? false);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const incrementSearchCount = useAuthStore((state) => state.incrementSearchCount);
   const updateUser = useAuthStore((state) => state.updateUser);
   const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
   const guestConditions = useGuestProfileStore((state) => state.common_conditions);
-  const guestAgeRange = useGuestProfileStore((state) => state.age_range);
-  const setGuestAgeRange = useGuestProfileStore((state) => state.setAgeRange);
+  const guestIsChildSafe = useGuestProfileStore((state) => state.is_child_safe ?? false);
+  const setGuestIsChildSafe = useGuestProfileStore((state) => state.setIsChildSafe);
   const activeAllergies = isAuthenticated ? userKnownAllergies : guestAllergies;
   const activeConditions = isAuthenticated ? userConditions : guestConditions;
-  const activeAgeRange = isAuthenticated ? userAgeRange : guestAgeRange;
+  const activeIsChildSafe = isAuthenticated ? userIsChildSafe : guestIsChildSafe;
 
   const symptoms = useCatalogStore((state) => state.symptoms);
   const remedies = useCatalogStore((state) => state.remedies);
@@ -318,8 +307,8 @@ export function Results() {
   }, [isFreeTextSearch, freeTextQuery, symptomParam, isAuthenticated, incrementSearchCount]);
 
   const safeFilter = useMemo(
-    () => (remedy) => isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions, ageRange: activeAgeRange }),
-    [activeAllergies, activeConditions, activeAgeRange]
+    () => (remedy) => isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions, isChildSafe: activeIsChildSafe }),
+    [activeAllergies, activeConditions, activeIsChildSafe]
   );
 
   const searchResult = useMemo(() => {
@@ -330,12 +319,12 @@ export function Results() {
       symptoms,
       allergies: activeAllergies,
       conditions: activeConditions,
-      ageRange: activeAgeRange,
+      isChildSafe: activeIsChildSafe,
       queryConfidence: symptomResolution.confidence,
       primarySymptomId: symptomResolution.primarySymptomId,
       popularityMap,
     });
-  }, [symptomResolution.symptomIds, symptomResolution.confidence, symptomResolution.primarySymptomId, symptomRemedies, remedies, symptoms, activeAllergies, activeConditions, activeAgeRange, popularityMap]);
+  }, [symptomResolution.symptomIds, symptomResolution.confidence, symptomResolution.primarySymptomId, symptomRemedies, remedies, symptoms, activeAllergies, activeConditions, activeIsChildSafe, popularityMap]);
 
   const grouped = searchResult.grouped;
 
@@ -369,19 +358,19 @@ export function Results() {
 
   const visibleAlternatives = showAllAlternatives ? allAlternatives : allAlternatives.slice(0, 5);
 
-  const handleAgeRangeSelect = async (ageRange) => {
-    if (!ageRange || ageRange === activeAgeRange) return;
+  const handleChildSafeToggle = async (newValue) => {
+    if (newValue === activeIsChildSafe) return;
 
     if (!isAuthenticated) {
-      setGuestAgeRange(ageRange);
+      setGuestIsChildSafe(newValue);
       return;
     }
 
-    setIsSavingAgeRange(true);
+    setIsSavingChildSafe(true);
     try {
-      await updateUser({ age_range: ageRange });
+      await updateUser({ is_child_safe: newValue });
     } finally {
-      setIsSavingAgeRange(false);
+      setIsSavingChildSafe(false);
     }
   };
 
@@ -446,9 +435,9 @@ export function Results() {
 
       {hasResults && !isEmergencySearch && (
         <SafetyProfilePanel
-          ageRange={activeAgeRange}
-          onSelectAgeRange={handleAgeRangeSelect}
-          isSaving={isSavingAgeRange}
+          isChildSafe={activeIsChildSafe}
+          onToggleChildSafe={handleChildSafeToggle}
+          isSaving={isSavingChildSafe}
         />
       )}
 
@@ -489,7 +478,7 @@ export function Results() {
                     isSafe={safeFilter(remedy)}
                     evidenceScore={remedy._evidenceScore}
                     safetyScore={remedy._safetyScore}
-                    ageRange={activeAgeRange}
+                    isChildSafe={activeIsChildSafe}
                     delay={i * 0.06}
                   />
                 ))}
@@ -525,7 +514,7 @@ export function Results() {
                       isSafe={safeFilter(remedy)}
                       evidenceScore={remedy._evidenceScore}
                       safetyScore={remedy._safetyScore}
-                      ageRange={activeAgeRange}
+                      isChildSafe={activeIsChildSafe}
                       showDivider={i < visibleAlternatives.length - 1}
                     />
                   ))}

@@ -11,9 +11,8 @@ export function needsOnboardingProfile(user) {
   const hasGender = Boolean((user.gender || '').trim());
   const hasConditions = (user.common_conditions ?? []).length > 0;
   const hasAllergies = (user.known_allergies ?? []).length > 0;
-  const hasAgeRange = Boolean((user.age_range || user.ageRange || '').trim());
 
-  return !hasCompletedOnboarding || (!hasGender && !hasAgeRange && !hasConditions && !hasAllergies);
+  return !hasCompletedOnboarding || (!hasGender && !hasConditions && !hasAllergies);
 }
 
 async function importQuickSavedFavorites(userId) {
@@ -35,13 +34,13 @@ async function migrateGuestProfileIfNeeded(user) {
 
   const userConditions = user.common_conditions ?? [];
   const userAllergies = user.known_allergies ?? [];
-  const hasExistingProfile = userConditions.length > 0 || userAllergies.length > 0 || Boolean(user.age_range);
+  const hasExistingProfile = userConditions.length > 0 || userAllergies.length > 0 || user.is_child_safe;
 
   if (hasExistingProfile) return;
 
   const GUEST_ALLERGIES_KEY = 'clotsolid_guest_allergies';
   const GUEST_CONDITIONS_KEY = 'clotsolid_guest_conditions';
-  const GUEST_AGE_RANGE_KEY = 'clotsolid_guest_age_range';
+  const GUEST_CHILD_SAFE_KEY = 'clotsolid_guest_child_safe';
 
   function readArr(key) {
     if (typeof window === 'undefined') return [];
@@ -53,20 +52,20 @@ async function migrateGuestProfileIfNeeded(user) {
 
   const guestAllergies = readArr(GUEST_ALLERGIES_KEY).filter((value) => !REMOVED_ALLERGY_VALUES.includes(value));
   const guestConditions = readArr(GUEST_CONDITIONS_KEY);
-  const guestAgeRange = typeof window === 'undefined' ? '' : window.localStorage.getItem(GUEST_AGE_RANGE_KEY) || '';
+  const guestChildSafe = typeof window === 'undefined' ? false : window.localStorage.getItem(GUEST_CHILD_SAFE_KEY) === 'true';
 
-  if (guestAllergies.length === 0 && guestConditions.length === 0 && !guestAgeRange) return;
+  if (guestAllergies.length === 0 && guestConditions.length === 0 && !guestChildSafe) return;
 
   const updates = {};
   if (guestConditions.length > 0) updates.common_conditions = guestConditions;
   if (guestAllergies.length > 0) updates.known_allergies = guestAllergies;
-  if (guestAgeRange) updates.age_range = guestAgeRange;
+  if (guestChildSafe) updates.is_child_safe = guestChildSafe;
 
   await updateUserProfileRow(user.id, updates);
 
   window.localStorage.removeItem(GUEST_ALLERGIES_KEY);
   window.localStorage.removeItem(GUEST_CONDITIONS_KEY);
-  window.localStorage.removeItem(GUEST_AGE_RANGE_KEY);
+  window.localStorage.removeItem(GUEST_CHILD_SAFE_KEY);
   window.localStorage.removeItem('clotsolid_guest_profile');
 
   return updates;
@@ -92,7 +91,7 @@ async function updateUserProfileRow(userId, updates) {
     common_conditions: updates.common_conditions,
     known_allergies: updates.known_allergies,
     has_completed_onboarding: updates.has_completed_onboarding,
-    age_range: updates.age_range,
+    is_child_safe: updates.is_child_safe,
   };
 
   Object.keys(fallbackUpdates).forEach((key) => fallbackUpdates[key] === undefined && delete fallbackUpdates[key]);
@@ -128,7 +127,7 @@ const buildUser = async (session) => {
     university: profile?.university_name || profile?.university || metadata.university_name || metadata.university || '',
     year: profile?.current_year || profile?.year || metadata.current_year || metadata.year || '',
     gender: profile?.gender || metadata.gender || '',
-    age_range: profile?.age_range || metadata.age_range || '',
+    is_child_safe: profile?.is_child_safe ?? false,
     common_conditions: profile?.common_conditions ?? [],
     known_allergies: profile?.known_allergies ?? [],
     has_completed_onboarding: profile?.has_completed_onboarding ?? false,
@@ -296,7 +295,7 @@ export const useAuthStore = create((set, get) => ({
         gender: updates.gender,
         known_allergies: updates.known_allergies,
         common_conditions: updates.common_conditions,
-        age_range: updates.ageRange ?? updates.age_range,
+        is_child_safe: updates.is_child_safe,
       };
 
       Object.keys(dbUpdates).forEach((key) => dbUpdates[key] === undefined && delete dbUpdates[key]);
@@ -307,7 +306,6 @@ export const useAuthStore = create((set, get) => ({
         university_name: updates.universityName,
         current_year: updates.currentYear,
         gender: updates.gender,
-        age_range: updates.ageRange ?? updates.age_range,
       };
 
       Object.keys(metadataUpdates).forEach((key) => metadataUpdates[key] === undefined && delete metadataUpdates[key]);
@@ -322,7 +320,6 @@ export const useAuthStore = create((set, get) => ({
         user: {
           ...state.user,
           ...updates,
-          age_range: updates.ageRange ?? updates.age_range ?? state.user.age_range,
           university_name: updates.universityName ?? state.user.university_name,
           current_year: updates.currentYear ?? state.user.current_year,
           university_email: updates.universityEmail ?? state.user.university_email,
@@ -335,7 +332,7 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  saveOnboarding: async ({ gender, ageRange, commonConditions, knownAllergies }) => {
+  saveOnboarding: async ({ gender, commonConditions, knownAllergies }) => {
     const { user } = get();
     if (!user) {
       return { success: false, error: new Error('No authenticated user found.') };
@@ -344,7 +341,6 @@ export const useAuthStore = create((set, get) => ({
     try {
       const updates = {
         gender,
-        age_range: ageRange,
         common_conditions: commonConditions,
         known_allergies: knownAllergies,
         has_completed_onboarding: true,
@@ -356,7 +352,6 @@ export const useAuthStore = create((set, get) => ({
         user: {
           ...state.user,
           ...updates,
-          age_range: updates.ageRange ?? updates.age_range ?? state.user.age_range,
         },
       }));
 

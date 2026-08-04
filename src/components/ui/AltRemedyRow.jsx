@@ -9,7 +9,7 @@ import { SafetyBadge } from './SafetyBadge';
 import { useFavoritesStore } from '../../store/favoritesStore';
 import { useAuthStore } from '../../store/authStore';
 
-export function AltRemedyRow({ remedy, evidenceScore, ageRange, showDivider = true, className }) {
+export function AltRemedyRow({ remedy, evidenceScore, isChildSafe, showDivider = true, className }) {
   const navigate = useNavigate();
   const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);
   const isFavorite = useFavoritesStore((s) => s.isFavorite);
@@ -49,7 +49,7 @@ export function AltRemedyRow({ remedy, evidenceScore, ageRange, showDivider = tr
         </div>
 
         <div className="flex items-center justify-center">
-          <SafetyBadge remedy={remedy} ageRange={ageRange} compact />
+          <SafetyBadge remedy={remedy} isChildSafe={isChildSafe} compact />
         </div>
 
         <div className="flex items-center justify-center">
@@ -88,7 +88,7 @@ export function AltRemedyRow({ remedy, evidenceScore, ageRange, showDivider = tr
                 {remedy.timeToEffect}
               </span>
             )}
-            <SafetyBadge remedy={remedy} ageRange={ageRange} compact />
+            <SafetyBadge remedy={remedy} isChildSafe={isChildSafe} compact />
             <EvidenceLabel score={evidenceScore} size="sm" />
           </div>
         </div>

@@ -35,7 +35,7 @@ function generateReasons(remedy, evidenceScore, safetyScore) {
   return reasons.slice(0, 3);
 }
 
-export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore, ageRange, delay = 0 }) {
+export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore, isChildSafe, delay = 0 }) {
   const navigate = useNavigate();
   const toggleFavorite = useFavoritesStore((s) => s.toggleFavorite);
   const isFavorite = useFavoritesStore((s) => s.isFavorite);
@@ -63,7 +63,7 @@ export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetySco
           <div className="flex items-start justify-between mb-3">
             <div className="flex flex-wrap gap-2">
               <CategoryBadge category={remedy.category} firstOccurrence />
-              <SafetyBadge remedy={remedy} ageRange={ageRange} compact />
+              <SafetyBadge remedy={remedy} isChildSafe={isChildSafe} compact />
             </div>
             <div className="flex items-center gap-1 shrink-0 -mt-0.5 -mr-0.5">
               <ScheduleQuickAdd remedy={remedy} />

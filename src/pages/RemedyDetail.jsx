@@ -55,21 +55,21 @@ export function RemedyDetail() {
 
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies) ?? [];
   const userConditions = useAuthStore((state) => state.user?.common_conditions);
-  const userAgeRange = useAuthStore((state) => state.user?.age_range);
+  const userIsChildSafe = useAuthStore((state) => state.user?.is_child_safe ?? false);
   const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
   const guestConditions = useGuestProfileStore((state) => state.common_conditions);
-  const guestAgeRange = useGuestProfileStore((state) => state.age_range);
+  const guestIsChildSafe = useGuestProfileStore((state) => state.is_child_safe ?? false);
   const activeAllergies = isAuthenticated ? userKnownAllergies : guestAllergies;
   const activeConditions = isAuthenticated ? userConditions : guestConditions;
-  const activeAgeRange = isAuthenticated ? userAgeRange : guestAgeRange;
+  const activeIsChildSafe = isAuthenticated ? userIsChildSafe : guestIsChildSafe;
 
   const remedy = remedies.find(r => r.id === id);
   const favorite = useFavoritesStore((state) => (remedy ? state.isFavorite(remedy.id) : false));
 
   const isSafe = useMemo(() => {
     if (!remedy) return true;
-    return isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions, ageRange: activeAgeRange });
-  }, [remedy, activeAllergies, activeConditions, activeAgeRange]);
+    return isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions, isChildSafe: activeIsChildSafe });
+  }, [remedy, activeAllergies, activeConditions, activeIsChildSafe]);
 
   useEffect(() => {
     if (!remedy?.id) return;
@@ -195,7 +195,7 @@ export function RemedyDetail() {
               safetyScore={safetyScore}
             />
             <div className="mt-4 flex justify-center">
-              <SafetyBadge remedy={remedy} ageRange={activeAgeRange} />
+              <SafetyBadge remedy={remedy} isChildSafe={activeIsChildSafe} />
             </div>
           </div>
         </Reveal>

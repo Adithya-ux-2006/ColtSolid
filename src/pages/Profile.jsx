@@ -12,10 +12,10 @@ import { useAuthStore } from '../store/authStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useGuestProfileStore } from '../store/guestProfileStore';
 import { getInitials } from '../utils/mappers';
-import { ALLERGIES, CONDITIONS, FAQ_ITEMS, GENDER_OPTIONS, AGE_RANGE_OPTIONS } from '../constants/onboarding';
+import { ALLERGIES, CONDITIONS, FAQ_ITEMS, GENDER_OPTIONS } from '../constants/onboarding';
 
 const ONBOARDING_LABELS = new Map(
-  [...CONDITIONS, ...ALLERGIES, ...AGE_RANGE_OPTIONS].map((option) => [option.value, option.label])
+  [...CONDITIONS, ...ALLERGIES].map((option) => [option.value, option.label])
 );
 
 const CONDITION_MAP = new Map(CONDITIONS.map((c) => [c.value, { label: c.label, emoji: c.emoji }]));
@@ -138,7 +138,7 @@ export function Profile() {
   const favorites = useFavoritesStore((state) => state.favorites);
   const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
   const guestConditions = useGuestProfileStore((state) => state.common_conditions);
-  const guestAgeRange = useGuestProfileStore((state) => state.age_range);
+  const guestIsChildSafe = useGuestProfileStore((state) => state.is_child_safe ?? false);
   const updateGuestProfile = useGuestProfileStore((state) => state.updateProfile);
   const navigate = useNavigate();
 
@@ -151,7 +151,7 @@ export function Profile() {
   const [healthForm, setHealthForm] = useState({
     selectedConditions: [],
     selectedAllergies: [],
-    ageRange: user?.age_range || '',
+    isChildSafe: user?.is_child_safe ?? false,
     otherConditionText: '',
     otherAllergyText: '',
   });
@@ -159,7 +159,7 @@ export function Profile() {
   const [guestEditForm, setGuestEditForm] = useState({
     selectedConditions: guestConditions,
     selectedAllergies: guestAllergies,
-    ageRange: guestAgeRange || '',
+    isChildSafe: guestIsChildSafe,
     otherConditionText: '',
     otherAllergyText: '',
   });
@@ -169,7 +169,6 @@ export function Profile() {
     gender: user?.gender || '',
     selectedConditions: user?.common_conditions ?? [],
     selectedAllergies: user?.known_allergies ?? [],
-    ageRange: user?.age_range || '',
   });
 
   // Guest profile view
@@ -186,7 +185,7 @@ export function Profile() {
       updateGuestProfile({
         known_allergies: allergies,
         common_conditions: conditions,
-        age_range: guestEditForm.ageRange,
+        is_child_safe: guestEditForm.isChildSafe,
       });
     };
 
@@ -232,9 +231,9 @@ export function Profile() {
               <p className="text-xs text-ink-muted mt-1">Edit your allergies and conditions to get safer remedy recommendations.</p>
             </div>
             <div className="space-y-5 p-5">
-              <AgeRangeField
-                value={guestEditForm.ageRange}
-                onChange={(ageRange) => setGuestEditForm({ ...guestEditForm, ageRange })}
+              <ChildSafeToggle
+                value={guestEditForm.isChildSafe}
+                onChange={(isChildSafe) => setGuestEditForm({ ...guestEditForm, isChildSafe })}
               />
               <div className="space-y-2">
                 <p className="text-sm font-semibold text-ink">Allergies & Sensitivities</p>
@@ -312,9 +311,9 @@ export function Profile() {
                 Save
               </button>
 
-              {(guestEditForm.ageRange || guestEditForm.selectedAllergies.length > 0 || guestEditForm.selectedConditions.length > 0) && (
+              {(guestEditForm.isChildSafe || guestEditForm.selectedAllergies.length > 0 || guestEditForm.selectedConditions.length > 0) && (
                 <div className="pt-3 border-t border-border space-y-3">
-                  <ProfileGroup title="Age Range" values={guestEditForm.ageRange ? [formatValue(guestEditForm.ageRange)] : []} emptyLabel="Not provided" />
+                  <ProfileGroup title="Child Safe" values={guestEditForm.isChildSafe ? ['Enabled'] : []} emptyLabel="Not enabled" />
                   <ProfileGroup title="Allergies" values={guestEditForm.selectedAllergies.map(formatValue)} emptyLabel="None selected" />
                   <ProfileGroup title="Conditions" values={guestEditForm.selectedConditions.map(formatValue)} emptyLabel="None selected" />
                 </div>
@@ -368,7 +367,7 @@ export function Profile() {
     updateUser({
       known_allergies: allergies,
       common_conditions: conditions,
-      age_range: healthForm.ageRange,
+      is_child_safe: healthForm.isChildSafe,
     });
     setIsEditingHealth(false);
   };
@@ -391,7 +390,6 @@ export function Profile() {
     updateUser({
       name: editForm.name,
       gender: editForm.gender,
-      age_range: editForm.ageRange,
       avatar: getInitials(editForm.name),
       known_allergies: editForm.selectedAllergies.filter(v => v !== 'none'),
       common_conditions: editForm.selectedConditions.filter(v => v !== 'none'),
@@ -405,7 +403,6 @@ export function Profile() {
       gender: user?.gender || '',
       selectedConditions: user?.common_conditions ?? [],
       selectedAllergies: user?.known_allergies ?? [],
-      ageRange: user?.age_range || '',
     });
     setIsEditing(true);
   };
@@ -505,7 +502,7 @@ export function Profile() {
                       ? GENDER_OPTIONS.find((option) => option.value === user.gender)?.label || user.gender
                       : 'Not provided'}
                   </p>
-                  <p className="text-sm text-ink-muted mt-1">Age Range: {user.age_range ? formatChip(user.age_range) : 'Not provided'}</p>
+                  <p className="text-sm text-ink-muted mt-1">Child Safe: {user.is_child_safe ? 'Enabled' : 'Not enabled'}</p>
                   <button
                     onClick={startEditing}
                     className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark transition-colors"
@@ -555,9 +552,9 @@ export function Profile() {
           </div>
 
           <div className="p-5 space-y-5">
-            <AgeRangeField
-              value={isEditingHealth ? healthForm.ageRange : user.age_range}
-              onChange={(ageRange) => setHealthForm({ ...healthForm, ageRange })}
+            <ChildSafeToggle
+              value={isEditingHealth ? healthForm.isChildSafe : user.is_child_safe}
+              onChange={(isChildSafe) => setHealthForm({ ...healthForm, isChildSafe })}
               readOnly={!isEditingHealth}
             />
             {/* Conditions */}
@@ -708,39 +705,40 @@ export function Profile() {
   );
 }
 
-function AgeRangeField({ value, onChange, readOnly = false }) {
-  const label = value ? formatChip(value) : 'Not provided';
-
+function ChildSafeToggle({ value, onChange, readOnly = false }) {
   if (readOnly) {
     return (
       <div className="space-y-2">
-        <p className="text-sm font-semibold text-ink">Age Range</p>
-        <p className="text-sm text-ink-muted">{label}</p>
+        <p className="text-sm font-semibold text-ink">Child Safe Mode</p>
+        <p className="text-sm text-ink-muted">{value ? 'Enabled' : 'Not enabled'}</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-2">
-      <p className="text-sm font-semibold text-ink">Age Range</p>
-      <div className="flex flex-wrap gap-2">
-        {AGE_RANGE_OPTIONS.map((option) => {
-          const isSelected = value === option.value;
-          return (
-            <button
-              key={option.value}
-              type="button"
-              aria-pressed={isSelected}
-              onClick={() => onChange(option.value)}
-              className={isSelected
-                ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white'
-                : 'rounded-full border border-border px-3 py-1.5 text-sm font-medium text-ink'
-              }
-            >
-              {option.label}
-            </button>
-          );
-        })}
+      <p className="text-sm font-semibold text-ink">Child Safe Mode</p>
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          role="switch"
+          aria-checked={value}
+          onClick={() => onChange(!value)}
+          className={cn(
+            'relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary/20',
+            value ? 'bg-primary' : 'bg-ink/20'
+          )}
+        >
+          <span
+            className={cn(
+              'pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out',
+              value ? 'translate-x-5' : 'translate-x-0'
+            )}
+          />
+        </button>
+        <span className="text-sm text-ink-muted">
+          {value ? 'Filtering remedies not safe for children' : 'Toggle on to filter remedies not safe for children'}
+        </span>
       </div>
     </div>
   );

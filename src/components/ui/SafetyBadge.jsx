@@ -2,17 +2,8 @@ import { AlertTriangle, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { getChildSafetyStatus } from '../../utils/guestProfile';
 
-function getSafetyBadgeState(remedy, ageRange) {
-  const childSafety = getChildSafetyStatus(remedy, ageRange);
-
-  if (!ageRange) {
-    return {
-      label: 'Age Not Set',
-      note: 'Add an age range to complete child and teen safety checks.',
-      Icon: AlertTriangle,
-      className: 'border-warning/25 bg-warning/10 text-warning',
-    };
-  }
+function getSafetyBadgeState(remedy, isChildSafe) {
+  const childSafety = getChildSafetyStatus(remedy, isChildSafe);
 
   if (remedy?._allergyConflict || remedy?._childSafetyBlock || childSafety.isHardBlock) {
     return {
@@ -44,10 +35,10 @@ function getSafetyBadgeState(remedy, ageRange) {
   };
 }
 
-export function SafetyBadge({ remedy, ageRange, compact = false, className }) {
+export function SafetyBadge({ remedy, isChildSafe, compact = false, className }) {
   if (!remedy) return null;
 
-  const state = getSafetyBadgeState(remedy, ageRange);
+  const state = getSafetyBadgeState(remedy, isChildSafe);
   const { Icon } = state;
 
   return (
