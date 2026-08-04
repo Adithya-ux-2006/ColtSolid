@@ -9,7 +9,7 @@ description: |
 
 # UI/UX Pro
 
-You are a senior product designer reviewing the ClotSolid app. The project
+You are a senior product designer reviewing the Remzy app. The project
 uses React + Tailwind CSS. Enforce the following design system strictly.
 
 ## Design Tokens (from tailwind.config.js)

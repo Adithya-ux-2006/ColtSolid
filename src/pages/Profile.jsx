@@ -329,13 +329,13 @@ export function Profile() {
               className="w-full p-5 flex justify-between items-center text-left"
               onClick={() => setExpandedSection(expandedSection === 'about' ? null : 'about')}
             >
-              <span className="font-bold text-lg text-ink">About ClotSolid</span>
+              <span className="font-bold text-lg text-ink">About Remzy</span>
               <ChevronDown className={`w-5 h-5 text-ink-muted transition-transform ${expandedSection === 'about' ? 'rotate-180' : ''}`} />
             </button>
             {expandedSection === 'about' && (
               <div className="p-5 pt-0 text-sm text-ink-muted leading-relaxed border-t border-border">
                 <p className="mb-4">
-                  ClotSolid is a health platform designed to provide evidence-backed information about blood clots and related conditions.
+                  Remzy is a health platform designed to provide evidence-backed information about common health concerns and remedies.
                   Always consult a certified medical professional for serious health concerns.
                 </p>
                 <FAQAccordion items={FAQ_ITEMS.slice(0, 3)} />
@@ -674,20 +674,20 @@ export function Profile() {
           />
         </section>
 
-        {/* ── About ClotSolid Accordion ── */}
+        {/* ── About Remzy Accordion ── */}
         <section className="bg-card rounded-2xl shadow-sm border border-border/60 overflow-hidden">
           <button
             aria-expanded={expandedSection === 'about'}
             className="w-full p-5 flex justify-between items-center text-left"
             onClick={() => setExpandedSection(expandedSection === 'about' ? null : 'about')}
           >
-            <span className="font-bold text-lg text-ink">About ClotSolid</span>
+            <span className="font-bold text-lg text-ink">About Remzy</span>
             <ChevronDown className={`w-5 h-5 text-ink-muted transition-transform ${expandedSection === 'about' ? 'rotate-180' : ''}`} />
           </button>
           {expandedSection === 'about' && (
             <div className="p-5 pt-0 text-sm text-ink-muted leading-relaxed border-t border-border/60">
               <p className="mb-4">
-                ClotSolid is a health platform designed to provide evidence-backed information about blood clots and related conditions.
+                Remzy is a health platform designed to provide evidence-backed information about common health concerns and remedies.
                 Your profile, favorites, and remedy schedules are synced through Supabase. Always consult a certified medical professional for serious health concerns.
               </p>
               <FAQAccordion items={FAQ_ITEMS.slice(0, 3)} />
