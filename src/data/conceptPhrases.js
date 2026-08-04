@@ -1,4 +1,6 @@
-const PHRASE_MAP = {
+import { getBruteForcePhrases } from './bruteForcePhrases';
+
+const _PHRASE_MAP = {
   "keep throwing up": { concepts: ["vomiting", "nausea"], hintSymptoms: ["nausea"], negated: false },
   "throwing up": { concepts: ["vomiting", "nausea"], hintSymptoms: ["nausea"], negated: false },
   "throw up": { concepts: ["vomiting", "nausea"], hintSymptoms: ["nausea"], negated: false },
@@ -614,6 +616,8 @@ const CONCEPT_SYMPTOMS = {
   tremor: ["anxiety", "stress"],
   "vision problems": ["eye_strain", "eye_pain"],
 };
+
+const PHRASE_MAP = { ..._PHRASE_MAP, ...getBruteForcePhrases() };
 
 export function getPhraseMap() {
   return PHRASE_MAP;
