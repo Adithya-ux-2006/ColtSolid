@@ -28,7 +28,7 @@ export function Landing() {
       <section className="relative pt-24 pb-16 px-6 lg:px-8 overflow-hidden">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           <div className="w-14 h-14 mx-auto bg-primary rounded-2xl flex items-center justify-center shadow-glow">
-            <span className="text-2xl font-bold text-white">C</span>
+            <span className="text-2xl font-bold text-white">R</span>
           </div>
 
           <h1 className="text-4xl md:text-6xl font-bold text-ink tracking-tight">
@@ -145,7 +145,7 @@ export function Landing() {
 
       <footer className="px-6 py-8 border-t border-ink/5 text-center">
         <div className="flex items-center justify-center gap-2 mb-2">
-          <div className="w-5 h-5 rounded-md bg-primary flex items-center justify-center text-white font-bold text-xs">C</div>
+          <div className="w-5 h-5 rounded-md bg-primary flex items-center justify-center text-white font-bold text-xs">R</div>
           <span className="font-bold text-ink">Remzy</span>
         </div>
         <p className="text-xs text-ink-subtle">&copy; 2026 Remzy.</p>
