@@ -7,7 +7,11 @@ const FEEDBACK_EVENTS = {
   MATCH_RATING: 'match_rating',
 };
 
+// Event types that qualify for Supabase persistence (strongest positive signals)
+const PERSIST_EVENT_TYPES = new Set(['favorite', 'schedule_add']);
+
 let feedbackQueue = [];
+let interactionBuffer = [];
 let flushTimer = null;
 
 function enqueue(event) {
@@ -42,6 +46,48 @@ async function flush() {
     localStorage.setItem('cura_feedback_log', JSON.stringify(stored));
   } catch {
     void 0;
+  }
+
+  // Also flush qualifying interaction events to Supabase (non-blocking)
+  flushInteractionsToSupabase();
+}
+
+/**
+ * Send qualifying interaction events to the track-interaction Netlify function.
+ * Non-blocking: failures are logged but don't affect the UI or local storage.
+ */
+async function flushInteractionsToSupabase() {
+  if (interactionBuffer.length === 0) return;
+
+  const events = interactionBuffer.splice(0, Math.min(interactionBuffer.length, 10));
+  try {
+    await fetch('/api/track-interaction', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ events }),
+    });
+  } catch {
+    // Non-blocking — interaction data is best-effort
+  }
+}
+
+/**
+ * Buffer an interaction event for Supabase persistence.
+ * @param {string} eventType - 'favorite' | 'schedule_add'
+ * @param {string} symptomId
+ * @param {string} remedyId
+ */
+export function trackInteraction(eventType, symptomId, remedyId) {
+  if (!PERSIST_EVENT_TYPES.has(eventType)) return;
+  if (!symptomId || !remedyId) return;
+
+  interactionBuffer.push({ eventType, symptomId, remedyId });
+
+  // Flush after 3 events or 10 seconds, whichever comes first
+  if (interactionBuffer.length >= 3) {
+    flushInteractionsToSupabase();
+  } else {
+    setTimeout(() => flushInteractionsToSupabase(), 10000);
   }
 }
 
@@ -155,6 +201,7 @@ export default {
   logRemedyClick,
   logCategoryClick,
   logMatchRating,
+  trackInteraction,
   getFeedbackStats,
   exportFeedbackLog,
   clearFeedbackLog,

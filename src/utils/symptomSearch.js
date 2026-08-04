@@ -3,6 +3,7 @@ import { filterUnsafeRemedies, adjustConfidence } from '../engine/safetyFilter';
 import { groupResults } from '../engine/resultsGrouper';
 import { buildKnowledgeContext } from '../engine/knowledgeGraph';
 import { isEmergencySymptom } from '../constants/emergency';
+import { findBestSemanticMatch } from '../engine/semanticFallback';
 
 export function isEmergencyQuery(query) {
   return isEmergencySymptom(query);
@@ -25,6 +26,7 @@ export function getRankedRemediesForSymptoms(
     ageRange = '',
     queryConfidence = null,
     primarySymptomId = null,
+    popularityMap = {},
   } = options;
 
   const concerns = symptomIds.map(id => {
@@ -42,6 +44,7 @@ export function getRankedRemediesForSymptoms(
   const ranked = rankRemedies(remedies, concerns, symptomRemediesMap, {
     userContext,
     symptoms,
+    popularityMap,
   });
 
   const safe = filterUnsafeRemedies(ranked, userContext);
@@ -65,4 +68,19 @@ export function getRankedRemediesForSymptoms(
     grouped,
     knowledgeCtx,
   };
+}
+
+/**
+ * Attempt semantic fallback when deterministic + NLU resolution both fail.
+ * Returns the matched symptom ID if a confident match is found, else null.
+ */
+export async function resolveWithSemanticFallback(query) {
+  if (!query || query.trim().length < 3) return null;
+
+  try {
+    const match = await findBestSemanticMatch(query);
+    return match?.symptomId || null;
+  } catch {
+    return null;
+  }
 }

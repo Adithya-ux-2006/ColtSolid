@@ -165,7 +165,7 @@ function computeUserContextPenalty(remedy, userContext) {
 export function rankRemedies(remedies, concerns, symptomRemediesMap, options = {}) {
   if (!remedies?.length || !concerns?.length) return [];
 
-  const { userContext, symptoms, queryConfidence } = options;
+  const { userContext, symptoms, queryConfidence, popularityMap = {} } = options;
 
   const remedyMap = {};
   for (const r of remedies) remedyMap[r.id] = r;
@@ -195,16 +195,14 @@ export function rankRemedies(remedies, concerns, symptomRemediesMap, options = {
       const safetyScore = computeSafetyScore(remedy);
       const penalty = computeUserContextPenalty(remedy, userContext);
 
-      let baseScore;
-      if (tier === REMEDY_TIER.DIRECT) {
-        baseScore = computeDirectScore(entry.evidenceScore, entry.priorityRank);
-      } else if (tier === REMEDY_TIER.ASSOCIATED) {
-        baseScore = computeAssociatedScore(entry.evidenceScore, entry.priorityRank);
-      } else {
-        baseScore = computeSupportiveScore(remedy.rating);
-      }
+      const baseScore = tier === REMEDY_TIER.DIRECT
+        ? computeDirectScore(entry.evidenceScore, entry.priorityRank)
+        : tier === REMEDY_TIER.ASSOCIATED
+          ? computeAssociatedScore(entry.evidenceScore, entry.priorityRank)
+          : computeSupportiveScore(remedy.rating);
 
-      const score = Math.max(0, baseScore - penalty);
+      const popularityBoost = (popularityMap[symptomId]?.[remedy.id] || 0) * 0.5;
+      const score = Math.max(0, baseScore - penalty) + popularityBoost;
 
       scored.push({
         ...remedy,
@@ -249,7 +247,8 @@ export function rankRemedies(remedies, concerns, symptomRemediesMap, options = {
         baseScore = computeAssociatedScore(evidenceScore, 3);
       }
 
-      const score = Math.max(0, baseScore - penalty);
+      const popularityBoost = (popularityMap[symptomId]?.[remedy.id] || 0) * 0.5;
+      const score = Math.max(0, baseScore - penalty) + popularityBoost;
 
       scored.push({
         ...remedy,
@@ -283,7 +282,8 @@ export function rankRemedies(remedies, concerns, symptomRemediesMap, options = {
           const safetyScore = computeSafetyScore(remedy);
           const penalty = computeUserContextPenalty(remedy, userContext);
           const baseScore = computeSupportiveScore(remedy.rating);
-          const score = Math.max(0, baseScore - penalty);
+          const popularityBoost = (popularityMap[symptomId]?.[remedy.id] || 0) * 0.5;
+          const score = Math.max(0, baseScore - penalty) + popularityBoost;
 
           scored.push({
             ...remedy,

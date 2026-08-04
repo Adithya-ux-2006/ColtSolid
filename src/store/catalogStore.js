@@ -81,6 +81,16 @@ function mergeSymptomRemedies(primary = {}, fallback = {}) {
   return merged;
 }
 
+function buildPopularityMap(rows) {
+  const map = {};
+  for (const row of rows || []) {
+    const sid = row.symptom_id;
+    if (!map[sid]) map[sid] = {};
+    map[sid][row.remedy_id] = row.popularity_score || 0;
+  }
+  return map;
+}
+
 async function enrichWithLocalCatalog(catalog) {
   const local = await loadLocalCatalog();
   return {
@@ -94,6 +104,7 @@ export const useCatalogStore = create((set, get) => ({
   symptoms: [],
   remedies: [],
   symptomRemedies: {},
+  popularityMap: {},
   isLoading: false,
   hasLoaded: false,
   error: null,
@@ -130,6 +141,17 @@ export const useCatalogStore = create((set, get) => ({
         console.warn('[CATALOG] symptom_remedies table not available, using default ranking:', srError.message || srError);
       }
 
+      // Load popularity data (non-blocking — failure doesn't prevent catalog load)
+      let popularityMap = {};
+      try {
+        const { data: popRows, error: popError } = await supabase.from('remedy_popularity').select('*');
+        if (!popError && popRows) {
+          popularityMap = buildPopularityMap(popRows);
+        }
+      } catch {
+        // Popularity table may not exist yet — that's fine
+      }
+
       const hasData = (symptoms?.length > 0 || remedies?.length > 0);
       if (!hasData) throw new Error('No data returned from Supabase');
 
@@ -146,6 +168,7 @@ export const useCatalogStore = create((set, get) => ({
 
       set({
         ...enriched,
+        popularityMap,
         isLoading: false,
         hasLoaded: true,
       });
@@ -154,6 +177,7 @@ export const useCatalogStore = create((set, get) => ({
       const local = await loadLocalCatalog();
       set({
         ...local,
+        popularityMap: {},
         error,
         isLoading: false,
         hasLoaded: true,

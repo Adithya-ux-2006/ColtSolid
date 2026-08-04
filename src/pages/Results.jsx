@@ -15,7 +15,7 @@ import { useCatalogStore } from '../store/catalogStore';
 import { useAuthStore } from '../store/authStore';
 import { useGuestProfileStore } from '../store/guestProfileStore';
 import { isRemedySafeForUser } from '../utils/guestProfile';
-import { getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptomSearch';
+import { getRankedRemediesForSymptoms, isEmergencyQuery, resolveWithSemanticFallback } from '../utils/symptomSearch';
 import { resolveQuery } from '../utils/symptomEngine';
 import { fetchGeminiInterpretation } from '../utils/geminiInterpreter';
 import { AGE_RANGE_OPTIONS } from '../constants/onboarding';
@@ -167,6 +167,7 @@ export function Results() {
   const [geminiInterpretation, setGeminiInterpretation] = useState(
     location.state?.geminiInterpretation || null
   );
+  const [semanticFallbackId, setSemanticFallbackId] = useState(null);
   const [isSavingAgeRange, setIsSavingAgeRange] = useState(false);
 
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies ?? EMPTY_ARRAY);
@@ -186,6 +187,7 @@ export function Results() {
   const symptoms = useCatalogStore((state) => state.symptoms);
   const remedies = useCatalogStore((state) => state.remedies);
   const symptomRemedies = useCatalogStore((state) => state.symptomRemedies);
+  const popularityMap = useCatalogStore((state) => state.popularityMap);
   const isCatalogLoading = useCatalogStore((state) => state.isLoading);
   const hasLoaded = useCatalogStore((state) => state.hasLoaded);
 
@@ -223,17 +225,69 @@ export function Results() {
     return () => { cancelled = true; };
   }, [isFreeTextSearch, freeTextQuery, symptoms, geminiInterpretation, hasStrongPhraseMatch]);
 
-  const symptomResolution = useMemo(
-    () => (isFreeTextSearch ? (hasStrongPhraseMatch ? deterministicResolution : resolveQuery(freeTextQuery, symptoms, geminiInterpretation)) : {
-      symptomIds: knownSymptom ? [knownSymptom.id] : [],
-      allSymptomIds: knownSymptom ? [knownSymptom.id] : [],
-      confidence: knownSymptom ? 100 : 0,
-      allMatches: [],
-      primarySymptom: knownSymptom,
-      primarySymptomId: knownSymptom?.id || null,
-    }),
-    [isFreeTextSearch, freeTextQuery, symptoms, knownSymptom, geminiInterpretation, hasStrongPhraseMatch, deterministicResolution]
-  );
+  // Semantic fallback: fires when deterministic + NLU both fail to resolve a confident match
+  useEffect(() => {
+    if (!isFreeTextSearch || !freeTextQuery) return;
+    if (hasStrongPhraseMatch) return;
+    if (geminiInterpretation) return;
+    if (semanticFallbackId) return;
+
+    // Only try semantic fallback if we have no resolved symptom IDs or very low confidence
+    const currentResolution = resolveQuery(freeTextQuery, symptoms, null);
+    if (currentResolution.symptomIds.length > 0 && currentResolution.confidence >= 50) return;
+
+    let cancelled = false;
+
+    resolveWithSemanticFallback(freeTextQuery)
+      .then((symptomId) => {
+        if (!cancelled && symptomId) {
+          console.log(`[RESULTS] Semantic fallback resolved: ${freeTextQuery} → ${symptomId}`);
+          setSemanticFallbackId(symptomId);
+        }
+      })
+      .catch(() => {});
+
+    return () => { cancelled = true; };
+  }, [isFreeTextSearch, freeTextQuery, symptoms, geminiInterpretation, hasStrongPhraseMatch, semanticFallbackId]);
+
+  const symptomResolution = useMemo(() => {
+    if (!isFreeTextSearch) {
+      return {
+        symptomIds: knownSymptom ? [knownSymptom.id] : [],
+        allSymptomIds: knownSymptom ? [knownSymptom.id] : [],
+        confidence: knownSymptom ? 100 : 0,
+        allMatches: [],
+        primarySymptom: knownSymptom,
+        primarySymptomId: knownSymptom?.id || null,
+      };
+    }
+
+    const baseResolution = hasStrongPhraseMatch
+      ? deterministicResolution
+      : resolveQuery(freeTextQuery, symptoms, geminiInterpretation);
+
+    // If the base resolution found something with decent confidence, use it
+    if (baseResolution.symptomIds.length > 0 && baseResolution.confidence >= 50) {
+      return baseResolution;
+    }
+
+    // Otherwise, try semantic fallback if available
+    if (semanticFallbackId) {
+      const fallbackSymptom = symptoms.find(s => s.id === semanticFallbackId);
+      if (fallbackSymptom) {
+        return {
+          symptomIds: [semanticFallbackId],
+          allSymptomIds: [semanticFallbackId],
+          confidence: 75, // Semantic match confidence threshold
+          allMatches: [],
+          primarySymptom: fallbackSymptom,
+          primarySymptomId: semanticFallbackId,
+        };
+      }
+    }
+
+    return baseResolution;
+  }, [isFreeTextSearch, freeTextQuery, symptoms, knownSymptom, geminiInterpretation, hasStrongPhraseMatch, deterministicResolution, semanticFallbackId]);
 
   const matchedSymptom = symptomResolution.primarySymptom;
   const queryConfidence = symptomResolution.confidence;
@@ -277,8 +331,9 @@ export function Results() {
       ageRange: activeAgeRange,
       queryConfidence: symptomResolution.confidence,
       primarySymptomId: symptomResolution.primarySymptomId,
+      popularityMap,
     });
-  }, [symptomResolution.symptomIds, symptomResolution.confidence, symptomResolution.primarySymptomId, symptomRemedies, remedies, symptoms, activeAllergies, activeConditions, activeAgeRange]);
+  }, [symptomResolution.symptomIds, symptomResolution.confidence, symptomResolution.primarySymptomId, symptomRemedies, remedies, symptoms, activeAllergies, activeConditions, activeAgeRange, popularityMap]);
 
   const grouped = searchResult.grouped;
 
