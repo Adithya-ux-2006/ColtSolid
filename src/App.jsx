@@ -23,6 +23,8 @@ const RemedySchedules = lazy(() => import('./pages/RemedySchedules').then(m => (
 const Profile = lazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })));
 const Onboarding = lazy(() => import('./pages/Onboarding').then(m => ({ default: m.Onboarding })));
 const AdminAnalytics = lazy(() => import('./pages/AdminAnalytics').then(m => ({ default: m.AdminAnalytics })));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy').then(m => ({ default: m.PrivacyPolicy })));
+const TermsOfService = lazy(() => import('./pages/TermsOfService').then(m => ({ default: m.TermsOfService })));
 
 /** Wraps a lazy page in its own Suspense so the navbar stays visible during transitions. */
 function Page({ children }) {
@@ -104,6 +106,8 @@ function AppRoutes() {
         <Route path="/profile" element={<ProtectedRoute><Page><Profile /></Page></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute><AdminGuard><Page><AdminAnalytics /></Page></AdminGuard></ProtectedRoute>} />
         <Route path="/onboarding" element={<ProtectedRoute><Page><Onboarding /></Page></ProtectedRoute>} />
+        <Route path="/privacy" element={<Page><PrivacyPolicy /></Page>} />
+        <Route path="/terms" element={<Page><TermsOfService /></Page>} />
         
         {/* Catch-all redirect */}
         <Route path="*" element={<Navigate to="/" replace />} />

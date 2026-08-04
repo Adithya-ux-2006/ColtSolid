@@ -89,11 +89,13 @@ function EvidenceBanner() {
 
 function MedicalDisclaimer() {
   return (
-    <p className="text-xs text-ink-muted leading-relaxed text-center">
-      Remzy provides general educational information and a basic symptom screening.
-      It cannot diagnose or replace professional medical advice. Only a qualified healthcare professional can assess your symptoms and arrange the correct tests.
-      Do not delay emergency care because of a result shown on this website.
-    </p>
+    <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-4 max-w-4xl mx-auto mb-6">
+      <p className="text-sm text-ink-muted leading-relaxed text-center">
+        <strong>Not medical advice.</strong> Remzy provides general educational information only.
+        It cannot diagnose or replace professional medical advice. Always consult a qualified healthcare provider.
+        Do not delay emergency care because of a result shown on this website.
+      </p>
+    </div>
   );
 }
 

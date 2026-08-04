@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, BookOpen, ChevronRight, ShieldCheck, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, BookOpen, ChevronRight, AlertTriangle } from 'lucide-react';
 import { FavoriteHeart } from '../components/ui/FavoriteHeart';
 import { ScheduleQuickAdd } from '../components/ui/ScheduleQuickAdd';
 import { PageWrapper } from '../components/layout';
@@ -265,10 +265,12 @@ export function RemedyDetail() {
                     Not yet rated
                   </span>
                 )}
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-success/10 text-success" aria-label="Medically reviewed">
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  Medically Reviewed
-                </span>
+                {researchLinks.length > 0 && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-evidence/10 text-evidence">
+                    <BookOpen className="w-3.5 h-3.5" />
+                    Research-Referenced
+                  </span>
+                )}
               </div>
             </div>
             <p className="text-sm text-ink-muted mb-5">

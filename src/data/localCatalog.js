@@ -275,7 +275,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_h02",
-    "name": "Magnesium Glycinate",
+    "name": "Calcium & Magnesium Supplement",
     "category": "Natural",
     "rating": 4.5,
     "reviewCount": 248,
@@ -297,7 +297,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_h03",
-    "name": "LI4 Acupressure",
+    "name": "Hand Pressure Point for Headaches",
     "category": "Lifestyle",
     "rating": 4.3,
     "reviewCount": 186,
@@ -319,7 +319,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_h05",
-    "name": "Hydration Reset",
+    "name": "Drink More Water",
     "category": "Lifestyle",
     "rating": 4.4,
     "reviewCount": 401,
@@ -341,7 +341,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_c01",
-    "name": "Zinc Lozenges",
+    "name": "Zinc Cold Relief Lozenges",
     "category": "Natural",
     "rating": 4.7,
     "reviewCount": 521,
@@ -365,7 +365,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_c02",
-    "name": "Saline Nasal Irrigation",
+    "name": "Nasal Saline Rinse",
     "category": "Lifestyle",
     "rating": 4.6,
     "reviewCount": 367,
@@ -434,7 +434,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_a01",
-    "name": "L-Theanine",
+    "name": "Amino Acid for Relaxation",
     "category": "Natural",
     "rating": 4.7,
     "reviewCount": 410,
@@ -457,7 +457,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_a02",
-    "name": "Ashwagandha Root Extract",
+    "name": "Ashwagandha Stress Relief Capsule",
     "category": "Natural",
     "rating": 4.4,
     "reviewCount": 298,
@@ -480,7 +480,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_a03",
-    "name": "Yintang Acupressure",
+    "name": "Forehead Pressure Point",
     "category": "Lifestyle",
     "rating": 4.2,
     "reviewCount": 154,
@@ -524,7 +524,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_i01",
-    "name": "Melatonin 1-3 mg",
+    "name": "Sleep Aid Melatonin",
     "category": "Natural",
     "rating": 4.5,
     "reviewCount": 562,
@@ -566,7 +566,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_i03",
-    "name": "Shenmen Ear Acupressure",
+    "name": "Ear Pressure Point for Relaxation",
     "category": "Lifestyle",
     "rating": 4,
     "reviewCount": 98,
@@ -654,7 +654,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_n03",
-    "name": "P6 Wrist Acupressure",
+    "name": "Wrist Pressure Point for Nausea",
     "category": "Lifestyle",
     "rating": 4.5,
     "reviewCount": 244,
@@ -675,7 +675,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_n05",
-    "name": "Oral Rehydration Sips",
+    "name": "Oral Rehydration Drink",
     "category": "Lifestyle",
     "rating": 4.6,
     "reviewCount": 287,
@@ -696,7 +696,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_s01",
-    "name": "Rhodiola Rosea",
+    "name": "Herbal Energy & Stress Capsule",
     "category": "Natural",
     "rating": 4.2,
     "reviewCount": 173,
@@ -718,7 +718,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_s02",
-    "name": "Lemon Balm Tea",
+    "name": "Herbal Calm Tea",
     "category": "Natural",
     "rating": 4.1,
     "reviewCount": 129,
@@ -830,7 +830,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_bp03",
-    "name": "Turmeric Anti-inflammatory",
+    "name": "Turmeric Anti-Inflammatory Drink",
     "category": "Natural",
     "rating": 4.2,
     "reviewCount": 188,
@@ -1453,7 +1453,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_h08",
-    "name": "Brahmi Capsule",
+    "name": "Herbal Brain Tonic Capsule",
     "category": "Ayurveda",
     "rating": 4.2,
     "reviewCount": 178,
@@ -1560,7 +1560,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_c08",
-    "name": "Chyawanprash",
+    "name": "Chyawanprash Immunity Jam",
     "category": "Ayurveda",
     "rating": 4.4,
     "reviewCount": 412,
@@ -1626,7 +1626,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_a06",
-    "name": "Shankhpushpi Syrup",
+    "name": "Ayurvedic Cold Relief Syrup",
     "category": "Ayurveda",
     "rating": 4.3,
     "reviewCount": 203,
@@ -1647,7 +1647,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_a07",
-    "name": "Jatamansi Root Powder",
+    "name": "Herbal Stress Relief Powder",
     "category": "Ayurveda",
     "rating": 4.1,
     "reviewCount": 118,
@@ -1755,7 +1755,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_i07",
-    "name": "Tagara Root Extract",
+    "name": "Herbal Sleep Capsule",
     "category": "Ayurveda",
     "rating": 4,
     "reviewCount": 87,
@@ -1839,7 +1839,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_n06",
-    "name": "Fennel Seed Chew",
+    "name": "Herbal Digestive Tea",
     "category": "Ayurveda",
     "rating": 4.3,
     "reviewCount": 312,
@@ -1966,7 +1966,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_s07",
-    "name": "Shankhpushpi for Stress",
+    "name": "Ayurvedic Brain Syrup",
     "category": "Ayurveda",
     "rating": 4.2,
     "reviewCount": 156,
@@ -2137,7 +2137,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_st03",
-    "name": "Licorice Root Tea",
+    "name": "Licorice Root Soothing Tea",
     "category": "Ayurveda",
     "rating": 4.3,
     "reviewCount": 198,
@@ -2179,7 +2179,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_st05",
-    "name": "Marshmallow Root Tea",
+    "name": "Marshmallow Root Soothing Tea",
     "category": "Natural",
     "rating": 4.2,
     "reviewCount": 167,
@@ -2244,7 +2244,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_es03",
-    "name": "Triphala Eye Wash",
+    "name": "Eye Moisturizing Drops",
     "category": "Ayurveda",
     "rating": 4.1,
     "reviewCount": 145,
@@ -2328,7 +2328,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_pc03",
-    "name": "Dashmool Decoction",
+    "name": "Herbal Joint Decoction",
     "category": "Ayurveda",
     "rating": 4.3,
     "reviewCount": 145,
@@ -2349,7 +2349,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_pc04",
-    "name": "Ashoka Bark Tea",
+    "name": "Herbal Womb Tea",
     "category": "Ayurveda",
     "rating": 4.2,
     "reviewCount": 123,

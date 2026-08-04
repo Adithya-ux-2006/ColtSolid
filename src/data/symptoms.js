@@ -86,7 +86,7 @@ export const SYMPTOMS = [
 
   { id: 'tinnitus', label: 'Tinnitus', emoji: '👂', color: 'amber' },
   { id: 'vertigo', label: 'Vertigo', emoji: '😵', color: 'amber' },
-  { id: 'neuropathy', label: 'Neuropathy', emoji: '🦶', color: 'forest' },
+  { id: 'neuropathy', label: 'Nerve Pain / Tingling', emoji: '🦶', color: 'forest' },
   { id: 'sciatica', label: 'Sciatica', emoji: '💪', color: 'forest' },
 
   { id: 'palpitations', label: 'Heart Palpitations', emoji: '💓', color: 'amber' },
@@ -95,7 +95,7 @@ export const SYMPTOMS = [
 
   { id: 'anemia', label: 'Anemia', emoji: '🩸', color: 'amber' },
   { id: 'arthritis', label: 'Arthritis', emoji: '🦴', color: 'forest' },
-  { id: 'ibs', label: 'IBS', emoji: '🫧', color: 'sage' },
+  { id: 'ibs', label: 'Irritable Bowel (IBS)', emoji: '🫧', color: 'sage' },
   { id: 'hemorrhoids', label: 'Hemorrhoids', emoji: '😣', color: 'sage' },
   { id: 'gerd', label: 'Acid Reflux', emoji: '🔥', color: 'amber' },
 

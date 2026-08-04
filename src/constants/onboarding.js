@@ -67,7 +67,7 @@ export const FAQ_ITEMS = [
   },
   {
     question: 'Is my health data private?',
-    answer: 'Yes. Your allergy and condition data is stored securely in our database and never shared with third parties. We do not sell user data. You can delete your account and all associated data at any time from your Profile page.',
+    answer: 'Yes. Your allergy and condition data is stored securely in our database and never sold. We do not share personally identifiable information with third parties. Your search queries may be processed through AI services (Google Gemini) to improve search accuracy — this processing is anonymized and not linked to your identity. You can delete your account and all associated data at any time from your Profile page.',
   },
   {
     question: 'How do I save a remedy?',

@@ -6,6 +6,7 @@ import { Modal } from '../components/ui/Modal';
 import { QuestionnaireFlow } from '../components/onboarding/QuestionnaireFlow';
 import { PageWrapper } from '../components/layout';
 import { TrustBadges } from '../components/ui/TrustBadges';
+import { LegalFooter } from '../components/ui/LegalFooter';
 import { MedicalCentreFinder } from '../components/MedicalCentreFinder';
 import { useCatalogStore } from '../store/catalogStore';
 import { FAQ_ITEMS } from '../constants/onboarding';
@@ -32,13 +33,13 @@ export function Landing() {
           </div>
 
           <h1 className="text-4xl md:text-6xl font-bold text-ink tracking-tight">
-            Research-backed relief
+            Understand your symptoms
             <br />
-            <span className="text-primary">for you.</span>
+            <span className="text-primary">find what may help.</span>
           </h1>
 
           <p className="text-lg text-ink-muted max-w-2xl mx-auto leading-relaxed">
-            No sign up needed. Search your symptoms and find evidence-backed remedies instantly.
+            No sign up needed. Search symptoms and explore remedies based on published research.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
@@ -106,8 +107,8 @@ export function Landing() {
           <div className="grid md:grid-cols-3 gap-10">
             <Feature
               icon={ShieldCheck}
-              title="Evidence-Backed"
-              description="Every remedy is supported by clinical research. No pseudoscience, just proven results."
+              title="Based on Research"
+              description="Remedies reference published studies and clinical literature. Always informational, not medical advice."
             />
             <Feature
               icon={Stethoscope}
@@ -143,13 +144,7 @@ export function Landing() {
         </div>
       </section>
 
-      <footer className="px-6 py-8 border-t border-ink/5 text-center">
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <div className="w-5 h-5 rounded-md bg-primary flex items-center justify-center text-white font-bold text-xs">R</div>
-          <span className="font-bold text-ink">Remzy</span>
-        </div>
-        <p className="text-xs text-ink-subtle">&copy; 2026 Remzy.</p>
-      </footer>
+      <LegalFooter />
 
       <Modal isOpen={isQuestionnaireOpen} onClose={() => setIsQuestionnaireOpen(false)} title="Quick Health Profile">
         <QuestionnaireFlow

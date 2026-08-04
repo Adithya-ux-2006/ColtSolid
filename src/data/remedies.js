@@ -27,7 +27,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_002',
-    name: 'Acupressure (LI4 Point)',
+    name: 'Hand Pressure Point for Headaches',
     category: 'Lifestyle',
     symptoms: ['headache'],
     primarySymptoms: ['headache'],
@@ -77,7 +77,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_004',
-    name: 'Hydration Therapy',
+    name: 'Drink More Water',
     category: 'Lifestyle',
     symptoms: ['headache'],
     primarySymptoms: ['headache'],
@@ -102,7 +102,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_005',
-    name: 'Feverfew Extract',
+    name: 'Feverfew Herbal Capsule',
     category: 'Natural',
     symptoms: ['headache'],
     primarySymptoms: ['headache'],
@@ -219,7 +219,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_010',
-    name: 'D-Mannose Powder',
+    name: 'D-Mannose UTI Relief Powder',
     category: 'Natural',
     symptoms: ['uti'],
     primarySymptoms: ['uti'],
@@ -265,7 +265,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_012',
-    name: 'Clotrimazole Cream (Antifungal)',
+    name: 'Antifungal Cream',
     category: 'Conventional',
     symptoms: ['yeast_infection', 'fungal_infection', 'skin_rash'],
     primarySymptoms: ['yeast_infection', 'fungal_infection'],
@@ -288,7 +288,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_013',
-    name: 'L-Arginine Supplement',
+    name: 'L-Arginine Blood Flow Supplement',
     category: 'Natural',
     symptoms: ['erectile_difficulty', 'low_libido', 'poor_circulation'],
     primarySymptoms: ['erectile_difficulty'],
@@ -311,7 +311,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_014',
-    name: 'Fenugreek Supplement',
+    name: 'Fenugreek Libido Capsule',
     category: 'Natural',
     symptoms: ['low_libido', 'low_energy'],
     primarySymptoms: ['low_libido'],
@@ -380,7 +380,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_017',
-    name: 'Saw Palmetto Extract',
+    name: 'Saw Palmetto Prostate Support',
     category: 'Natural',
     symptoms: ['prostate_issues', 'frequent_urination', 'hair_loss'],
     primarySymptoms: ['prostate_issues'],
@@ -518,7 +518,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_023',
-    name: 'Colloidal Oatmeal Cream',
+    name: 'Oatmeal Soothing Cream',
     category: 'Natural',
     symptoms: ['eczema', 'psoriasis', 'dry_skin', 'skin_rash', 'hives'],
     primarySymptoms: ['eczema'],
@@ -702,7 +702,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_031',
-    name: 'Ginkgo Biloba Extract',
+    name: 'Ginkgo Biloba Brain & Ear Capsule',
     category: 'Natural',
     symptoms: ['tinnitus', 'vertigo', 'poor_circulation', 'brain_fog'],
     primarySymptoms: ['tinnitus'],
@@ -725,7 +725,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_032',
-    name: 'Epley Maneuver (Repositioning)',
+    name: 'Head Repositioning Exercise for Vertigo',
     category: 'Lifestyle',
     symptoms: ['vertigo'],
     primarySymptoms: ['vertigo'],
@@ -771,7 +771,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_034',
-    name: 'Piriformis Stretch',
+    name: 'Buttock Stretch for Sciatica',
     category: 'Lifestyle',
     symptoms: ['sciatica', 'back_pain', 'hip_pain'],
     primarySymptoms: ['sciatica'],
@@ -840,7 +840,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_037',
-    name: 'Coenzyme Q10 (CoQ10)',
+    name: 'CoQ10 Heart & Energy Supplement',
     category: 'Natural',
     symptoms: ['palpitations', 'fatigue', 'low_energy'],
     primarySymptoms: ['palpitations'],
@@ -863,7 +863,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_038',
-    name: 'Anti-Inflammatory Diet (Endometriosis)',
+    name: 'Anti-Inflammatory Diet for Endometriosis',
     category: 'Lifestyle',
     symptoms: ['endometriosis', 'pelvic_pain', 'period_cramps'],
     primarySymptoms: ['endometriosis'],
@@ -909,7 +909,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_040',
-    name: 'Leg Elevation (Edema)',
+    name: 'Leg Elevation for Swelling',
     category: 'Lifestyle',
     symptoms: ['edema', 'foot_pain', 'ankle_pain'],
     primarySymptoms: ['edema'],
@@ -932,7 +932,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_041',
-    name: 'Leg Movement Exercises (Restless Legs)',
+    name: 'Leg Stretches for Restless Legs',
     category: 'Lifestyle',
     symptoms: ['restless_leg', 'insomnia'],
     primarySymptoms: ['restless_leg'],
@@ -1001,7 +1001,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_044',
-    name: 'Calendula Cream',
+    name: 'Calendula (Marigold) Skin Cream',
     category: 'Natural',
     symptoms: ['insect_bite', 'minor_burn', 'sunburn', 'skin_rash'],
     primarySymptoms: ['insect_bite'],
@@ -1074,7 +1074,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_102',
-    name: 'Maca Root Supplement',
+    name: 'Maca Root Energy & Libido Capsule',
     category: 'Natural',
     symptoms: ['low_libido'],
     primarySymptoms: ['low_libido'],
@@ -1099,7 +1099,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_103',
-    name: 'Pelvic Floor Relaxation Exercises',
+    name: 'Pelvic Floor Relaxation',
     category: 'Lifestyle',
     symptoms: ['erectile_difficulty', 'painful_intercourse'],
     primarySymptoms: ['erectile_difficulty'],
