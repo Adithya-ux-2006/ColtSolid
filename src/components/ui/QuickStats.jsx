@@ -1,14 +1,7 @@
 import { motion } from 'framer-motion';
 import { Clock, ShieldCheck, BarChart3, Gauge } from 'lucide-react';
 import { cn } from '../../utils/cn';
-
-function getSafetyText(score, hasConflicts) {
-  if (hasConflicts) return 'Check first';
-  if (score >= 85) return 'Generally well tolerated';
-  if (score >= 60) return 'Usually safe';
-  if (score >= 30) return 'Check with a professional';
-  return 'Check first';
-}
+import { getSafetyText } from '../../utils/safety';
 
 function getSafetyColor(score, hasConflicts) {
   if (hasConflicts) return 'text-danger';
@@ -24,7 +17,7 @@ function getEvidenceText(score) {
   return '—';
 }
 
-function StatColumn({ icon: Icon, iconBg, iconColor, value, label, subLabel, subLabelClassName, ariaLabel, delay, isLast }) {
+function StatColumn({ icon: Icon, iconBg, iconColor, value, label, subLabel, subLabelClassName, ariaLabel, delay, isLast, allowWrap = false }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 6 }}
@@ -49,7 +42,8 @@ function StatColumn({ icon: Icon, iconBg, iconColor, value, label, subLabel, sub
         )} />
       </div>
       <span className={cn(
-        'font-semibold text-ink leading-tight truncate w-full',
+        'font-semibold text-ink leading-tight w-full',
+        !allowWrap && 'truncate',
         'text-[13px] sm:text-sm md:text-[17px]'
       )}>
         {value}
@@ -79,7 +73,7 @@ export function QuickStats({ remedy, isSafe, evidenceScore, safetyScore, classNa
   const safetyText = getSafetyText(safetyScore, !isSafe);
   const safetyColor = getSafetyColor(safetyScore, !isSafe);
   const evidenceText = getEvidenceText(evidenceScore);
-  const safetySubLabel = isSafe ? 'Generally safe' : 'Potential conflict — check with a professional';
+  const safetySubLabel = isSafe ? 'Safe for you' : 'Potential conflict — check with a professional';
 
   return (
     <div
@@ -107,6 +101,7 @@ export function QuickStats({ remedy, isSafe, evidenceScore, safetyScore, classNa
         ariaLabel={`Safety: ${safetyText}, ${safetySubLabel}`}
         delay={0.04}
         isLast={false}
+        allowWrap
       />
       <StatColumn
         icon={BarChart3}

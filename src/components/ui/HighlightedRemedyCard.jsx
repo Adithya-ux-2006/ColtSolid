@@ -4,19 +4,12 @@ import { Clock, Check, ArrowRight } from 'lucide-react';
 import { FavoriteHeart } from './FavoriteHeart';
 import { ScheduleQuickAdd } from './ScheduleQuickAdd';
 import { cn } from '../../utils/cn';
+import { getSafetyText } from '../../utils/safety';
 import { CategoryBadge } from './CategoryBadge';
 import { SafetyBadge } from './SafetyBadge';
 import { RemedyImage } from './RemedyImage';
 import { useFavoritesStore } from '../../store/favoritesStore';
 import { useAuthStore } from '../../store/authStore';
-
-function getSafetyText(score, hasConflicts) {
-  if (hasConflicts) return 'Check first';
-  if (score >= 85) return 'Very Safe';
-  if (score >= 60) return 'Safe';
-  if (score >= 30) return 'Generally Safe';
-  return 'Check first';
-}
 
 function getEvidenceText(score) {
   if (score >= 7) return 'High';

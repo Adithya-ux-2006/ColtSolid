@@ -7,7 +7,6 @@ import { PageWrapper } from '../components/layout';
 import { LoadingSkeleton } from '../components/ui/LoadingSkeleton';
 import { RemedyHero } from '../components/ui/RemedyHero';
 import { QuickStats } from '../components/ui/QuickStats';
-import { SafetyBadge } from '../components/ui/SafetyBadge';
 import { BenefitCard } from '../components/ui/BenefitCard';
 import { TimelineStep } from '../components/ui/TimelineStep';
 import { EvidenceCard } from '../components/ui/EvidenceCard';
@@ -194,9 +193,6 @@ export function RemedyDetail() {
               evidenceScore={evidenceScore}
               safetyScore={safetyScore}
             />
-            <div className="mt-4 flex justify-center">
-              <SafetyBadge remedy={remedy} isChildSafe={activeIsChildSafe} />
-            </div>
           </div>
         </Reveal>
       </div>
