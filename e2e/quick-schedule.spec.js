@@ -98,11 +98,11 @@ test.describe('Quick Add Schedule — RemedyCard Clock Button', () => {
       if (!isVisible) {
         // Search page may not show RemedyCard carousel. Try going to a remedy page
         // that has RemedyCard-related UI, or accept this test needs auth.
-        // For now, verify the redirect behavior via the schedule page itself
-        await page.goto('/schedules');
+        // For now, verify the redirect behavior via the reminders page itself
+        await page.goto('/reminders');
         await page.waitForLoadState('networkidle');
         await page.waitForTimeout(500);
-        // Schedules page requires auth — should redirect to login
+        // Reminders page requires auth — should redirect to login
         expect(page.url()).toContain('/login');
         return;
       }
@@ -225,13 +225,13 @@ test.describe('Quick Add Schedule — RemedyCard Clock Button', () => {
       // Modal should auto-close after ~1.5s
       await expect(modal).not.toBeVisible({ timeout: 5000 });
 
-      // Navigate to /schedules and verify the new schedule exists
-      await page.goto('/schedules');
+      // Navigate to /reminders and verify the new schedule exists
+      await page.goto('/reminders');
       await page.waitForLoadState('networkidle');
       await page.waitForTimeout(1000);
 
       // Look for the schedule with 09:30 time
-      await expect(page.getByText('09:30 AM')).toBeVisible({ timeout: 5000 });
+      await expect(page.getByText('9:30 AM')).toBeVisible({ timeout: 5000 });
     });
 
     test('repeat add creates independent schedules (no overwrite)', async ({ page }) => {
@@ -278,13 +278,13 @@ test.describe('Quick Add Schedule — RemedyCard Clock Button', () => {
       await expect(modal.getByText('Schedule added!')).toBeVisible({ timeout: 10000 });
       await expect(modal).not.toBeVisible({ timeout: 5000 });
 
-      // Verify both exist on /schedules
-      await page.goto('/schedules');
+      // Verify both exist on /reminders
+      await page.goto('/reminders');
       await page.waitForLoadState('networkidle');
       await page.waitForTimeout(1000);
 
       await expect(page.getByText('10:00 AM')).toBeVisible({ timeout: 5000 });
-      await expect(page.getByText('02:00 PM')).toBeVisible({ timeout: 5000 });
+      await expect(page.getByText('2:00 PM')).toBeVisible({ timeout: 5000 });
     });
   });
 

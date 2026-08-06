@@ -19,7 +19,6 @@ const SymptomSearch = lazy(() => import('./pages/SymptomSearch').then(m => ({ de
 const Results = lazy(() => import('./pages/Results').then(m => ({ default: m.Results })));
 const RemedyDetail = lazy(() => import('./pages/RemedyDetail').then(m => ({ default: m.RemedyDetail })));
 const Favorites = lazy(() => import('./pages/Favorites').then(m => ({ default: m.Favorites })));
-const RemedySchedules = lazy(() => import('./pages/RemedySchedules').then(m => ({ default: m.RemedySchedules })));
 const TreatmentReminders = lazy(() => import('./pages/TreatmentReminders').then(m => ({ default: m.TreatmentReminders })));
 const Profile = lazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })));
 const Onboarding = lazy(() => import('./pages/Onboarding').then(m => ({ default: m.Onboarding })));
@@ -103,7 +102,7 @@ function AppRoutes() {
         {/* Protected Routes */}
         <Route path="/dashboard" element={<ProtectedRoute><Page><Dashboard /></Page></ProtectedRoute>} />
         <Route path="/favorites" element={<ProtectedRoute><Page><Favorites /></Page></ProtectedRoute>} />
-        <Route path="/schedules" element={<ProtectedRoute><Page><RemedySchedules /></Page></ProtectedRoute>} />
+        <Route path="/schedules" element={<Navigate to="/reminders" replace />} />
         <Route path="/reminders" element={<ProtectedRoute><Page><TreatmentReminders /></Page></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Page><Profile /></Page></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute><AdminGuard><Page><AdminAnalytics /></Page></AdminGuard></ProtectedRoute>} />

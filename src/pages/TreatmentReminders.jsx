@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Plus, Check, ChevronLeft, ChevronRight, ChevronRight as Chevron,
-  Sparkles, Sprout, CalendarClock, Bell, ArrowRight,
+  Sparkles, Sprout, CalendarClock, Bell, ArrowRight, ToggleLeft, ToggleRight, Trash2,
 } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { PageWrapper } from '../components/layout';
@@ -121,6 +121,8 @@ export function TreatmentReminders() {
   const completions = useRemedyScheduleStore((s) => s.completions);
   const isLoading = useRemedyScheduleStore((s) => s.isLoading);
   const markComplete = useRemedyScheduleStore((s) => s.markComplete);
+  const toggleActive = useRemedyScheduleStore((s) => s.toggleActive);
+  const remove = useRemedyScheduleStore((s) => s.remove);
   const add = useRemedyScheduleStore((s) => s.add);
   const remedies = useCatalogStore((s) => s.remedies);
   const favorites = useFavoritesStore((s) => s.favorites);
@@ -178,6 +180,12 @@ export function TreatmentReminders() {
 
   const handleToggleComplete = (scheduleId) => {
     markComplete(scheduleId);
+  };
+
+  const handleRemove = (scheduleId) => {
+    if (window.confirm('Remove this reminder?')) {
+      remove(scheduleId);
+    }
   };
 
   return (
@@ -321,9 +329,9 @@ export function TreatmentReminders() {
           <section className="bg-card rounded-[20px] border border-border/60 shadow-soft p-5 md:p-6">
             <header className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-ink">Upcoming Reminders</h2>
-              <Link to="/schedules" className="text-sm font-medium text-primary hover:text-primary-dark transition-colors">
+              <a href="#all-reminders" className="text-sm font-medium text-primary hover:text-primary-dark transition-colors">
                 View All
-              </Link>
+              </a>
             </header>
 
             {upcoming.length > 0 ? (
@@ -473,6 +481,76 @@ export function TreatmentReminders() {
               Learn More <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </section>
+        </div>
+      </section>
+
+      {/* All Reminders — full management list (pause/resume, remove) */}
+      <section id="all-reminders" className="max-w-[1280px] mx-auto px-5 md:px-8 mb-10">
+        <div className="bg-card rounded-[20px] border border-border/60 shadow-soft p-5 md:p-6">
+          <header className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-ink">All Reminders</h2>
+            <span className="text-xs text-ink-muted">{schedules.length} total</span>
+          </header>
+
+          {schedules.length > 0 ? (
+            <ul className="space-y-2">
+              {schedules.map((schedule) => {
+                const remedy = remediesById.get(schedule.remedy_id);
+                const active = schedule.active;
+                return (
+                  <li
+                    key={schedule.id}
+                    className={cn(
+                      'flex items-center gap-3 p-3 rounded-2xl border border-border/60',
+                      !active && 'opacity-60'
+                    )}
+                  >
+                    <ReminderIcon category={remedy?.category} />
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold text-ink text-sm truncate">{schedule.remedy_name}</p>
+                      <p className="text-xs text-ink-muted">
+                        {formatTime(schedule.scheduled_time)} · {getRecurrenceLabel(schedule)}
+                      </p>
+                    </div>
+                    <span
+                      className={cn(
+                        'hidden sm:inline-flex text-xs font-medium px-2.5 py-1 rounded-full border',
+                        active ? 'bg-success/10 text-success border-success/20' : 'bg-surface text-ink-muted border-border'
+                      )}
+                    >
+                      {active ? 'Active' : 'Paused'}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => toggleActive(schedule.id)}
+                      aria-label={active ? `Pause ${schedule.remedy_name}` : `Resume ${schedule.remedy_name}`}
+                      className="p-1.5 text-ink-muted hover:text-ink rounded-full transition-colors"
+                    >
+                      {active ? (
+                        <ToggleRight className="w-5 h-5 text-primary" />
+                      ) : (
+                        <ToggleLeft className="w-5 h-5" />
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleRemove(schedule.id)}
+                      aria-label={`Remove ${schedule.remedy_name}`}
+                      className="p-1.5 text-ink-muted hover:text-danger rounded-full transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <EmptyState
+              icon={Bell}
+              title="No reminders yet"
+              description="Add your first reminder to get started."
+            />
+          )}
         </div>
       </section>
 
