@@ -20,6 +20,7 @@ const Results = lazy(() => import('./pages/Results').then(m => ({ default: m.Res
 const RemedyDetail = lazy(() => import('./pages/RemedyDetail').then(m => ({ default: m.RemedyDetail })));
 const Favorites = lazy(() => import('./pages/Favorites').then(m => ({ default: m.Favorites })));
 const RemedySchedules = lazy(() => import('./pages/RemedySchedules').then(m => ({ default: m.RemedySchedules })));
+const TreatmentReminders = lazy(() => import('./pages/TreatmentReminders').then(m => ({ default: m.TreatmentReminders })));
 const Profile = lazy(() => import('./pages/Profile').then(m => ({ default: m.Profile })));
 const Onboarding = lazy(() => import('./pages/Onboarding').then(m => ({ default: m.Onboarding })));
 const AdminAnalytics = lazy(() => import('./pages/AdminAnalytics').then(m => ({ default: m.AdminAnalytics })));
@@ -103,6 +104,7 @@ function AppRoutes() {
         <Route path="/dashboard" element={<ProtectedRoute><Page><Dashboard /></Page></ProtectedRoute>} />
         <Route path="/favorites" element={<ProtectedRoute><Page><Favorites /></Page></ProtectedRoute>} />
         <Route path="/schedules" element={<ProtectedRoute><Page><RemedySchedules /></Page></ProtectedRoute>} />
+        <Route path="/reminders" element={<ProtectedRoute><Page><TreatmentReminders /></Page></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Page><Profile /></Page></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute><AdminGuard><Page><AdminAnalytics /></Page></AdminGuard></ProtectedRoute>} />
         <Route path="/onboarding" element={<ProtectedRoute><Page><Onboarding /></Page></ProtectedRoute>} />
@@ -122,6 +124,7 @@ function App() {
   const isInitialized = useAuthStore((state) => state.isInitialized);
   const fetchFavorites = useFavoritesStore((state) => state.fetchFavorites);
   const fetchSchedules = useRemedyScheduleStore((state) => state.fetchSchedules);
+  const fetchCompletions = useRemedyScheduleStore((state) => state.fetchCompletions);
   const clearSchedules = useRemedyScheduleStore((state) => state.clear);
   const fetchCatalog = useCatalogStore((state) => state.fetchCatalog);
   const clearFavorites = useFavoritesStore((state) => state.clear);
@@ -149,7 +152,8 @@ function App() {
 
     fetchFavorites();
     fetchSchedules();
-  }, [clearFavorites, clearSchedules, fetchFavorites, fetchSchedules, isAuthenticated]);
+    fetchCompletions();
+  }, [clearFavorites, clearSchedules, fetchFavorites, fetchSchedules, fetchCompletions, isAuthenticated]);
 
   if (!bootstrapped && !isInitialized) {
     return (

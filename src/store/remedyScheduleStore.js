@@ -1,12 +1,15 @@
 import { create } from 'zustand';
 import { supabase } from '../lib/supabase';
 import { useAuthStore } from './authStore';
+import { isSameDay } from '../utils/scheduleDates';
 
 export const useRemedyScheduleStore = create((set, get) => ({
   schedules: [],
+  completions: [],
   isLoading: false,
+  isCompletionsLoading: false,
 
-  clear: () => set({ schedules: [] }),
+  clear: () => set({ schedules: [], completions: [] }),
 
   hasActiveSchedule: (remedyId) => {
     return get().schedules.some((s) => s.remedy_id === remedyId && s.active);
@@ -30,6 +33,78 @@ export const useRemedyScheduleStore = create((set, get) => ({
       console.error('Error fetching remedy schedules:', error);
     } finally {
       set({ isLoading: false });
+    }
+  },
+
+  fetchCompletions: async () => {
+    const user = useAuthStore.getState().user;
+    if (!user) return;
+
+    set({ isCompletionsLoading: true });
+    try {
+      const { data, error } = await supabase
+        .from('schedule_completions')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('completed_at', { ascending: false });
+
+      if (error) throw error;
+      set({ completions: data || [] });
+    } catch (error) {
+      console.error('Error fetching schedule completions:', error);
+    } finally {
+      set({ isCompletionsLoading: false });
+    }
+  },
+
+  /**
+   * Mark a reminder occurrence complete for today, or unmark it if it was
+   * already completed today. Completions are stored per schedule + day so a
+   * recurring reminder accumulates history instead of overwriting it.
+   */
+  markComplete: async (scheduleId) => {
+    const user = useAuthStore.getState().user;
+    if (!user) return { success: false };
+
+    const existing = get().completions.find(
+      (c) => c.schedule_id === scheduleId && isSameDay(new Date(c.completed_at), new Date())
+    );
+
+    if (existing) {
+      try {
+        const { error } = await supabase
+          .from('schedule_completions')
+          .delete()
+          .eq('id', existing.id)
+          .eq('user_id', user.id);
+        if (error) throw error;
+        set((state) => ({
+          completions: state.completions.filter((c) => c.id !== existing.id),
+        }));
+        return { success: true };
+      } catch (error) {
+        console.error('Error unmarking schedule completion:', error);
+        return { success: false };
+      }
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('schedule_completions')
+        .insert({
+          user_id: user.id,
+          schedule_id: scheduleId,
+          completed_at: new Date().toISOString(),
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      set((state) => ({ completions: [data, ...state.completions] }));
+      return { success: true, data };
+    } catch (error) {
+      console.error('Error marking schedule complete:', error);
+      return { success: false };
     }
   },
 

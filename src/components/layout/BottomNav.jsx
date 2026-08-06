@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Search, Heart, Clock, User } from 'lucide-react';
+import { LayoutDashboard, Search, Heart, Clock, Bell, User } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { useAuthStore } from '../../store/authStore';
 
@@ -25,6 +25,7 @@ export function BottomNav() {
     { to: '/dashboard', icon: LayoutDashboard, label: 'Home', locked: !isAuthenticated },
     { to: '/search', icon: Search, label: 'Search' },
     { to: '/favorites', icon: Heart, label: 'Saved', locked: !isAuthenticated },
+    { to: '/reminders', icon: Bell, label: 'Reminders', locked: !isAuthenticated },
     { to: '/schedules', icon: Clock, label: 'History', locked: !isAuthenticated },
     { to: '/profile', icon: User, label: 'Profile', locked: !isAuthenticated },
   ];
