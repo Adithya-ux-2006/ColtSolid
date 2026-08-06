@@ -73,18 +73,20 @@ export function AltRemedyRow({ remedy, evidenceScore, isChildSafe, showDivider =
 
       <Link
         to={`/remedy/${remedy.id}`}
-        className="md:hidden flex items-center gap-3 py-4 px-2 hover:bg-mint/30 rounded-xl transition-colors"
+        className="md:hidden flex items-start gap-3 py-4 px-4 hover:bg-mint/30 rounded-xl transition-colors"
       >
-        <RemedyImage category={remedy.category} size="sm" alt={remedy.name} />
+        <RemedyImage category={remedy.category} size="sm" alt={remedy.name} className="mt-0.5" />
 
         <div className="flex-1 min-w-0">
-          <CategoryBadge category={remedy.category} className="scale-90 origin-left mb-1" />
-          <h4 className="font-semibold text-ink text-sm leading-snug">{remedy.name}</h4>
-          <p className="text-xs text-ink-muted mt-0.5">{remedy.shortDescription}</p>
-          <div className="flex items-center gap-2 mt-1.5">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h4 className="font-semibold text-ink text-sm leading-snug">{remedy.name}</h4>
+            <CategoryBadge category={remedy.category} />
+          </div>
+          <p className="text-xs text-ink-muted mt-1 line-clamp-2">{remedy.shortDescription}</p>
+          <div className="flex items-center gap-x-3 gap-y-1 mt-2 flex-wrap">
             {remedy.timeToEffect && (
-              <span className="flex items-center gap-1 text-xs text-ink-muted">
-                <Clock className="w-3 h-3" />
+              <span className="flex items-center gap-1 text-xs text-ink-muted whitespace-nowrap">
+                <Clock className="w-3 h-3 shrink-0" />
                 {remedy.timeToEffect}
               </span>
             )}
@@ -93,7 +95,7 @@ export function AltRemedyRow({ remedy, evidenceScore, isChildSafe, showDivider =
           </div>
         </div>
 
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex items-center gap-1 shrink-0 self-center">
           <button
             onClick={handleFavorite}
             className={cn(

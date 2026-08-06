@@ -71,6 +71,10 @@ export function getInitials(name = '') {
   return initials || 'U';
 }
 
+function normalizeCategory(category) {
+  return category === 'Ayurveda' ? 'Natural' : category;
+}
+
 export function mapRemedy(remedy) {
   if (!remedy) return null;
 
@@ -86,7 +90,7 @@ export function mapRemedy(remedy) {
   return {
     id: remedy.id,
     name: remedy.name,
-    category: remedy.category,
+    category: normalizeCategory(remedy.category),
     symptoms: allSymptoms.length > 0 ? allSymptoms : (remedy.symptoms || []),
     primarySymptoms: primarySymptoms.length > 0 ? primarySymptoms : (allSymptoms.length > 0 ? allSymptoms : (remedy.symptoms || [])),
     secondarySymptoms: secondarySymptoms.length > 0 ? secondarySymptoms : [],
