@@ -90,9 +90,6 @@ export function RemedyCard({ remedy, className, featured, variant, isSafe = true
         >
           <div className="flex items-center gap-2 mb-3">
             <CategoryBadge category={remedy.category} />
-            <span className="text-xs font-medium text-primary-light bg-card/60 px-2.5 py-0.5 rounded-full">
-              Featured
-            </span>
             <div className="flex items-center gap-1 ml-auto">
               <ScheduleQuickAdd remedy={remedy} />
               <button
