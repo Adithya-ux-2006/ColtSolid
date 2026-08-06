@@ -89,6 +89,7 @@
 
     --shadow-color: 155 30% 13%;
 
+    --radius: 0.5rem;
     --radius-card: 1.25rem;
     --radius-pill: 9999px;
     --shadow-card: 0 4px 20px hsl(155 30% 13% / 0.06);
@@ -150,6 +151,7 @@
 
     --shadow-color: 210 40% 3%;
 
+    --radius: 0.5rem;
     --radius-card: 1.25rem;
     --radius-pill: 9999px;
     --shadow-card: 0 4px 20px hsl(210 40% 3% / 0.12);

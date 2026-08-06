@@ -13,7 +13,7 @@ export function Navbar() {
         <div className="h-full px-4 md:px-6 grid grid-cols-[1fr_auto_1fr] items-center">
           <div />
           <Link to="/dashboard" className="flex items-center gap-2 justify-self-center">
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground text-base font-bold shadow-glow">
+            <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground text-base font-bold shadow-glow">
               R
             </div>
             <span className="text-xl font-bold text-ink tracking-tight">Remzy</span>
