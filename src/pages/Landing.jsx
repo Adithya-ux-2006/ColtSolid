@@ -74,7 +74,7 @@ export function Landing() {
         <section className="py-6 border-y border-ink/5 bg-card/50">
           <div className="max-w-6xl mx-auto px-6">
             <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-4">
-              Common Symptoms
+              Common Searches
             </p>
             <div className="flex overflow-x-auto justify-center gap-3 pb-2 no-scrollbar -mx-6 px-6 snap-x">
               {quickSymptoms.map((symptom) => (

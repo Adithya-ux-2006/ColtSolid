@@ -257,7 +257,7 @@ export function SymptomSearch() {
         </div>
 
         <div className="w-full mb-8">
-          <p className="text-sm font-medium text-ink-muted mb-4 text-center">Popular symptoms</p>
+          <p className="text-sm font-medium text-ink-muted mb-4 text-center">Common Searches</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {symptomCards.map((item) => {
               const color = SYMPTOM_COLOR_CLASSES[item.color] || SYMPTOM_COLOR_CLASSES.sage;
