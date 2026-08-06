@@ -12,6 +12,7 @@ Run these in order in the Supabase SQL Editor when setting up a new environment.
 | 006_profile_collection_fields.sql | Personalization profile collection fields |
 | 020_remove_medication_allergies.sql | Remove Medication Allergies from onboarding options |
 | 021_rename_anxiety_label.sql | Rename "Anxiety" symptom label to "Anxious" |
+| 025_merge_ayurveda_into_natural.sql | Merge Ayurveda remedies into Natural category |
 
 New changes: always create the next numbered file and add a row to this table.
 Never modify existing migration files.
