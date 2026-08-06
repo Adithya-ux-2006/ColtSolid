@@ -78,7 +78,6 @@ export function SavedRemedyCard({ remedy, className }) {
               <RatingStars
                 rating={remedy.rating}
                 size="sm"
-                category={remedy.category}
               />
             </div>
           </div>

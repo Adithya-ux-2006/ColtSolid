@@ -1,26 +1,9 @@
 import { motion } from 'framer-motion';
-import { Star, StarHalf } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { RemedyImage } from './RemedyImage';
 import { CategoryBadge } from './CategoryBadge';
 import { EvidenceLabel } from './EvidenceLabel';
-
-function StarRating({ rating }) {
-  const full = Math.floor(rating);
-  const hasHalf = rating - full >= 0.3;
-
-  return (
-    <div className="flex items-center gap-1.5">
-      <div className="flex items-center gap-0.5">
-        {Array.from({ length: 5 }).map((_, i) => {
-          if (i < full) return <Star key={i} className="w-4 h-4 fill-warning text-warning" />;
-          if (i === full && hasHalf) return <StarHalf key={i} className="w-4 h-4 fill-warning text-warning" />;
-          return <Star key={i} className="w-4 h-4 text-ink-subtle" />;
-        })}
-      </div>
-    </div>
-  );
-}
+import { RatingStars } from './RatingStars';
 
 export function RemedyHero({ remedy, evidenceScore, className }) {
   return (
@@ -63,7 +46,7 @@ export function RemedyHero({ remedy, evidenceScore, className }) {
         >
           {evidenceScore > 0 && <EvidenceLabel score={evidenceScore} />}
           {remedy.rating > 0 && (
-            <StarRating rating={remedy.rating} />
+            <RatingStars rating={remedy.rating} size="sm" />
           )}
         </motion.div>
 

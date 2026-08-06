@@ -83,6 +83,9 @@ export default {
         kaggle: {
           DEFAULT: '#20BEFF',
         },
+        rating: {
+          DEFAULT: 'hsl(var(--color-rating-star))',
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

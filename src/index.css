@@ -85,6 +85,8 @@
     --evidence: 262 60% 50%;
     --evidence-soft: 262 50% 95%;
 
+    --color-rating-star: 43 96% 56%;
+
     --shadow-color: 155 30% 13%;
 
     --radius-card: 1.25rem;
@@ -143,6 +145,8 @@
     --danger-soft: 0 40% 18%;
     --evidence: 262 50% 60%;
     --evidence-soft: 262 25% 16%;
+
+    --color-rating-star: 43 92% 62%;
 
     --shadow-color: 210 40% 3%;
 
