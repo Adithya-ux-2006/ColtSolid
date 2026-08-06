@@ -203,6 +203,39 @@ export function RemedyDetail() {
 
       <div className="max-w-[800px] mx-auto px-5 md:px-8">
 
+        {remedy.warnings && (
+          <section className="mb-12 md:mb-16">
+            <Reveal>
+              <h2 className="section-title mb-5">Health Alert</h2>
+            </Reveal>
+            <Reveal delay={0.08}>
+              <AdvisoryCard
+                title="Important"
+                message={remedy.warnings}
+              />
+            </Reveal>
+          </section>
+        )}
+
+        {howToUseSteps.length > 0 && (
+          <section className="mb-12 md:mb-16">
+            <Reveal>
+              <h2 className="section-title mb-5">How To Use</h2>
+            </Reveal>
+            <div className="rounded-[20px] bg-card border border-border p-6 md:p-8 shadow-card hover:shadow-card-lg transition-shadow duration-200">
+              {howToUseSteps.map((step, i) => (
+                <TimelineStep
+                  key={i}
+                  number={i + 1}
+                  description={step}
+                  isLast={i === howToUseSteps.length - 1}
+                  delay={i * 0.15}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
         {benefits.length > 0 && (
           <section className="mb-12 md:mb-16">
             <Reveal>
@@ -230,22 +263,27 @@ export function RemedyDetail() {
           </section>
         )}
 
-        {howToUseSteps.length > 0 && (
+        {remedy.isPurchasable !== false && (
+          <div className="mb-12 md:mb-16">
+            <NearbyShops remedyName={remedy.name} />
+          </div>
+        )}
+
+        {remedy.category === 'Over-the-Counter' && (
           <section className="mb-12 md:mb-16">
             <Reveal>
-              <h2 className="section-title mb-5">How To Use</h2>
+              <div className="rounded-2xl border border-warning/20 bg-warning/5 p-5">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-warning shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-semibold text-ink text-sm mb-1">Medicine information</p>
+                    <p className="text-sm text-ink-muted leading-relaxed">
+                      This medicine may not be suitable for everyone. Check with a pharmacist or doctor if you have high blood pressure, heart problems, take other medicines, are pregnant, or are unsure.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </Reveal>
-            <div className="rounded-[20px] bg-card border border-border p-6 md:p-8 shadow-card hover:shadow-card-lg transition-shadow duration-200">
-              {howToUseSteps.map((step, i) => (
-                <TimelineStep
-                  key={i}
-                  number={i + 1}
-                  description={step}
-                  isLast={i === howToUseSteps.length - 1}
-                  delay={i * 0.15}
-                />
-              ))}
-            </div>
           </section>
         )}
 
@@ -303,44 +341,6 @@ export function RemedyDetail() {
             </>
           )}
         </section>
-
-        {remedy.isPurchasable !== false && (
-          <div className="mb-12 md:mb-16">
-            <NearbyShops remedyName={remedy.name} />
-          </div>
-        )}
-
-        {remedy.category === 'Over-the-Counter' && (
-          <section className="mb-12 md:mb-16">
-            <Reveal>
-              <div className="rounded-2xl border border-warning/20 bg-warning/5 p-5">
-                <div className="flex items-start gap-3">
-                  <AlertTriangle className="w-5 h-5 text-warning shrink-0 mt-0.5" />
-                  <div>
-                    <p className="font-semibold text-ink text-sm mb-1">Medicine information</p>
-                    <p className="text-sm text-ink-muted leading-relaxed">
-                      This medicine may not be suitable for everyone. Check with a pharmacist or doctor if you have high blood pressure, heart problems, take other medicines, are pregnant, or are unsure.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-          </section>
-        )}
-
-        {remedy.warnings && (
-          <section className="mb-12 md:mb-16">
-            <Reveal>
-              <h2 className="section-title mb-5">Safety Information</h2>
-            </Reveal>
-            <Reveal delay={0.08}>
-              <AdvisoryCard
-                title="Important"
-                message={remedy.warnings}
-              />
-            </Reveal>
-          </section>
-        )}
 
         <section className="mb-12 md:mb-16">
           <DoctorGuidance />
