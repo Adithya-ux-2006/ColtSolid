@@ -26,9 +26,9 @@ export const REMEDIES = [
     isPurchasable: true,
   },
   {
-    id: 'rem_003',
+    id: 'rem_h04',
     name: 'Ibuprofen (Advil / Motrin)',
-    category: 'Over-the-Counter',
+    category: 'Conventional',
     symptoms: ['headache'],
     primarySymptoms: ['headache'],
     secondarySymptoms: ['cold'],

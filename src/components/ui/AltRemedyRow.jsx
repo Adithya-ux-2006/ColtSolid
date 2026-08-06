@@ -27,7 +27,7 @@ export function AltRemedyRow({ remedy, evidenceScore, isChildSafe, showDivider =
     <div className={cn(showDivider && 'border-b border-border', className)}>
       <Link
         to={`/remedy/${remedy.id}`}
-        className="hidden md:grid grid-cols-[80px_2fr_160px_160px_170px_40px] items-center gap-4 px-4 hover:bg-mint/30 rounded-xl transition-colors"
+        className="hidden md:grid grid-cols-[80px_2fr_160px_160px_170px_40px] items-center gap-4 px-4 h-20 hover:bg-mint/30 rounded-xl transition-colors"
       >
         <div className="flex items-center justify-center">
           <RemedyImage category={remedy.category} size="sm" alt={remedy.name} />
@@ -35,8 +35,8 @@ export function AltRemedyRow({ remedy, evidenceScore, isChildSafe, showDivider =
 
         <div className="min-w-0 pr-4">
           <CategoryBadge category={remedy.category} className="scale-90 origin-left mb-1" />
-          <h4 className="font-semibold text-ink text-sm leading-snug">{remedy.name}</h4>
-          <p className="text-xs text-ink-muted mt-0.5">{remedy.shortDescription}</p>
+          <h4 className="font-semibold text-ink text-sm leading-snug truncate">{remedy.name}</h4>
+          <p className="text-xs text-ink-muted mt-0.5 truncate">{remedy.shortDescription}</p>
         </div>
 
         <div className="flex items-center justify-center">
@@ -73,16 +73,16 @@ export function AltRemedyRow({ remedy, evidenceScore, isChildSafe, showDivider =
 
       <Link
         to={`/remedy/${remedy.id}`}
-        className="md:hidden flex items-start gap-3 py-4 px-4 hover:bg-mint/30 rounded-xl transition-colors"
+        className="md:hidden flex items-center gap-3 px-4 h-[124px] hover:bg-mint/30 rounded-xl transition-colors"
       >
-        <RemedyImage category={remedy.category} size="sm" alt={remedy.name} className="mt-0.5" />
+        <RemedyImage category={remedy.category} size="sm" alt={remedy.name} />
 
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h4 className="font-semibold text-ink text-sm leading-snug">{remedy.name}</h4>
-            <CategoryBadge category={remedy.category} />
+          <div className="flex items-center gap-2">
+            <h4 className="font-semibold text-ink text-sm leading-snug truncate flex-1 min-w-0">{remedy.name}</h4>
+            <CategoryBadge category={remedy.category} className="shrink-0" />
           </div>
-          <p className="text-xs text-ink-muted mt-1 line-clamp-2">{remedy.shortDescription}</p>
+          <p className="text-xs text-ink-muted mt-1 truncate">{remedy.shortDescription}</p>
           <div className="flex items-center gap-x-3 gap-y-1 mt-2 flex-wrap">
             {remedy.timeToEffect && (
               <span className="flex items-center gap-1 text-xs text-ink-muted whitespace-nowrap">
