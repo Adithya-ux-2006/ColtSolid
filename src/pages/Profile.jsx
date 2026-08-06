@@ -1,15 +1,12 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import {
-  LogOut, ChevronDown, User, Shield, Pencil, X, Check,
-  Leaf, TrendingUp, Clock
+  LogOut, ChevronDown, User, Shield, Pencil, X, Check
 } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { PageWrapper } from '../components/layout';
 import { FAQAccordion } from '../components/ui/FAQAccordion';
 import { useAuthStore } from '../store/authStore';
-import { useFavoritesStore } from '../store/favoritesStore';
 import { useGuestProfileStore } from '../store/guestProfileStore';
 import { getInitials } from '../utils/mappers';
 import { ALLERGIES, CONDITIONS, FAQ_ITEMS, GENDER_OPTIONS } from '../constants/onboarding';
@@ -44,54 +41,6 @@ function getAllergyDisplay(value) {
   const entry = ALLERGY_MAP.get(value);
   if (entry) return entry;
   return { emoji: NONE_EMOJI, label: formatChip(value) };
-}
-
-function parseReliefMinutes(timeStr) {
-  if (!timeStr) return null;
-  const s = timeStr.toLowerCase();
-  if (s.includes('immediate')) return 0;
-  if (s.includes('week') || s.includes('day')) return null;
-  const nums = s.match(/\d+/g);
-  if (!nums) return null;
-  const values = nums.map(Number);
-  const avg = (values[0] + (values[values.length - 1] || values[0])) / 2;
-  if (s.includes('hour')) return avg * 60;
-  return avg;
-}
-
-function computeAvgReliefTime(favorites) {
-  const minutes = favorites
-    .map((r) => parseReliefMinutes(r.timeToEffect))
-    .filter((m) => m !== null);
-  if (minutes.length === 0) return null;
-  const avg = minutes.reduce((a, b) => a + b, 0) / minutes.length;
-  if (avg < 1) return 'Immediate';
-  if (avg < 60) return `${Math.round(avg)} min`;
-  const h = Math.round(avg / 60);
-  return `${h} hr${h > 1 ? 's' : ''}`;
-}
-
-function StatCard({ icon: Icon, value, label, color }) {
-  return (
-    <motion.div
-      whileHover={{ y: -2 }}
-      transition={{ duration: 0.2 }}
-      className="bg-card rounded-[20px] border border-border/60 shadow-soft p-5 flex items-center gap-4"
-    >
-      <div className={cn(
-        'w-12 h-12 rounded-full flex items-center justify-center shrink-0',
-        color === 'emerald' && 'bg-emerald-500/10 text-emerald-500',
-        color === 'violet' && 'bg-violet-500/10 text-violet-500',
-        color === 'orange' && 'bg-orange-500/10 text-orange-500',
-      )}>
-        <Icon className="w-6 h-6" />
-      </div>
-      <div className="min-w-0">
-        <p className="text-2xl font-bold text-ink leading-none mb-1">{value}</p>
-        <p className="text-sm text-ink-muted leading-snug">{label}</p>
-      </div>
-    </motion.div>
-  );
 }
 
 function PillGroup({ items, getDisplay, emptyLabel }) {
@@ -135,15 +84,11 @@ export function Profile() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const logout = useAuthStore((state) => state.logout);
   const updateUser = useAuthStore((state) => state.updateUser);
-  const favorites = useFavoritesStore((state) => state.favorites);
   const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
   const guestConditions = useGuestProfileStore((state) => state.common_conditions);
   const guestIsChildSafe = useGuestProfileStore((state) => state.is_child_safe ?? false);
   const updateGuestProfile = useGuestProfileStore((state) => state.updateProfile);
   const navigate = useNavigate();
-
-  // Stats computation (must be before any early returns)
-  const avgReliefTime = useMemo(() => computeAvgReliefTime(favorites), [favorites]);
 
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingHealth, setIsEditingHealth] = useState(false);
@@ -418,17 +363,6 @@ export function Profile() {
     setHealthForm({ ...healthForm, [field]: next });
   };
 
-  // Stats computation
-  const naturalCount = favorites.filter((r) => r.category === 'Natural').length;
-  const naturalPercent = favorites.length > 0
-    ? Math.round((naturalCount / favorites.length) * 100)
-    : 0;
-
-  const highEvidenceCount = favorites.filter((r) => {
-    if (r._evidenceScore != null) return r._evidenceScore >= 7;
-    return r.rating >= 4.5;
-  }).length;
-
   return (
     <PageWrapper className="min-h-screen pb-28 md:pb-12">
       <div className="max-w-2xl mx-auto px-5 md:px-8 pt-6 md:pt-8 space-y-6 md:space-y-8">
@@ -647,28 +581,6 @@ export function Profile() {
               )}
             </div>
           </div>
-        </section>
-
-        {/* ── Stat Cards ── */}
-        <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <StatCard
-            icon={Leaf}
-            value={favorites.length > 0 ? `${naturalPercent}%` : '—'}
-            label="Natural Preference"
-            color="emerald"
-          />
-          <StatCard
-            icon={TrendingUp}
-            value={favorites.length > 0 ? highEvidenceCount : '—'}
-            label="Evidence Focus"
-            color="violet"
-          />
-          <StatCard
-            icon={Clock}
-            value={avgReliefTime || '—'}
-            label="Avg. Relief Time"
-            color="orange"
-          />
         </section>
 
         {/* ── About Remzy Accordion ── */}
