@@ -77,31 +77,7 @@ async function updateUserProfileRow(userId, updates) {
     .update(updates)
     .eq('id', userId);
 
-  if (!error) return;
-
-  const isMissingNewColumn = /column .* does not exist/i.test(error.message || '')
-    || /could not find the '.*' column of 'users' in the schema cache/i.test(error.message || '');
-  if (!isMissingNewColumn) throw error;
-
-  const fallbackUpdates = {
-    name: updates.name,
-    university: updates.university_name ?? updates.university,
-    year: updates.current_year ?? updates.year,
-    gender: updates.gender,
-    common_conditions: updates.common_conditions,
-    known_allergies: updates.known_allergies,
-    has_completed_onboarding: updates.has_completed_onboarding,
-    is_child_safe: updates.is_child_safe,
-  };
-
-  Object.keys(fallbackUpdates).forEach((key) => fallbackUpdates[key] === undefined && delete fallbackUpdates[key]);
-
-  const { error: fallbackError } = await supabase
-    .from('users')
-    .update(fallbackUpdates)
-    .eq('id', userId);
-
-  if (fallbackError) throw fallbackError;
+  if (error) throw error;
 }
 
 const buildUser = async (session) => {
@@ -122,10 +98,8 @@ const buildUser = async (session) => {
     ...profile,
     name: profile?.name || metadata.name || '',
     university_email: profile?.university_email || metadata.university_email || '',
-    university_name: profile?.university_name || profile?.university || metadata.university_name || metadata.university || '',
-    current_year: profile?.current_year || profile?.year || metadata.current_year || metadata.year || '',
-    university: profile?.university_name || profile?.university || metadata.university_name || metadata.university || '',
-    year: profile?.current_year || profile?.year || metadata.current_year || metadata.year || '',
+    university_name: profile?.university_name || metadata.university_name || '',
+    current_year: profile?.current_year || metadata.current_year || '',
     gender: profile?.gender || metadata.gender || '',
     is_child_safe: profile?.is_child_safe ?? false,
     common_conditions: profile?.common_conditions ?? [],
@@ -290,8 +264,6 @@ export const useAuthStore = create((set, get) => ({
         university_email: updates.universityEmail,
         university_name: updates.universityName,
         current_year: updates.currentYear,
-        university: updates.universityName,
-        year: updates.currentYear,
         gender: updates.gender,
         known_allergies: updates.known_allergies,
         common_conditions: updates.common_conditions,
@@ -323,8 +295,6 @@ export const useAuthStore = create((set, get) => ({
           university_name: updates.universityName ?? state.user.university_name,
           current_year: updates.currentYear ?? state.user.current_year,
           university_email: updates.universityEmail ?? state.user.university_email,
-          university: updates.universityName ?? state.user.university,
-          year: updates.currentYear ?? state.user.year,
         },
       }));
     } catch (error) {

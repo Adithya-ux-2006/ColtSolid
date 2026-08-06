@@ -438,7 +438,6 @@ const EXTRA_PHRASES = {
   "water retention": { concepts: ["edema"], hintSymptoms: ["edema"], negated: false },
   "fluid retention": { concepts: ["edema"], hintSymptoms: ["edema"], negated: false },
 
-  "sugar craving": { concepts: ["low vitality"], hintSymptoms: ["fatigue", "low_energy"], negated: false },
   "caffeine withdrawal": { concepts: ["head pain"], hintSymptoms: ["headache", "fatigue"], negated: false },
   "caffeine headache": { concepts: ["head pain"], hintSymptoms: ["headache"], negated: false },
 
@@ -482,7 +481,6 @@ const EXTRA_PHRASES = {
   "wrist numbness": { concepts: ["neuropathy"], hintSymptoms: ["neuropathy", "wrist_pain"], negated: false },
   "hand weakness": { concepts: ["neuropathy"], hintSymptoms: ["neuropathy", "muscle_pain"], negated: false },
 
-  "neck lump": { concepts: ["swollen lymph nodes"], hintSymptoms: ["swollen_lymph_nodes"], negated: false },
   "jaw lump": { concepts: ["swollen lymph nodes"], hintSymptoms: ["swollen_lymph_nodes"], negated: false },
 
   "lower back hurts": { concepts: ["lower back pain"], hintSymptoms: ["back_pain"], negated: false },
@@ -646,7 +644,6 @@ const EXTRA_PHRASES = {
   "neck pain when sitting": { concepts: ["neck stiffness"], hintSymptoms: ["neck_pain"], negated: false },
   "neck pain when lying down": { concepts: ["neck stiffness"], hintSymptoms: ["neck_pain"], negated: false },
 
-  "lower abdominal pain": { concepts: ["abdominal pain"], hintSymptoms: ["period_cramps", "pelvic_pain"], negated: false },
   "upper abdominal pain": { concepts: ["abdominal pain"], hintSymptoms: ["indigestion", "heartburn"], negated: false },
   "right side abdominal pain": { concepts: ["abdominal pain"], hintSymptoms: ["stomach_ache"], negated: false },
   "left side abdominal pain": { concepts: ["abdominal pain"], hintSymptoms: ["stomach_ache"], negated: false },

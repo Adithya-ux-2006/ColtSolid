@@ -17,48 +17,45 @@ function getAnalyticsUserId() {
   return supabase.auth.getUser().then(({ data }) => data.user?.id || null).catch(() => null);
 }
 
-async function insertRow(table, payload) {
+export async function trackSearchEvent({ source, queryText = '', symptomIds = [] }) {
   const userId = await getAnalyticsUserId();
-  const { error } = await supabase.from(table).insert({
-    ...payload,
-    user_id: userId,
-    session_id: getAnalyticsSessionId(),
+  const { data, error } = await supabase.rpc('insert_search_event', {
+    p_session_id: getAnalyticsSessionId(),
+    p_source: source,
+    p_query_text: queryText,
+    p_symptom_ids: symptomIds,
+    p_user_id: userId,
   });
 
   if (error) throw error;
-}
-
-export async function trackSearchEvent({ source, queryText = '', symptomIds = [] }) {
-  await insertRow('search_events', {
-    source,
-    query_text: queryText,
-    symptom_ids: symptomIds,
-  });
+  return data;
 }
 
 export async function trackRemedyEvent({ remedyId, eventType, metadata = {} }) {
-  await insertRow('remedy_events', {
-    remedy_id: remedyId,
-    event_type: eventType,
-    metadata,
+  const userId = await getAnalyticsUserId();
+  const { data, error } = await supabase.rpc('insert_remedy_event', {
+    p_session_id: getAnalyticsSessionId(),
+    p_remedy_id: remedyId,
+    p_event_type: eventType,
+    p_metadata: metadata,
+    p_user_id: userId,
   });
+
+  if (error) throw error;
+  return data;
 }
 
 export async function createRemedyFeedback({ remedyId, vote }) {
   const userId = await getAnalyticsUserId();
-  const { data, error } = await supabase
-    .from('remedy_feedback')
-    .insert({
-      remedy_id: remedyId,
-      vote,
-      user_id: userId,
-      session_id: getAnalyticsSessionId(),
-    })
-    .select('id')
-    .single();
+  const { data, error } = await supabase.rpc('insert_remedy_feedback', {
+    p_session_id: getAnalyticsSessionId(),
+    p_remedy_id: remedyId,
+    p_vote: vote,
+    p_user_id: userId,
+  });
 
   if (error) throw error;
-  return data.id;
+  return data;
 }
 
 export async function updateRemedyFeedback(feedbackId, feedbackText) {

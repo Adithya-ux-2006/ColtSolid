@@ -12,7 +12,15 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test:e2e": "npx playwright test",
-    "test": "npx playwright test"
+    "test": "npx playwright test",
+    "db:migrate": "node scripts/db-migrate.js",
+    "db:migrate:dry": "node scripts/db-migrate.js --dry-run",
+    "db:migrate:status": "node scripts/db-migrate.js --status",
+    "db:validate": "node scripts/db-validate.js",
+    "db:diff": "node scripts/db-diff.js",
+    "db:diff:output": "node scripts/db-diff.js --output supabase/pending_migration.sql",
+    "db:generate-schema": "node scripts/generate-schema.js",
+    "db:generate-schema:dry": "node scripts/generate-schema.js --dry-run"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

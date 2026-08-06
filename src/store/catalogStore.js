@@ -131,14 +131,14 @@ export const useCatalogStore = create((set, get) => ({
 
       let symptomRemediesData = {};
       try {
-        const { data: srRows, error: srError } = await supabase.from('symptom_remedies').select('*');
+        const { data: srRows, error: srError } = await supabase.from('remedy_symptoms').select('*');
         if (srError) {
-          console.warn('[CATALOG] symptom_remedies query failed:', srError.message || srError);
+          console.warn('[CATALOG] remedy_symptoms query failed:', srError.message || srError);
         } else if (srRows) {
           symptomRemediesData = buildSymptomRemediesMap(srRows);
         }
       } catch (srError) {
-        console.warn('[CATALOG] symptom_remedies table not available, using default ranking:', srError.message || srError);
+        console.warn('[CATALOG] remedy_symptoms table not available, using default ranking:', srError.message || srError);
       }
 
       // Load popularity data (non-blocking — failure doesn't prevent catalog load)
