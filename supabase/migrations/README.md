@@ -15,6 +15,7 @@ Run these in order in the Supabase SQL Editor when setting up a new environment.
 | 025_merge_ayurveda_into_natural.sql | Merge Ayurveda remedies into Natural category |
 | 026_merge_ibuprofen_duplicate.sql | Rename canonical Ibuprofen row to "Ibuprofen (Advil / Motrin)" |
 | 027_strip_parenthetical_titles.sql | Remove parenthetical text from all remedy titles |
+| 028_add_remedy_taglines.sql | Add short display taglines for compact list rows |
 
 New changes: always create the next numbered file and add a row to this table.
 Never modify existing migration files.

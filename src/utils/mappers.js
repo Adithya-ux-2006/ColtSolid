@@ -96,6 +96,7 @@ export function mapRemedy(remedy) {
     secondarySymptoms: secondarySymptoms.length > 0 ? secondarySymptoms : [],
     rating: remedy.rating,
     reviewCount: remedy.review_count ?? remedy.reviewCount,
+    tagline: simplifyRemedyLanguage(remedy.tagline ?? ''),
     shortDescription: simplifyRemedyLanguage(remedy.short_description ?? remedy.shortDescription),
     longDescription: simplifyRemedyLanguage(remedy.long_description ?? remedy.longDescription),
     howToUse: simplifyRemedyLanguage(remedy.how_to_use ?? remedy.howToUse),
