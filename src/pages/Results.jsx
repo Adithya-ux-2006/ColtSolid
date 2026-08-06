@@ -164,16 +164,19 @@ export function Results() {
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies ?? EMPTY_ARRAY);
   const userConditions = useAuthStore((state) => state.user?.common_conditions);
   const userIsChildSafe = useAuthStore((state) => state.user?.is_child_safe ?? false);
+  const userTreatmentPrefs = useAuthStore((state) => state.user?.treatment_prefs ?? []);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const incrementSearchCount = useAuthStore((state) => state.incrementSearchCount);
   const updateUser = useAuthStore((state) => state.updateUser);
   const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
   const guestConditions = useGuestProfileStore((state) => state.common_conditions);
   const guestIsChildSafe = useGuestProfileStore((state) => state.is_child_safe ?? false);
+  const guestTreatmentPrefs = useGuestProfileStore((state) => state.treatment_prefs ?? []);
   const setGuestIsChildSafe = useGuestProfileStore((state) => state.setIsChildSafe);
   const activeAllergies = isAuthenticated ? userKnownAllergies : guestAllergies;
   const activeConditions = isAuthenticated ? userConditions : guestConditions;
   const activeIsChildSafe = isAuthenticated ? userIsChildSafe : guestIsChildSafe;
+  const activeTreatmentPrefs = isAuthenticated ? userTreatmentPrefs : guestTreatmentPrefs;
 
   const symptoms = useCatalogStore((state) => state.symptoms);
   const remedies = useCatalogStore((state) => state.remedies);
@@ -320,11 +323,12 @@ export function Results() {
       allergies: activeAllergies,
       conditions: activeConditions,
       isChildSafe: activeIsChildSafe,
+      treatmentPrefs: activeTreatmentPrefs,
       queryConfidence: symptomResolution.confidence,
       primarySymptomId: symptomResolution.primarySymptomId,
       popularityMap,
     });
-  }, [symptomResolution.symptomIds, symptomResolution.confidence, symptomResolution.primarySymptomId, symptomRemedies, remedies, symptoms, activeAllergies, activeConditions, activeIsChildSafe, popularityMap]);
+  }, [symptomResolution.symptomIds, symptomResolution.confidence, symptomResolution.primarySymptomId, symptomRemedies, remedies, symptoms, activeAllergies, activeConditions, activeIsChildSafe, activeTreatmentPrefs, popularityMap]);
 
   const grouped = searchResult.grouped;
 

@@ -9,7 +9,7 @@ import { FAQAccordion } from '../components/ui/FAQAccordion';
 import { useAuthStore } from '../store/authStore';
 import { useGuestProfileStore } from '../store/guestProfileStore';
 import { getInitials } from '../utils/mappers';
-import { ALLERGIES, CONDITIONS, FAQ_ITEMS, GENDER_OPTIONS, getVisibleConditions } from '../constants/onboarding';
+import { ALLERGIES, CONDITIONS, FAQ_ITEMS, GENDER_OPTIONS, getVisibleConditions, TREATMENT_PREFERENCES } from '../constants/onboarding';
 
 const ONBOARDING_LABELS = new Map(
   [...CONDITIONS, ...ALLERGIES].map((option) => [option.value, option.label])
@@ -88,6 +88,7 @@ export function Profile() {
   const guestConditions = useGuestProfileStore((state) => state.common_conditions);
   const guestGender = useGuestProfileStore((state) => state.gender);
   const guestIsChildSafe = useGuestProfileStore((state) => state.is_child_safe ?? false);
+  const guestTreatmentPrefs = useGuestProfileStore((state) => state.treatment_prefs ?? []);
   const updateGuestProfile = useGuestProfileStore((state) => state.updateProfile);
   const navigate = useNavigate();
 
@@ -98,6 +99,7 @@ export function Profile() {
     selectedConditions: [],
     selectedAllergies: [],
     isChildSafe: user?.is_child_safe ?? false,
+    treatmentPrefs: user?.treatment_prefs ?? [],
     otherConditionText: '',
     otherAllergyText: '',
   });
@@ -106,6 +108,7 @@ export function Profile() {
     selectedConditions: guestConditions,
     selectedAllergies: guestAllergies,
     isChildSafe: guestIsChildSafe,
+    treatmentPrefs: guestTreatmentPrefs,
     otherConditionText: '',
     otherAllergyText: '',
   });
@@ -132,6 +135,7 @@ export function Profile() {
         known_allergies: allergies,
         common_conditions: conditions,
         is_child_safe: guestEditForm.isChildSafe,
+        treatment_prefs: guestEditForm.treatmentPrefs,
       });
     };
 
@@ -253,15 +257,43 @@ export function Profile() {
                   />
                 )}
               </div>
+              <div className="space-y-2">
+                <p className="text-sm font-semibold text-ink">Treatment Preferences</p>
+                <div className="flex flex-wrap gap-2">
+                  {TREATMENT_PREFERENCES.map((option) => {
+                    const isSelected = guestEditForm.treatmentPrefs.includes(option.value);
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        aria-pressed={isSelected}
+                        onClick={() => {
+                          const next = isSelected
+                            ? guestEditForm.treatmentPrefs.filter(v => v !== option.value)
+                            : [...guestEditForm.treatmentPrefs, option.value];
+                          setGuestEditForm({ ...guestEditForm, treatmentPrefs: next });
+                        }}
+                        className={isSelected ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white' : 'rounded-full border border-border px-3 py-1.5 text-sm font-medium text-ink'}
+                      >
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
               <button onClick={handleGuestSave} className="px-6 py-2.5 bg-primary text-white rounded-xl font-semibold text-sm w-full">
                 Save
               </button>
 
-              {(guestEditForm.isChildSafe || guestEditForm.selectedAllergies.length > 0 || guestEditForm.selectedConditions.length > 0) && (
+              {(guestEditForm.isChildSafe || guestEditForm.selectedAllergies.length > 0 || guestEditForm.selectedConditions.length > 0 || guestEditForm.treatmentPrefs.length > 0) && (
                 <div className="pt-3 border-t border-border space-y-3">
                   <ProfileGroup title="Child Safe" values={guestEditForm.isChildSafe ? ['Enabled'] : []} emptyLabel="Not enabled" />
                   <ProfileGroup title="Allergies" values={guestEditForm.selectedAllergies.map(formatValue)} emptyLabel="None selected" />
                   <ProfileGroup title="Conditions" values={guestEditForm.selectedConditions.map(formatValue)} emptyLabel="None selected" />
+                  <ProfileGroup title="Treatment Preferences" values={guestEditForm.treatmentPrefs.map(v => {
+                    const pref = TREATMENT_PREFERENCES.find(p => p.value === v);
+                    return pref ? pref.label : v;
+                  })} emptyLabel="None selected" />
                 </div>
               )}
             </div>
@@ -314,6 +346,7 @@ export function Profile() {
       known_allergies: allergies,
       common_conditions: conditions,
       is_child_safe: healthForm.isChildSafe,
+      treatment_prefs: healthForm.treatmentPrefs,
     });
     setIsEditingHealth(false);
   };
@@ -321,11 +354,14 @@ export function Profile() {
   const startEditingHealth = () => {
     const existingConditions = user?.common_conditions ?? [];
     const existingAllergies = user?.known_allergies ?? [];
+    const existingTreatmentPrefs = user?.treatment_prefs ?? [];
     const otherConditionEntry = existingConditions.find(v => !CONDITIONS.some(c => c.value === v));
     const otherAllergyEntry = existingAllergies.find(v => !ALLERGIES.some(a => a.value === v));
     setHealthForm({
       selectedConditions: existingConditions.filter(v => CONDITIONS.some(c => c.value === v)),
       selectedAllergies: existingAllergies.filter(v => ALLERGIES.some(a => a.value === v)),
+      isChildSafe: user?.is_child_safe ?? false,
+      treatmentPrefs: existingTreatmentPrefs,
       otherConditionText: otherConditionEntry || '',
       otherAllergyText: otherAllergyEntry || '',
     });
@@ -578,6 +614,46 @@ export function Profile() {
                   items={selectedAllergies}
                   getDisplay={getAllergyDisplay}
                   emptyLabel="No allergies selected"
+                />
+              )}
+            </div>
+
+            {/* Treatment Preferences */}
+            <div className="space-y-2">
+              <p className="text-sm font-semibold text-ink">Treatment Preferences</p>
+              {isEditingHealth ? (
+                <div className="flex flex-wrap gap-2">
+                  {TREATMENT_PREFERENCES.map((option) => {
+                    const isSelected = healthForm.treatmentPrefs.includes(option.value);
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        aria-pressed={isSelected}
+                        onClick={() => {
+                          const next = isSelected
+                            ? healthForm.treatmentPrefs.filter(v => v !== option.value)
+                            : [...healthForm.treatmentPrefs, option.value];
+                          setHealthForm({ ...healthForm, treatmentPrefs: next });
+                        }}
+                        className={isSelected
+                          ? 'rounded-full border border-forest bg-primary px-3 py-1.5 text-sm font-medium text-white'
+                          : 'rounded-full border border-border px-3 py-1.5 text-sm font-medium text-ink'
+                        }
+                      >
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : (
+                <PillGroup
+                  items={user.treatment_prefs ?? []}
+                  getDisplay={(value) => {
+                    const pref = TREATMENT_PREFERENCES.find(p => p.value === value);
+                    return pref ? { emoji: pref.emoji, label: pref.label } : { emoji: '○', label: value };
+                  }}
+                  emptyLabel="No preferences selected"
                 />
               )}
             </div>

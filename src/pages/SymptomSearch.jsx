@@ -34,10 +34,16 @@ export function SymptomSearch() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies);
   const userConditions = useAuthStore((state) => state.user?.common_conditions);
+  const userIsChildSafe = useAuthStore((state) => state.user?.is_child_safe ?? false);
+  const userTreatmentPrefs = useAuthStore((state) => state.user?.treatment_prefs ?? []);
   const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
   const guestConditions = useGuestProfileStore((state) => state.common_conditions);
+  const guestIsChildSafe = useGuestProfileStore((state) => state.is_child_safe);
+  const guestTreatmentPrefs = useGuestProfileStore((state) => state.treatment_prefs ?? []);
   const activeAllergies = isAuthenticated ? userKnownAllergies : guestAllergies;
   const activeConditions = isAuthenticated ? userConditions : guestConditions;
+  const activeIsChildSafe = isAuthenticated ? userIsChildSafe : guestIsChildSafe;
+  const activeTreatmentPrefs = isAuthenticated ? userTreatmentPrefs : guestTreatmentPrefs;
 
   const isSearching = searchTerm !== debouncedTerm;
   const trimmedQuery = debouncedTerm.trim();
@@ -69,8 +75,8 @@ export function SymptomSearch() {
   const matchedSymptomIds = symptomResolution.symptomIds;
 
   const safeFilter = useMemo(
-    () => (remedy) => isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions }),
-    [activeAllergies, activeConditions]
+    () => (remedy) => isRemedySafeForUser(remedy, { allergies: activeAllergies, conditions: activeConditions, isChildSafe: activeIsChildSafe }),
+    [activeAllergies, activeConditions, activeIsChildSafe]
   );
 
   const symptomRankedResults = useMemo(() => {
@@ -79,12 +85,14 @@ export function SymptomSearch() {
       symptoms,
       allergies: activeAllergies,
       conditions: activeConditions,
+      isChildSafe: activeIsChildSafe,
+      treatmentPrefs: activeTreatmentPrefs,
       queryConfidence: symptomResolution.confidence,
       primarySymptomId: symptomResolution.primarySymptomId,
     });
     const combined = [...(result.primary || []), ...(result.related || [])];
     return combined.filter(safeFilter);
-  }, [matchedSymptomIds, remedies, safeFilter, symptomRemedies, symptoms, activeAllergies, activeConditions, symptomResolution.confidence, symptomResolution.primarySymptomId]);
+  }, [matchedSymptomIds, remedies, safeFilter, symptomRemedies, symptoms, activeAllergies, activeConditions, activeIsChildSafe, activeTreatmentPrefs, symptomResolution.confidence, symptomResolution.primarySymptomId]);
 
   const dropdownResults = symptomRankedResults;
   const shouldShowDropdown = trimmedQuery.length >= 2;

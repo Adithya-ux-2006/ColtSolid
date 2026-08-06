@@ -34,13 +34,15 @@ async function migrateGuestProfileIfNeeded(user) {
 
   const userConditions = user.common_conditions ?? [];
   const userAllergies = user.known_allergies ?? [];
-  const hasExistingProfile = userConditions.length > 0 || userAllergies.length > 0 || user.is_child_safe;
+  const userTreatmentPrefs = user.treatment_prefs ?? [];
+  const hasExistingProfile = userConditions.length > 0 || userAllergies.length > 0 || user.is_child_safe || userTreatmentPrefs.length > 0;
 
   if (hasExistingProfile) return;
 
   const GUEST_ALLERGIES_KEY = 'clotsolid_guest_allergies';
   const GUEST_CONDITIONS_KEY = 'clotsolid_guest_conditions';
   const GUEST_CHILD_SAFE_KEY = 'clotsolid_guest_child_safe';
+  const GUEST_TREATMENT_PREFS_KEY = 'clotsolid_guest_treatment_prefs';
 
   function readArr(key) {
     if (typeof window === 'undefined') return [];
@@ -53,19 +55,22 @@ async function migrateGuestProfileIfNeeded(user) {
   const guestAllergies = readArr(GUEST_ALLERGIES_KEY).filter((value) => !REMOVED_ALLERGY_VALUES.includes(value));
   const guestConditions = readArr(GUEST_CONDITIONS_KEY);
   const guestChildSafe = typeof window === 'undefined' ? false : window.localStorage.getItem(GUEST_CHILD_SAFE_KEY) === 'true';
+  const guestTreatmentPrefs = readArr(GUEST_TREATMENT_PREFS_KEY);
 
-  if (guestAllergies.length === 0 && guestConditions.length === 0 && !guestChildSafe) return;
+  if (guestAllergies.length === 0 && guestConditions.length === 0 && !guestChildSafe && guestTreatmentPrefs.length === 0) return;
 
   const updates = {};
   if (guestConditions.length > 0) updates.common_conditions = guestConditions;
   if (guestAllergies.length > 0) updates.known_allergies = guestAllergies;
   if (guestChildSafe) updates.is_child_safe = guestChildSafe;
+  if (guestTreatmentPrefs.length > 0) updates.treatment_prefs = guestTreatmentPrefs;
 
   await updateUserProfileRow(user.id, updates);
 
   window.localStorage.removeItem(GUEST_ALLERGIES_KEY);
   window.localStorage.removeItem(GUEST_CONDITIONS_KEY);
   window.localStorage.removeItem(GUEST_CHILD_SAFE_KEY);
+  window.localStorage.removeItem(GUEST_TREATMENT_PREFS_KEY);
   window.localStorage.removeItem('clotsolid_guest_profile');
 
   return updates;
@@ -104,6 +109,7 @@ const buildUser = async (session) => {
     is_child_safe: profile?.is_child_safe ?? false,
     common_conditions: profile?.common_conditions ?? [],
     known_allergies: profile?.known_allergies ?? [],
+    treatment_prefs: profile?.treatment_prefs ?? [],
     has_completed_onboarding: profile?.has_completed_onboarding ?? false,
     is_admin: profile?.is_admin ?? false,
     notify_nearby_launch: profile?.notify_nearby_launch ?? false,
@@ -268,6 +274,7 @@ export const useAuthStore = create((set, get) => ({
         known_allergies: updates.known_allergies,
         common_conditions: updates.common_conditions,
         is_child_safe: updates.is_child_safe,
+        treatment_prefs: updates.treatment_prefs,
       };
 
       Object.keys(dbUpdates).forEach((key) => dbUpdates[key] === undefined && delete dbUpdates[key]);
@@ -302,7 +309,7 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  saveOnboarding: async ({ gender, commonConditions, knownAllergies }) => {
+  saveOnboarding: async ({ gender, commonConditions, knownAllergies, treatmentPrefs }) => {
     const { user } = get();
     if (!user) {
       return { success: false, error: new Error('No authenticated user found.') };
@@ -313,6 +320,7 @@ export const useAuthStore = create((set, get) => ({
         gender,
         common_conditions: commonConditions,
         known_allergies: knownAllergies,
+        treatment_prefs: treatmentPrefs || [],
         has_completed_onboarding: true,
       };
 

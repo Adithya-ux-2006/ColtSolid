@@ -110,11 +110,12 @@ function computeUserContextPenalty(remedy, userContext) {
   delete remedy._childSafetyBlock;
   delete remedy._childSafetyConcern;
   delete remedy._childSafetyNote;
+  delete remedy._treatmentConflict;
 
   if (!userContext) return 0;
 
   let penalty = 0;
-  const { allergies, conditions, isChildSafe } = userContext;
+  const { allergies, conditions, isChildSafe, treatmentPrefs } = userContext;
 
   if (allergies?.length) {
     const remedyAllergens = (remedy.allergen_tags || []).map(t => t.toLowerCase());
@@ -157,6 +158,48 @@ function computeUserContextPenalty(remedy, userContext) {
     penalty += 15;
     remedy._childSafetyConcern = true;
     remedy._childSafetyNote = childSafety.note;
+  }
+
+  // Treatment preference penalties
+  if (treatmentPrefs?.length) {
+    const category = (remedy.category || '').toLowerCase();
+    const name = (remedy.name || '').toLowerCase();
+    const ingredients = (remedy.ingredients || []).map(i => i.toLowerCase());
+
+    // Avoid medication: penalize conventional pharmaceuticals
+    if (treatmentPrefs.includes('avoid_medication')) {
+      if (category === 'conventional') {
+        penalty += 30;
+        remedy._treatmentConflict = 'avoid medication (conventional remedy)';
+      }
+      const pharmaKeywords = ['ibuprofen', 'acetaminophen', 'aspirin', 'paracetamol', 'antihistamine', 'decongestant'];
+      if (pharmaKeywords.some(kw => name.includes(kw) || ingredients.some(i => i.includes(kw)))) {
+        penalty += 30;
+        remedy._treatmentConflict = 'avoid medication (pharmaceutical ingredient)';
+      }
+    }
+
+    // Prefer natural: penalize conventional remedies
+    if (treatmentPrefs.includes('prefer_natural')) {
+      if (category === 'conventional' && !remedy._treatmentConflict) {
+        penalty += 15;
+        remedy._treatmentConflict = 'prefer natural (conventional remedy)';
+      }
+    }
+
+    // Vegetarian only: penalize animal-derived ingredients
+    if (treatmentPrefs.includes('vegetarian_remedies')) {
+      const animalDerived = ['gelatin', 'lanolin', 'collagen', 'chondroitin', 'glucosamine', 'fish oil', 'cod liver', 'shellfish', 'animal', 'lard', 'tallow'];
+      if (ingredients.some(i => animalDerived.some(ad => i.includes(ad)))) {
+        penalty += 25;
+        remedy._treatmentConflict = 'vegetarian only (animal-derived ingredient)';
+      }
+      const allergenTags = (remedy.allergen_tags || []).map(t => t.toLowerCase());
+      if (allergenTags.some(t => t.includes('animal') || t.includes('shellfish') || t.includes('fish'))) {
+        penalty += 25;
+        remedy._treatmentConflict = 'vegetarian only (animal-derived allergen tag)';
+      }
+    }
   }
 
   return penalty;

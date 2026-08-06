@@ -8,22 +8,25 @@ export function filterUnsafeRemedies(remedies, userContext) {
     }));
   }
 
-  const { allergies, conditions } = userContext;
+  const { allergies, conditions, treatmentPrefs } = userContext;
 
   const result = [];
 
   for (const remedy of remedies) {
     const allergyConflict = allergies?.length ? findAllergyConflict(remedy, allergies) : null;
     const contraindicationConflict = conditions?.length ? findContraindicationConflict(remedy, conditions) : null;
+    const treatmentConflict = treatmentPrefs?.length ? findTreatmentConflict(remedy, treatmentPrefs) : null;
 
-    const isUnsafe = allergyConflict || contraindicationConflict;
+    const isUnsafe = allergyConflict || contraindicationConflict || treatmentConflict;
 
     const reasons = [];
     if (allergyConflict) reasons.push(`Hidden due to allergy conflict: ${allergyConflict}`);
     if (contraindicationConflict) reasons.push(`Hidden due to contraindication: ${contraindicationConflict}`);
+    if (treatmentConflict) reasons.push(`Hidden due to treatment preference: ${treatmentConflict}`);
     if (!reasons.length && userContext) {
       if (allergies?.length) reasons.push('No allergy conflicts detected');
       if (conditions?.length) reasons.push('No contraindications detected');
+      if (treatmentPrefs?.length) reasons.push('Matches treatment preferences');
       if (!reasons.length) reasons.push('Safety check passed');
     }
 
@@ -85,6 +88,48 @@ function findContraindicationConflict(remedy, conditions) {
       if (ci.includes(condition) || condition.includes(ci)) {
         return condition;
       }
+    }
+  }
+
+  return null;
+}
+
+function findTreatmentConflict(remedy, treatmentPrefs) {
+  if (!treatmentPrefs?.length) return null;
+
+  const category = (remedy.category || '').toLowerCase();
+  const name = (remedy.name || '').toLowerCase();
+  const ingredients = (remedy.ingredients || []).map(i => i.toLowerCase());
+
+  // Avoid medication: filter out conventional pharmaceuticals
+  if (treatmentPrefs.includes('avoid_medication')) {
+    if (category === 'conventional') {
+      return 'avoid medication (conventional remedy)';
+    }
+    // Check for common pharmaceutical indicators
+    const pharmaKeywords = ['ibuprofen', 'acetaminophen', 'aspirin', 'paracetamol', 'antihistamine', 'decongestant'];
+    if (pharmaKeywords.some(kw => name.includes(kw) || ingredients.some(i => i.includes(kw)))) {
+      return 'avoid medication (pharmaceutical ingredient)';
+    }
+  }
+
+  // Prefer natural: penalize conventional remedies
+  if (treatmentPrefs.includes('prefer_natural')) {
+    if (category === 'conventional') {
+      return 'prefer natural (conventional remedy)';
+    }
+  }
+
+  // Vegetarian only: filter out animal-derived ingredients
+  if (treatmentPrefs.includes('vegetarian_remedies')) {
+    const animalDerived = ['gelatin', 'lanolin', 'collagen', 'chondroitin', 'glucosamine', 'fish oil', 'cod liver', 'shellfish', 'animal', 'lard', 'tallow'];
+    if (ingredients.some(i => animalDerived.some(ad => i.includes(ad)))) {
+      return 'vegetarian only (animal-derived ingredient)';
+    }
+    // Check allergen tags for animal products
+    const allergenTags = (remedy.allergen_tags || []).map(t => t.toLowerCase());
+    if (allergenTags.some(t => t.includes('animal') || t.includes('shellfish') || t.includes('fish'))) {
+      return 'vegetarian only (animal-derived allergen tag)';
     }
   }
 

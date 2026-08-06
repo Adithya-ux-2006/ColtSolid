@@ -57,6 +57,12 @@ export const ALLERGIES = [
 
 export const REMOVED_ALLERGY_VALUES = ['medication-allergies'];
 
+export const TREATMENT_PREFERENCES = [
+  { value: 'prefer_natural', label: 'Prefer Natural Remedies', emoji: '🌿', description: 'Prioritize natural and herbal treatments over conventional medicine' },
+  { value: 'avoid_medication', label: 'Avoid Medication', emoji: '💊', description: 'Minimize pharmaceutical interventions when possible' },
+  { value: 'vegetarian_remedies', label: 'Vegetarian Only', emoji: '🥬', description: 'Only show remedies without animal-derived ingredients' },
+];
+
 export const FAQ_ITEMS = [
   {
     question: 'Are these remedies safe to use?',

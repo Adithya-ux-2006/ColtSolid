@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CheckCircle2, ChevronLeft } from 'lucide-react';
-import { CONDITIONS, ALLERGIES, GENDER_OPTIONS, REMOVED_ALLERGY_VALUES, getVisibleConditions } from '../../constants/onboarding';
+import { CONDITIONS, ALLERGIES, GENDER_OPTIONS, REMOVED_ALLERGY_VALUES, getVisibleConditions, TREATMENT_PREFERENCES } from '../../constants/onboarding';
 import { cn } from '../../utils/cn';
 
 const STEPS = [
@@ -20,6 +20,11 @@ const STEPS = [
     title: 'Allergies & Sensitivities',
     options: ALLERGIES,
   },
+  {
+    key: 'treatmentPrefs',
+    title: 'Treatment Preferences',
+    options: TREATMENT_PREFERENCES,
+  },
 ];
 
 export function QuestionnaireFlow({
@@ -37,6 +42,7 @@ export function QuestionnaireFlow({
   const [gender, setGender] = useState(initialValues?.gender ?? '');
   const [conditions, setConditions] = useState(initialValues?.common_conditions ?? []);
   const [allergies, setAllergies] = useState(initialValues?.known_allergies ?? []);
+  const [treatmentPrefs, setTreatmentPrefs] = useState(initialValues?.treatment_prefs ?? []);
   const [otherAllergy, setOtherAllergy] = useState(
     () => (initialValues?.known_allergies ?? []).find((value) => value.startsWith('other:'))?.slice(6).trim() || ''
   );
@@ -102,6 +108,7 @@ export function QuestionnaireFlow({
       gender,
       commonConditions: normalizedConditions,
       knownAllergies: normalizedAllergies,
+      treatmentPrefs,
     });
 
     setIsSaving(false);
@@ -138,7 +145,9 @@ export function QuestionnaireFlow({
 
   const selectedValues = currentStep.key === 'conditions'
     ? conditions
-    : allergies;
+    : currentStep.key === 'treatmentPrefs'
+      ? treatmentPrefs
+      : allergies;
 
   const visibleOptions = currentStep.key === 'conditions'
     ? getVisibleConditions(gender, conditions)
@@ -198,6 +207,11 @@ export function QuestionnaireFlow({
 
                   if (currentStep.key === 'allergies') {
                     handleNoneAwareToggle(option.value, allergies, setAllergies);
+                    return;
+                  }
+
+                  if (currentStep.key === 'treatmentPrefs') {
+                    handleNoneAwareToggle(option.value, treatmentPrefs, setTreatmentPrefs);
                     return;
                   }
                 };
