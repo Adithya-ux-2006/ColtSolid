@@ -1,10 +1,9 @@
 import { AlertTriangle } from 'lucide-react';
 import { cn } from '../../utils/cn';
-import { SYMPTOM_EMERGENCY_FLAGS, UNIVERSAL_EMERGENCY_FLAGS } from '../../constants/emergency';
+import { getMedicalCareWarnings } from '../../data/symptoms';
 
 export function MedicalGuidancePanel({ symptomId, severity, className }) {
-  const symptomFlags = SYMPTOM_EMERGENCY_FLAGS[symptomId] || [];
-  const flags = [...new Set([...symptomFlags, ...UNIVERSAL_EMERGENCY_FLAGS])];
+  const flags = getMedicalCareWarnings(symptomId);
 
   if (severity === 'mild' && flags.length === 0) return null;
 

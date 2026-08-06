@@ -21,6 +21,7 @@ import { useGuestProfileStore } from '../store/guestProfileStore';
 import { isRemedySafeForUser } from '../utils/guestProfile';
 import { cn } from '../utils/cn';
 import { trackRemedyEvent } from '../utils/analytics';
+import { getMedicalCareWarnings } from '../data/symptoms';
 
 const CATEGORY_BENEFITS = {
   Natural: [
@@ -120,6 +121,8 @@ export function RemedyDetail() {
   }, [remedy]);
 
   const visibleEvidence = showAllEvidence ? researchLinks : researchLinks.slice(0, EVIDENCE_SHOW_LIMIT);
+
+  const doctorWarnings = getMedicalCareWarnings(remedy?.primarySymptoms?.[0] || remedy?.symptoms?.[0]);
 
   if (!hasLoaded && isCatalogLoading) {
     return (
@@ -339,7 +342,7 @@ export function RemedyDetail() {
         </section>
 
         <section className="mb-12 md:mb-16">
-          <DoctorGuidance />
+          <DoctorGuidance flags={doctorWarnings} />
         </section>
       </div>
     </PageWrapper>
