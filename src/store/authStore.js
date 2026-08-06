@@ -82,7 +82,29 @@ async function updateUserProfileRow(userId, updates) {
     .update(updates)
     .eq('id', userId);
 
-  if (error) throw error;
+  if (!error) return;
+
+  const isMissingNewColumn = /column .* does not exist/i.test(error.message || '')
+    || /could not find the '.*' column of 'users' in the schema cache/i.test(error.message || '');
+  if (!isMissingNewColumn) throw error;
+
+  const KNOWN_COLUMNS = [
+    'name', 'university_name', 'current_year', 'gender',
+    'common_conditions', 'known_allergies', 'has_completed_onboarding',
+    'is_child_safe', 'treatment_prefs',
+  ];
+
+  const fallbackUpdates = {};
+  for (const key of KNOWN_COLUMNS) {
+    if (updates[key] !== undefined) fallbackUpdates[key] = updates[key];
+  }
+
+  const { error: fallbackError } = await supabase
+    .from('users')
+    .update(fallbackUpdates)
+    .eq('id', userId);
+
+  if (fallbackError) throw fallbackError;
 }
 
 const buildUser = async (session) => {
