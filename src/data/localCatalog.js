@@ -2292,7 +2292,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_bg04",
-    "name": "Hing (Asafoetida) Preparation",
+    "name": "Hing Preparation",
     "category": "Natural",
     "rating": 4.1,
     "reviewCount": 145,
@@ -2506,7 +2506,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_lp04",
-    "name": "Mahanarayan Oil Massage (Legs)",
+    "name": "Mahanarayan Oil Massage",
     "category": "Natural",
     "rating": 4.3,
     "reviewCount": 145,
@@ -2654,7 +2654,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_kp07",
-    "name": "Mahanarayan Oil (Knee)",
+    "name": "Mahanarayan Oil",
     "category": "Natural",
     "rating": 4.2,
     "reviewCount": 98,
@@ -2696,7 +2696,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_np04",
-    "name": "Mahanarayan Oil (Neck)",
+    "name": "Mahanarayan Oil",
     "category": "Natural",
     "rating": 4.3,
     "reviewCount": 134,
@@ -2717,7 +2717,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_np06",
-    "name": "Turmeric Compress (Neck)",
+    "name": "Turmeric Compress",
     "category": "Natural",
     "rating": 4.1,
     "reviewCount": 98,
@@ -2824,7 +2824,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_sp06",
-    "name": "Turmeric Compress (Shoulder)",
+    "name": "Turmeric Compress",
     "category": "Natural",
     "rating": 4.1,
     "reviewCount": 87,
@@ -2866,7 +2866,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_sp08",
-    "name": "Mahanarayan Oil (Shoulder)",
+    "name": "Mahanarayan Oil",
     "category": "Natural",
     "rating": 4.2,
     "reviewCount": 89,
@@ -2887,7 +2887,7 @@ export const LOCAL_REMEDIES = [
   },
   {
     "id": "rem_ey01",
-    "name": "Triphala Eye Wash (Eye Pain)",
+    "name": "Triphala Eye Wash",
     "category": "Natural",
     "rating": 4.2,
     "reviewCount": 134,

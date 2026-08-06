@@ -14,6 +14,7 @@ Run these in order in the Supabase SQL Editor when setting up a new environment.
 | 021_rename_anxiety_label.sql | Rename "Anxiety" symptom label to "Anxious" |
 | 025_merge_ayurveda_into_natural.sql | Merge Ayurveda remedies into Natural category |
 | 026_merge_ibuprofen_duplicate.sql | Rename canonical Ibuprofen row to "Ibuprofen (Advil / Motrin)" |
+| 027_strip_parenthetical_titles.sql | Remove parenthetical text from all remedy titles |
 
 New changes: always create the next numbered file and add a row to this table.
 Never modify existing migration files.

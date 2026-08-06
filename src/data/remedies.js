@@ -27,7 +27,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_h04',
-    name: 'Ibuprofen (Advil / Motrin)',
+    name: 'Ibuprofen',
     category: 'Conventional',
     symptoms: ['headache'],
     primarySymptoms: ['headache'],
@@ -103,7 +103,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_006',
-    name: 'Cetirizine (Zyrtec)',
+    name: 'Cetirizine',
     category: 'Over-the-Counter',
     symptoms: ['allergies', 'hives', 'allergic_reaction', 'congestion'],
     primarySymptoms: ['allergies'],
@@ -520,7 +520,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_024',
-    name: 'Tea Tree Oil (Diluted)',
+    name: 'Tea Tree Oil',
     category: 'Natural',
     symptoms: ['fungal_infection', 'acne', 'insect_bite', 'bad_breath'],
     primarySymptoms: ['fungal_infection'],
@@ -590,7 +590,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_027',
-    name: 'Antacid (Tums / Rolaids)',
+    name: 'Antacid',
     category: 'Over-the-Counter',
     symptoms: ['gerd', 'heartburn', 'indigestion'],
     primarySymptoms: ['gerd'],
@@ -798,7 +798,7 @@ export const REMEDIES = [
   },
   {
     id: 'rem_036',
-    name: 'Fish Oil (Omega-3)',
+    name: 'Fish Oil',
     category: 'Natural',
     symptoms: ['arthritis', 'joint_pain', 'dry_skin', 'anxiety', 'palpitations'],
     primarySymptoms: ['arthritis'],
