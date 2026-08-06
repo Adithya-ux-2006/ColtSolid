@@ -7,7 +7,6 @@ import { QuestionnaireFlow } from '../components/onboarding/QuestionnaireFlow';
 import { PageWrapper } from '../components/layout';
 import { TrustBadges } from '../components/ui/TrustBadges';
 import { LegalFooter } from '../components/ui/LegalFooter';
-import { MedicalCentreFinder } from '../components/MedicalCentreFinder';
 import { useCatalogStore } from '../store/catalogStore';
 import { FAQ_ITEMS } from '../constants/onboarding';
 import { useGuestProfileStore } from '../store/guestProfileStore';
@@ -120,14 +119,6 @@ export function Landing() {
               title="Fast & Accessible"
               description="Cost-effective, accessible, and fast-acting solutions for anyone, anywhere."
             />
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 px-6">
-        <div className="max-w-6xl mx-auto space-y-12">
-          <div id="medical-centres">
-            <MedicalCentreFinder />
           </div>
         </div>
       </section>

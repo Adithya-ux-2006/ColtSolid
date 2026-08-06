@@ -46,7 +46,7 @@ function getCachedState() {
   return null;
 }
 
-export function MedicalCentreFinder() {
+export function MedicalCentreFinder({ className }) {
   const [state, setState] = useState(() => {
     const cached = getCachedState();
     return cached ? 'results' : 'idle';
@@ -140,7 +140,7 @@ export function MedicalCentreFinder() {
   }, [userLocation, radius, handleSearch]);
 
   return (
-    <section className="rounded-3xl bg-card border border-border overflow-hidden shadow-soft" role="region" aria-label="Find Medical Centres">
+    <section className={cn("rounded-3xl bg-card border border-border overflow-hidden shadow-soft", className)} role="region" aria-label="Find Medical Centres">
       <div className="p-6 md:p-8">
         <div className="flex items-start gap-3 mb-4">
           <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">

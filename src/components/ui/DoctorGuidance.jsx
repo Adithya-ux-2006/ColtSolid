@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { Stethoscope, MapPin } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { Checklist } from './Checklist';
 import { Reveal } from './Reveal';
+import { Modal } from './Modal';
+import { MedicalCentreFinder } from '../MedicalCentreFinder';
 
 const DEFAULT_FLAGS = [
   'Symptoms last over 48 hours',
@@ -13,6 +16,15 @@ const DEFAULT_FLAGS = [
 
 export function DoctorGuidance({ message, flags, ctaLabel, onCtaClick, className }) {
   const items = flags || DEFAULT_FLAGS;
+  const [isFinderOpen, setIsFinderOpen] = useState(false);
+
+  const handleCtaClick = () => {
+    if (onCtaClick) {
+      onCtaClick();
+    } else {
+      setIsFinderOpen(true);
+    }
+  };
 
   return (
     <Reveal className={cn("section-card", className)}>
@@ -37,12 +49,16 @@ export function DoctorGuidance({ message, flags, ctaLabel, onCtaClick, className
       <Checklist items={items} delay={0.1} className="mb-6 space-y-3" />
 
       <button
-        onClick={onCtaClick}
+        onClick={handleCtaClick}
         className="flex items-center justify-center gap-2 w-full h-12 rounded-2xl border border-border text-ink font-medium text-sm transition-all duration-200 hover:bg-surface hover:border-border active:scale-[0.98] active:bg-surface/80"
       >
         <MapPin className="w-4 h-4" />
         {ctaLabel || 'Find Nearby Medical Centres'}
       </button>
+
+      <Modal isOpen={isFinderOpen} onClose={() => setIsFinderOpen(false)}>
+        <MedicalCentreFinder className="rounded-none border-0 bg-transparent shadow-none" />
+      </Modal>
     </Reveal>
   );
 }
