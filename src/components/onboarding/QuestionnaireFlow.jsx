@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { CheckCircle2, ChevronLeft } from 'lucide-react';
-import { CONDITIONS, ALLERGIES, GENDER_OPTIONS, REMOVED_ALLERGY_VALUES } from '../../constants/onboarding';
+import { CONDITIONS, ALLERGIES, GENDER_OPTIONS, REMOVED_ALLERGY_VALUES, getVisibleConditions } from '../../constants/onboarding';
 import { cn } from '../../utils/cn';
 
 const STEPS = [
@@ -140,6 +140,10 @@ export function QuestionnaireFlow({
     ? conditions
     : allergies;
 
+  const visibleOptions = currentStep.key === 'conditions'
+    ? getVisibleConditions(gender, conditions)
+    : currentStep.options;
+
   return (
     <div className={cn('mx-auto flex flex-col rounded-[2rem] bg-transparent', compact ? 'max-w-2xl' : 'min-h-[82vh] max-w-3xl')}>
       <div className="mb-8 space-y-4">
@@ -176,7 +180,7 @@ export function QuestionnaireFlow({
             </div>
 
             <div className={cn('grid gap-3', currentStep.key === 'gender' ? 'grid-cols-1' : 'grid-cols-2 md:grid-cols-3')}>
-              {currentStep.options.map((option) => {
+              {visibleOptions.map((option) => {
                 const isSelected = currentStep.key === 'gender'
                   ? gender === option.value
                   : selectedValues.includes(option.value);

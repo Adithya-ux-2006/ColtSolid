@@ -9,7 +9,7 @@ import { FAQAccordion } from '../components/ui/FAQAccordion';
 import { useAuthStore } from '../store/authStore';
 import { useGuestProfileStore } from '../store/guestProfileStore';
 import { getInitials } from '../utils/mappers';
-import { ALLERGIES, CONDITIONS, FAQ_ITEMS, GENDER_OPTIONS } from '../constants/onboarding';
+import { ALLERGIES, CONDITIONS, FAQ_ITEMS, GENDER_OPTIONS, getVisibleConditions } from '../constants/onboarding';
 
 const ONBOARDING_LABELS = new Map(
   [...CONDITIONS, ...ALLERGIES].map((option) => [option.value, option.label])
@@ -86,6 +86,7 @@ export function Profile() {
   const updateUser = useAuthStore((state) => state.updateUser);
   const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
   const guestConditions = useGuestProfileStore((state) => state.common_conditions);
+  const guestGender = useGuestProfileStore((state) => state.gender);
   const guestIsChildSafe = useGuestProfileStore((state) => state.is_child_safe ?? false);
   const updateGuestProfile = useGuestProfileStore((state) => state.updateProfile);
   const navigate = useNavigate();
@@ -220,7 +221,7 @@ export function Profile() {
               <div className="space-y-2">
                 <p className="text-sm font-semibold text-ink">Health Conditions</p>
                 <div className="flex flex-wrap gap-2">
-                  {CONDITIONS.map((option) => {
+                  {getVisibleConditions(guestGender, guestEditForm.selectedConditions).map((option) => {
                     const isSelected = guestEditForm.selectedConditions.includes(option.value);
                     return (
                       <button
@@ -497,7 +498,7 @@ export function Profile() {
               {isEditingHealth ? (
                 <>
                   <div className="flex flex-wrap gap-2">
-                    {CONDITIONS.map((option) => {
+                    {getVisibleConditions(user.gender, healthForm.selectedConditions).map((option) => {
                       const isSelected = healthForm.selectedConditions.includes(option.value);
                       return (
                         <button

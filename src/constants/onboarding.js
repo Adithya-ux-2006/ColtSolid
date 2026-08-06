@@ -21,11 +21,20 @@ export const CONDITIONS = [
   { value: 'anxiety', label: 'Anxious', emoji: '😰' },
   { value: 'depression', label: 'Depression', emoji: '🌧️' },
   { value: 'ibs-digestive-issues', label: 'IBS / Digestive Issues', emoji: '🤢' },
-  { value: 'pcos', label: 'PCOS', emoji: '🌙' },
+  { value: 'pcos', label: 'PCOS', emoji: '🌙', relevantFor: ['female'] },
   { value: 'thyroid-disorders', label: 'Thyroid Disorders', emoji: '🦋' },
   { value: 'other', label: 'Other', emoji: '✏️' },
   { value: 'none', label: 'None', emoji: '○' },
 ];
+
+export function getVisibleConditions(gender, selectedValues = []) {
+  if (gender !== 'male' && gender !== 'female') return CONDITIONS;
+  const selected = new Set(selectedValues);
+  return CONDITIONS.filter((option) => {
+    if (!option.relevantFor) return true;
+    return option.relevantFor.includes(gender) || selected.has(option.value);
+  });
+}
 
 export const ALLERGIES = [
   { value: 'nuts', label: 'Nuts', emoji: '🥜' },
