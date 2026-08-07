@@ -79,8 +79,15 @@ export function AdminAnalytics() {
     );
   }, [summary, remedyLabels]);
 
-  const helpfulCount = summary?.feedback.filter((item) => item.vote === 'helpful').length || 0;
-  const notHelpfulCount = summary?.feedback.filter((item) => item.vote === 'not_helpful').length || 0;
+  const helpfulCount = useMemo(() => {
+    if (!summary?.feedback) return 0;
+    return summary.feedback.filter((item) => item.vote === 'helpful').length;
+  }, [summary]);
+
+  const notHelpfulCount = useMemo(() => {
+    if (!summary?.feedback) return 0;
+    return summary.feedback.filter((item) => item.vote === 'not_helpful').length;
+  }, [summary]);
 
   return (
     <PageWrapper className="min-h-screen pb-24 md:pb-8 pt-6">
@@ -100,7 +107,7 @@ export function AdminAnalytics() {
         {!isLoading && !errorMessage ? (
           <>
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              <StatCard icon={Search} label="Searches" value={summary?.searches.length || 0} />
+              <StatCard icon={Search} label="Searches" value={summary?.searches?.length || 0} />
               <StatCard icon={Heart} label="Remedy Saves" value={mostSavedRemedies.reduce((sum, item) => sum + item.count, 0)} />
               <StatCard icon={ThumbsUp} label="Helpful Votes" value={helpfulCount} />
               <StatCard icon={ThumbsDown} label="Not Helpful" value={notHelpfulCount} />

@@ -10,7 +10,9 @@ function readArr(key) {
   if (typeof window === 'undefined') return [];
   try {
     const raw = window.localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : [];
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
   } catch { return []; }
 }
 

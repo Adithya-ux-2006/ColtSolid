@@ -5,7 +5,9 @@ export function getGuestProfile() {
 
   try {
     const raw = window.localStorage.getItem(GUEST_PROFILE_KEY);
-    return raw ? JSON.parse(raw) : {};
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) ? parsed : {};
   } catch {
     return {};
   }

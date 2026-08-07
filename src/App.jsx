@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { Suspense, lazy, useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import { Navbar, BottomNav, AppDock, AdminGuard } from './components/layout';
 import { ThemeProvider } from './context/ThemeProvider';
 import { needsOnboardingProfile, useAuthStore } from './store/authStore';
@@ -26,11 +26,13 @@ const AdminAnalytics = lazy(() => import('./pages/AdminAnalytics').then(m => ({ 
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy').then(m => ({ default: m.PrivacyPolicy })));
 const TermsOfService = lazy(() => import('./pages/TermsOfService').then(m => ({ default: m.TermsOfService })));
 
-/** Wraps a lazy page in its own Suspense so the navbar stays visible during transitions. */
+/** Wraps a lazy page in its own Suspense + ErrorBoundary so the navbar stays visible during transitions. */
 function Page({ children }) {
   return (
     <Suspense fallback={<div className="flex items-center justify-center min-h-[40vh]"><LoadingSkeleton count={2} /></div>}>
-      {children}
+      <ErrorBoundary>
+        {children}
+      </ErrorBoundary>
     </Suspense>
   );
 }
@@ -128,18 +130,36 @@ function App() {
   const fetchCatalog = useCatalogStore((state) => state.fetchCatalog);
   const clearFavorites = useFavoritesStore((state) => state.clear);
   const [bootstrapped, setBootstrapped] = useState(false);
+  const [initTimedOut, setInitTimedOut] = useState(false);
+  const bootstrappedRef = useRef(false);
 
   useEffect(() => {
     let dispose = () => {};
 
     initialize().then((cleanup) => {
       dispose = cleanup || (() => {});
+      bootstrappedRef.current = true;
+      setBootstrapped(true);
+    }).catch((error) => {
+      console.error('[APP] Auth initialization failed:', error);
+      bootstrappedRef.current = true;
       setBootstrapped(true);
     });
 
     fetchCatalog();
 
-    return () => dispose();
+    const timeoutId = setTimeout(() => {
+      if (!bootstrappedRef.current) {
+        setInitTimedOut(true);
+        bootstrappedRef.current = true;
+        setBootstrapped(true);
+      }
+    }, 10000);
+
+    return () => {
+      clearTimeout(timeoutId);
+      dispose();
+    };
   }, [fetchCatalog, initialize]);
 
   useEffect(() => {
@@ -160,6 +180,14 @@ function App() {
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full animate-spin" />
           <p className="text-sm text-ink-muted font-medium">Loading Remzy...</p>
+          {initTimedOut && (
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 px-4 py-2 bg-primary text-white rounded-xl text-sm font-medium hover:bg-primary-dark transition-colors"
+            >
+              Refresh Page
+            </button>
+          )}
         </div>
       </div>
     );

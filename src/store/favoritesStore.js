@@ -22,11 +22,14 @@ export const useFavoritesStore = create((set, get) => ({
         
       if (error) throw error;
       
-      const remedies = data.map((favorite) => {
-        const remedy = mapRemedy(favorite.remedies);
-        if (remedy) remedy._savedAt = favorite.created_at;
-        return remedy;
-      });
+      const remedies = data
+        .filter((favorite) => favorite.remedies)
+        .map((favorite) => {
+          const remedy = mapRemedy(favorite.remedies);
+          if (remedy) remedy._savedAt = favorite.created_at;
+          return remedy;
+        })
+        .filter(Boolean);
       set({ favorites: remedies.sort((a, b) => new Date(b._savedAt) - new Date(a._savedAt)) });
     } catch (error) {
       console.error('Error fetching favorites:', error);
