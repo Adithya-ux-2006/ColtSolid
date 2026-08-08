@@ -141,8 +141,6 @@ function computeUserContextPenalty(remedy, userContext) {
   }
 
   if (conditions?.length) {
-    // DEBUG: log conditions being checked for contraindications
-    console.log('[DEBUG] checking contraindication, conditions:', conditions);
     const contraindications = (remedy.contraindications || []).map(c => c.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim()).filter(Boolean);
     
     // Check direct matches
@@ -165,6 +163,7 @@ function computeUserContextPenalty(remedy, userContext) {
             if (ci.includes(normMapped) || normMapped.includes(ci)) {
               penalty += 40;
               remedy._contraindicationConflict = condition;
+              console.log('[DEBUG-RANK] MAPPED MATCH:', { condition, mappedContra: normMapped, ci });
             }
           }
         }

@@ -41,9 +41,6 @@ export function getRankedRemediesForSymptoms(
   if (isChildSafe) userContext.isChildSafe = isChildSafe;
   if (treatmentPrefs?.length) userContext.treatmentPrefs = treatmentPrefs;
 
-  // DEBUG: log userContext for health condition filtering investigation
-  console.log('[DEBUG] userContext:', userContext);
-
   const knowledgeCtx = buildKnowledgeContext(symptomIds, symptoms);
 
   const ranked = rankRemedies(remedies, concerns, symptomRemediesMap, {

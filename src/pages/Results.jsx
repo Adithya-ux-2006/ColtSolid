@@ -178,9 +178,6 @@ export function Results() {
   const activeIsChildSafe = isAuthenticated ? userIsChildSafe : guestIsChildSafe;
   const activeTreatmentPrefs = isAuthenticated ? userTreatmentPrefs : guestTreatmentPrefs;
 
-  // DEBUG: log activeConditions for health condition filtering investigation
-  console.log('[DEBUG] activeConditions:', activeConditions, 'isAuthenticated:', isAuthenticated, 'user.common_conditions:', useAuthStore.getState().user?.common_conditions);
-
   const symptoms = useCatalogStore((state) => state.symptoms);
   const remedies = useCatalogStore((state) => state.remedies);
   const symptomRemedies = useCatalogStore((state) => state.symptomRemedies);
