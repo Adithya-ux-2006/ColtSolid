@@ -106,7 +106,7 @@ export function HighlightedRemedyCard({ remedy, isSafe, evidenceScore, safetySco
           </div>
 
           {reasons.length > 0 && (
-            <div className="bg-surface/60 rounded-xl px-3 py-2.5 mb-4">
+            <div className="bg-surface rounded-xl px-3 py-2.5 mb-4">
               <p className="text-[10px] font-bold uppercase tracking-wider text-ink-muted mb-1.5">
                 Why This May Help
               </p>

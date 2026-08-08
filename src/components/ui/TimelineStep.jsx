@@ -13,7 +13,7 @@ export function TimelineStep({ number, description, isLast = false, delay = 0, c
       transition={{ ...baseTransition, delay }}
       className={cn(
         'group flex flex-col md:flex-row md:items-center gap-3 md:gap-5',
-        'md:hover:bg-surface/30 md:rounded-2xl md:-mx-3 md:px-3 md:py-2',
+        'md:hover:bg-ink/5 md:rounded-2xl md:-mx-3 md:px-3 md:py-2',
         'md:transition-all md:duration-200',
         className
       )}

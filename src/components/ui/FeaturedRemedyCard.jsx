@@ -80,7 +80,7 @@ export function FeaturedRemedyCard({ remedy, isSafe, evidenceScore, safetyScore,
       >
         <div className="grid grid-cols-1 md:grid-cols-[20%_52%_28%] md:min-h-[400px]">
           <div className="flex items-center justify-center py-8 px-4 bg-mint/40">
-            <div className="w-[180px] h-[180px] rounded-full bg-card/80 flex items-center justify-center shrink-0">
+            <div className="w-[180px] h-[180px] rounded-full bg-card flex items-center justify-center shrink-0">
               <RemedyImage
                 category={remedy.category}
                 size="hero"

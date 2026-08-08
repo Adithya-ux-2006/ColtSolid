@@ -38,9 +38,9 @@ export function BottomNav() {
       className={cn(
         'md:hidden fixed bottom-0 left-0 right-0 z-50',
         'border-t border-white/10 dark:border-white/5',
-        'bg-card/80 backdrop-blur-xl',
+        'bg-card backdrop-blur-xl',
         'transition-all duration-300 ease-in-out',
-        scrolled ? 'bg-card/90 backdrop-blur-2xl' : 'bg-card/80 backdrop-blur-xl'
+        scrolled ? 'bg-card backdrop-blur-2xl' : 'bg-card backdrop-blur-xl'
       )}
       style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
     >

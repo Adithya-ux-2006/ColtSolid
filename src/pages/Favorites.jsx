@@ -186,13 +186,13 @@ export function Favorites() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search your saved remedies..."
-                  className="w-full h-11 md:h-12 pl-11 pr-4 bg-card/60 backdrop-blur-sm border border-border/60 rounded-2xl text-sm text-ink placeholder-ink-muted/60 transition-all duration-200 focus:outline-none focus:border-primary/30 focus:bg-card focus:shadow-soft"
+                  className="w-full h-11 md:h-12 pl-11 pr-4 bg-card backdrop-blur-sm border border-border/60 rounded-2xl text-sm text-ink placeholder-ink-muted/60 transition-all duration-200 focus:outline-none focus:border-primary/30 focus:bg-card focus:shadow-soft"
                 />
               </div>
 
               <button
                 type="button"
-                className="flex items-center gap-2 h-11 md:h-12 px-4 bg-card/60 backdrop-blur-sm border border-border/60 rounded-2xl text-sm font-medium text-ink-muted hover:text-ink hover:border-border transition-all duration-200"
+                className="flex items-center gap-2 h-11 md:h-12 px-4 bg-card backdrop-blur-sm border border-border/60 rounded-2xl text-sm font-medium text-ink-muted hover:text-ink hover:border-border transition-all duration-200"
               >
                 <SlidersHorizontal className="w-4 h-4" />
                 <span className="hidden sm:inline">Filter</span>
@@ -202,7 +202,7 @@ export function Favorites() {
                 <button
                   type="button"
                   onClick={() => setShowSortMenu((v) => !v)}
-                  className="flex items-center gap-2 h-11 md:h-12 px-4 bg-card/60 backdrop-blur-sm border border-border/60 rounded-2xl text-sm font-medium text-ink-muted hover:text-ink hover:border-border transition-all duration-200"
+                  className="flex items-center gap-2 h-11 md:h-12 px-4 bg-card backdrop-blur-sm border border-border/60 rounded-2xl text-sm font-medium text-ink-muted hover:text-ink hover:border-border transition-all duration-200"
                 >
                   <ArrowUpDown className="w-4 h-4" />
                   <span className="hidden sm:inline">Sort</span>

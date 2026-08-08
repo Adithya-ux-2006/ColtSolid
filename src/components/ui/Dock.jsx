@@ -68,7 +68,7 @@ export function Dock({
           mouseX.set(Infinity);
         }}
         className={cn(
-          'mx-auto flex w-fit gap-3 rounded-2xl bg-card/90 backdrop-blur-md border border-border px-4 shadow-soft-lg',
+          'mx-auto flex w-fit gap-3 rounded-2xl bg-card backdrop-blur-md border border-border px-4 shadow-soft-lg',
           className
         )}
         style={{ height: panelHeight }}

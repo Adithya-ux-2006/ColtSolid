@@ -8,7 +8,7 @@ export function Navbar() {
   const user = useAuthStore((state) => state.user);
 
   return (
-    <nav className="sticky top-0 z-40 h-16 bg-card/80 backdrop-blur-md border-b border-border transition-colors duration-250">
+    <nav className="sticky top-0 z-40 h-16 bg-card backdrop-blur-md border-b border-border transition-colors duration-250">
       {isAuthenticated ? (
         <div className="h-full px-4 md:px-6 grid grid-cols-[1fr_auto_1fr] items-center">
           <div />

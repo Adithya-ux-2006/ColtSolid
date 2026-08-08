@@ -50,7 +50,7 @@ export function DoctorGuidance({ message, flags, ctaLabel, onCtaClick, className
 
       <button
         onClick={handleCtaClick}
-        className="flex items-center justify-center gap-2 w-full h-12 rounded-2xl border border-border text-ink font-medium text-sm transition-all duration-200 hover:bg-surface hover:border-border active:scale-[0.98] active:bg-surface/80"
+        className="flex items-center justify-center gap-2 w-full h-12 rounded-2xl border border-border text-ink font-medium text-sm transition-all duration-200 hover:bg-surface hover:border-border active:scale-[0.98] active:bg-ink/5"
       >
         <MapPin className="w-4 h-4" />
         {ctaLabel || 'Find Nearby Medical Centres'}

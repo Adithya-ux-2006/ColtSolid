@@ -277,7 +277,7 @@ export function TreatmentReminders() {
                   return (
                     <li
                       key={schedule.id}
-                      className="flex items-center gap-3 p-3 rounded-2xl border border-border/60 bg-surface/50"
+                      className="flex items-center gap-3 p-3 rounded-2xl border border-border/60 bg-surface"
                     >
                       <button
                         type="button"

@@ -181,7 +181,7 @@ export function SymptomSearch() {
               <button
                 type="button"
                 onClick={goToResults}
-                className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-ink transition-colors hover:bg-surface/50"
+                className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-ink transition-colors hover:bg-surface"
               >
                 <span className="flex min-w-0 items-center gap-3">
                   <Search className="h-4 w-4 shrink-0 text-primary" />
@@ -205,7 +205,7 @@ export function SymptomSearch() {
                           <button
                             type="button"
                             onClick={() => navigate(`/results?symptom=${encodeURIComponent(symptomResolution.primarySymptomId)}`)}
-                            className="flex w-full items-center justify-between gap-3 rounded-xl px-2 py-2 text-left text-ink transition-colors hover:bg-surface/50"
+                            className="flex w-full items-center justify-between gap-3 rounded-xl px-2 py-2 text-left text-ink transition-colors hover:bg-surface"
                           >
                             <span className="flex min-w-0 items-center gap-3">
                               <span className="w-6 h-6 rounded-lg bg-surface text-primary flex items-center justify-center text-xs font-semibold shrink-0">
@@ -225,7 +225,7 @@ export function SymptomSearch() {
                         <Link
                           key={remedy.id}
                           to={`/remedy/${remedy.id}`}
-                          className="flex items-center gap-2 rounded-xl px-2 py-2 text-sm font-medium text-ink transition-colors hover:bg-surface/50"
+                          className="flex items-center gap-2 rounded-xl px-2 py-2 text-sm font-medium text-ink transition-colors hover:bg-surface"
                         >
                           <span className="w-6 h-6 rounded-lg bg-surface text-primary flex items-center justify-center text-xs font-semibold shrink-0">
                             {remedy.name.charAt(0)}

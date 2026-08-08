@@ -158,7 +158,7 @@ export function QuestionnaireFlow({
       <div className="mb-8 space-y-4">
         <div className="flex gap-2">
           {STEPS.map((step, index) => (
-            <div key={step.key} className="h-2 flex-1 overflow-hidden rounded-full bg-card/70">
+            <div key={step.key} className="h-2 flex-1 overflow-hidden rounded-full bg-card">
               <div
                 className={cn(
                   'h-full rounded-full transition-all duration-300',
@@ -171,7 +171,7 @@ export function QuestionnaireFlow({
         <p className="text-sm font-medium text-ink-muted">Step {progress} of {STEPS.length}</p>
       </div>
 
-      <div className={cn('relative flex-1 overflow-hidden rounded-[2rem] border border-white/70 bg-card/60 shadow-sm backdrop-blur', compact ? 'p-5 md:p-6' : 'p-6 md:p-10')}>
+      <div className={cn('relative flex-1 overflow-hidden rounded-[2rem] border border-white/70 bg-card shadow-sm backdrop-blur', compact ? 'p-5 md:p-6' : 'p-6 md:p-10')}>
         <AnimatePresence custom={direction} mode="wait">
           <motion.div
             key={currentStep.key}
@@ -273,7 +273,7 @@ export function QuestionnaireFlow({
           type="button"
           onClick={handleBack}
           disabled={stepIndex === 0 || isSaving}
-          className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-card/60 disabled:cursor-not-allowed disabled:opacity-40"
+          className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-card disabled:cursor-not-allowed disabled:opacity-40"
         >
           <ChevronLeft className="h-4 w-4" />
           Back

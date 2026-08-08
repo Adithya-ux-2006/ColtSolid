@@ -22,7 +22,7 @@ export function FeaturedRecommendation({ remedy, evidenceScore, isSafe, safetyWa
       >
         <div className="flex items-center justify-between mb-4">
           <CategoryBadge category={remedy.category} />
-          <span className="text-xs font-semibold text-primary bg-card/60 px-3 py-1 rounded-full">
+          <span className="text-xs font-semibold text-primary bg-card px-3 py-1 rounded-full">
             Top Recommendation
           </span>
         </div>
@@ -32,19 +32,19 @@ export function FeaturedRecommendation({ remedy, evidenceScore, isSafe, safetyWa
 
         <div className="flex flex-wrap items-center gap-2 text-sm text-ink-muted mb-5">
           {remedy.timeToEffect && (
-            <span className="flex items-center gap-1.5 bg-card/60 px-3 py-1.5 rounded-xl">
+            <span className="flex items-center gap-1.5 bg-card px-3 py-1.5 rounded-xl">
               <Clock className="w-3.5 h-3.5 text-primary" />
               {remedy.timeToEffect}
             </span>
           )}
           {remedy.difficulty && (
-            <span className="flex items-center gap-1.5 bg-card/60 px-3 py-1.5 rounded-xl">
+            <span className="flex items-center gap-1.5 bg-card px-3 py-1.5 rounded-xl">
               <Star className="w-3.5 h-3.5 text-primary" />
               {remedy.difficulty}
             </span>
           )}
           {evidenceScore != null && (
-            <span className="flex items-center gap-1.5 bg-card/60 px-3 py-1.5 rounded-xl font-semibold text-primary">
+            <span className="flex items-center gap-1.5 bg-card px-3 py-1.5 rounded-xl font-semibold text-primary">
               <FileText className="w-3.5 h-3.5" />
               Evidence {evidenceScore}/10
             </span>

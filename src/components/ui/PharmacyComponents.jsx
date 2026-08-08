@@ -88,8 +88,8 @@ export function PharmacyCard({ shop, className }) {
       rel="noopener noreferrer"
       className={cn(
         'flex items-center gap-3 p-3 rounded-xl transition-all duration-200',
-        'hover:bg-surface/50',
-        'active:scale-[0.99] active:bg-surface/70',
+        'hover:bg-surface',
+        'active:scale-[0.99] active:bg-ink/5',
         className
       )}
     >
