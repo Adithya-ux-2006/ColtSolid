@@ -2,7 +2,6 @@
 -- Uses pgvector extension for cosine similarity search
 -- Populated by scripts/generate-embeddings.js (run manually when symptoms change)
 -- NOTE: Requires pgvector extension enabled in Supabase Dashboard (Database → Extensions)
--- This migration is skipped if extension is not available
 
 DO $$
 BEGIN
@@ -11,14 +10,12 @@ BEGIN
     RETURN;
   END IF;
 
-  -- pgvector extension must be enabled in Supabase dashboard (Database → Extensions)
-  CREATE EXTENSION IF NOT EXISTS vector;
-
+  -- pgvector is installed in extensions schema, need to reference it explicitly
   EXECUTE '
     CREATE TABLE IF NOT EXISTS public.symptom_embeddings (
         symptom_id TEXT PRIMARY KEY REFERENCES public.symptoms(id) ON DELETE CASCADE,
         label TEXT NOT NULL,
-        embedding vector(768) NOT NULL,
+        embedding extensions.vector(768) NOT NULL,
         created_at TIMESTAMPTZ DEFAULT now()
     )
   ';
@@ -28,7 +25,7 @@ BEGIN
   EXECUTE '
     CREATE INDEX IF NOT EXISTS idx_symptom_embeddings_vector
         ON public.symptom_embeddings
-        USING ivfflat (embedding vector_cosine_ops)
+        USING ivfflat (embedding extensions.vector_cosine_ops)
         WITH (lists = 10)
   ';
 
