@@ -25,8 +25,17 @@ CREATE TABLE IF NOT EXISTS public.remedies (
     difficulty TEXT NOT NULL,
     cost TEXT NOT NULL,
     is_featured BOOLEAN DEFAULT false,
-    ingredients TEXT[] DEFAULT '{}'
+    ingredients TEXT[] DEFAULT '{}',
+    child_safe BOOLEAN,
+    child_safety_note TEXT,
+    is_purchasable BOOLEAN DEFAULT true
 );
+
+ALTER TABLE public.remedies DROP CONSTRAINT IF EXISTS remedies_category_check;
+
+ALTER TABLE public.remedies
+  ADD CONSTRAINT remedies_category_check
+  CHECK (category IN ('Lifestyle', 'Natural', 'Ayurveda', 'Conventional'));
 
 CREATE TABLE IF NOT EXISTS public.remedy_symptoms (
     remedy_id TEXT REFERENCES public.remedies(id) ON DELETE CASCADE,
@@ -49,10 +58,8 @@ CREATE TABLE IF NOT EXISTS public.users (
     id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
     name TEXT NOT NULL,
     university_email TEXT,
-    university_name TEXT,
-    current_year TEXT,
-    university TEXT,
-    year TEXT,
+    university_name TEXT NOT NULL DEFAULT '',
+    current_year TEXT NOT NULL DEFAULT '',
     gender TEXT,
     common_conditions TEXT[] DEFAULT '{}' NOT NULL,
     known_allergies TEXT[] DEFAULT '{}' NOT NULL,
@@ -64,8 +71,16 @@ CREATE TABLE IF NOT EXISTS public.users (
     prefer_natural BOOLEAN DEFAULT false NOT NULL,
     avoid_medication BOOLEAN DEFAULT false NOT NULL,
     vegetarian_remedies BOOLEAN DEFAULT false NOT NULL,
+    age_range TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+
+ALTER TABLE public.users
+  DROP CONSTRAINT IF EXISTS users_age_range_check;
+
+ALTER TABLE public.users
+  ADD CONSTRAINT users_age_range_check
+  CHECK (age_range IS NULL OR age_range IN ('under-12', '12-17', '18-64', '65-plus', 'prefer-not-to-say'));
 
 CREATE TABLE IF NOT EXISTS public.favorites (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -179,15 +194,13 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-  INSERT INTO public.users (id, name, university_email, university_name, current_year, university, year, gender)
+  INSERT INTO public.users (id, name, university_email, university_name, current_year, gender)
   VALUES (
     NEW.id,
     COALESCE(NEW.raw_user_meta_data ->> 'name', 'Student'),
-    NEW.raw_user_meta_data ->> 'university_email',
-    NEW.raw_user_meta_data ->> 'university_name',
-    NEW.raw_user_meta_data ->> 'current_year',
-    NEW.raw_user_meta_data ->> 'university_name',
-    NEW.raw_user_meta_data ->> 'current_year',
+    COALESCE(NEW.raw_user_meta_data ->> 'university_email', ''),
+    COALESCE(NEW.raw_user_meta_data ->> 'university_name', ''),
+    COALESCE(NEW.raw_user_meta_data ->> 'current_year', ''),
     COALESCE(NEW.raw_user_meta_data ->> 'gender', '')
   )
   ON CONFLICT (id) DO UPDATE SET
@@ -195,8 +208,6 @@ BEGIN
     university_email = EXCLUDED.university_email,
     university_name = EXCLUDED.university_name,
     current_year = EXCLUDED.current_year,
-    university = EXCLUDED.university,
-    year = EXCLUDED.year,
     gender = EXCLUDED.gender;
 
   RETURN NEW;
