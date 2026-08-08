@@ -4,7 +4,7 @@ import { Navbar, BottomNav, AppDock, AdminGuard } from './components/layout';
 import { ThemeProvider } from './context/ThemeProvider';
 import { ThemeContext } from './context/themeContext';
 import { GradientBackground } from './components/ui/jade-sky';
-import { RadialGlowBackground } from './components/ui/radial-glow-background';
+
 import { needsOnboardingProfile, useAuthStore } from './store/authStore';
 import { useFavoritesStore } from './store/favoritesStore';
 import { useRemedyScheduleStore } from './store/remedyScheduleStore';
@@ -136,7 +136,7 @@ function LightModeBackground() {
   );
 }
 
-/** Dark-mode ambient background: renders the emerald radial glow behind every page. */
+/** Dark-mode ambient background: renders the dark Jade Sky variant behind every page. */
 function DarkModeBackground() {
   const { resolvedTheme } = useContext(ThemeContext);
 
@@ -144,7 +144,7 @@ function DarkModeBackground() {
 
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10">
-      <RadialGlowBackground className="absolute inset-0" />
+      <GradientBackground dark className="h-full w-full" />
     </div>
   );
 }
