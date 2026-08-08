@@ -15,9 +15,8 @@ import { getRankedRemediesForSymptoms, isEmergencyQuery } from '../utils/symptom
 import { resolveQuery } from '../utils/symptomEngine';
 import { fetchGeminiInterpretation } from '../utils/geminiInterpreter';
 import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
-import { SYMPTOM_COLOR_CLASSES } from '../constants/symptoms';
+import { POPULAR_SYMPTOM_IDS, SYMPTOM_COLOR_CLASSES } from '../constants/symptoms';
 
-const SEARCH_POPULAR_IDS = ['cold', 'anxiety', 'back_pain', 'bloating', 'eye_pain', 'headache'];
 const EMPTY_ARRAY = [];
 
 function normalizeValue(value) {
@@ -51,7 +50,7 @@ export function SymptomSearch() {
 
   const symptomCards = useMemo(() => {
     if (!symptoms?.length) return [];
-    return SEARCH_POPULAR_IDS
+    return POPULAR_SYMPTOM_IDS
       .map(id => symptoms.find(s => s.id === id))
       .filter(Boolean)
       .map(s => ({

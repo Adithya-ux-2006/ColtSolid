@@ -8,6 +8,7 @@ import { PageWrapper } from '../components/layout';
 import { TrustBadges } from '../components/ui/TrustBadges';
 import { LegalFooter } from '../components/ui/LegalFooter';
 import { useCatalogStore } from '../store/catalogStore';
+import { POPULAR_SYMPTOM_IDS } from '../constants/symptoms';
 import { FAQ_ITEMS } from '../constants/onboarding';
 import { useGuestProfileStore } from '../store/guestProfileStore';
 import { trackSearchEvent } from '../utils/analytics';
@@ -19,7 +20,7 @@ export function Landing() {
   const updateGuestProfile = useGuestProfileStore((state) => state.updateProfile);
 
   const quickSymptoms = useMemo(
-    () => symptoms.filter((s) => ['headache', 'cold', 'anxiety', 'insomnia', 'nausea', 'stress'].includes(s.id)).slice(0, 6),
+    () => symptoms.filter((s) => POPULAR_SYMPTOM_IDS.includes(s.id)).slice(0, 6),
     [symptoms]
   );
 
