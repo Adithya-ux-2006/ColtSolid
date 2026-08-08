@@ -1,5 +1,6 @@
 import { buildKnowledgeContext } from './knowledgeGraph';
 import { getChildSafetyStatus } from '../utils/guestProfile';
+import { CONDITION_TO_CONTRAINDICATION_MAP, normalizeConditionValue } from '../utils/conditionMapping';
 
 export const REMEDY_TIER = {
   DIRECT: 0,
@@ -142,11 +143,31 @@ function computeUserContextPenalty(remedy, userContext) {
   if (conditions?.length) {
     // DEBUG: log conditions being checked for contraindications
     console.log('[DEBUG] checking contraindication, conditions:', conditions);
-    const contraindications = (remedy.contraindications || []).map(c => c.toLowerCase());
-    for (const condition of conditions.map(c => c.toLowerCase())) {
-      if (contraindications.some(ci => ci.includes(condition) || condition.includes(ci))) {
-        penalty += 40;
-        remedy._contraindicationConflict = condition;
+    const contraindications = (remedy.contraindications || []).map(c => c.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim()).filter(Boolean);
+    
+    // Check direct matches
+    for (const condition of conditions.map(c => normalizeConditionValue(c)).filter(Boolean)) {
+      for (const ci of contraindications) {
+        if (ci.includes(condition) || condition.includes(ci)) {
+          penalty += 40;
+          remedy._contraindicationConflict = condition;
+        }
+      }
+    }
+    
+    // Check mapped contraindications
+    for (const condition of conditions) {
+      const mapped = CONDITION_TO_CONTRAINDICATION_MAP[condition];
+      if (mapped) {
+        for (const mappedContra of mapped) {
+          const normMapped = normalizeConditionValue(mappedContra);
+          for (const ci of contraindications) {
+            if (ci.includes(normMapped) || normMapped.includes(ci)) {
+              penalty += 40;
+              remedy._contraindicationConflict = condition;
+            }
+          }
+        }
       }
     }
   }

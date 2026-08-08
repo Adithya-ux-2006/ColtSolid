@@ -1,5 +1,7 @@
 const GUEST_PROFILE_KEY = 'clotsolid_guest_profile';
 
+import { CONDITION_TO_CONTRAINDICATION_MAP, normalizeConditionValue } from './conditionMapping';
+
 export function getGuestProfile() {
   if (typeof window === 'undefined') return {};
 
@@ -57,12 +59,34 @@ export function remedyMatchesAllergies(remedy, allergies = []) {
 export function remedyHasContraindication(remedy, conditions = []) {
   if (!remedy || !conditions?.length) return false;
 
-  const normalizedConditions = conditions.map((c) => c.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim()).filter(Boolean);
-  const contraindications = (remedy.contraindications || []).map((c) => c.toLowerCase());
+  const normalizedConditions = conditions.map((c) => normalizeConditionValue(c)).filter(Boolean);
+  const contraindications = (remedy.contraindications || []).map((c) => c.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim()).filter(Boolean);
 
-  return normalizedConditions.some((condition) =>
-    contraindications.some((ci) => ci.includes(condition) || condition.includes(ci))
-  );
+  // Check direct matches first
+  for (const condition of normalizedConditions) {
+    for (const ci of contraindications) {
+      if (ci.includes(condition) || condition.includes(ci)) {
+        return true;
+      }
+    }
+  }
+
+  // Check mapped contraindications for each user condition
+  for (const condition of conditions) {
+    const mapped = CONDITION_TO_CONTRAINDICATION_MAP[condition];
+    if (mapped) {
+      for (const mappedContra of mapped) {
+        const normMapped = mappedContra.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim();
+        for (const ci of contraindications) {
+          if (ci.includes(normMapped) || normMapped.includes(ci)) {
+            return true;
+          }
+        }
+      }
+    }
+  }
+
+  return false;
 }
 
 export function getGuestConditions() {

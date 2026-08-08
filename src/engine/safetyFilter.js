@@ -1,3 +1,5 @@
+import { CONDITION_TO_CONTRAINDICATION_MAP, normalizeConditionValue } from '../utils/conditionMapping';
+
 export function filterUnsafeRemedies(remedies, userContext) {
   if (!remedies?.length) return [];
   if (!userContext) {
@@ -78,15 +80,31 @@ function findAllergyConflict(remedy, allergies) {
 
 function findContraindicationConflict(remedy, conditions) {
   const normalizedConditions = conditions.map(c =>
-    c.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim()
+    normalizeConditionValue(c)
   ).filter(Boolean);
 
-  const contraindications = (remedy.contraindications || []).map(c => c.toLowerCase());
+  const contraindications = (remedy.contraindications || []).map(c => c.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim()).filter(Boolean);
 
+  // Check direct matches first
   for (const condition of normalizedConditions) {
     for (const ci of contraindications) {
       if (ci.includes(condition) || condition.includes(ci)) {
         return condition;
+      }
+    }
+  }
+
+  // Check mapped contraindications for each user condition
+  for (const condition of conditions) {
+    const mapped = CONDITION_TO_CONTRAINDICATION_MAP[condition];
+    if (mapped) {
+      for (const mappedContra of mapped) {
+        const normMapped = normalizeConditionValue(mappedContra);
+        for (const ci of contraindications) {
+          if (ci.includes(normMapped) || normMapped.includes(ci)) {
+            return condition;
+          }
+        }
       }
     }
   }
