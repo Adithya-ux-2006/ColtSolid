@@ -52,8 +52,8 @@ export default {
           subtle: 'hsl(var(--ink-subtle))',
         },
         bg: {
-          DEFAULT: 'hsl(var(--bg-page))',
-          dark: 'hsl(var(--bg-page))',
+          DEFAULT: 'hsl(var(--background))',
+          dark: 'hsl(var(--background))',
         },
         surface: {
           DEFAULT: 'hsl(var(--surface))',
