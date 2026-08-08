@@ -21,11 +21,11 @@ export function GradientBackground({ className }: { className?: string }) {
       <div
         style={{
           position: "absolute",
-          inset: "-0.8cqmin",
-          filter: "blur(0.4cqmin)",
-          backgroundColor: "#CFE8DA",
-          backgroundImage:
-            "radial-gradient(circle at 65.34% 44.62%, rgba(240, 249, 244, 1) 0%, rgba(240, 249, 244, 0) 34.1%), radial-gradient(circle at 28.07% 74.48%, rgba(173, 218, 194, 1) 0%, rgba(173, 218, 194, 0) 45.65%), radial-gradient(circle at 52.42% 19.94%, rgba(143, 200, 172, 1) 0%, rgba(143, 200, 172, 0) 57.55%), radial-gradient(circle at 80.31% 84.47%, rgba(199, 232, 214, 1) 0%, rgba(199, 232, 214, 0) 69.1%)",
+        inset: "-0.8cqmin",
+        filter: "blur(0.4cqmin)",
+        backgroundColor: "#CFE9F0",
+        backgroundImage:
+          "radial-gradient(circle at 65.34% 44.62%, rgba(238, 246, 227, 1) 0%, rgba(238, 246, 227, 0) 34.1%), radial-gradient(circle at 28.07% 74.48%, rgba(183, 217, 142, 1) 0%, rgba(183, 217, 142, 0) 45.65%), radial-gradient(circle at 52.42% 19.94%, rgba(127, 191, 154, 1) 0%, rgba(127, 191, 154, 0) 57.55%), radial-gradient(circle at 80.31% 84.47%, rgba(207, 233, 240, 1) 0%, rgba(207, 233, 240, 0) 69.1%)",
         }}
       />
     </div>
