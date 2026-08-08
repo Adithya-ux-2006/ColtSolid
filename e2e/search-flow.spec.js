@@ -90,8 +90,8 @@ test.describe('Search Flow — Symptom to Remedy Detail', () => {
     // Verify navigation to results page
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(800);
-    await expect(page).toHaveURL(/\/results\?symptom=anxiety/);
-    await expect(page.getByRole('heading').first()).toContainText('Anxiety');
+    await expect(page).toHaveURL(/\/results\?q=anxiety/);
+    await expect(page.getByRole('heading').first()).toContainText('Anxious');
   });
 
   test('back button on results page returns to search', async ({ page }) => {
