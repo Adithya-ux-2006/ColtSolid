@@ -32,17 +32,19 @@ test.describe('Search Flow — Symptom to Remedy Detail', () => {
     // 6. Verify results page loads with the correct heading
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(800);
-    await expect(page).toHaveURL(/\/results\?q=headache/);
+    await expect(page).toHaveURL(/\/results\?symptom=headache/);
     await expect(page.getByRole('heading').first()).toContainText('Headache');
 
-    // 7. Verify "Best Match" section is visible (use exact match to avoid "Best Matches" ambiguity)
-    const bestMatch = page.getByText('Best Match', { exact: true });
-    await expect(bestMatch).toBeVisible();
+    // 7. Verify "Recommended for you" section is visible
+    const recommendedForYou = page.getByText('Recommended for you');
+    await expect(recommendedForYou).toBeVisible();
 
     // 8. Click on a remedy card to navigate to detail page
     const firstRemedyLink = page.locator('a[href^="/remedy/"]').first();
     await expect(firstRemedyLink).toBeVisible({ timeout: 5000 });
-    const remedyName = await firstRemedyLink.locator('h3').textContent();
+    // Get remedy name from the h3 in the card (not inside the link)
+    const remedyCard = firstRemedyLink.locator('xpath=ancestor::div[contains(@class, "rounded-3xl")]').first();
+    const remedyName = await remedyCard.locator('h3').textContent();
     await firstRemedyLink.click();
 
     // 9. Verify remedy detail page loads
@@ -61,7 +63,7 @@ test.describe('Search Flow — Symptom to Remedy Detail', () => {
     await page.waitForLoadState('networkidle');
 
     // Wait for the popular symptoms section to render (catalog loads async)
-    await expect(page.getByText('Popular symptoms')).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText('Common Searches')).toBeVisible({ timeout: 15000 });
 
     // Click the first symptom card in the grid — find any button with an emoji inside
     const firstCard = page.locator('.grid button').first();
@@ -71,7 +73,7 @@ test.describe('Search Flow — Symptom to Remedy Detail', () => {
     // Verify navigation to results page with a symptom query
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(800);
-    await expect(page).toHaveURL(/\/results\?q=/);
+    await expect(page).toHaveURL(/\/results\?symptom=/);
     const heading = page.getByRole('heading').first();
     await expect(heading).toBeVisible();
   });
@@ -88,8 +90,8 @@ test.describe('Search Flow — Symptom to Remedy Detail', () => {
     // Verify navigation to results page
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(800);
-    await expect(page).toHaveURL(/\/results\?q=anxiety/);
-    await expect(page.getByRole('heading').first()).toContainText('Anxious');
+    await expect(page).toHaveURL(/\/results\?symptom=anxiety/);
+    await expect(page.getByRole('heading').first()).toContainText('Anxiety');
   });
 
   test('back button on results page returns to search', async ({ page }) => {

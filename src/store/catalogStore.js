@@ -185,3 +185,7 @@ export const useCatalogStore = create((set, get) => ({
     }
   },
 }));
+
+if (import.meta.env.DEV) {
+  window.__ZUSTAND_STORE__ = useCatalogStore;
+}

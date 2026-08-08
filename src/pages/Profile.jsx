@@ -11,6 +11,8 @@ import { useGuestProfileStore } from '../store/guestProfileStore';
 import { getInitials } from '../utils/mappers';
 import { ALLERGIES, CONDITIONS, FAQ_ITEMS, GENDER_OPTIONS, getVisibleConditions, TREATMENT_PREFERENCES } from '../constants/onboarding';
 
+const EMPTY_ARRAY = [];
+
 const ONBOARDING_LABELS = new Map(
   [...CONDITIONS, ...ALLERGIES].map((option) => [option.value, option.label])
 );
@@ -88,7 +90,7 @@ export function Profile() {
   const guestConditions = useGuestProfileStore((state) => state.common_conditions);
   const guestGender = useGuestProfileStore((state) => state.gender);
   const guestIsChildSafe = useGuestProfileStore((state) => state.is_child_safe ?? false);
-  const guestTreatmentPrefs = useGuestProfileStore((state) => state.treatment_prefs ?? []);
+  const guestTreatmentPrefs = useGuestProfileStore((state) => state.treatment_prefs ?? EMPTY_ARRAY);
   const updateGuestProfile = useGuestProfileStore((state) => state.updateProfile);
   const navigate = useNavigate();
 

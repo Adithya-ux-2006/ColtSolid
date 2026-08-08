@@ -164,14 +164,14 @@ export function Results() {
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies ?? EMPTY_ARRAY);
   const userConditions = useAuthStore((state) => state.user?.common_conditions);
   const userIsChildSafe = useAuthStore((state) => state.user?.is_child_safe ?? false);
-  const userTreatmentPrefs = useAuthStore((state) => state.user?.treatment_prefs ?? []);
+  const userTreatmentPrefs = useAuthStore((state) => state.user?.treatment_prefs ?? EMPTY_ARRAY);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const incrementSearchCount = useAuthStore((state) => state.incrementSearchCount);
   const updateUser = useAuthStore((state) => state.updateUser);
   const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
   const guestConditions = useGuestProfileStore((state) => state.common_conditions);
   const guestIsChildSafe = useGuestProfileStore((state) => state.is_child_safe ?? false);
-  const guestTreatmentPrefs = useGuestProfileStore((state) => state.treatment_prefs ?? []);
+  const guestTreatmentPrefs = useGuestProfileStore((state) => state.treatment_prefs ?? EMPTY_ARRAY);
   const setGuestIsChildSafe = useGuestProfileStore((state) => state.setIsChildSafe);
   const activeAllergies = isAuthenticated ? userKnownAllergies : guestAllergies;
   const activeConditions = isAuthenticated ? userConditions : guestConditions;

@@ -18,6 +18,7 @@ import { EMERGENCY_MESSAGE, EMERGENCY_ACTION } from '../constants/emergency';
 import { SYMPTOM_COLOR_CLASSES } from '../constants/symptoms';
 
 const SEARCH_POPULAR_IDS = ['cold', 'anxiety', 'back_pain', 'bloating', 'eye_pain', 'headache'];
+const EMPTY_ARRAY = [];
 
 function normalizeValue(value) {
   return value.toLowerCase().trim().replace(/\s+/g, ' ');
@@ -35,11 +36,11 @@ export function SymptomSearch() {
   const userKnownAllergies = useAuthStore((state) => state.user?.known_allergies);
   const userConditions = useAuthStore((state) => state.user?.common_conditions);
   const userIsChildSafe = useAuthStore((state) => state.user?.is_child_safe ?? false);
-  const userTreatmentPrefs = useAuthStore((state) => state.user?.treatment_prefs ?? []);
+  const userTreatmentPrefs = useAuthStore((state) => state.user?.treatment_prefs ?? EMPTY_ARRAY);
   const guestAllergies = useGuestProfileStore((state) => state.known_allergies);
   const guestConditions = useGuestProfileStore((state) => state.common_conditions);
   const guestIsChildSafe = useGuestProfileStore((state) => state.is_child_safe);
-  const guestTreatmentPrefs = useGuestProfileStore((state) => state.treatment_prefs ?? []);
+  const guestTreatmentPrefs = useGuestProfileStore((state) => state.treatment_prefs ?? EMPTY_ARRAY);
   const activeAllergies = isAuthenticated ? userKnownAllergies : guestAllergies;
   const activeConditions = isAuthenticated ? userConditions : guestConditions;
   const activeIsChildSafe = isAuthenticated ? userIsChildSafe : guestIsChildSafe;
