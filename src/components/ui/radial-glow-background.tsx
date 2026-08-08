@@ -10,7 +10,7 @@ export function RadialGlowBackground({ className }: { className?: string }) {
       className={cn("absolute inset-0", className)}
       style={{
         backgroundImage:
-          "radial-gradient(circle 500px at 50% 300px, rgba(16,185,129,0.35), transparent)",
+          "radial-gradient(circle 900px at 50% 300px, rgba(16,185,129,0.35), transparent)",
       }}
     />
   );
