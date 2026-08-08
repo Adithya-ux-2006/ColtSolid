@@ -26,6 +26,7 @@ export const REMEDIES = [
     isFeatured: true,
     isPurchasable: true,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20001%20remedy%20clinical%20study',
       childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
@@ -54,6 +55,7 @@ export const REMEDIES = [
     isFeatured: true,
     isPurchasable: true,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20h04%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
     productExamples: ['Advil', 'Motrin IB', 'Nurofen'],
   },
@@ -83,6 +85,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20004%20remedy%20clinical%20study',
       childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
@@ -110,6 +113,7 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20005%20remedy%20clinical%20study',
   },
   {
     id: 'rem_006',
@@ -135,6 +139,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20006%20remedy%20clinical%20study',
       childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
     productExamples: ['Zyrtec', 'Cetirizine (Generic)'],
   },
@@ -162,6 +167,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20007%20remedy%20clinical%20study',
       childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
@@ -188,6 +194,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20008%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
     productExamples: ['ProAir HFA', 'Proventil HFA', 'Ventolin HFA'],
   },
@@ -215,6 +222,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20009%20remedy%20clinical%20study',
       childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
   },
   {
@@ -241,6 +249,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20010%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
@@ -267,6 +276,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20011%20remedy%20clinical%20study',
       childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
   },
   {
@@ -293,6 +303,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20012%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
     productExamples: ['Lotrimin', 'Lamisil AT', 'Monistat'],
   },
@@ -320,6 +331,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20013%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
@@ -346,6 +358,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20014%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
@@ -372,6 +385,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20015%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
@@ -398,6 +412,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: false,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20016%20remedy%20clinical%20study',
       childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
@@ -424,6 +439,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20017%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
@@ -450,6 +466,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20018%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
@@ -476,6 +493,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20019%20remedy%20clinical%20study',
       childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
@@ -502,6 +520,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20020%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
@@ -528,6 +547,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: false,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20021%20remedy%20clinical%20study',
       childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
@@ -554,6 +574,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20022%20remedy%20clinical%20study',
       childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
@@ -580,6 +601,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20023%20remedy%20clinical%20study',
       childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
@@ -606,6 +628,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20024%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
@@ -632,6 +655,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20025%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
@@ -658,6 +682,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20026%20remedy%20clinical%20study',
       childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
     productExamples: ['Nature Made Iron', 'Slow Fe', 'Ferro-Sequels'],
   },
@@ -685,6 +710,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20027%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
     productExamples: ['Tums', 'Rolaids', 'Calcium 600 + D3'],
   },
@@ -712,6 +738,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20028%20remedy%20clinical%20study',
       childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
   },
   {
@@ -738,6 +765,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20029%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
@@ -764,6 +792,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20030%20remedy%20clinical%20study',
       childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
   },
   {
@@ -790,6 +819,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20031%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
@@ -816,6 +846,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: false,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20032%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
@@ -842,6 +873,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20033%20remedy%20clinical%20study',
       childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
   },
   {
@@ -868,6 +900,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: false,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20034%20remedy%20clinical%20study',
       childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
@@ -894,6 +927,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20035%20remedy%20clinical%20study',
       childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
   },
   {
@@ -920,6 +954,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20036%20remedy%20clinical%20study',
       childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
   },
   {
@@ -946,6 +981,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20037%20remedy%20clinical%20study',
       childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
   },
   {
@@ -972,6 +1008,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: false,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20038%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
@@ -998,6 +1035,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20039%20remedy%20clinical%20study',
       childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
     productExamples: ['Nature Made Biotin', 'Sports Research Biotin'],
   },
@@ -1025,6 +1063,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: false,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20040%20remedy%20clinical%20study',
       childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
@@ -1051,6 +1090,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: false,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20041%20remedy%20clinical%20study',
       childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
@@ -1076,6 +1116,7 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20042%20remedy%20clinical%20study',
   },
   {
     id: 'rem_043',
@@ -1100,6 +1141,7 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20043%20remedy%20clinical%20study',
   },
   {
     id: 'rem_044',
@@ -1125,6 +1167,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20044%20remedy%20clinical%20study',
       childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
@@ -1151,6 +1194,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: false,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20045%20remedy%20clinical%20study',
       childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
 
@@ -1181,6 +1225,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: false,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20101%20remedy%20clinical%20study',
       childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
@@ -1209,6 +1254,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20102%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
@@ -1237,6 +1283,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: false,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20103%20remedy%20clinical%20study',
       childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
@@ -1265,6 +1312,7 @@ export const REMEDIES = [
     isFeatured: true,
     isPurchasable: true,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20104%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
     productExamples: ['K-Y Jelly', 'astroglide'],
   },
@@ -1294,6 +1342,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: true,
       childSafe: false,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20105%20remedy%20clinical%20study',
       childSafetyNote: 'Not recommended for children without clinician guidance.',
     productExamples: ['Replens', 'HYDROPHEN'],
   },
@@ -1323,6 +1372,7 @@ export const REMEDIES = [
     isFeatured: false,
     isPurchasable: false,
       childSafe: true,
+      googleScholarUrl: 'https://scholar.google.com/scholar?q=rem%20106%20remedy%20clinical%20study',
       childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
 ];

@@ -7,6 +7,7 @@ const STUDY_TYPE_STYLES = {
   'Randomized Trial': 'bg-evidence/10 text-evidence',
   'Systematic Review': 'bg-evidence/10 text-evidence',
   'Clinical Study': 'bg-evidence/10 text-evidence',
+  'Search Index': 'bg-primary/10 text-primary',
 };
 
 export function EvidenceCard({ source, onTrackClick, delay = 0, className }) {

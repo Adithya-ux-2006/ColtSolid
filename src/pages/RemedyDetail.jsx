@@ -103,7 +103,24 @@ export function RemedyDetail() {
 
   const researchLinks = useMemo(() => {
     if (!remedy) return [];
-    return remedy.researchPapers || remedy.researchLinks || [];
+    const baseLinks = remedy.researchPapers || remedy.researchLinks || [];
+    
+    // Add Google Scholar search link if available
+    if (remedy.googleScholarUrl) {
+      return [
+        ...baseLinks,
+        {
+          label: `Search Google Scholar for "${remedy.name}" research`,
+          url: remedy.googleScholarUrl,
+          journal: 'Google Scholar',
+          keyFinding: `Browse peer-reviewed studies, clinical trials, and meta-analyses on ${remedy.name} from Google Scholar`,
+          type: 'Search Index',
+          year: new Date().getFullYear(),
+        },
+      ];
+    }
+    
+    return baseLinks;
   }, [remedy]);
 
   const evidenceScore = useMemo(() => {
