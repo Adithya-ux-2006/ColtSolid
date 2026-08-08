@@ -140,6 +140,8 @@ function computeUserContextPenalty(remedy, userContext) {
   }
 
   if (conditions?.length) {
+    // DEBUG: log conditions being checked for contraindications
+    console.log('[DEBUG] checking contraindication, conditions:', conditions);
     const contraindications = (remedy.contraindications || []).map(c => c.toLowerCase());
     for (const condition of conditions.map(c => c.toLowerCase())) {
       if (contraindications.some(ci => ci.includes(condition) || condition.includes(ci))) {
