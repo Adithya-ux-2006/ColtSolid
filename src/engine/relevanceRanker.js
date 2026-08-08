@@ -184,28 +184,15 @@ function computeUserContextPenalty(remedy, userContext) {
 
   // Treatment preference penalties
   if (treatmentPrefs?.length) {
-    const category = (remedy.category || '').toLowerCase();
     const name = (remedy.name || '').toLowerCase();
     const ingredients = (remedy.ingredients || []).map(i => i.toLowerCase());
 
-    // Avoid medication: penalize conventional pharmaceuticals
+    // Avoid medication: penalize pharmaceuticals
     if (treatmentPrefs.includes('avoid_medication')) {
-      if (category === 'conventional') {
-        penalty += 30;
-        remedy._treatmentConflict = 'avoid medication (conventional remedy)';
-      }
       const pharmaKeywords = ['ibuprofen', 'acetaminophen', 'aspirin', 'paracetamol', 'antihistamine', 'decongestant'];
       if (pharmaKeywords.some(kw => name.includes(kw) || ingredients.some(i => i.includes(kw)))) {
         penalty += 30;
         remedy._treatmentConflict = 'avoid medication (pharmaceutical ingredient)';
-      }
-    }
-
-    // Prefer natural: penalize conventional remedies
-    if (treatmentPrefs.includes('prefer_natural')) {
-      if (category === 'conventional' && !remedy._treatmentConflict) {
-        penalty += 15;
-        remedy._treatmentConflict = 'prefer natural (conventional remedy)';
       }
     }
 

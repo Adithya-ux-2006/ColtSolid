@@ -29,7 +29,7 @@ export const REMEDIES = [
   {
     id: 'rem_h04',
     name: 'Ibuprofen',
-    category: 'Conventional',
+    category: 'Over-the-Counter',
     symptoms: ['headache'],
     primarySymptoms: ['headache'],
     secondarySymptoms: ['cold'],

@@ -115,26 +115,15 @@ function findContraindicationConflict(remedy, conditions) {
 function findTreatmentConflict(remedy, treatmentPrefs) {
   if (!treatmentPrefs?.length) return null;
 
-  const category = (remedy.category || '').toLowerCase();
   const name = (remedy.name || '').toLowerCase();
   const ingredients = (remedy.ingredients || []).map(i => i.toLowerCase());
 
-  // Avoid medication: filter out conventional pharmaceuticals
+  // Avoid medication: filter out pharmaceuticals
   if (treatmentPrefs.includes('avoid_medication')) {
-    if (category === 'conventional') {
-      return 'avoid medication (conventional remedy)';
-    }
     // Check for common pharmaceutical indicators
     const pharmaKeywords = ['ibuprofen', 'acetaminophen', 'aspirin', 'paracetamol', 'antihistamine', 'decongestant'];
     if (pharmaKeywords.some(kw => name.includes(kw) || ingredients.some(i => i.includes(kw)))) {
       return 'avoid medication (pharmaceutical ingredient)';
-    }
-  }
-
-  // Prefer natural: penalize conventional remedies
-  if (treatmentPrefs.includes('prefer_natural')) {
-    if (category === 'conventional') {
-      return 'prefer natural (conventional remedy)';
     }
   }
 
