@@ -131,7 +131,7 @@ function LightModeBackground() {
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10">
       <GradientBackground className="h-full w-full" />
-      <div className="absolute inset-0 bg-background/60" />
+      <div className="absolute inset-0 bg-background/40" />
     </div>
   );
 }
