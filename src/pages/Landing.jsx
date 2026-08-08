@@ -113,7 +113,7 @@ export function Landing() {
             <Feature
               icon={Stethoscope}
               title="4 Treatment Approaches"
-              description="Filter by Natural, Over-the-Counter, or Lifestyle remedies."
+              description="Filter by Natural, OTC, or Lifestyle remedies."
             />
             <Feature
               icon={GraduationCap}

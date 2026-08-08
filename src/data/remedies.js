@@ -32,7 +32,7 @@ export const REMEDIES = [
   {
     id: 'rem_h04',
     name: 'Ibuprofen',
-    category: 'Over-the-Counter',
+    category: 'OTC',
     symptoms: ['headache'],
     primarySymptoms: ['headache'],
     secondarySymptoms: ['cold'],
@@ -118,7 +118,7 @@ export const REMEDIES = [
   {
     id: 'rem_006',
     name: 'Cetirizine',
-    category: 'Over-the-Counter',
+    category: 'OTC',
     symptoms: ['allergies', 'hives', 'allergic_reaction', 'congestion'],
     primarySymptoms: ['allergies'],
     secondarySymptoms: ['congestion'],
@@ -173,7 +173,7 @@ export const REMEDIES = [
   {
     id: 'rem_008',
     name: 'Albuterol Rescue Inhaler',
-    category: 'Over-the-Counter',
+    category: 'OTC',
     symptoms: ['asthma', 'wheezing', 'cough'],
     primarySymptoms: ['asthma', 'cough'],
     secondarySymptoms: [],
@@ -282,7 +282,7 @@ export const REMEDIES = [
   {
     id: 'rem_012',
     name: 'Antifungal Cream',
-    category: 'Over-the-Counter',
+    category: 'OTC',
     symptoms: ['yeast_infection', 'fungal_infection', 'skin_rash'],
     primarySymptoms: ['yeast_infection', 'fungal_infection'],
     secondarySymptoms: [],
@@ -661,7 +661,7 @@ export const REMEDIES = [
   {
     id: 'rem_026',
     name: 'Iron Supplement',
-    category: 'Over-the-Counter',
+    category: 'OTC',
     symptoms: ['anemia', 'fatigue', 'low_energy', 'hair_loss', 'restless_leg'],
     primarySymptoms: ['anemia'],
     secondarySymptoms: ['fatigue'],
@@ -689,7 +689,7 @@ export const REMEDIES = [
   {
     id: 'rem_027',
     name: 'Antacid',
-    category: 'Over-the-Counter',
+    category: 'OTC',
     symptoms: ['gerd', 'heartburn', 'indigestion'],
     primarySymptoms: ['gerd'],
     secondarySymptoms: [],
@@ -852,7 +852,7 @@ export const REMEDIES = [
   {
     id: 'rem_033',
     name: 'Vitamin B Complex Pills',
-    category: 'Over-the-Counter',
+    category: 'OTC',
     symptoms: ['neuropathy', 'fatigue', 'low_energy', 'hair_loss'],
     primarySymptoms: ['neuropathy'],
     secondarySymptoms: ['fatigue'],
@@ -1014,7 +1014,7 @@ export const REMEDIES = [
   {
     id: 'rem_039',
     name: 'Biotin Supplement',
-    category: 'Over-the-Counter',
+    category: 'OTC',
     symptoms: ['hair_loss'],
     primarySymptoms: ['hair_loss'],
     secondarySymptoms: [],
@@ -1289,7 +1289,7 @@ export const REMEDIES = [
   {
     id: 'rem_104',
     name: 'Water-Based Lubricant',
-    category: 'Over-the-Counter',
+    category: 'OTC',
     symptoms: ['vaginal_dryness', 'painful_intercourse'],
     primarySymptoms: ['vaginal_dryness'],
     secondarySymptoms: ['painful_intercourse'],
@@ -1319,7 +1319,7 @@ export const REMEDIES = [
   {
     id: 'rem_105',
     name: 'Vaginal Moisturizer',
-    category: 'Over-the-Counter',
+    category: 'OTC',
     symptoms: ['vaginal_dryness'],
     primarySymptoms: ['vaginal_dryness'],
     secondarySymptoms: [],

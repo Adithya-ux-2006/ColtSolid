@@ -29,7 +29,7 @@ const CATEGORY_BENEFITS = {
     { title: 'Holistic relief', description: 'Addresses root causes, not just surface symptoms.' },
     { title: 'Low side-effect profile', description: 'Well tolerated by most people when used as directed.' },
   ],
-  'Over-the-Counter': [
+  OTC: [
     { title: 'Clinically validated', description: 'Backed by rigorous trials and peer-reviewed research.' },
     { title: 'Fast-acting relief', description: 'Rapid onset of symptom relief when needed most.' },
     { title: 'Precise, standardised dosing', description: 'Consistent formulation for predictable results.' },
@@ -285,7 +285,7 @@ export function RemedyDetail() {
           </div>
         )}
 
-        {remedy.category === 'Over-the-Counter' && (
+        {remedy.category === 'OTC' && (
           <section className="mb-12 md:mb-16">
             <Reveal>
               <div className="rounded-2xl border border-warning/20 bg-warning/5 p-5">
