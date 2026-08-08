@@ -22,10 +22,10 @@ export function MedicalGuidancePanel({ symptomId, severity, className }) {
       </div>
 
       <div className="px-5 pb-4">
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1.5">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2.5">
           {flags.map((flag, i) => (
-            <li key={i} className="flex items-start gap-2 text-sm text-ink-muted">
-              <span className="text-danger mt-1.5 text-[8px]" aria-hidden="true">&#9679;</span>
+            <li key={i} className="flex items-start gap-2.5 text-sm leading-5 text-ink-muted">
+              <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-danger" aria-hidden="true" />
               {flag}
             </li>
           ))}
