@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useContext, useEffect, useRef, useState } from 'react';
 import { Navbar, BottomNav, AppDock, AdminGuard } from './components/layout';
 import { ThemeProvider } from './context/ThemeProvider';
+import { ThemeContext } from './context/themeContext';
+import { GradientBackground } from './components/ui/jade-sky';
 import { needsOnboardingProfile, useAuthStore } from './store/authStore';
 import { useFavoritesStore } from './store/favoritesStore';
 import { useRemedyScheduleStore } from './store/remedyScheduleStore';
@@ -119,6 +121,20 @@ function AppRoutes() {
   );
 }
 
+/** Light-mode ambient background: renders the "Jade Sky" gradient behind every page. */
+function LightModeBackground() {
+  const { resolvedTheme } = useContext(ThemeContext);
+
+  if (resolvedTheme !== 'light') return null;
+
+  return (
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10">
+      <GradientBackground className="h-full w-full" />
+      <div className="absolute inset-0 bg-background/60" />
+    </div>
+  );
+}
+
 function App() {
   const initialize = useAuthStore((state) => state.initialize);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -195,6 +211,7 @@ function App() {
 
   return (
     <ThemeProvider>
+      <LightModeBackground />
       <BrowserRouter>
         <ErrorBoundary>
           <div className="flex flex-col min-h-screen transition-colors duration-250">
