@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Heart, Activity, ArrowRight, Sparkles, Shield, AlertTriangle } from 'lucide-react';
 import { PageWrapper } from '../components/layout';
 import { RemedyCard } from '../components/ui/RemedyCard';
-import { EmptyState } from '../components/ui/EmptyState';
 import { useAuthStore } from '../store/authStore';
 import { useFavoritesStore } from '../store/favoritesStore';
 import { useCatalogStore } from '../store/catalogStore';
@@ -40,11 +39,6 @@ export function Dashboard() {
   const featuredRemedies = useMemo(
     () => remedies.filter(r => r.isFeatured).slice(0, 6),
     [remedies]
-  );
-
-  const favoriteRemedies = useMemo(
-    () => remedies.filter(r => favorites.some(f => f.id === r.id)).slice(0, 5),
-    [remedies, favorites]
   );
 
   const selectedConditionChips = useMemo(
@@ -195,45 +189,6 @@ export function Dashboard() {
             </div>
           </section>
         )}
-
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="section-title mb-0">Saved Remedies</h2>
-            {favoriteRemedies.length > 0 && (
-              <Link to="/favorites" className="text-sm text-primary font-medium hover:underline py-3 inline-block">
-                View all
-              </Link>
-            )}
-          </div>
-          {favoriteRemedies.length > 0 ? (
-            <div className="space-y-3">
-              {favoriteRemedies.map((remedy) => (
-                <Link
-                  key={remedy.id}
-                  to={`/remedy/${remedy.id}`}
-                  className="flex items-center gap-4 bg-card rounded-2xl p-4 shadow-soft hover:shadow-card transition-shadow"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-surface flex items-center justify-center shrink-0 text-primary font-semibold text-sm">
-                    {remedy.name.charAt(0)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-ink">{remedy.name}</p>
-                    <p className="text-sm text-ink-muted truncate">{remedy.shortDescription}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <EmptyState
-              icon={Heart}
-              title="No saved remedies yet"
-              description="Save remedies while searching to find them here."
-              ctaLabel="Search Remedies"
-              ctaHref="/search"
-              className="bg-card rounded-3xl shadow-soft"
-            />
-          )}
-        </section>
       </div>
     </PageWrapper>
   );
