@@ -4,6 +4,7 @@ import { Navbar, BottomNav, AppDock, AdminGuard } from './components/layout';
 import { ThemeProvider } from './context/ThemeProvider';
 import { ThemeContext } from './context/themeContext';
 import { GradientBackground } from './components/ui/jade-sky';
+import { RadialGlowBackground } from './components/ui/radial-glow-background';
 import { needsOnboardingProfile, useAuthStore } from './store/authStore';
 import { useFavoritesStore } from './store/favoritesStore';
 import { useRemedyScheduleStore } from './store/remedyScheduleStore';
@@ -135,6 +136,19 @@ function LightModeBackground() {
   );
 }
 
+/** Dark-mode ambient background: renders the emerald radial glow behind every page. */
+function DarkModeBackground() {
+  const { resolvedTheme } = useContext(ThemeContext);
+
+  if (resolvedTheme !== 'dark') return null;
+
+  return (
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10">
+      <RadialGlowBackground className="absolute inset-0" />
+    </div>
+  );
+}
+
 function App() {
   const initialize = useAuthStore((state) => state.initialize);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -212,6 +226,7 @@ function App() {
   return (
     <ThemeProvider>
       <LightModeBackground />
+      <DarkModeBackground />
       <BrowserRouter>
         <ErrorBoundary>
           <div className="flex flex-col min-h-screen transition-colors duration-250">
