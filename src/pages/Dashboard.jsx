@@ -180,11 +180,9 @@ export function Dashboard() {
         {featuredRemedies.length > 0 && (
           <section>
             <h2 className="section-title">Featured Remedies</h2>
-            <div className="flex overflow-x-auto gap-5 pb-4 no-scrollbar -mx-6 px-6 md:mx-0 md:px-0 snap-x">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {featuredRemedies.map((remedy) => (
-                <div key={remedy.id} className="snap-start min-w-[280px] w-[280px] md:w-1/3 shrink-0">
-                  <RemedyCard remedy={remedy} featured />
-                </div>
+                <RemedyCard key={remedy.id} remedy={remedy} featured />
               ))}
             </div>
           </section>
