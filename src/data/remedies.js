@@ -25,6 +25,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: true,
     isPurchasable: true,
+      childSafe: true,
+      childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
     id: 'rem_h04',
@@ -51,6 +53,8 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: true,
     isPurchasable: true,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
     productExamples: ['Advil', 'Motrin IB', 'Nurofen'],
   },
   {
@@ -78,6 +82,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: true,
+      childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
     id: 'rem_005',
@@ -128,6 +134,8 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: true,
+      childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
     productExamples: ['Zyrtec', 'Cetirizine (Generic)'],
   },
   {
@@ -153,6 +161,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: true,
+      childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
     id: 'rem_008',
@@ -177,6 +187,8 @@ export const REMEDIES = [
     cost: '$$$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
     productExamples: ['ProAir HFA', 'Proventil HFA', 'Ventolin HFA'],
   },
   {
@@ -202,6 +214,8 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: true,
+      childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
   },
   {
     id: 'rem_010',
@@ -226,6 +240,8 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
     id: 'rem_011',
@@ -250,6 +266,8 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: true,
+      childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
   },
   {
     id: 'rem_012',
@@ -274,6 +292,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
     productExamples: ['Lotrimin', 'Lamisil AT', 'Monistat'],
   },
   {
@@ -299,6 +319,8 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
     id: 'rem_014',
@@ -323,6 +345,8 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
     id: 'rem_015',
@@ -347,6 +371,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
     id: 'rem_016',
@@ -371,6 +397,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: false,
+      childSafe: true,
+      childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
     id: 'rem_017',
@@ -395,6 +423,8 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
     id: 'rem_018',
@@ -419,6 +449,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
     id: 'rem_019',
@@ -443,6 +475,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: true,
+      childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
     id: 'rem_020',
@@ -467,6 +501,8 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
     id: 'rem_021',
@@ -491,6 +527,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: false,
+      childSafe: true,
+      childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
     id: 'rem_022',
@@ -515,6 +553,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: true,
+      childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
     id: 'rem_023',
@@ -539,6 +579,8 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: true,
+      childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
     id: 'rem_024',
@@ -563,6 +605,8 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
     id: 'rem_025',
@@ -587,6 +631,8 @@ export const REMEDIES = [
     cost: '$$$$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
     id: 'rem_026',
@@ -611,6 +657,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: true,
+      childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
     productExamples: ['Nature Made Iron', 'Slow Fe', 'Ferro-Sequels'],
   },
   {
@@ -636,6 +684,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
     productExamples: ['Tums', 'Rolaids', 'Calcium 600 + D3'],
   },
   {
@@ -661,6 +711,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: true,
+      childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
   },
   {
     id: 'rem_029',
@@ -685,6 +737,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
     id: 'rem_030',
@@ -709,6 +763,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: true,
+      childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
   },
   {
     id: 'rem_031',
@@ -733,6 +789,8 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
     id: 'rem_032',
@@ -757,6 +815,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: false,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
     id: 'rem_033',
@@ -781,6 +841,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: true,
+      childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
   },
   {
     id: 'rem_034',
@@ -805,6 +867,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: false,
+      childSafe: true,
+      childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
     id: 'rem_035',
@@ -829,6 +893,8 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: true,
+      childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
   },
   {
     id: 'rem_036',
@@ -853,6 +919,8 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: true,
+      childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
   },
   {
     id: 'rem_037',
@@ -877,6 +945,8 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: true,
+      childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
   },
   {
     id: 'rem_038',
@@ -901,6 +971,8 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: false,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
     id: 'rem_039',
@@ -925,6 +997,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: true,
+      childSafetyNote: 'Safe for children with appropriate pediatric dosing. Consult pediatrician before use.',
     productExamples: ['Nature Made Biotin', 'Sports Research Biotin'],
   },
   {
@@ -950,6 +1024,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: false,
+      childSafe: true,
+      childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
     id: 'rem_041',
@@ -974,6 +1050,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: false,
+      childSafe: true,
+      childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
     id: 'rem_042',
@@ -1046,6 +1124,8 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: true,
+      childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
     id: 'rem_045',
@@ -1070,6 +1150,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: false,
+      childSafe: true,
+      childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
 
   // SEXUAL WELLNESS
@@ -1098,6 +1180,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: false,
+      childSafe: true,
+      childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
     id: 'rem_102',
@@ -1124,6 +1208,8 @@ export const REMEDIES = [
     cost: '$$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
   },
   {
     id: 'rem_103',
@@ -1150,6 +1236,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: false,
+      childSafe: true,
+      childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
   {
     id: 'rem_104',
@@ -1176,6 +1264,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: true,
     isPurchasable: true,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
     productExamples: ['K-Y Jelly', 'astroglide'],
   },
   {
@@ -1203,6 +1293,8 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: true,
+      childSafe: false,
+      childSafetyNote: 'Not recommended for children without clinician guidance.',
     productExamples: ['Replens', 'HYDROPHEN'],
   },
   {
@@ -1230,5 +1322,7 @@ export const REMEDIES = [
     cost: '$',
     isFeatured: false,
     isPurchasable: false,
+      childSafe: true,
+      childSafetyNote: 'Generally safe for children when used as directed. Consult pediatrician for children under 2.',
   },
 ];
