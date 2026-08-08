@@ -11,7 +11,7 @@ ALTER TABLE public.remedy_symptoms
 
 -- Step 2: Migrate data from symptom_remedies to remedy_symptoms
 -- Copy evidence_score and priority_rank where they exist
-UPDATE public.remedy_symyps rs
+UPDATE public.remedy_symptoms rs
 SET
   evidence_score = COALESCE(sr.evidence_score, 5),
   priority_rank = COALESCE(sr.priority_rank, 5)

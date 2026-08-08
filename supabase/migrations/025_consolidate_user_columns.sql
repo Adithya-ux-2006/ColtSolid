@@ -13,7 +13,16 @@ WHERE university_name IS NULL AND university IS NOT NULL;
 -- Copy year → current_year where current_year is NULL
 UPDATE public.users
 SET current_year = year
-WHERE current_year IS NULL AND year IS NULL;
+WHERE current_year IS NULL AND year IS NOT NULL;
+
+-- Step 1b: Set empty string default for any remaining NULL values (required for NOT NULL constraint)
+UPDATE public.users
+SET university_name = ''
+WHERE university_name IS NULL;
+
+UPDATE public.users
+SET current_year = ''
+WHERE current_year IS NULL;
 
 -- Step 2: Drop legacy columns
 ALTER TABLE public.users DROP COLUMN IF EXISTS university;
@@ -33,9 +42,9 @@ BEGIN
   VALUES (
     NEW.id,
     COALESCE(NEW.raw_user_meta_data ->> 'name', 'Student'),
-    NEW.raw_user_meta_data ->> 'university_email',
-    NEW.raw_user_meta_data ->> 'university_name',
-    NEW.raw_user_meta_data ->> 'current_year',
+    COALESCE(NEW.raw_user_meta_data ->> 'university_email', ''),
+    COALESCE(NEW.raw_user_meta_data ->> 'university_name', ''),
+    COALESCE(NEW.raw_user_meta_data ->> 'current_year', ''),
     COALESCE(NEW.raw_user_meta_data ->> 'gender', '')
   )
   ON CONFLICT (id) DO UPDATE SET

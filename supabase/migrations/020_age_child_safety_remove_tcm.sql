@@ -12,7 +12,8 @@ ALTER TABLE public.users
 
 ALTER TABLE public.remedies
   ADD COLUMN IF NOT EXISTS child_safe BOOLEAN,
-  ADD COLUMN IF NOT EXISTS child_safety_note TEXT;
+  ADD COLUMN IF NOT EXISTS child_safety_note TEXT,
+  ADD COLUMN IF NOT EXISTS is_purchasable BOOLEAN DEFAULT true;
 
 UPDATE public.remedies
 SET category = 'Lifestyle'
