@@ -68,6 +68,54 @@ function mergeById(primary = [], fallback = []) {
   ];
 }
 
+import { SUPABASE_REMEDY_GOOGLE_SCHOLAR_MAP } from '../utils/supabaseRemedyGoogleScholarMap';
+
+function mergeRemedyFields(primary = [], fallback = []) {
+  // Merge specific fields from fallback (local) into primary (Supabase) remedies
+  const fallbackMapById = new Map(fallback.map(item => [item.id, item]));
+  const fallbackMapByName = new Map(fallback.map(item => [item.name.toLowerCase(), item]));
+  
+  return primary.map(primaryItem => {
+    // Try matching by ID first
+    let fallbackItem = fallbackMapById.get(primaryItem.id);
+    
+    // Try Supabase-specific name mapping FIRST (before local fallback by name)
+    // This ensures Supabase-specific fields like googleScholarUrl take precedence
+    if (primaryItem.name) {
+      const supabaseMap = SUPABASE_REMEDY_GOOGLE_SCHOLAR_MAP[primaryItem.name];
+      if (supabaseMap) {
+        console.log('[CATALOG] Matched Supabase remedy:', primaryItem.name, '-> googleScholarUrl:', supabaseMap.googleScholarUrl);
+        fallbackItem = supabaseMap;
+      }
+    }
+    
+    // If not found by Supabase mapping, try matching by name (case-insensitive) from local fallback
+    if (!fallbackItem && primaryItem.name) {
+      fallbackItem = fallbackMapByName.get(primaryItem.name.toLowerCase());
+    }
+    
+    if (!fallbackItem) return primaryItem;
+    
+    // Merge specific fields from local data that may not be in Supabase
+    const merged = {
+      ...primaryItem,
+      googleScholarUrl: fallbackItem.googleScholarUrl ?? primaryItem.googleScholarUrl,
+      childSafe: fallbackItem.childSafe ?? primaryItem.childSafe,
+      childSafetyNote: fallbackItem.childSafetyNote ?? primaryItem.childSafetyNote,
+    };
+    
+    if (primaryItem.name === 'Aloe Vera Gel') {
+      console.log('[CATALOG] Merged Aloe Vera Gel:', {
+        primaryGoogleScholarUrl: primaryItem.googleScholarUrl,
+        fallbackGoogleScholarUrl: fallbackItem?.googleScholarUrl,
+        mergedGoogleScholarUrl: merged.googleScholarUrl,
+      });
+    }
+    
+    return merged;
+  });
+}
+
 function mergeSymptomRemedies(primary = {}, fallback = {}) {
   const merged = { ...primary };
 
@@ -95,7 +143,7 @@ async function enrichWithLocalCatalog(catalog) {
   const local = await loadLocalCatalog();
   return {
     symptoms: mergeById(catalog.symptoms, local.symptoms),
-    remedies: mergeById(catalog.remedies, local.remedies),
+    remedies: mergeRemedyFields(catalog.remedies, local.remedies),
     symptomRemedies: mergeSymptomRemedies(catalog.symptomRemedies, local.symptomRemedies),
   };
 }

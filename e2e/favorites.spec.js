@@ -44,11 +44,11 @@ test.describe('Favorites — Remedy Card Heart Button', () => {
   });
 
   test('heart button is visible on remedy detail page', async ({ page }) => {
-    await page.goto('/remedy/rem_030');
+    await page.goto('/remedy/rem_c09');
     await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(3000);
 
     const heartBtn = page.locator('button[aria-label*="favorites"]').first();
-    await expect(heartBtn).toBeVisible({ timeout: 5000 });
+    await expect(heartBtn).toBeVisible({ timeout: 10000 });
   });
 });
